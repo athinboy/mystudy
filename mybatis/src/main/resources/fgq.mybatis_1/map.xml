@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.mybatis.example.BlogMapper">
+    <resultMap id="BlogMapper" type="fgq.mybatis_1.UI">
+        <id column="button_id" property="button_id"  ></id>
+    </resultMap>
+    <select id="selectbutton"   resultType="fgq.mybatis_1.UI" useCache="false">
+        select e.page_id as 'button_id',e.page_name as 'text_value'
+        from test_db.ui_page e
+        WHERE e.page_id=#{id}
+
+    </select>
+
+</mapper>

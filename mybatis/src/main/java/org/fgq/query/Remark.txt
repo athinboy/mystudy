@@ -1,0 +1,32 @@
+
+
+1、多表连接类和单表类区分：
+   具有MTDto注解就是多表关联类。否则都是单表类。
+
+2、类可以具有的注解：
+   (1)、select注解。
+
+2、字段可以具有的注解：
+   (1)无任何注解
+   (1)annotation.predicate注解
+   (1)select 注解
+   (1)
+   (1)
+   (1)
+2、字段功能：
+    (1)具有annotation.predicate注解，作为where条件字段。
+    (2)没有annotation.predicate注解，值为null时不作为where条件。值不为null时作为where条件。
+    (3)具有annotation.predicate注解，不作为insert操作的值列。
+    (4)具有annotation.predicate注解，不作为update操作的值列。
+    (5)具有annotation.predicate注解，不作为select操作结果列。
+
+
+
+
+
+查询谓词：=,<>,like,not like ,>,>=,<,<=,between,not between,in ,not in，is null,is not null
+
+暂时不支持Between，通过<,>,<=,>=实现。
+
+
+

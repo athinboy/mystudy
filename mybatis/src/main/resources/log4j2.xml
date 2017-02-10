@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug" strict="true" name="XMLConfigTest"
+               packages="org.apache.logging.log4j.test">
+    <Properties>
+        <Property name="filename">target/test.log</Property>
+        <Property name="rootLogger">info</Property>
+
+    </Properties>
+
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+        <!--<logger name="org.apache.ibatis" level="info">-->
+        <!--</logger>-->
+        <!--<logger name="org.apache.mybatis" level="info">-->
+        <!--</logger>-->
+        <logger name="java.sql.Connection" level="debug">
+        </logger>
+        <logger name="java.sql.PreparedStatement" level="debug">
+        </logger>
+        <logger name="java.sql.ResultSet" level="debug">
+        </logger>
+        <logger name="org.fgq" level="debug">
+        </logger>
+        <logger name="fgq.mybatis_1" level="debug">
+        </logger>
+        <logger name="fgq.mybatis_2" level="debug">
+        </logger>
+        <logger name="org.mybatis.example" level="debug">
+        </logger>
+    </Loggers>
+
+    <Appenders>
+        <Appender type="Console" name="STDOUT">
+            <Layout type="PatternLayout" pattern="%logger-%5p - %m%n"/>
+            <Filters></Filters>
+        </Appender>
+        <Appender type="Console" name="FLOW">
+            <Layout type="PatternLayout" pattern="%logger--%C{1}.%M %m %ex%n"/>
+            <!-- class and line number -->
+            <Filters>
+
+            </Filters>
+        </Appender>
+        <!--<Appender type="File" name="File" fileName="${filename}">-->
+            <!--<Layout type="PatternLayout">-->
+                <!--<Pattern>%d %p %C{1.} [%t] %m%n</Pattern>-->
+            <!--</Layout>-->
+        <!--</Appender>-->
+        <!--<Appender type="List" name="List">-->
+        <!--</Appender>-->
+    </Appenders>
+
+
+
+ </Configuration>

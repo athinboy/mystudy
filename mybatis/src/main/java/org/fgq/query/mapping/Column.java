@@ -7,7 +7,6 @@ public class Column {
 
     private  Boolean isPrimaryKey;
     private  Boolean allowNull;
-    private org.apache.ibatis.type.JdbcType jdbcType;
 
 
     //region Getter And Setter

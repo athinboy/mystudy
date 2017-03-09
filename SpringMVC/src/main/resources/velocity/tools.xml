@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tools>
+	<data type="boolean" key="VIEW_TOOLS_AVAILABLE" value="true" />
+	<toolbox scope="request">
+		<tool key="link" class="org.apache.velocity.tools.view.LinkTool" />
+		<tool key="params" class="org.apache.velocity.tools.view.ParameterTool" />
+		<tool key="context" class="org.apache.velocity.tools.view.ViewContextTool" />
+
+		<tool key="date" class="org.apache.velocity.tools.generic.DateTool" format="yyyy-MM-dd HH:mm:ss" />
+		<tool key="math" class="org.apache.velocity.tools.generic.MathTool" />
+		<tool key="NumberTool" class="org.apache.velocity.tools.generic.NumberTool" />
+
+	</toolbox>
+	
+</tools>

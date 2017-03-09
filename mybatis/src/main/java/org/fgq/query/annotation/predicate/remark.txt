@@ -1,0 +1,6 @@
+
+
+查询谓词：=,<>,like,not like ,>,>=,<,<=,between,not between,in ,not in，is null,is not null
+
+暂时不支持Between，通过<,>,<=,>=实现。
+

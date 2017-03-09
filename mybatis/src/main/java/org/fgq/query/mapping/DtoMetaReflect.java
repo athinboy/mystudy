@@ -3,8 +3,6 @@ package org.fgq.query.mapping;
 import org.apache.commons.lang3.NotImplementedException;
 import org.fgq.query.annotation.MTDto;
 import org.fgq.query.annotation.STDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -21,13 +19,6 @@ public class DtoMetaReflect {
 
 
     private static Map<String, DtoTypeInfo> typecache = Collections.synchronizedMap(new HashMap<String, DtoTypeInfo>());
-
-    static {
-
-    }
-
-
-    private Logger logger = LoggerFactory.getLogger(DtoMetaReflect.class);
 
     public static void Reflect(Type type) {
         if (false == typecache.containsKey(type.getTypeName())) {

@@ -18,10 +18,9 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.fgq.query.mapper.CommonMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -47,7 +46,7 @@ public class CommonQueryTest {
         {
 
 
-            Logger logger = LoggerFactory.getLogger(CommonQueryTest.class);
+            Logger logger = LogManager.getLogger(CommonQueryTest.class);
 
             logger.error("111111111111111111111111111111111111111111111111111111");
 
@@ -66,13 +65,12 @@ public class CommonQueryTest {
 
            // ui = sqlSession.selectOne("selectbutton", "buttonAdd");
 
-//             UI2Mapper ui2Mapper = sqlSession.getMapper(UI2Mapper.class);
-//            ui2 = ui2Mapper.SelectOne("\"buttonAdd\" + 2");
-//            System.out.println(ui2.getButton_id());
+             UI2Mapper ui2Mapper = sqlSession.getMapper(UI2Mapper.class);
+            ui2 = ui2Mapper.SelectOne("\"buttonAdd\" + 2");
 
 
-            CommonMapper<UI2> commonMapper = sqlSession.getMapper(CommonMapper.class);
-            Object o  = commonMapper.SelectByPrimaryKey(ui2);
+            //          CommonMapper<UI2> commonMapper = sqlSession.getMapper(CommonMapper.class);
+            //       Object o  = commonMapper.SelectByPrimaryKey(ui2);
 
 
             sqlSession.close();

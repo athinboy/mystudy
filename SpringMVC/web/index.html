@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script type="text/javascript" src="scripts/jquery-1.6.2.min.js"></script>
+</head>
+
+this is a html page!
+
+
+<input type="button" onclick="btnclick()" value="click me"/>
+
+<script type="text/javascript">
+    function btnclick() {
+        $.ajax(
+                {
+                    url:"/spmvc/mv/mvc/time?id=1",
+                    beforeSend: function(jqXHR, settings) {
+                        jqXHR.setRequestHeader('eventsign', 'eventsignOfQequest');
+                    },
+
+                }
+        );
+
+    }
+    ;
+</script>
+
+</body>
+</html>

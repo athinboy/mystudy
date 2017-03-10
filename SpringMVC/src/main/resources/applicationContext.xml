@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:task="http://www.springframework.org/schema/task" xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+
+
+    <!-- 采用注释的方式配置bean -->
+    <context:annotation-config/>
+
+    <!-- aop动态代理 -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <!-- 扫描注解对象 -->
+    <context:component-scan base-package="org.fgq.study">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!--&lt;!&ndash; 扫描注解对象 &ndash;&gt;-->
+    <!--<context:component-scan base-package="org.fgq.study.service">-->
+    <!--</context:component-scan>-->
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <!--<value>classpath*:mybatis/jdbc.properties</value>-->
+                <!--<value>classpath*:cache/radis.properties</value>-->
+                <!--<value>classpath*:applicationConfig.properties</value>-->
+            </list>
+
+        </property>
+    </bean>
+
+
+
+
+     <!--transaction support-->
+     <!--PlatformTransactionMnager -->
+
+    <!--<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
+         <!--<property name="dataSource" ref="dataSource"/>-->
+    <!--</bean>-->
+
+    <!-- enable transaction annotation support -->
+    <!--<tx:annotation-driven transaction-manager="txManager"/>-->
+
+
+
+
+    <!-- 配置SqlSessionTemplate -->
+    <!--<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">-->
+    <!--<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>-->
+    <!--</bean>-->
+
+
+    <!-- spring上下文获取，可以得到各个bean的实体 -->
+    <!--<bean id="SpringContextUtil" class="com.itl.core.tool.SpringToolInit"/>-->
+
+
+
+</beans>

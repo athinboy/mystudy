@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller()
 @RequestMapping("/mvc")
+//http://localhost:8084/spmvc/mv/mvc/time
 public class TimeController {
 
 

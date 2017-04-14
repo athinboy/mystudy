@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.springframework.org/schema/rabbit
+       http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+
+    <rabbit:connection-factory id="connectionFactory" host="${rabbitmq.host}" port="${rabbitmq.port}"/>
+
+    <rabbit:template id="amqpTemplate" connection-factory="connectionFactory" queue="queue"/>
+    <rabbit:admin connection-factory="connectionFactory"/>
+    <rabbit:queue id="queue" name="myqueue"></rabbit:queue>
+    <rabbit:direct-exchange name="myexchange" id="exchangeid">
+        <rabbit:bindings>
+            <rabbit:binding queue="queue" key="key123"></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+
+    <rabbit:listener-container acknowledge="none" auto-startup="true" connection-factory="connectionFactory">
+        <rabbit:listener ref="consumer" queue-names="myqueue2"></rabbit:listener>
+        <rabbit:listener ref="consumer" queue-names="myqueue"></rabbit:listener>
+    </rabbit:listener-container>
+
+
+    <bean class="org.fgq.study.rabbitmq.Consumer" id="consumer">
+        <constructor-arg>
+            <rabbit:template id="amqpTemplateConsumer" connection-factory="connectionFactory"></rabbit:template>
+        </constructor-arg>
+    </bean>
+
+    <bean class="org.fgq.study.rabbitmq.Producer" id="producer">
+        <constructor-arg>
+            <rabbit:template id="amqpTemplateProducer" connection-factory="connectionFactory"></rabbit:template>
+        </constructor-arg>
+    </bean>
+
+
+</beans>

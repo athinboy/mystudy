@@ -2,6 +2,7 @@ package org.fgq.study.controller;
 
 import org.fgq.study.rabbitmq.IProduct;
 import org.fgq.study.rabbitmq.Producer;
+import org.fgq.study.service.RabbitMQService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -23,8 +24,11 @@ public class RabbitController {
 
     private Logger logger = LoggerFactory.getLogger(RabbitController.class);
 
+//    @Autowired
+//    IProduct product;
+
     @Autowired
-    IProduct product;
+    RabbitMQService rabbitMQService;
 
 
     @RequestMapping("/send")
@@ -32,8 +36,11 @@ public class RabbitController {
     public String send(HttpServletRequest request, Model model) {
 
 
-        logger.warn("rabbit send");
-        this.product.sendMessage("hello world!");
+//        logger.warn("rabbit send");
+//        this.product.sendMessage("hello world!");
+        rabbitMQService.SendMessage();
+
+
 
         return "rabbit";
 

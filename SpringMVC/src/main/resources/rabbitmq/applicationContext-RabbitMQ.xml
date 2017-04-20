@@ -7,32 +7,48 @@
        http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
 
-    <rabbit:connection-factory id="connectionFactory" host="${rabbitmq.host}" port="${rabbitmq.port}"/>
+    <rabbit:connection-factory id="connectionFactory" host="${rabbitmq.host}" port="${rabbitmq.port}"
+                               connection-factory="rabbitConnectionFactory" username="${rabbitmq.user}"
+                               password="${rabbitmq.password}"/>
 
-    <rabbit:template id="amqpTemplate" connection-factory="connectionFactory" queue="queue"/>
-    <rabbit:admin connection-factory="connectionFactory"/>
+    <bean id="rabbitConnectionFactory"
+          class="org.springframework.amqp.rabbit.connection.RabbitConnectionFactoryBean">
+    </bean>
+    <rabbit:template id="amqpTemplate" connection-factory="connectionFactory" queue="queue" channel-transacted="true"/>
+    <rabbit:admin connection-factory="connectionFactory" auto-startup="true"/>
     <rabbit:queue id="queue" name="myqueue"></rabbit:queue>
+    <rabbit:queue id="queue2" name="myqueue2"></rabbit:queue>
     <rabbit:direct-exchange name="myexchange" id="exchangeid">
         <rabbit:bindings>
             <rabbit:binding queue="queue" key="key123"></rabbit:binding>
+            <rabbit:binding queue="queue2" key="key123"></rabbit:binding>
         </rabbit:bindings>
     </rabbit:direct-exchange>
 
-    <rabbit:listener-container acknowledge="none" auto-startup="true" connection-factory="connectionFactory">
+    <rabbit:listener-container acknowledge="auto" auto-startup="true" connection-factory="connectionFactory"
+                               transaction-manager="rabbitProducerTxManager">
         <rabbit:listener ref="consumer" queue-names="myqueue2"></rabbit:listener>
         <rabbit:listener ref="consumer" queue-names="myqueue"></rabbit:listener>
     </rabbit:listener-container>
 
+    <bean id="rabbitProducerTxManager"
+          class="org.springframework.amqp.rabbit.transaction.RabbitTransactionManager">
+        <property name="connectionFactory" ref="connectionFactory"/>
+
+    </bean>
+
 
     <bean class="org.fgq.study.rabbitmq.Consumer" id="consumer">
         <constructor-arg>
-            <rabbit:template id="amqpTemplateConsumer" connection-factory="connectionFactory"></rabbit:template>
+            <rabbit:template id="amqpTemplateConsumer" connection-factory="connectionFactory"
+                             channel-transacted="true"></rabbit:template>
         </constructor-arg>
     </bean>
 
     <bean class="org.fgq.study.rabbitmq.Producer" id="producer">
         <constructor-arg>
-            <rabbit:template id="amqpTemplateProducer" connection-factory="connectionFactory"></rabbit:template>
+            <rabbit:template id="amqpTemplateProducer" connection-factory="connectionFactory"
+                             channel-transacted="true"></rabbit:template>
         </constructor-arg>
     </bean>
 

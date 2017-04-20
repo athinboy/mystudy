@@ -24,10 +24,10 @@ public class Producer implements IProduct {
     private Logger logger = LoggerFactory.getLogger(Producer.class);
 
 
-    private AmqpTemplate amqpTemplate;
+    private RabbitTemplate amqpTemplate;
 
 
-    public Producer(AmqpTemplate amqpTemplate) {
+    public Producer(RabbitTemplate amqpTemplate) {
         this.amqpTemplate = amqpTemplate;
     }
 
@@ -38,14 +38,14 @@ public class Producer implements IProduct {
 
         // amqpTemplate.convertAndSend("myexchange","key123",converter.toMessage(message,null));
         amqpTemplate.convertAndSend("myexchange", "key123", jsonMessageConverter.toMessage(message, null));
-        amqpTemplate.convertAndSend("myexchange", "key123", jsonMessageConverter.toMessage(new Date(), null));
-
-
-        ArrayList<String> ar=new ArrayList<String>();
-        ar.add("234324");
-        ar.add("fwer");
-
-        amqpTemplate.convertAndSend("myexchange", "key123", jsonMessageConverter.toMessage(ar, null));
+//        amqpTemplate.convertAndSend("myexchange", "key123", jsonMessageConverter.toMessage(new Date(), null));
+//
+//
+//        ArrayList<String> ar=new ArrayList<String>();
+//        ar.add("234324");
+//        ar.add("fwer");
+//
+//        amqpTemplate.convertAndSend("myexchange", "key123", jsonMessageConverter.toMessage(ar, null));
 
 
     }

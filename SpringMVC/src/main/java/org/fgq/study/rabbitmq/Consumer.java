@@ -39,7 +39,8 @@ public class Consumer implements IConsume, MessageListener {
 
     @Override
     public void onMessage(Message message) {
-        logger.error(  jsonMessageConverter.fromMessage(message).toString());
+        logger.error("receive:"+  jsonMessageConverter.fromMessage(message).toString());
+
 
     }
 

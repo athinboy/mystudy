@@ -1,0 +1,16 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:redisson="http://redisson.org/schema/redisson"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+       http://redisson.org/schema/redisson
+       http://redisson.org/schema/redisson/redisson-1.0.xsd">
+
+    <!--<redisson:redis id="redisson" host="10.0.2.120" port="6379" >-->
+    <!--</redisson:redis>-->
+
+    <redisson:client id="redissonClient" name="redissonClient" >
+        <redisson:single-server address="10.0.2.120:6379" database="3"></redisson:single-server>
+    </redisson:client>
+
+</beans>

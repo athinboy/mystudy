@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * dto¿‡–≈œ¢°£
+ *
  * Created by fenggqc on 2016/12/27.
  */
 public class DtoTypeInfo {

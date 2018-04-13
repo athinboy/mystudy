@@ -7,16 +7,12 @@ import java.util.List;
 import java.util.Properties;
 import java.sql.*;
 
-import com.mysql.jdbc.ConnectionImpl;
-import com.mysql.jdbc.JDBC4Connection;
-import com.mysql.jdbc.JDBC4MySQLConnection;
-//import org.apache.commons.lang.time.StopWatch;
-import com.sun.javafx.Logging;
+
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.dbcp.DataSourceConnectionFactory;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.Configuration;
+
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;

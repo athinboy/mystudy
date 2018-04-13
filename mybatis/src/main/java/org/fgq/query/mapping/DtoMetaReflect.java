@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * ÔªÊý¾Ý·´Éä¡£
+ *
  * Created by fenggqc on 2016/12/27.
  */
 public class DtoMetaReflect {
@@ -58,7 +58,7 @@ public class DtoMetaReflect {
 
 
     /**
-     * ÊÇ·ñ¶à±íÁ¬½ÓDto¡£
+     * ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Dtoï¿½ï¿½
      *
      * @param annotations
      * @return

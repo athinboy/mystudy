@@ -10,6 +10,7 @@
     <modules>
         <module>mybatis</module>
         <module>SpringMVC</module>
+        <module>general</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -372,7 +373,7 @@
             <dependency>
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson</artifactId>
-                <version>2.10.1</version>
+                <version>3.6.5</version>
             </dependency>
             <dependency>
                 <groupId>redis.clients</groupId>
@@ -471,8 +472,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>

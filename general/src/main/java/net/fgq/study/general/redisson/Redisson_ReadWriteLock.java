@@ -1,6 +1,6 @@
 package net.fgq.study.general.redisson;
 
-import net.fgq.study.general.multithread.A;
+
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.redisson.api.RReadWriteLock;

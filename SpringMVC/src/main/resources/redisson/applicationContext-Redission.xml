@@ -6,11 +6,11 @@
        http://redisson.org/schema/redisson
        http://redisson.org/schema/redisson/redisson-1.0.xsd">
 
-    <!--<redisson:redis id="redisson" host="10.0.2.120" port="6379" >-->
+    <!--<redisson:redis id="redisson" host="127.0.0.1" port="6379" >-->
     <!--</redisson:redis>-->
 
-    <redisson:client id="redissonClient" name="redissonClient" >
-        <redisson:single-server address="10.0.2.120:6379" database="3"></redisson:single-server>
+    <redisson:client id="redissonClient" name="redissonClient">
+        <redisson:single-server address="${redisson.address}" database="${redisson.dbid}"></redisson:single-server>
     </redisson:client>
 
 </beans>

@@ -107,7 +107,7 @@ public class RedisController {
         stopWatch.reset();
         stopWatch.start();
 
-        JedisPool pool = new JedisPool(new JedisPoolConfig(), "10.0.2.120");
+        JedisPool pool = new JedisPool(new JedisPoolConfig(), "127.0.0.1");
         Jedis jedis = pool.getResource();
         jedis.select(3);
         Map<byte[], byte[]> map2 = new JedisByteHashMap();

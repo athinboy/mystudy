@@ -165,7 +165,7 @@ public class PerformanceTest {
 
                 // 驱动程序名
                 String driver = "com.mysql.jdbc.Driver";
-                String uri = "jdbc:mysql://10.0.2.120:3306/test_db";
+                String uri = "jdbc:mysql://127.0.0.1:3306/test_db";
 
 
                 Properties p = new Properties();
@@ -244,7 +244,7 @@ public class PerformanceTest {
 
                 org.apache.commons.dbcp.BasicDataSource dataSource = new BasicDataSource();
                 dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-                dataSource.setUrl("jdbc:mysql://10.0.2.120:3306/test_db");
+                dataSource.setUrl("jdbc:mysql://127.0.0.1:3306/test_db");
                 dataSource.setUsername("root");
                 dataSource.setPassword("itstest$");
 

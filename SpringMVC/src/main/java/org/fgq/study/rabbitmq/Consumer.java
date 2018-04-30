@@ -9,7 +9,8 @@ import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.support.converter.JsonMessageConverter;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+//import org.springframework.amqp.support.converter.JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.converter.StringMessageConverter;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,8 @@ public class Consumer implements IConsume, MessageListener {
 
     private AmqpTemplate amqpTemplate;
 
-    private  static JsonMessageConverter jsonMessageConverter=new JsonMessageConverter();
+    //    private  static JsonMessageConverter jsonMessageConverter=new JsonMessageConverter();
+    private static Jackson2JsonMessageConverter JsonMessageConverter = new Jackson2JsonMessageConverter();
 
 
     public Consumer(AmqpTemplate amqpTemplate) {
@@ -39,7 +41,15 @@ public class Consumer implements IConsume, MessageListener {
 
     @Override
     public void onMessage(Message message) {
-        logger.error("receive:"+  jsonMessageConverter.fromMessage(message).toString());
+
+
+        logger.error("before receive:" + JsonMessageConverter.fromMessage(message).toString());
+        try {
+            Thread.sleep(10 * 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        logger.error("after receive:" + JsonMessageConverter.fromMessage(message).toString());
 
 
     }

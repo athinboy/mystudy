@@ -4,7 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.support.converter.JsonMessageConverter;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+//import org.springframework.amqp.support.converter.JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.messaging.converter.StringMessageConverter;
@@ -31,16 +32,17 @@ public class Producer implements IProduct {
         this.amqpTemplate = amqpTemplate;
     }
 
-    private static JsonMessageConverter jsonMessageConverter = new JsonMessageConverter();
+//    private static JsonMessageConverter jsonMessageConverter = new JsonMessageConverter();
+private  static Jackson2JsonMessageConverter JsonMessageConverter  =new Jackson2JsonMessageConverter();
 
     public void sendMessage(String message) {
         logger.error("to send message:{}", message);
 
         // amqpTemplate.convertAndSend("myexchange","key123",converter.toMessage(message,null));
-        amqpTemplate.convertAndSend("myexchange", "key123", jsonMessageConverter.toMessage(message, null));
+        amqpTemplate.convertAndSend("myexchange", "key123", JsonMessageConverter.toMessage(message, null));
 //        amqpTemplate.convertAndSend("myexchange", "key123", jsonMessageConverter.toMessage(new Date(), null));
 //
-//
+         logger.error("finish to send message:{}", message);
 //        ArrayList<String> ar=new ArrayList<String>();
 //        ar.add("234324");
 //        ar.add("fwer");

@@ -29,12 +29,9 @@ public class RabbitMQServiceImpl implements RabbitMQService {
     @Override
     @Transactional(rollbackFor =  Exception.class)
     public void SendMessage() {
-        logger.warn("rabbit send£ºhello world!");
+        logger.warn("rabbit send hello world!");
         this.product.sendMessage(String.valueOf( new Date().getTime()));
 
-        int i = 0;
-        if (2 + 3 == 5) {
-            int s = 2 / i;
-        }
+
     }
 }

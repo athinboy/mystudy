@@ -10,9 +10,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>Spring</artifactId>
+    <artifactId>spring</artifactId>
     <groupId>net.fgq.study</groupId>
     <version>1.0-SNAPSHOT</version>
+    <name>spring</name>
     <dependencies>
         <!-- spring核心包 -->
         <!-- springframe start -->

@@ -12,6 +12,7 @@
         <module>SpringMVC</module>
         <module>general</module>
         <module>sprintboot</module>
+        <module>mysqlfunnel</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -452,6 +453,13 @@
                 <artifactId>asm-util</artifactId>
                 <version>4.2</version>
             </dependency>
+            <dependency>
+                <groupId>com.alibaba.otter</groupId>
+                <artifactId>canal.client</artifactId>
+                <version>1.0.25</version>
+            </dependency>
+
+
 
         </dependencies>
     </dependencyManagement>

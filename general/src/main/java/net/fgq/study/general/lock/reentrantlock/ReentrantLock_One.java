@@ -9,11 +9,43 @@ public class ReentrantLock_One {
     // endregion
 
 
-    public static void main(String[] args) {
+    private  static  Runnable runnable=new Runnable() {
+        @Override
+        public void run() {
 
-        ReentrantLock reentrantLock = new ReentrantLock(true);
+            System.out.println(Thread.currentThread().getName()+"enter");
+            reentrantLock.lock();
+            System.out.println(Thread.currentThread().getName()+"lock");
 
-        Condition condition = reentrantLock.newCondition();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println(Thread.currentThread().getName()+"unlock");
+            reentrantLock.unlock();
+
+
+        }
+    };
+
+
+    private  static  ReentrantLock reentrantLock;
+
+    public static void main(String[] args) throws Exception {
+
+
+        reentrantLock=new ReentrantLock(true);
+        Thread t1=new Thread(runnable);
+        t1.setName("t1");
+        Thread t2=new Thread(runnable);
+        t2.setName("t2");
+        t1.start();
+
+        Thread.sleep(200);
+
+        t2.start();
+        Thread.sleep(1000);
 
 
     }

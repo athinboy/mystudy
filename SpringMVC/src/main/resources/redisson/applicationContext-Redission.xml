@@ -9,8 +9,10 @@
     <!--<redisson:redis id="redisson" host="127.0.0.1" port="6379" >-->
     <!--</redisson:redis>-->
 
-    <redisson:client id="redissonClient" name="redissonClient">
-        <redisson:single-server address="${redisson.address}" database="${redisson.dbid}"></redisson:single-server>
+    <redisson:client id="redissonClient" name="redissonClient" threads="1">
+        <redisson:single-server address="${redisson.address}" database="${redisson.dbid}"
+                                connection-minimum-idle-size="1" connection-pool-size="3"
+        ></redisson:single-server>
     </redisson:client>
 
 </beans>

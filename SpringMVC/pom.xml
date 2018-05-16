@@ -7,12 +7,18 @@
     <groupId>net.fgq.study</groupId>
     <artifactId>springmvc</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <packaging>war</packaging>
     <parent>
         <groupId>net.fgq.study</groupId>
         <artifactId>studyjava</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+
+    <properties>
+        <!--<maven.scope>provided </maven.scope>-->
+        <maven.scope>compile</maven.scope>
+    </properties>
+
     <dependencies>
         <!-- spring核心包 -->
         <!-- springframe start -->
@@ -159,6 +165,29 @@
 
         </dependency>
 
+        <!---feign 开始-->
+        <dependency>
+            <groupId>com.netflix.feign</groupId>
+            <artifactId>feign-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.netflix.feign</groupId>
+            <artifactId>feign-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.netflix.feign</groupId>
+            <artifactId>feign-gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.netflix.feign</groupId>
+            <artifactId>feign-httpclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.netflix.feign</groupId>
+            <artifactId>feign-slf4j</artifactId>
+        </dependency>
+        <!---feign 结束-->
+
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
@@ -171,11 +200,10 @@
 
         </dependency>
 
-        <!--<dependency>-->
-        <!--<groupId>javax.servlet</groupId>-->
-        <!--<artifactId>servlet-api</artifactId>-->
-        <!--<version>3.0</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
 
 
         <dependency>
@@ -269,7 +297,6 @@
 
 
     </build>
-
 
 
 </project>

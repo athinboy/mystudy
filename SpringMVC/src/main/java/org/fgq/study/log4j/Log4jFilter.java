@@ -1,8 +1,10 @@
 package org.fgq.study.log4j;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -54,11 +56,11 @@ public class Log4jFilter implements Filter {
         String eventsign;
 
         if (request.getHeader("eventsign") == null || request.getHeader("eventsign").length() == 0) {
-            eventsign = this.sign + String.valueOf(new Date().getTime()); //计算eventID
+            eventsign = this.sign + String.valueOf(new Date().getTime()); //璁＄畻eventID
 
             logger.error("set eventid:" + eventsign);
         } else {
-            eventsign = request.getHeader("eventsign");//从请求端获取eventsign
+            eventsign = request.getHeader("eventsign");//浠庤姹傜鑾峰彇eventsign
             logger.error("get eventid from request:" + eventsign);
 
         }

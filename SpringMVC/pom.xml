@@ -186,7 +186,22 @@
             <groupId>com.netflix.feign</groupId>
             <artifactId>feign-slf4j</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.netflix.feign</groupId>
+            <artifactId>feign-jaxrs</artifactId>
+        </dependency>
+
         <!---feign 结束-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>commons-lang</groupId>

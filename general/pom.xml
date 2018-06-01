@@ -25,6 +25,10 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.lmax/disruptor -->
         <dependency>

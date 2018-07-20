@@ -1,76 +1,47 @@
 package net.fgq.study.netty.one;
 
+import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.CharsetUtil;
+
+import java.net.InetSocketAddress;
 
 public class Server {
 
-    //region Getter And Setter
-    // endregion
 
-    public static void main(String[] args) {
+    private final int port;
 
-
-    }
-
-    public class EchoServerHandler extends ChannelInboundHandlerAdapter {
-        /**
-         * Calls {@link ChannelHandlerContext#fireChannelRead(Object)} to forward
-         * to the next {@link ChannelInboundHandler} in the {@link ChannelPipeline}.
-         * <p>
-         * Sub-classes may override this method to change behavior.
-         *
-         * @param ctx
-         * @param msg
-         */
-        @Override
-        public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-            ByteBuf inbuf = (ByteBuf) msg;
-            System.out.println("server received:" + inbuf.toString(CharsetUtil.UTF_8));
-            ctx.write(inbuf);
-        }
-
-        /**
-         * Calls {@link ChannelHandlerContext#fireChannelReadComplete()} to forward
-         * to the next {@link ChannelInboundHandler} in the {@link ChannelPipeline}.
-         * <p>
-         * Sub-classes may override this method to change behavior.
-         *
-         * @param ctx
-         */
-        @Override
-        public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-            ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
-        }
-
-        /**
-         * Calls {@link ChannelHandlerContext#fireExceptionCaught(Throwable)} to forward
-         * to the next {@link ChannelHandler} in the {@link ChannelPipeline}.
-         * <p>
-         * Sub-classes may override this method to change behavior.
-         *
-         * @param ctx
-         * @param cause
-         */
-        @Override
-        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-            ctx.close();
-        }
+    public Server(int port) {
+        this.port = port;
     }
 
 
     public void start() throws Exception {
-        int port = 8899;
+        final ServerHandler serverHandler = new ServerHandler();
         EventLoopGroup group = new NioEventLoopGroup();
+        try {
+            ServerBootstrap b = new ServerBootstrap();
+            b.group(group)
+                    .channel(NioServerSocketChannel.class)
+                    .localAddress(new InetSocketAddress(port))
+                    .childHandler(new ChannelInitializer<SocketChannel>() {
+                        @Override
+                        public void initChannel(SocketChannel ch) throws Exception {
+                            ch.pipeline().addLast(serverHandler);
+                        }
+                    });
 
-
+            ChannelFuture f = b.bind().sync();
+            System.out.println(Server.class.getName() +
+                    " started and listening for connections on " + f.channel().localAddress());
+            f.channel().closeFuture().sync();
+        } finally {
+            group.shutdownGracefully().sync();
+        }
     }
-
-
 }

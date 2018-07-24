@@ -13,6 +13,7 @@
         <module>general</module>
         <module>sprintboot</module>
         <module>mysqlfunnel</module>
+        <module>sparkstudy</module>
     </modules>
     <packaging>pom</packaging>
 

@@ -36,31 +36,31 @@ public class MysqlSource {
         SparkConf conf = new SparkConf().setAppName(MysqlSource.class.getName());
 
 
+
         SparkSession sparkSession = SparkSession.builder().appName(MysqlSource.class.getName()).config(conf)
                 .getOrCreate();
 
         DataFrameReader dataFrameReader = sparkSession.read().format("jdbc")
-                .option("url", "jdbc:mysql://10.10.14.215:6603/kingkoo_wms")
+                .option("url", "jdbc:mysql://127.0.0.1:3306/test")
                 .option("dbtable", "ba_area")
                 .option("driver", "com.mysql.jdbc.Driver")
-                .option("user", "kingkoo")
-                .option("password", "Kingkoo!!!123");
+                .option("user", "root")
+                .option("password", "123");
 
         if (null == dataFrameReader) {
-            throw new Exception("wefewf");
+            throw new Exception("初始化DataFrameReader失败");
         }
 
-        Dataset<Row> jdbcDF = dataFrameReader.load();
+        Dataset<Row> rowDataset = dataFrameReader.load();
+
+        System.out.println("load finish!!!!!!!!!!!!");
+
+        rowDataset.show();
+
+        rowDataset = sparkSession.sql("select * from ba_area ");
+        rowDataset.show();
 
 
-//        Properties connectionProperties = new Properties();
-//        connectionProperties.put("user", "username");
-//        connectionProperties.put("password", "password");
-//        Dataset<Row> jdbcDF2 = sparkSession.read()
-//                .jdbc("jdbc:mysql:10.10.14.215:6603/kingkoo_wms", "ba_area", connectionProperties);
-
-
-        jdbcDF.show();
 
     }
 

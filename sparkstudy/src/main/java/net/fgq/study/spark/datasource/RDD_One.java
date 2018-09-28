@@ -4,6 +4,7 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
+import org.apache.spark.launcher.SparkLauncher;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.util.LongAccumulator;
 
@@ -22,6 +23,10 @@ public class RDD_One {
     // endregion
 
     //spark-submit --class  net.fgq.study.spark.datasource.RDD_One  --master spark://192.168.169.110:7077 --jars  F:\fenggq\study\github\studyjava\sparkstudy\src\main\resources\mysqldrive\mysql-connector-java-5.0.8-bin.jar   F:\fenggq\study\github\studyjava\sparkstudy\target\sparkstudy-1.0-SNAPSHOT.jar
+
+
+
+    //./spark-submit --class  net.fgq.study.spark.datasource.RDD_One  --master spark://ubuntu:7077    /mnt/hgfs/sharedfolder/sparkstudy-1.0-SNAPSHOT.jar   --executor-memory 500M --total-executor-cores 1
     public static void main(String[] args) {
 
         SparkConf conf = new SparkConf().setAppName(MysqlSource.class.getName());
@@ -39,6 +44,7 @@ public class RDD_One {
         distData.foreach(x -> accum.add(x));
 
         System.out.println("fwefw");
+
         System.out.println(accum.value());
 
 

@@ -14,6 +14,8 @@
         <module>sprintboot</module>
         <module>mysqlfunnel</module>
         <module>sparkstudy</module>
+        <module>dubbo/dubboserverone</module>
+        <module>dubbo/dubboservertwo</module>
     </modules>
     <packaging>pom</packaging>
 

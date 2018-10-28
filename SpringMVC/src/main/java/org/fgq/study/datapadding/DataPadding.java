@@ -113,7 +113,7 @@ public class DataPadding {
         SerializeBeanInfo serializeBeanInfo = TypeUtils.buildBeanInfo(t.getClass(), null);
         JavaBeanInfo javaBeanInfo = JavaBeanInfo.build(t.getClass(), t.getClass());
 
-        DozerBeanMapper
+
 
         return null;
 

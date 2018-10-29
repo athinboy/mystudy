@@ -11,6 +11,9 @@ import org.fgq.study.datapadding.annotation.NeedPad;
 public class PaddingClient {
 
 
+    private  String index;
+
+
     @NeedPad(SourceClass = PaddingSource.class,
             SourceMethod = "getStatA", PadSort = 2)
     private String staticA;
@@ -20,7 +23,7 @@ public class PaddingClient {
     private String serviceA;
 
     @NeedPad(SourceClass = PaddingSourceService.class,
-            SourceMethod = "getServiceParaA", ParaFieldNames = {"staticA"})
+            SourceMethod = "getServiceParaA", ParaFieldNames = {"index"},NoCache = true)
     private String serviceParaA;
 
 
@@ -29,6 +32,14 @@ public class PaddingClient {
 
     //region Getter And Setter
 
+
+    public String getIndex() {
+        return index;
+    }
+
+    public void setIndex(String index) {
+        this.index = index;
+    }
 
     public String getServiceParaA() {
         return serviceParaA;

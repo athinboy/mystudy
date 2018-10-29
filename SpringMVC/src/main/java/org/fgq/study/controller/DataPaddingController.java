@@ -28,15 +28,20 @@ public class DataPaddingController {
     @RequestMapping("/test")
     public String HelloName() {
 
-        PaddingClient paddingClient=new PaddingClient();
+        PaddingClient paddingClient = new PaddingClient();
 
-        List<PaddingClient> paddingClientList=new ArrayList<PaddingClient>();
-        paddingClientList.add(paddingClient);
+        List<PaddingClient> paddingClientList = new ArrayList<PaddingClient>();
+
+        for (int i = 0; i < 10000; i++) {
+            paddingClient = new PaddingClient();
+            paddingClient.setIndex(String.valueOf(i/500));
+            paddingClientList.add(paddingClient);
+        }
 
 
         try {
 
-            DataPadding.PadInfo( PaddingClient.class, paddingClientList);
+            DataPadding.PadInfo(PaddingClient.class, paddingClientList);
 
             return JSON.toJSONString(paddingClientList);
 
@@ -47,9 +52,7 @@ public class DataPaddingController {
         return "";
 
 
-
     }
-
 
 
 }

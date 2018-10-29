@@ -1,11 +1,13 @@
 package org.fgq.study.datapadding.test;
 
+import org.springframework.stereotype.Component;
+
 /**
  * @author fenggqc
  * @create 2018-10-24 15:06
  **/
 
-
+@Component
 public class PaddingSource {
 
     //region Getter And Setter
@@ -16,7 +18,7 @@ public class PaddingSource {
 
 
     public static String  getStatA(){
-        return "staticA";
+        return "staticAValue";
     }
 
 

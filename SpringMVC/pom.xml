@@ -91,6 +91,14 @@
             <groupId>cglib</groupId>
             <artifactId>cglib-nodep</artifactId>
 
+
+
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
         </dependency>
 
 

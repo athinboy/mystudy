@@ -1,11 +1,14 @@
 package org.fgq.study.datapadding.test;
 
+import org.springframework.stereotype.Component;
+
 /**
  * @author fenggqc
  * @create 2018-10-24 17:38
  **/
 
 
+@Component
 public class PaddingSourceServiceImpl implements PaddingSourceService {
 
     //region Getter And Setter
@@ -14,11 +17,11 @@ public class PaddingSourceServiceImpl implements PaddingSourceService {
 
     @Override
     public String getServiceA() {
-        return "ServiceA";
+        return "ServiceAValue";
     }
 
     @Override
     public String getServiceParaA(String a) {
-        return "getServiceParaA:" + (a == null ? "" : a);
+        return "ServiceParaAValue:" + (a == null ? "" : a);
     }
 }

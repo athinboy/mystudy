@@ -6,6 +6,7 @@ import org.apache.commons.beanutils.PropertyUtilsBean;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.dozer.DozerBeanMapper;
 import org.dozer.util.ReflectionUtils;
+import sun.java2d.loops.ProcessPath;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
@@ -35,7 +36,7 @@ public class One {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InvocationTargetException, IllegalAccessException {
 
 
         A a = new A();
@@ -54,6 +55,15 @@ public class One {
 
         PropertyUtilsBean propertyUtilsBean = org.apache.commons.beanutils.BeanUtilsBean.getInstance().getPropertyUtils();
         PropertyDescriptor[] propertyDescriptors = propertyUtilsBean.getPropertyDescriptors(A.class);
+        PropertyDescriptor propertyDescriptor;
+        for (int i = 0; i < propertyDescriptors.length; i++) {
+            propertyDescriptor=propertyDescriptors[i];
+            System.out.println( propertyDescriptor.getName());
+            if(propertyDescriptor.getName().equals("name")){
+                propertyDescriptor.getReadMethod().invoke(a,null);
+            }
+        }
+
 //or
         PropertyDescriptor[] propertyDescriptors2 = ReflectionUtils.getPropertyDescriptors(A.class);
 

@@ -12,15 +12,15 @@ public class PaddingClient {
 
 
     @NeedPad(SourceClass = PaddingSource.class,
-            SourceMethod = "PaddingSource", PadSort = 2)
+            SourceMethod = "getStatA", PadSort = 2)
     private String staticA;
 
     @NeedPad(SourceClass = PaddingSourceService.class,
-            SourceMethod = "getServiceA", ParaField = {})
+            SourceMethod = "getServiceA", ParaFieldNames = {})
     private String serviceA;
 
     @NeedPad(SourceClass = PaddingSourceService.class,
-            SourceMethod = "getServiceParaA", ParaField = {"staticA"})
+            SourceMethod = "getServiceParaA", ParaFieldNames = {"staticA"})
     private String serviceParaA;
 
 
@@ -29,6 +29,14 @@ public class PaddingClient {
 
     //region Getter And Setter
 
+
+    public String getServiceParaA() {
+        return serviceParaA;
+    }
+
+    public void setServiceParaA(String serviceParaA) {
+        this.serviceParaA = serviceParaA;
+    }
 
     public String getServiceA() {
         return serviceA;

@@ -1,5 +1,6 @@
 package org.fgq.study.controller;
 
+import com.alibaba.fastjson.JSON;
 import org.fgq.study.datapadding.DataPadding;
 import org.fgq.study.datapadding.exception.DataPaddingException;
 import org.fgq.study.datapadding.test.PaddingClient;
@@ -34,7 +35,11 @@ public class DataPaddingController {
 
 
         try {
+
             DataPadding.PadInfo( PaddingClient.class, paddingClientList);
+
+            return JSON.toJSONString(paddingClientList);
+
         } catch (DataPaddingException e) {
             System.out.println(e.toString());
         }

@@ -1,5 +1,8 @@
 package org.fgq.study.datapadding.test;
 
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
 /**
  * @author fenggqc
  * @create 2018-10-24 17:37

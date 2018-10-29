@@ -3,17 +3,20 @@ package org.fgq.study.datapadding;
 import com.alibaba.fastjson.JSON;
 
 
-import com.alibaba.fastjson.util.JavaBeanInfo;
+import com.google.common.collect.Ordering;
+import org.apache.commons.beanutils.PropertyUtilsBean;
+import org.apache.commons.collections.CollectionUtils;
 import org.fgq.study.datapadding.annotation.NeedPad;
 import org.fgq.study.datapadding.exception.DataPaddingException;
-import org.fgq.study.datapadding.fastjson.SerializeBeanInfo;
-import org.fgq.study.datapadding.fastjson.TypeUtils;
+import org.fgq.study.datapadding.wrap.ClassWrap;
+import org.fgq.study.datapadding.wrap.FieldWrap;
+import org.fgq.study.datapadding.wrap.MethodWrap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.*;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 
 
 /**
@@ -26,6 +29,10 @@ public class DataPadding {
 
 
     static Logger logger = LoggerFactory.getLogger(DataPadding.class);
+
+
+    static PropertyUtilsBean propertyUtilsBean = org.apache.commons.beanutils.BeanUtilsBean.getInstance().getPropertyUtils();
+
 
     //region Getter And Setter
     // endregion
@@ -41,42 +48,27 @@ public class DataPadding {
 
         try {
 
-
             if (collection == null || collection.size() == 0) return;
 
-            System.out.println(tClass.toString());
+            ClassWrap classWrap = ClassWrap.WrapClass(tClass);
 
             final Field[] fields = tClass.getDeclaredFields();
 
-
-            Iterator<T> iterable = collection.iterator();
-
+            Iterator<T> iterable;
             T t;
-            while (iterable.hasNext()) {
-                t = iterable.next();
+            Method method;
+            NeedPad needPad = null;
+            for (FieldWrap fieldWrap : classWrap.getFieldWraps()) {
 
+                needPad = fieldWrap.getNeedPad();
+                iterable = collection.iterator();
 
-                NeedPad needPad = null;
-                for (Field field : fields) {
-                    needPad = field.getAnnotation(NeedPad.class);
-                    if (needPad == null) {
-                        continue;
-                    }
-
-                    Object object = InitBean.getSpringBeanFactory().getBean(needPad.SourceClass());
-                    if (object == null) {
-                        throw new DataPaddingException(String.format("获取对象%s失败", needPad.getClass().toString()));
-                    }
-                    Method[] methods = needPad.SourceClass().getMethods();
-                    Method method;
-                    for (int i = 0; i < methods.length; i++) {
-                        method = methods[i];
-                        Object[] paras = getMethodPara(t, needPad, method, fields);
-                        if (method.getName().equals(needPad.SourceMethod())) {
-                            method.invoke(null, new Object[]{});
-                        }
-                    }
-
+                while (iterable.hasNext()) {
+                    t = iterable.next();
+                    method = fieldWrap.getSourceMethod();
+                    Object[] paras = getMethodPara(fieldWrap.getSourceMethodWrap(), t);
+                    Object readvalue = method.invoke(fieldWrap.getSourceObject(), paras);
+                    fieldWrap.getFieldWriteMethod().invoke(t, readvalue);
                 }
             }
 
@@ -95,29 +87,33 @@ public class DataPadding {
      *
      * @return
      */
-    private static <T> Object[] getMethodPara(T t, NeedPad needPad, Method method, Field[] fields) {
-        if (needPad.ParaField() == null || needPad.ParaField().length == 0) {
+    private static <T> Object[] getMethodPara(MethodWrap methodWrap, T t) throws DataPaddingException {
+        if (methodWrap.getParaMethods().length == 0) {
             return new Object[]{};
         }
-        Parameter[] parameters = method.getParameters();
-        Parameter parameter;
-        for (int i = 0; i < parameters.length; i++) {
-            parameter = parameters[i];
+
+        Object[] para = new Object[methodWrap.getParaMethods().length];
+
+        try {
+
+            Method method;
+            for (int i = 0; i < methodWrap.getParaMethods().length; i++) {
+                method = methodWrap.getParaMethods()[i];
+                para[i] = method.invoke(t, null);
+
+            }
+
+//        SerializeBeanInfo serializeBeanInfo = TypeUtils.buildBeanInfo(t.getClass(), null);
+//        JavaBeanInfo javaBeanInfo = JavaBeanInfo.build(t.getClass(), t.getClass());
+
+
+        } catch (Exception e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(e.toString());
+            }
+            throw new DataPaddingException("出现异常！", e);
+
         }
-        Field field;
-        for (int i = 0; i < fields.length; i++) {
-            field = fields[i];
-            JSON.parseArray("", t.getClass());
-        }
-
-        SerializeBeanInfo serializeBeanInfo = TypeUtils.buildBeanInfo(t.getClass(), null);
-        JavaBeanInfo javaBeanInfo = JavaBeanInfo.build(t.getClass(), t.getClass());
-
-
-
-        return null;
-
+        return para;
     }
-
-
 }

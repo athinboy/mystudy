@@ -14,9 +14,7 @@ public class PaddingClient {
     private  String index;
 
 
-    @NeedPad(SourceClass = PaddingSource.class,
-            SourceMethod = "getStatA", PadSort = 2)
-    private String staticA;
+
 
     @NeedPad(SourceClass = PaddingSourceService.class,
             SourceMethod = "getServiceA", ParaFieldNames = {})
@@ -26,7 +24,14 @@ public class PaddingClient {
             SourceMethod = "getServiceParaA", ParaFieldNames = {"index"},NoCache = true)
     private String serviceParaA;
 
+    @NeedPad(SourceClass = PaddingSourceService.class,
+            SourceMethod = "getServiceParaA", ParaFieldNames = {"staticA"},NoCache = true)
+    private String serviceParaB;
 
+
+    @NeedPad(SourceClass = PaddingSource.class,
+            SourceMethod = "getStatA", PadSort = 2)
+    private String staticA;
 
 
     private String otherfield;
@@ -35,7 +40,13 @@ public class PaddingClient {
     //region Getter And Setter
 
 
+    public String getServiceParaB() {
+        return serviceParaB;
+    }
 
+    public void setServiceParaB(String serviceParaB) {
+        this.serviceParaB = serviceParaB;
+    }
 
     public String getIndex() {
         return index;

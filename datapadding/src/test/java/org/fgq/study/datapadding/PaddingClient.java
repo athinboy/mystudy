@@ -1,4 +1,4 @@
-package org.fgq.study.datapadding.test;
+package org.fgq.study.datapadding;
 
 import org.fgq.study.datapadding.annotation.NeedPad;
 
@@ -27,10 +27,14 @@ public class PaddingClient {
     private String serviceParaA;
 
 
+
+
     private String otherfield;
 
 
     //region Getter And Setter
+
+
 
 
     public String getIndex() {

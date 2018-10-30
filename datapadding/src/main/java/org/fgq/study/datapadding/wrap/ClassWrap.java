@@ -105,15 +105,16 @@ public final class ClassWrap {
             methodWrap = new MethodWrap(method);
 
 
-            fieldWrap = new FieldWrap();
+            fieldWrap = new FieldWrap(needPad, method);
             fieldWrap.setField(field);
-            fieldWrap.setNeedPad(needPad);
-            fieldWrap.setSourceMethod(method);
             fieldWrap.setSourceObject(sourceobject);
             fieldWrap.setFieldWriteMethod(propertyDescriptor.getWriteMethod());
+            if (needPad.enableParaFieldInfer() && needPad.ParaFieldNames().length == 0 && method.getParameters().length > 0) {
+                fieldWrap.inferParaField(fields);
+            }
 
             fieldWrap.setSourceMethodWrap(methodWrap);
-            methodWrap.setParaMethods(getParaMethod(needPad, method, destClass));
+            methodWrap.setParaMethods(getParaMethod(fieldWrap, destClass));
             fieldWraplist.add(fieldWrap);
         }
 
@@ -132,30 +133,34 @@ public final class ClassWrap {
 
     }
 
-    private static Method[] getParaMethod(NeedPad needPad, Method sourceMethod, Class destClass) throws Exception {
+    private static Method[] getParaMethod(FieldWrap fieldWrap, Class destClass) throws Exception {
 
-        if (needPad.ParaFieldNames().length != sourceMethod.getParameters().length) {
+
+        NeedPad needPad=fieldWrap.getNeedPad();
+        Method sourceMethod=fieldWrap.getSourceMethod();
+
+        if (fieldWrap.getParameterFields().length != sourceMethod.getParameters().length) {
             throw new WrongAnnotationException("方法参数数量不一致！" + sourceMethod.getName());
         }
 
-        if (needPad.ParaFieldNames() == null || needPad.ParaFieldNames().length == 0) {
+        if (fieldWrap.getParameterFields() == null ||fieldWrap.getParameterFields().length == 0) {
             return new Method[]{};
         }
 
         List<Method> paraMethodlist = new ArrayList<>();
 
-        Object[] para = new Object[needPad.ParaFieldNames().length];
+        Object[] para = new Object[fieldWrap.getParameterFields().length];
 
 
         PropertyDescriptor[] propertyDescriptors = propertyUtilsBean.getPropertyDescriptors(destClass);
         PropertyDescriptor propertyDescriptor;
         Method method;
         boolean finded = false;
-        for (int i = 0; i < needPad.ParaFieldNames().length; i++) {
+        for (int i = 0; i < fieldWrap.getParameterFields().length; i++) {
             finded = false;
             for (int j = 0; j < propertyDescriptors.length; j++) {
                 propertyDescriptor = propertyDescriptors[j];
-                if (propertyDescriptor.getName().equals(needPad.ParaFieldNames()[i])) {
+                if (propertyDescriptor.getName().equals(fieldWrap.getParameterFields()[i])) {
                     method = propertyDescriptor.getReadMethod();
                     if (method.getParameters().length > 0) {
                         throw new WrongAnnotationException("错误的取值方法");
@@ -169,7 +174,7 @@ public final class ClassWrap {
                 }
             }
             if (false == finded) {
-                throw new WrongAnnotationException("未找到配置的方法参数字段"+needPad.ParaFieldNames()[i]);
+                throw new WrongAnnotationException("未找到配置的方法参数字段" +fieldWrap.getParameterFields()[i]);
             }
 
         }

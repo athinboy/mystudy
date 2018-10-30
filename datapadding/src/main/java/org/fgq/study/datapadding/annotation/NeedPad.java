@@ -30,11 +30,21 @@ public @interface NeedPad {
     String SourceMethod();
 
     /**
+     * ParaFieldNames为空时，允许自动推断ParaFieldNames。
+     *
+     * 暂时无法支持设置为true ，默认情况下拿到的参数名是argN
+     *
+     * @return
+     */
+    boolean enableParaFieldInfer() default false;
+
+    /**
      * SourceMethod 方法的参数对应的字段名称。
      *
      * @return
      */
     String[] ParaFieldNames() default {};
+
 
     /**
      * 参数一样的情况下，也要每次都调用获取方法。

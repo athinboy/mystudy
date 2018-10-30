@@ -1,4 +1,4 @@
-package org.fgq.study.datapadding.test;
+package org.fgq.study.datapadding;
 
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;

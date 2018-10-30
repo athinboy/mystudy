@@ -6,7 +6,6 @@ import org.fgq.study.datapadding.DataPadding;
 import org.fgq.study.datapadding.exception.DataPaddingException;
 import org.fgq.study.datapadding.test.PaddingClient;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -29,26 +28,7 @@ public class DataPaddingController {
     @RequestMapping("/test")
     public String HelloName() {
 
-        PaddingClient paddingClient = new PaddingClient();
 
-        List<PaddingClient> paddingClientList = new ArrayList<PaddingClient>();
-
-        for (int i = 0; i < 10000; i++) {
-            paddingClient = new PaddingClient();
-            paddingClient.setIndex(String.valueOf(i/500));
-            paddingClientList.add(paddingClient);
-        }
-
-
-        try {
-
-            DataPadding.PadInfo(PaddingClient.class, paddingClientList);
-
-            return JSON.toJSONString(paddingClientList);
-
-        } catch (DataPaddingException e) {
-            System.out.println(e.toString());
-        }
 
         return "";
 

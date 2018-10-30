@@ -1,9 +1,11 @@
 package org.fgq.study.datapadding.wrap;
 
 import org.fgq.study.datapadding.annotation.NeedPad;
+import org.fgq.study.datapadding.exception.WrongAnnotationException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 
 /**
  * @author fenggqc
@@ -20,15 +22,31 @@ public final class FieldWrap {
     private Method sourceMethod;
     private MethodWrap sourceMethodWrap;
     private Object sourceObject;
+    private String[] parameterFields;
 
 
-    protected FieldWrap() {
+    /**
+     * @param needPad
+     * @param sourceMethod
+     */
+    protected FieldWrap(NeedPad needPad, Method sourceMethod) {
+        this.setNeedPad(needPad);
+        this.setSourceMethod(sourceMethod);
+        parameterFields=needPad.ParaFieldNames();
 
     }
 
 
     //region Getter And Setter
 
+
+    public String[] getParameterFields() {
+        return parameterFields;
+    }
+
+    public void setParameterFields(String[] parameterFields) {
+        this.parameterFields = parameterFields;
+    }
 
     public MethodWrap getSourceMethodWrap() {
         return sourceMethodWrap;
@@ -76,6 +94,43 @@ public final class FieldWrap {
 
     public void setNeedPad(NeedPad needPad) {
         this.needPad = needPad;
+    }
+
+    /**
+     * 参数字段名称推断。
+     * 推断规则：
+     * 1、不考虑大小写区别。
+     * 2、去掉下划线（_）。
+     *
+     * @param fields
+     */
+    public void inferParaField(Field[] fields) throws WrongAnnotationException {
+        Parameter[] parameters = this.getSourceMethod().getParameters();
+        String[] parafields = new String[parameters.length];
+        Parameter parameter;
+        String fieldname = null;
+        String parameterName;
+        for (int i = 0; i < parafields.length; i++) {
+            parameter = parameters[i];
+            for (int j = 0; j < fields.length; j++) {
+                fieldname = fields[j].getName().toLowerCase().replaceAll("_", "");
+                parameterName = parameter.getName().toLowerCase().replaceAll("_", "");
+
+                if (fieldname.equals(parameterName)) {
+                    fieldname = fields[j].getName();
+                    break;
+                }
+
+                fieldname = null;
+            }
+            if (fieldname == null) {
+                throw new WrongAnnotationException("无法推断方法:" + this.getSourceMethod().getName() + "的参数：" + parameter.getName());
+            }
+            parafields[i] = fieldname;
+
+        }
+        this.parameterFields=parafields;
+
     }
 
 

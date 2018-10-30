@@ -3,7 +3,7 @@ package org.fgq.study.datapadding.wrap;
 import com.google.common.collect.Collections2;
 import org.apache.commons.beanutils.PropertyUtilsBean;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.ibatis.javassist.ClassMap;
+
 import org.fgq.study.datapadding.InitBean;
 import org.fgq.study.datapadding.annotation.NeedPad;
 import org.fgq.study.datapadding.exception.DataPaddingException;

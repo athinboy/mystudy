@@ -250,6 +250,12 @@
 
         </dependency>
 
+        <dependency>
+            <groupId>net.fgq.study</groupId>
+            <artifactId>datapadding</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
         <!-- LOG BEGIN -->
         <dependency>
             <groupId>org.slf4j</groupId>

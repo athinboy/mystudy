@@ -16,6 +16,7 @@
         <module>sparkstudy</module>
         <module>dubbo/dubboserverone</module>
         <module>dubbo/dubboservertwo</module>
+        <module>datapadding</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -39,11 +40,7 @@
             </dependency>
 
             <!--spring begin-->
-            <dependency>
-                <groupId>net.sf.dozer</groupId>
-                <artifactId>dozer</artifactId>
-                <version>5.5.1</version>
-            </dependency>
+
 
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -427,6 +424,10 @@
                 <artifactId>dozer</artifactId>
                 <version>5.5.1</version>
             </dependency>
+
+
+
+
             <dependency>
                 <groupId>net.sf.dozer</groupId>
                 <artifactId>dozer-spring</artifactId>

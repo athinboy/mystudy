@@ -11,7 +11,7 @@
         <module>mybatis</module>
         <module>SpringMVC</module>
         <module>general</module>
-        <module>sprintboot</module>
+        <module>springboot</module>
         <module>mysqlfunnel</module>
         <module>sparkstudy</module>
         <module>dubbo/dubboserverone</module>

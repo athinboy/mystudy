@@ -1,4 +1,4 @@
-package org.fgq.study.dubbo.one.service;
+package org.fgq.study.dubbo.service;
 
 /**
  * @author fenggqc

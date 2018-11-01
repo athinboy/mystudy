@@ -20,6 +20,14 @@
     </properties>
 
     <dependencies>
+
+
+        <dependency>
+            <groupId>net.fgq.study</groupId>
+            <artifactId>dubbosdk</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
         <dependency>
             <groupId>net.sf.dozer</groupId>
             <artifactId>dozer</artifactId>

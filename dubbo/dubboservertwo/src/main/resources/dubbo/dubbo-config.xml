@@ -5,19 +5,18 @@
        http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
 
     <!-- provider's application name, used for tracing dependency relationship -->
-    <dubbo:application name="fgq-dubbo-provider">
+    <dubbo:application name="fgq-dubbo-consumer">
         <dubbo:parameter key="qos.enable" value="false"/>
+        <!--<dubbo:parameter key="qos.accept.foreign.ip" value="false"/>-->
+        <!--<dubbo:parameter key="qos.port" value="33333"/>-->
     </dubbo:application>
 
     <!-- use redis registry center to export service -->
     <dubbo:registry protocol="redis" address="127.0.0.1:6379" />
 
-    <!-- use dubbo protocol to export service on port 20880 -->
-    <dubbo:protocol name="dubbo" port="20880"/>
-    <!-- service implementation, as same as regular local bean -->
-    <bean id="studentService" class="org.fgq.study.dubbo.service.StudentServiceImpl"/>
-    <!-- declare the service interface to be exported -->
-    <dubbo:service interface="org.fgq.study.dubbo.service.StudentService" ref="studentService"/>
+    <dubbo:reference id="studentService" check="false" interface="org.fgq.study.dubbo.service.StudentService"/>
+
+
 
 
 </beans>

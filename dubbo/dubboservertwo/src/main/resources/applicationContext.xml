@@ -16,7 +16,7 @@
     <!--<import resource="classpath*:/rabbitmq/applicationContext-RabbitMQ.xml"></import>-->
     <!--<import resource="classpath*:/redisson/applicationContext-Redission.xml"></import>-->
 
-    <import resource="classpath*:/dubbo/dubbo-config.xml"></import>
+    <import resource="classpath*:/dubbo/dubbo-consumer-config.xml"></import>
 
     <!-- aop动态代理 -->
     <aop:aspectj-autoproxy proxy-target-class="true"/>

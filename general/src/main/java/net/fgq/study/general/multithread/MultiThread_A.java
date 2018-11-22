@@ -1,5 +1,7 @@
 package net.fgq.study.general.multithread;
 
+import sun.misc.Unsafe;
+
 import javax.sound.midi.Soundbank;
 import java.util.List;
 import java.util.concurrent.*;
@@ -27,22 +29,41 @@ public class MultiThread_A {
     };
 
 
-
     public static void main(String[] args) throws Exception {
 
-        ExecutorService executor = Executors.newFixedThreadPool(2);
-        List<Future<Long>> results = executor.invokeAll(java.util.Arrays.asList(
+        ExecutorService FixedExecutor = Executors.newFixedThreadPool(2);
+        List<Future<Long>> results = FixedExecutor.invokeAll(java.util.Arrays.asList(
                 new Sum(0, 10), new Sum(100, 1_000), new Sum(10_000, 1_000_000)
         ));
-        executor.shutdown();
+        FixedExecutor.shutdown();
 
         for (Future<Long> result : results) {
             System.out.println(result.get());
         }
 //        Thread.currentThread().join();
 
-        executor.awaitTermination(3, TimeUnit.SECONDS);
+        FixedExecutor.awaitTermination(3, TimeUnit.SECONDS);
 
+
+        ExecutorService singleExecutor = Executors.newSingleThreadExecutor();
+        results = singleExecutor.invokeAll(java.util.Arrays.asList(
+                new Sum(0, 10), new Sum(100, 1_000), new Sum(10_000, 1_000_000)
+        ));
+        singleExecutor.shutdown();
+        for (Future<Long> result : results) {
+            System.out.println(result.get());
+        }
+
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(2);
+        scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("what is the funk!");
+            }
+        }, 1000L, 1000L, TimeUnit.MILLISECONDS);
+
+        Thread.sleep(10*1000L);
+        scheduledExecutorService.shutdown();
 
 
     }
@@ -58,7 +79,9 @@ public class MultiThread_A {
         }
 
         @Override
-        public Long call() {
+        public Long call() throws InterruptedException {
+
+            Thread.sleep(1000L);
             long acc = 0;
             for (long i = from; i <= to; i++) {
                 acc = acc + i;

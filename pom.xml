@@ -17,6 +17,7 @@
         <module>dubbo/dubboserverone</module>
         <module>dubbo/dubboservertwo</module>
         <module>datapadding</module>
+        <module>flinkstudy</module>
     </modules>
     <packaging>pom</packaging>
 

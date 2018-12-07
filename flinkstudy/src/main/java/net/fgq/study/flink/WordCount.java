@@ -3,6 +3,7 @@ package net.fgq.study.flink;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
 
+import org.apache.flink.api.java.io.jdbc.JDBCInputFormat;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -35,6 +36,7 @@ public class WordCount {
 
         // get the execution environment
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+
 
         // get input data by connecting to the socket
         DataStream<String> text = env.socketTextStream("localhost", port, "\n");
@@ -70,7 +72,8 @@ public class WordCount {
         public String word;
         public long count;
 
-        public WordWithCount() {}
+        public WordWithCount() {
+        }
 
         public WordWithCount(String word, long count) {
             this.word = word;

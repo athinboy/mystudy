@@ -18,6 +18,8 @@
         <module>dubbo/dubboservertwo</module>
         <module>datapadding</module>
         <module>flinkstudy</module>
+        <module>MybatisPlusSpringMVC</module>
+        <module>mybatismapper</module>
     </modules>
     <packaging>pom</packaging>
 

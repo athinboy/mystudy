@@ -16,6 +16,7 @@
     <!--<import resource="classpath*:/rabbitmq/applicationContext-RabbitMQ.xml"></import>-->
     <!--<import resource="classpath*:/redisson/applicationContext-Redission.xml"></import>-->
 
+
     <!-- aop动态代理 -->
     <aop:aspectj-autoproxy proxy-target-class="true"/>
 
@@ -31,7 +32,7 @@
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <!--<value>classpath*:mybatis/jdbc.properties</value>-->
+                <value>classpath*:mybatis/jdbc.properties</value>
                 <!--<value>classpath*:cache/radis.properties</value>-->
                 <!--<value>classpath*:applicationConfig.properties</value>-->
                 <!--<value> classpath*:rabbitmq/rabbitmq.properties</value>-->
@@ -42,7 +43,40 @@
     </bean>
 
 
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="initialSize" value="${dbcp.initialSize}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="minEvictableIdleTimeMillis" value="${dbcp.minEvictableIdleTimeMillis}"/>
+        <property name="validationQuery" value="${dbcp.validationQuery}"/>
+        <property name="testWhileIdle" value="${dbcp.testWhileIdle}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${dbcp.timeBetweenEvictionRunsMillis}"/>
+        <property name="numTestsPerEvictionRun" value="${dbcp.numTestsPerEvictionRun}"/>
+        <property name="testOnReturn" value="${dbcp.testOnReturn}"/>
+        <property name="maxActive" value="${dbcp.maxActive}"/>
+        <property name="logAbandoned" value="${dbcp.logAbandoned}"/>
+        <property name="removeAbandoned" value="${dbcp.removeAbandoned}"/>
+        <property name="removeAbandonedTimeout" value="${dbcp.removeAbandonedTimeout}"/>
+    </bean>
 
+
+    <!--开始mybatis plus 配置-->
+
+    <bean id="sqlSessionFactory" class="com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="mybatis/mybatis-config.xml"></property>
+        <property name="mapperLocations" value="mapperxml/**/*.xml"></property>
+    </bean>
+
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="org.fgq.study.mbgmapper.mapper"/>
+    </bean>
+
+
+    <!--结束mybatis plus 配置-->
 
      <!--transaction support-->
      <!--PlatformTransactionMnager -->

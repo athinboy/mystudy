@@ -47,6 +47,15 @@ public class ReentrantLock_One {
         t2.start();
         Thread.sleep(1000);
 
+        /*
+t1enter
+t1lock
+t2enter
+t1unlock
+t2lock
+t2unlock
+         */
+
 
     }
 

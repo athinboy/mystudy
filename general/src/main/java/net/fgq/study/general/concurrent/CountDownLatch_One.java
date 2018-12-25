@@ -36,7 +36,7 @@ public class CountDownLatch_One extends Thread {
 
     private static CountDownLatch batchstart_CountDownLatch;
 
-    private static boolean running = true;
+
 
 
     public CountDownLatch_One(Integer i) {
@@ -73,7 +73,7 @@ public class CountDownLatch_One extends Thread {
             System.out.println("完成");
 
             batchstart_CountDownLatch.countDown();
-            running = false;
+
 
         } catch (Exception e) {
             e.printStackTrace();

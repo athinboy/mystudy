@@ -24,6 +24,9 @@
             <rabbit:binding queue="queue2" key="key123"></rabbit:binding>
         </rabbit:bindings>
     </rabbit:direct-exchange>
+    <rabbit:direct-exchange name="deadletterexchange" delayed="true">
+
+    </rabbit:direct-exchange>
 
     <rabbit:listener-container acknowledge="auto" auto-startup="true" connection-factory="connectionFactory"
                                transaction-manager="rabbitProducerTxManager">

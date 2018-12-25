@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>多线程</title>
+</head>
+<style type="text/css">
+    .item h6{
+        color: blue;
+
+    }
+
+</style>
+<body>
+
+
+
+<div class="item">
+    <h6>绿色线程</h6>
+    <div>
+        <p style="color:rgb(51,51,51);font-family:Arial;font-size:14px;"><span
+                style="font-family:'Comic Sans MS';"><span
+                style="color:rgb(204,0,0);">所谓绿色线程更多的是一个逻辑层面的概念，依赖于虚拟机来实现</span>。操作系统对于虚拟机内部如何进行线程的切换并不清楚，从虚拟机外部来看，或者说站在操作系统的角度看，这些都是不可见的。可以把虚拟机看作一个应用程序，程序的代码本身来建立和维护针对不同线程的堆栈，指令计数器和统计信息等等。这个时候的线程仅仅存在于用户级别的应用程序中，不需要进行系统级的调用，也不依赖于操作系统为线程提供的具体功能。<span
+                style="color:rgb(204,0,0);">绿色线程主要是为了移植方便，但是会增加虚拟机的复杂度</span>。总的来说，它把线程的实现对操作系统屏蔽，处在用户级别的实现这个层次上。绿色线程模型的一个特点就是多CPU也只能在某一时刻仅有一个线程运行。<br><span
+                style="color:rgb(204,0,0);">本机线程简单地说就是和操作系统的线程对应，操作系统完全了解虚拟机内部的线程</span>。对于windows操作系统，一个java虚拟机的线程对应一个本地线程，java线程调度依赖于操作系统线程。对于solaris，复杂一些，因为后者本身提供了用户级和系统级两个层次的线程库。依赖于操作系统增加了对于平台的依赖性，<span
+                style="color:rgb(204,0,0);">但是虚拟机实现相对简单些，而且可以充分利用多CPU实现多线程同时处理。</span></span></p>
+    </div>
+</div>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>lvs为何不能完全替代DNS轮询 https://mp.weixin.qq.com/s/4dzqbh2wfzbQzgFodP2_6Q</title>
+</head>
+<body>
+
+<div class="rich_media_area_primary_inner">
+
+
+    <div id="img-content">
+
+
+        <h2 class="rich_media_title" id="activity-name">
+
+
+            lvs为何不能完全替代DNS轮询
+
+        </h2>
+        <div id="meta_content" class="rich_media_meta_list">
+            <span id="copyright_logo" class="rich_media_meta rich_media_meta_text meta_tag_text">原创：</span>
+            <span class="rich_media_meta rich_media_meta_text">
+                                                58沈剑
+                                            </span>
+
+            <span class="rich_media_meta rich_media_meta_nickname" id="profileBt">
+                      <a href="javascript:void(0);" id="js_name">
+                        架构师之路                      </a>
+                      <div id="js_profile_qrcode" class="profile_container" style="display:none;">
+                          <div class="profile_inner">
+                              <strong class="profile_nickname">架构师之路</strong>
+
+
+                              <p class="profile_meta">
+                              <label class="profile_meta_label">微信号</label>
+                              <span class="profile_meta_value">road5858</span>
+                              </p>
+
+                              <p class="profile_meta">
+                              <label class="profile_meta_label">功能介绍</label>
+                              <span class="profile_meta_value">架构师之路，坚持撰写接地气的架构文章</span>
+                              </p>
+
+                          </div>
+                          <span class="profile_arrow_wrp" id="js_profile_arrow_wrp">
+                              <i class="profile_arrow arrow_out"></i>
+                              <i class="profile_arrow arrow_in"></i>
+                          </span>
+                      </div>
+                    </span>
+
+
+            <em id="publish_time" class="rich_media_meta rich_media_meta_text">2016-09-18</em>
+
+
+        </div>
+
+
+        <div class="rich_media_content " id="js_content">
+
+
+            <p><span style="font-family: 宋体; font-size: 14px;">上一篇文章“<a
+                    href="http://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&amp;mid=2651959585&amp;idx=1&amp;sn=0a9222cbfeb62a662edffafb7f0b43ae&amp;scene=21#wechat_redirect"
+                    target="_blank"
+                    data_ue_src="http://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&amp;mid=2651959585&amp;idx=1&amp;sn=0a9222cbfeb62a662edffafb7f0b43ae&amp;scene=21#wechat_redirect">一分钟了解负载均衡的一切</a>”引起了不少同学的关注，评论中大家争论的比较多的一个技术点是<strong>接入层负载均衡技术</strong>，部分同学持这样的观点：</span>
+            </p>
+            <p><span style="font-size: 14px;">1<span style="font-size: 14px; font-family: 宋体;">）</span>nginx<span
+                    style="font-size: 14px; font-family: 宋体;">前端加入</span>lvs<span
+                    style="font-size: 14px; font-family: 宋体;">和</span>keepalived<span
+                    style="font-size: 14px; font-family: 宋体;">可以替代“</span>DNS<span
+                    style="font-size: 14px; font-family: 宋体;">轮询”</span></span></p>
+            <p><span style="font-size: 14px;">2<span style="font-size: 14px; font-family: 宋体;">）</span>F5<span
+                    style="font-size: 14px; font-family: 宋体;">能搞定接入层高可用、扩展性、负载均衡，可以替代“</span>DNS<span
+                    style="font-size: 14px; font-family: 宋体;">轮询”</span></span></p>
+            <p><span style="font-size: 14px;"><span style="font-size: 14px; font-family: 宋体;">“</span>DNS<span
+                    style="font-size: 14px; font-family: 宋体;">轮询”究竟是不是过时的技术，是不是可以被其他方案替代，<span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);">接入层架构技术演进，是本文将要细致讨论的内容。</span></span></span>
+            </p>
+            <p><span style="font-size: 14px;">&nbsp;</span></p>
+            <p><span style="font-size: 14px;"><strong><span
+                    style="font-size: 16px; font-family: 宋体;">一、问题域</span></strong></span></p>
+            <p><span style="font-size: 14px;">nginx<span style="font-size: 14px; font-family: 宋体;">、</span>lvs<span
+                    style="font-size: 14px; font-family: 宋体;">、</span>keepalived<span
+                    style="font-size: 14px; font-family: 宋体;">、</span>f5<span style="font-size: 14px; font-family: 宋体;">、</span>DNS<span
+                    style="font-size: 14px; font-family: 宋体;">轮询，每每提到这些技术，往往讨论的是接入层的这样几个问题：</span></span></p>
+            <p><span style="font-size: 14px;">1<span style="font-size: 14px; font-family: 宋体;">）<span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);"><strong>可用性</strong></span>：任何一台机器挂了，服务受不受影响</span></span>
+            </p>
+            <p><span style="font-size: 14px;">2<span style="font-size: 14px; font-family: 宋体;">）<strong><span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);">扩展性</span></strong>：能否通过增加机器，扩充系统的性能</span></span>
+            </p>
+            <p><span style="font-size: 14px;">3<span style="font-size: 14px; font-family: 宋体;">）</span><span
+                    style="font-size: 14px; color: rgb(255, 76, 0);"><strong><span
+                    style="font-size: 14px; font-family: 宋体;">反向代理</span>+<span
+                    style="font-size: 14px; font-family: 宋体;">负载均衡</span></strong></span><span
+                    style="font-size: 14px; font-family: 宋体;">：请求是否均匀分摊到后端的操作单元执行</span></span></p>
+            <p><span style="font-size: 14px;">&nbsp;</span></p>
+            <p><span style="font-size: 14px;"><strong><span
+                    style="font-size: 16px; font-family: 宋体;">二、上面那些名词都是干嘛的</span></strong></span></p>
+            <p><span style="font-size: 14px;"><span style="font-size: 14px; font-family: 宋体;">由于每个技术人的背景和知识域不同，上面那些名词缩写（运维的同学再熟悉不过了），还是花</span>1<span
+                    style="font-size: 14px; font-family: 宋体;">分钟简单说明一下（详细请自行“百度”）：</span></span></p>
+            <p><span style="font-size: 14px;">1<span style="font-size: 14px; font-family: 宋体;">）</span><span
+                    style="font-size: 14px; color: rgb(255, 76, 0);"><strong>nginx</strong></span><span
+                    style="font-size: 14px; font-family: 宋体;">：一个高性能的</span>web-server<span
+                    style="font-size: 14px; font-family: 宋体;">和实施反向代理的<span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);">软件</span></span></span></p>
+            <p><span style="font-size: 14px;">2<span style="font-size: 14px; font-family: 宋体;">）</span><span
+                    style="font-size: 14px; color: rgb(255, 76, 0);"><strong>lvs</strong></span><span
+                    style="font-size: 14px; font-family: 宋体;">：</span>Linux Virtual Server<span
+                    style="font-size: 14px; font-family: 宋体;">，使用集群技术，实现在</span><span
+                    style="font-size: 14px; color: rgb(255, 76, 0);">linux<span
+                    style="font-size: 14px; font-family: 宋体;">操作系统层面</span></span><span
+                    style="font-size: 14px; font-family: 宋体;">的一个高性能、高可用、负载均衡服务器</span></span></p>
+            <p><span style="font-size: 14px;">3<span style="font-size: 14px; font-family: 宋体;">）</span><span
+                    style="font-size: 14px; color: rgb(255, 76, 0);"><strong>keepalived</strong></span><span
+                    style="font-size: 14px; font-family: 宋体;">：一款用来检测服务状态存活性的<span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);">软件</span>，常用来做<span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);">高可用</span></span></span></p>
+            <p><span style="font-size: 14px;">4<span style="font-size: 14px; font-family: 宋体;">）</span><span
+                    style="font-size: 14px; color: rgb(255, 76, 0);"><strong>f5</strong></span><span
+                    style="font-size: 14px; font-family: 宋体;">：一个高性能、高可用、负载均衡的<span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);">硬件设备</span>（听上去和</span>lvs<span
+                    style="font-size: 14px; font-family: 宋体;">功能差不多？）</span></span></p>
+            <p><span style="font-size: 14px;">5<span style="font-size: 14px; font-family: 宋体;">）</span><span
+                    style="font-size: 14px; color: rgb(255, 76, 0);"><strong>DNS<span
+                    style="font-size: 14px; font-family: 宋体;">轮询</span></strong></span><span
+                    style="font-size: 14px; font-family: 宋体;">：通过在</span>DNS-server<span
+                    style="font-size: 14px; font-family: 宋体;">上对一个域名设置多个</span>ip<span
+                    style="font-size: 14px; font-family: 宋体;">解析，来</span><span
+                    style="font-size: 14px; color: rgb(255, 76, 0);"><span
+                    style="font-size: 14px; font-family: 宋体;">扩充</span>web-server<span
+                    style="font-size: 14px; font-family: 宋体;">性能及实施负载均衡的技术</span></span></span></p>
+            <p><span style="font-size: 14px;">&nbsp;</span></p>
+            <p><span style="font-size: 14px;"><strong><span
+                    style="font-size: 16px; font-family: 宋体;">三、接入层技术演进</span></strong></span></p>
+            <p><strong><span style="font-size: 14px;"><span
+                    style="font-size: 14px; font-family: 宋体;">【裸奔时代（</span>0<span
+                    style="font-size: 14px; font-family: 宋体;">）单机架构】</span></span></strong></p>
+            <p><img  src="1.webp" ><br><span
+                    style="font-family: 宋体; font-size: 14px; line-height: 1.6;">裸奔时代的架构图如上：</span></p>
+            <p><span style="font-size: 14px;">1<span
+                    style="font-size: 14px; font-family: 宋体;">）浏览器通过</span>DNS-server<span
+                    style="font-size: 14px; font-family: 宋体;">，域名解析到</span>ip</span></p>
+            <p><span style="font-size: 14px;">2<span style="font-size: 14px; font-family: 宋体;">）浏览器通过</span>ip<span
+                    style="font-size: 14px; font-family: 宋体;">访问</span>web-server</span></p>
+            <p><strong><span style="font-family: 宋体; font-size: 14px;">缺点</span></strong><span
+                    style="font-family: 宋体; font-size: 14px;">：</span></p>
+            <p><span style="font-size: 14px;">1<span style="font-size: 14px; font-family: 宋体;">）<span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);">非高可用</span>，</span>web-server<span
+                    style="font-size: 14px; font-family: 宋体;">挂了整个系统就挂了</span></span></p>
+            <p><span style="font-size: 14px;">2<span style="font-size: 14px; font-family: 宋体;">）<span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);">扩展性差</span>，当吞吐量达到</span>web-server<span
+                    style="font-size: 14px; font-family: 宋体;">上限时，无法扩容</span></span></p>
+            <p><span style="font-family: 宋体; font-size: 14px;">注：单机不涉及负载均衡的问题</span></p>
+            <p><span style="font-size: 14px;">&nbsp;</span></p>
+            <p><strong><span style="font-size: 14px;"><span
+                    style="font-size: 14px; font-family: 宋体;">【简易扩容方案（</span>1<span
+                    style="font-size: 14px; font-family: 宋体;">）</span>DNS<span
+                    style="font-size: 14px; font-family: 宋体;">轮询】</span></span></strong></p>
+            <p><span style="font-size: 14px;"><span style="font-size: 14px; font-family: 宋体;">假设</span>tomcat<span
+                    style="font-size: 14px; font-family: 宋体;">的吞吐量是</span>1000<span
+                    style="font-size: 14px; font-family: 宋体;">次每秒，当系统总吞吐量达到</span>3000<span
+                    style="font-size: 14px; font-family: 宋体;">时，<span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);">如何扩容是首先要解决的问题</span>，</span>DNS<span
+                    style="font-size: 14px; font-family: 宋体;">轮询是一个很容易想到的方案：</span></span></p>
+            <p><img src="2.webp">此时的架构图如上：</span></p>
+            <p><span style="font-size: 14px;">1<span
+                    style="font-size: 14px; font-family: 宋体;">）多部署几份</span>web-server<span
+                    style="font-size: 14px; font-family: 宋体;">，</span>1<span
+                    style="font-size: 14px; font-family: 宋体;">个</span>tomcat<span
+                    style="font-size: 14px; font-family: 宋体;">抗</span>1000<span
+                    style="font-size: 14px; font-family: 宋体;">，部署</span>3<span
+                    style="font-size: 14px; font-family: 宋体;">个</span>tomcat<span
+                    style="font-size: 14px; font-family: 宋体;">就能抗</span>3000</span></p>
+            <p><span style="font-size: 14px;">2<span style="font-size: 14px; font-family: 宋体;">）在</span>DNS-server<span
+                    style="font-size: 14px; font-family: 宋体;">层面，域名每次解析到不同的</span>ip</span></p>
+            <p><strong><span style="font-family: 宋体; font-size: 14px;">优点</span></strong><span
+                    style="font-family: 宋体; font-size: 14px;">：</span></p>
+            <p><span style="font-size: 14px;">1<span style="font-size: 14px; font-family: 宋体;">）<span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);">零成本</span>：在</span>DNS-server<span
+                    style="font-size: 14px; font-family: 宋体;">上多配几个</span>ip<span
+                    style="font-size: 14px; font-family: 宋体;">即可，功能也不收费</span></span></p>
+            <p><span style="font-size: 14px;">2<span style="font-size: 14px; font-family: 宋体;">）<span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);">部署简单</span>：多部署几个</span>web-server<span
+                    style="font-size: 14px; font-family: 宋体;">即可，原系统架构不需要做任何改造</span></span></p>
+            <p><span style="font-size: 14px;">3<span style="font-size: 14px; font-family: 宋体;">）<span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);">负载均衡</span>：变成了多机，但负载基本是均衡的</span></span>
+            </p>
+            <p><strong><span style="font-family: 宋体; font-size: 14px;">缺点</span></strong><span
+                    style="font-family: 宋体; font-size: 14px;">：</span></p>
+            <p><span style="font-size: 14px;">1<span style="font-size: 14px; font-family: 宋体;">）<span
+                    style="color: rgb(255, 76, 0); font-family: 宋体; font-size: 14px; line-height: 22.4px; white-space: pre-wrap;">非高可用</span>：</span><strong>DNS-server<span
+                    style="font-size: 14px; font-family: 宋体;">只负责域名解析</span>ip<span
+                    style="font-size: 14px; font-family: 宋体;">，这个</span>ip<span
+                    style="font-size: 14px; font-family: 宋体;">对应的服务是否可用，</span>DNS-server<span
+                    style="font-size: 14px; font-family: 宋体;">是不保证的</span></strong><span
+                    style="font-size: 14px; font-family: 宋体;">，假设有一个</span>web-server<span
+                    style="font-size: 14px; font-family: 宋体;">挂了，部分服务会受到影响</span></span></p>
+            <p><span style="font-size: 14px;">2<span style="font-size: 14px; font-family: 宋体;">）<span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);">扩容非实时</span>：</span>DNS<span
+                    style="font-size: 14px; font-family: 宋体;">解析有一个生效周期</span></span></p>
+            <p><span style="font-size: 14px;">3<span style="font-size: 14px; font-family: 宋体;">）<span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);">暴露了太多的外网ip</span></span></span>
+            </p>
+            <p><span style="font-size: 14px;">&nbsp;</span></p>
+            <p><strong><span style="font-size: 14px;"><span
+                    style="font-size: 14px; font-family: 宋体;">【简易扩容方案（</span>2<span
+                    style="font-size: 14px; font-family: 宋体;">）</span>nginx<span
+                    style="font-size: 14px; font-family: 宋体;">】</span></span></strong></p>
+            <p><span style="font-size: 14px;">tomcat<span
+                    style="font-size: 14px; font-family: 宋体;">的性能较差，但</span>nginx<span
+                    style="font-size: 14px; font-family: 宋体;">作为反向代理的性能就强多了，假设线上跑到</span>1w<span
+                    style="font-size: 14px; font-family: 宋体;">，就比</span>tomcat<span
+                    style="font-size: 14px; font-family: 宋体;">高了</span>10<span
+                    style="font-size: 14px; font-family: 宋体;">倍，可以利用这个特性来做扩容：</span></span></p>
+            <p><img  src="3.webp">此时的架构图如上：</span></p>
+            <p><span style="font-size: 14px;">1<span style="font-size: 14px; font-family: 宋体;">）站点层与浏览器层之间加入了一个反向代理层，利用高性能的</span>nginx<span
+                    style="font-size: 14px; font-family: 宋体;">来做反向代理</span></span></p>
+            <p><span style="font-size: 14px;">2<span style="font-size: 14px; font-family: 宋体;">）</span>nginx<span
+                    style="font-size: 14px; font-family: 宋体;">将</span>http<span
+                    style="font-size: 14px; font-family: 宋体;">请求分发给后端多个</span>web-server</span></p>
+            <p><strong><span style="font-family: 宋体; font-size: 14px;">优点</span></strong><span
+                    style="font-family: 宋体; font-size: 14px;">：</span></p>
+            <p><span style="font-size: 14px;">1<span style="font-size: 14px; font-family: 宋体;">）</span><span
+                    style="font-size: 14px; color: rgb(255, 76, 0);">DNS-server<span
+                    style="font-size: 14px; font-family: 宋体;">不需要动</span></span></span></p>
+            <p><span style="font-size: 14px;">2<span style="font-size: 14px; font-family: 宋体;">）<span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);">负载均衡</span>：通过</span>nginx<span
+                    style="font-size: 14px; font-family: 宋体;">来保证</span></span></p>
+            <p><span style="font-size: 14px;">3<span style="font-size: 14px; font-family: 宋体;">）<span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);">只暴露一个外网ip</span>，</span>nginx-&gt;tomcat<span
+                    style="font-size: 14px; font-family: 宋体;">之间使用内网访问</span></span></p>
+            <p><span style="font-size: 14px;">4<span style="font-size: 14px; font-family: 宋体;">）<span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);">扩容实时</span>：</span>nginx<span
+                    style="font-size: 14px; font-family: 宋体;">内部可控，随时增加</span>web-server<span
+                    style="font-size: 14px; font-family: 宋体;">随时实时扩容</span></span></p>
+            <p><span style="font-size: 14px;">5<span style="font-size: 14px; font-family: 宋体;">）能够<span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);">保证站点层的可用性</span>：任何一台</span>tomcat<span
+                    style="font-size: 14px; font-family: 宋体;">挂了，</span>nginx<span
+                    style="font-size: 14px; font-family: 宋体;">可以将流量迁移到其他</span>tomcat</span></p>
+            <p><strong><span style="font-family: 宋体; font-size: 14px;">缺点</span></strong><span
+                    style="font-family: 宋体; font-size: 14px;">：</span></p>
+            <p><span style="font-size: 14px;">1<span style="font-size: 14px; font-family: 宋体;">）</span><span
+                    style="font-size: 14px; color: rgb(255, 76, 0);"><span style="font-size: 14px; font-family: 宋体;">时延增加</span>+<span
+                    style="font-size: 14px; font-family: 宋体;">架构更复杂</span></span><span
+                    style="font-size: 14px; font-family: 宋体;">了：中间多加了一个反向代理层</span></span></p>
+            <p><span style="font-size: 14px;">2<span style="font-size: 14px; font-family: 宋体;">）<span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);">反向代理层成了单点，非高可用</span>：</span>tomcat<span
+                    style="font-size: 14px; font-family: 宋体;">挂了不影响服务，</span><strong>nginx<span
+                    style="font-size: 14px; font-family: 宋体;">挂了怎么办？</span></strong></span></p>
+            <p><span style="font-size: 14px;">&nbsp;</span></p>
+            <p><strong><span style="font-size: 14px;"><span
+                    style="font-size: 14px; font-family: 宋体;">【高可用方案（</span>3<span
+                    style="font-size: 14px; font-family: 宋体;">）</span>keepalived<span
+                    style="font-size: 14px; font-family: 宋体;">】</span></span></strong></p>
+            <p><span style="font-size: 14px; color: rgb(255, 76, 0);"><span style="font-size: 14px; font-family: 宋体;">为了解决高可用的问题，</span>keepalived<span
+                    style="font-size: 14px; font-family: 宋体;">出场了</span></span><span style="font-size: 14px;"><span
+                    style="font-size: 14px; font-family: 宋体;">（之前的文章“</span><a
+                    href="http://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&amp;mid=2651959480&amp;idx=1&amp;sn=337bd74410a6bef616128fd17abd08a8&amp;scene=21#wechat_redirect"
+                    target="_blank"
+                    data_ue_src="http://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&amp;mid=2651959480&amp;idx=1&amp;sn=337bd74410a6bef616128fd17abd08a8&amp;scene=21#wechat_redirect"><span
+                    style="font-size: 14px; font-family: 宋体;">使用</span>shadow-master<span
+                    style="font-size: 14px; font-family: 宋体;">保证系统可用性</span></a><span
+                    style="font-size: 14px; font-family: 宋体;">”详细介绍过）：</span></span></p>
+            <p><img src="4.webp"><br><span
+                    style="font-family: 宋体; font-size: 14px; line-height: 1.6;">此时：</span></p>
+            <p><span style="font-size: 14px;">1<span style="font-size: 14px; font-family: 宋体;">）做两台</span>nginx<span
+                    style="font-size: 14px; font-family: 宋体;">组成一个集群，分别部署上</span>keepalived<span
+                    style="font-size: 14px; font-family: 宋体;">，设置成相同的虚</span>IP<span
+                    style="font-size: 14px; font-family: 宋体;">，保证</span>nginx<span
+                    style="font-size: 14px; font-family: 宋体;">的高可用</span></span></p>
+            <p><span style="font-size: 14px;">2<span style="font-size: 14px; font-family: 宋体;">）</span><span
+                    style="font-size: 14px; color: rgb(255, 76, 0);"><span
+                    style="font-size: 14px; font-family: 宋体;">当一台</span>nginx<span
+                    style="font-size: 14px; font-family: 宋体;">挂了，</span>keepalived<span
+                    style="font-size: 14px; font-family: 宋体;">能够探测到，并将流量自动迁移到另一台</span>nginx<span
+                    style="font-size: 14px; font-family: 宋体;">上，整个过程对调用方透明</span></span></span></p>
+            <p><img src="5.webp"><br><strong><span
+                    style="font-family: 宋体; font-size: 14px; line-height: 1.6;">优点</span></strong><span
+                    style="font-family: 宋体; font-size: 14px; line-height: 1.6;">：</span></p>
+            <p><span style="font-size: 14px;">1<span style="font-size: 14px; font-family: 宋体;">）解决了<span
+                    style="font-size: 14px; font-family: 宋体; color: rgb(255, 76, 0);">高可用</span>的问题</span></span></p>
+            <p><strong><span style="font-family: 宋体; font-size: 14px;">缺点</span></strong><span
+                    style="font-family: 宋体; font-size: 14px;">：</span></p>
+            <p><span style="font-size: 14px;">1<span style="font-size: 14px; font-family: 宋体;">）</span><span
+                    style="font-size: 14px; color: rgb(255, 76, 0);"><span style="font-size: 14px; font-family: 宋体;">资源利用率只有</span>50%</span></span>
+            </p>
+            <p><span style="font-size: 14px;">2<span style="font-size: 14px; font-family: 宋体;">）</span>nginx<span
+                    style="font-size: 14px; font-family: 宋体;">仍然是接入单点，</span><strong><span
+                    style="font-size: 14px; font-family: 宋体;">如果接入吞吐量超过的</span>nginx<span
+                    style="font-size: 14px; font-family: 宋体;">的性能上限怎么办，例如</span>qps<span
+                    style="font-size: 14px; font-family: 宋体;">达到了</span>50000<span
+                    style="font-size: 14px; font-family: 宋体;">咧？</span></strong></span></p>
+            <p><span style="font-size: 14px;">&nbsp;</span></p>
+            <p><strong><span style="font-size: 14px;"><span
+                    style="font-size: 14px; font-family: 宋体;">【</span>scale up<span
+                    style="font-size: 14px; font-family: 宋体;">扩容方案（</span>4<span
+                    style="font-size: 14px; font-family: 宋体;">）</span>lvs/f5<span
+                    style="font-size: 14px; font-family: 宋体;">】</span></span></strong></p>
+            <p><span style="font-size: 14px;">nginx<span style="font-size: 14px; font-family: 宋体;">毕竟是软件，性能比</span>tomcat<span
+                    style="font-size: 14px; font-family: 宋体;">好，但总有个上限，超出了上限，还是扛不住。</span></span></p>
+            <p><span style="font-size: 14px;">lvs<span
+                    style="font-size: 14px; font-family: 宋体;">就不一样了，它实施在操作系统层面；</span>f5<span
+                    style="font-size: 14px; font-family: 宋体;">的性能又更好了，它实施在硬件层面；它们性能比</span>nginx<span
+                    style="font-size: 14px; font-family: 宋体;">好很多，例如每秒可以抗</span>10w<span
+                    style="font-size: 14px; font-family: 宋体;">，这样可以利用他们来扩容，常见的架构图如下：</span></span></p>
+            <p><img  src="6.webp"><br><span
+                    style="font-family: 宋体; font-size: 14px; line-height: 1.6;">此时：</span></p>
+            <p><span style="font-size: 14px;">1<span style="font-size: 14px; font-family: 宋体;">）如果通过</span>nginx<span
+                    style="font-size: 14px; font-family: 宋体;">可以扩展多个</span>tomcat<span
+                    style="font-size: 14px; font-family: 宋体;">一样，可以通过</span>lvs<span
+                    style="font-size: 14px; font-family: 宋体;">来扩展多个</span>nginx</span></p>
+            <p><span style="font-size: 14px;">2<span
+                    style="font-size: 14px; font-family: 宋体;">）通过</span>keepalived+VIP<span
+                    style="font-size: 14px; font-family: 宋体;">的方案可以保证可用性</span></span></p>
+            <p><strong><span style="font-size: 14px;">99.9999%<span style="font-size: 14px; font-family: 宋体;">的公司到这一步基本就能解决接入层高可用、扩展性、负载均衡的问题。</span></span></strong>
+            </p>
+            <p><span style="font-size: 14px;">&nbsp;</span></p>
+            <p><span style="font-family: 宋体; font-size: 14px;">这就完美了嘛？还有潜在问题么？</span></p>
+            <p><span style="font-size: 14px;"><span style="font-size: 14px; font-family: 宋体;">好吧，不管是使用</span>lvs<span
+                    style="font-size: 14px; font-family: 宋体;">还是</span>f5<span
+                    style="font-size: 14px; font-family: 宋体;">，这些都是</span>scale up<span
+                    style="font-size: 14px; font-family: 宋体;">的方案，根本上，</span>lvs/f5<span
+                    style="font-size: 14px; font-family: 宋体;">还是会有性能上限，假设每秒能处理</span>10w<span
+                    style="font-size: 14px; font-family: 宋体;">的请求，一天也只能处理</span>80<span
+                    style="font-size: 14px; font-family: 宋体;">亿的请求（</span>10w<span
+                    style="font-size: 14px; font-family: 宋体;">秒吞吐量</span>*8w<span
+                    style="font-size: 14px; font-family: 宋体;">秒），那万一</span><strong><span
+                    style="font-size: 14px; font-family: 宋体;">系统的日</span>PV<span
+                    style="font-size: 14px; font-family: 宋体;">超过</span>80<span
+                    style="font-size: 14px; font-family: 宋体;">亿怎么办呢？</span></strong><span
+                    style="font-size: 14px; font-family: 宋体;">（好吧，没几个公司要考虑这个问题）</span></span></p>
+            <p><span style="font-size: 14px;">&nbsp;</span></p>
+            <p><strong><span style="font-size: 14px;"><span
+                    style="font-size: 14px; font-family: 宋体;">【</span>scale out<span
+                    style="font-size: 14px; font-family: 宋体;">扩容方案（</span>5<span
+                    style="font-size: 14px; font-family: 宋体;">）</span>DNS<span
+                    style="font-size: 14px; font-family: 宋体;">轮询】</span></span></strong></p>
+            <p><span style="font-family: 宋体; font-size: 14px;">如之前文章所述，<span
+                    style="font-family: 宋体; font-size: 14px; color: rgb(255, 76, 0);">水平扩展，才是解决性能问题的根本方案，能够通过加机器扩充性能的方案才具备最好的扩展性</span>。</span>
+            </p>
+            <p><span style="font-size: 14px;">facebook<span
+                    style="font-size: 14px; font-family: 宋体;">，</span>google<span
+                    style="font-size: 14px; font-family: 宋体;">，</span>baidu<span
+                    style="font-size: 14px; font-family: 宋体;">的</span>PV<span style="font-size: 14px; font-family: 宋体;">是不是超过</span>80<span
+                    style="font-size: 14px; font-family: 宋体;">亿呢，它们的域名只对应一个</span>ip<span
+                    style="font-size: 14px; font-family: 宋体;">么，</span><strong><span
+                    style="font-size: 14px; font-family: 宋体;">终点又是起点，还是得通过</span>DNS<span
+                    style="font-size: 14px; font-family: 宋体;">轮询来进行扩容</span></strong><span
+                    style="font-size: 14px; font-family: 宋体;">：</span></span></p>
+            <p><img  src="7.webp" ><br><span
+                    style="font-family: 宋体; font-size: 14px; line-height: 1.6;">此时：</span></p>
+            <p><span style="font-size: 14px;">1<span style="font-size: 14px; font-family: 宋体;">）通过</span>DNS<span
+                    style="font-size: 14px; font-family: 宋体;">轮询来线性扩展入口</span>lvs<span
+                    style="font-size: 14px; font-family: 宋体;">层的性能</span></span></p>
+            <p><span style="font-size: 14px;">2<span style="font-size: 14px; font-family: 宋体;">）通过</span>keepalived<span
+                    style="font-size: 14px; font-family: 宋体;">来保证高可用</span></span></p>
+            <p><span style="font-size: 14px;">3<span style="font-size: 14px; font-family: 宋体;">）通过</span>lvs<span
+                    style="font-size: 14px; font-family: 宋体;">来扩展多个</span>nginx</span></p>
+            <p><span style="font-size: 14px;">4<span style="font-size: 14px; font-family: 宋体;">）通过</span>nginx<span
+                    style="font-size: 14px; font-family: 宋体;">来做负载均衡，业务七层路由</span></span></p>
+            <p><span style="font-size: 14px;">&nbsp;</span></p>
+            <p><span style="font-size: 14px;"><strong><span
+                    style="font-size: 16px; font-family: 宋体;">四、结论</span></strong></span></p>
+            <p><span style="font-family: 宋体; font-size: 14px;">聊了这么多，稍微做一个简要的总结：</span></p>
+            <p><span style="font-size: 14px;">1<span
+                    style="font-size: 14px; font-family: 宋体;">）<strong>接入层架构要考虑的问题域为</strong>：</span><span
+                    style="font-size: 14px; color: rgb(255, 76, 0);"><span style="font-size: 14px; font-family: 宋体;">高可用、扩展性、反向代理</span>+<span
+                    style="font-size: 14px; font-family: 宋体;">扩展均衡</span></span></span></p>
+            <p><span style="font-size: 14px;">2<span style="font-size: 14px; font-family: 宋体;">）</span><span
+                    style="font-size: 14px; color: rgb(255, 76, 0);">nginx<span
+                    style="font-size: 14px; font-family: 宋体;">、keepalived、</span>lvs<span
+                    style="font-size: 14px; font-family: 宋体;">、</span>f5</span><span
+                    style="font-size: 14px; font-family: 宋体;">可以很好的解决</span><strong><span
+                    style="font-size: 14px; font-family: 宋体;">高可用、扩展性、反向代理</span>+<span
+                    style="font-size: 14px; font-family: 宋体;">扩展均衡</span></strong><span
+                    style="font-size: 14px; font-family: 宋体;">的问题</span></span></p>
+            <p><span style="font-size: 14px;">3<span style="font-size: 14px; font-family: 宋体;">）</span><span
+                    style="font-size: 14px; color: rgb(255, 76, 0);"><span style="font-size: 14px; font-family: 宋体;">水平扩展</span>scale out<span
+                    style="font-size: 14px; font-family: 宋体;">是解决扩展性问题的根本方案</span></span><span
+                    style="font-size: 14px; font-family: 宋体;">，</span><strong>DNS<span
+                    style="font-size: 14px; font-family: 宋体;">轮询是不能完全被</span>nginx/lvs/f5<span
+                    style="font-size: 14px; font-family: 宋体;">所替代的</span></strong></span></p>
+            <p><span style="font-size: 14px;"><span style="font-size: 14px; font-family: 宋体;"><br></span></span></p>
+            <p><span style="font-size: 14px;"><span
+                    style="font-size: 14px; font-family: 宋体;">末了，上一篇文章有同学留言问</span><strong>58<span
+                    style="font-size: 14px; font-family: 宋体;">到家采用什么方案</span></strong><span
+                    style="font-size: 14px; font-family: 宋体;">，</span>58<span style="font-size: 14px; font-family: 宋体;">到家目前部署在阿里云上，</span><span
+                    style="font-size: 14px; color: rgb(255, 76, 0);"><span style="font-size: 14px; font-family: 宋体;">前端购买了</span>SLB<span
+                    style="font-size: 14px; font-family: 宋体;">服务</span></span><span
+                    style="font-size: 14px; font-family: 宋体;">（可以先粗暴的认为是一个</span>lvs+keepalived<span
+                    style="font-size: 14px; font-family: 宋体;">的高可用负载均衡服务），</span><span
+                    style="font-size: 14px; color: rgb(255, 76, 0);"><span
+                    style="font-size: 14px; font-family: 宋体;">后端是</span>nginx+tomcat</span><span
+                    style="font-size: 14px; font-family: 宋体;">。</span></span></p>
+            <p><br></p>
+            <p><span style="font-size: 14px;"><strong><span
+                    style="font-size: 16px; font-family: 宋体;">五、挖坑</span></strong></span></p>
+            <p><span
+                    style="font-family: 宋体; font-size: 14px;">接入层讲了这么多，下一章，准备讲讲服务层“异构服务的负载均”（牛逼的机器应该分配更多的流量，如何做到？）。</span>
+            </p>
+            <p><span style="font-size: 14px;"><span
+                    style="font-size: 14px; font-family: 宋体;">希望大家有收获，转发一篇文章只需要</span>3<span
+                    style="font-size: 14px; font-family: 宋体;">秒钟，求</span>3<span
+                    style="font-size: 14px; font-family: 宋体;">秒。</span></span></p>
+            <p style="max-width: 100%; min-height: 1em; color: rgb(62, 62, 62); line-height: 25.6px; box-sizing: border-box !important; word-wrap: break-word !important; background-color: rgb(255, 255, 255);">
+                <span style="max-width: 100%; font-family: 宋体; box-sizing: border-box !important; word-wrap: break-word !important;">==【完】==</span>
+            </p>
+            <p style="max-width: 100%; min-height: 1em; color: rgb(62, 62, 62); line-height: 25.6px; box-sizing: border-box !important; word-wrap: break-word !important; background-color: rgb(255, 255, 255);">
+                <span style="max-width: 100%; font-size: 14px; box-sizing: border-box !important; word-wrap: break-word !important;">回【均衡】<a
+                        href="http://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&amp;mid=2651959585&amp;idx=1&amp;sn=0a9222cbfeb62a662edffafb7f0b43ae&amp;scene=21#wechat_redirect"
+                        target="_blank"
+                        data_ue_src="http://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&amp;mid=2651959585&amp;idx=1&amp;sn=0a9222cbfeb62a662edffafb7f0b43ae&amp;scene=21#wechat_redirect">一分钟了解负载均衡的一切</a></span>
+            </p>
+            <p style="max-width: 100%; min-height: 1em; color: rgb(62, 62, 62); line-height: 25.6px; box-sizing: border-box !important; word-wrap: break-word !important; background-color: rgb(255, 255, 255);">
+                <span style="max-width: 100%; font-size: 14px; box-sizing: border-box !important; word-wrap: break-word !important;">回【容量】<a
+                        href="http://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&amp;mid=2651959542&amp;idx=1&amp;sn=2494bbea9a855e0e1c3ccd6d2562a600&amp;scene=21#wechat_redirect"
+                        target="_blank"
+                        data_ue_src="http://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&amp;mid=2651959542&amp;idx=1&amp;sn=2494bbea9a855e0e1c3ccd6d2562a600&amp;scene=21#wechat_redirect">互联网架构，如何进行容量设计？</a></span>
+            </p>
+            <p style="max-width: 100%; min-height: 1em; color: rgb(62, 62, 62); line-height: 25.6px; box-sizing: border-box !important; word-wrap: break-word !important; background-color: rgb(255, 255, 255);">
+                <span style="max-width: 100%; font-size: 14px; box-sizing: border-box !important; word-wrap: break-word !important;">回【单点】<a
+                        href="http://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&amp;mid=2651959480&amp;idx=1&amp;sn=337bd74410a6bef616128fd17abd08a8&amp;scene=21#wechat_redirect"
+                        target="_blank"
+                        data_ue_src="http://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&amp;mid=2651959480&amp;idx=1&amp;sn=337bd74410a6bef616128fd17abd08a8&amp;scene=21#wechat_redirect">单点系统架构的可用性与性能优化</a></span>
+            </p>
+            <p style="max-width: 100%; min-height: 1em; color: rgb(62, 62, 62); line-height: 25.6px; box-sizing: border-box !important; word-wrap: break-word !important; background-color: rgb(255, 255, 255);">
+                <span style="max-width: 100%; font-size: 14px; box-sizing: border-box !important; word-wrap: break-word !important;">回【ID】<a
+                        href="http://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&amp;mid=403837240&amp;idx=1&amp;sn=ae9f2bf0cc5b0f68f9a2213485313127&amp;scene=21#wechat_redirect"
+                        target="_blank"
+                        data_ue_src="http://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&amp;mid=403837240&amp;idx=1&amp;sn=ae9f2bf0cc5b0f68f9a2213485313127&amp;scene=21#wechat_redirect">细聊分布式ID生成方法</a></span>
+            </p>
+            <p style="max-width: 100%; min-height: 1em; color: rgb(62, 62, 62); line-height: 25.6px; box-sizing: border-box !important; word-wrap: break-word !important; background-color: rgb(255, 255, 255);">
+                <span style="max-width: 100%; font-size: 14px; box-sizing: border-box !important; word-wrap: break-word !important;"><br></span>
+            </p>
+            <p style="max-width: 100%; min-height: 1em; color: rgb(62, 62, 62); line-height: 25.6px; box-sizing: border-box !important; word-wrap: break-word !important; background-color: rgb(255, 255, 255);">
+                <span style="max-width: 100%; font-size: 14px; line-height: 22px; box-sizing: border-box !important; word-wrap: break-word !important;">【小游戏：回大于10的整数，随机返回好文，<span
+                        style="max-width: 100%; color: rgb(255, 76, 0); box-sizing: border-box !important; word-wrap: break-word !important;">猜猜怎么实现的</span>】</span>
+            </p>
+            <p style="max-width: 100%; min-height: 1em; color: rgb(62, 62, 62); line-height: 25.6px; box-sizing: border-box !important; word-wrap: break-word !important; background-color: rgb(255, 255, 255);">
+                <span style="max-width: 100%; font-size: 14px; line-height: 22px; box-sizing: border-box !important; word-wrap: break-word !important;"></span>
+            </p>
+            <p style="max-width: 100%; min-height: 1em; color: rgb(62, 62, 62); line-height: 25.6px; box-sizing: border-box !important; word-wrap: break-word !important; background-color: rgb(255, 255, 255);">
+                <img data-s="300,640" data-type="png" data-ratio="0.5347222222222222" data-w="576" width="auto"
+                     data-src="http://mmbiz.qpic.cn/mmbiz/YrezxckhYOwaiaLOJAcZRoSIibo4Q92Vtz8eOvJnQd1OoUcdmNSJV7m90LDzSeYc2l5ZmGJT9EXg0szIg70KibVEA/640?wx_fmt=png"
+                     style="font-size: 14px; line-height: 1.6; box-sizing: border-box !important; overflow-wrap: break-word !important; visibility: visible !important; width: 576px !important; height: 308px !important;"
+                     _width="auto" class="img_loading"
+                     src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="
+                     crossorigin="anonymous"></p>
+            <p><br></p>
+        </div>
+        <script nonce="" type="text/javascript">
+            var first_sceen__time = (+new Date());
+
+            if ("" == 1 && document.getElementById('js_content')) {
+                document.getElementById('js_content').addEventListener("selectstart", function (e) {
+                    e.preventDefault();
+                });
+            }
+
+
+            (function () {
+                if (navigator.userAgent.indexOf("WindowsWechat") != -1) {
+                    var link = document.createElement('link');
+                    var head = document.getElementsByTagName('head')[0];
+                    link.rel = 'stylesheet';
+                    link.type = 'text/css';
+                    link.href = "//res.wx.qq.com/mmbizwap/zh_CN/htmledition/style/page/appmsg_new/winwx42c23e.css";
+                    head.appendChild(link);
+                }
+            })();
+        </script>
+
+
+        <div class="ct_mpda_wrp" id="js_sponsor_ad_area" style="display:none;"></div>
+
+
+        <div class="read-more__area" id="js_more_read_area" style="display:none;">
+
+        </div>
+
+
+        <div class="reward_area tc reward_area_primary" id="js_reward_area" style="display:none;">
+
+
+            <div class="reward-author" style="display: none;" id="js_reward_author">58沈剑</div>
+
+
+            <p class="reward_tips js_reward_wording">谢谢大家</p>
+            <p>
+                <a class="reward_button" id="js_reward_link" href="##"><span id="js_reward_link_text">赞赏</span></a>
+            </p>
+            <div id="js_reward_inner" class="reward_area_inner" style="display: none; width: 1440px;">
+                <p class="weui-loadmore weui-loadmore_line reward_user_tips" id="js_reward_total_parent">
+                    <span class="weui-loadmore__tips"><a href="##" id="js_reward_total"></a>&nbsp;人<span
+                            id="js_reward_total_text">赞赏</span></span>
+                </p>
+
+                <div id="js_reward_list" class="reward_user_list"></div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <ul id="js_hotspot_area" class="article_extend_area"></ul>
+
+
+    <div class="rich_media_tool" id="js_toobar3">
+
+        <a class="media_tool_meta meta_primary" id="js_view_source" href="##">阅读原文</a>
+        <div id="js_read_area3" class="media_tool_meta tips_global_primary meta_primary" style="display:none;">阅读 <span
+                id="readNum3"></span></div>
+
+        <span style="display:none;" class="media_tool_meta meta_extra meta_praise" id="like_old">
+        <i class="icon_praise_gray"></i><span class="praise_num" id="likeNum_old"></span>
+    </span>
+
+        <span style="display:none;" class="media_tool_meta meta_extra meta_like" id="like3">
+        <button class="like_btn" id="js_like_btn">
+          好看<span class="like_num" id="likeNum3"></span>
+        </button>
+    </span>
+
+        <div id="js_like_educate" style="display:none">
+            <div class="weui-mask"></div>
+            <div class="weui-dialog weui-dialog_haokan">
+                <div class="weui-dialog__hd"><strong class="weui-dialog__title" id="educate_title">已推荐到看一看</strong>
+                </div>
+
+                <div class="weui-dialog__ft" id="educate_btn" style="display: none">
+                    <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_default" id="js_cancel">取消</a>
+                    <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" id="js_confirm">推荐</a>
+                </div>
+                <div class="weui-dialog__ft" id="educate_btn2" style="display: none">
+                    <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary"
+                       id="js_acknowledge">我知道了</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="js_unlike_educate" style="display:none">
+            <div class="weui-mask"></div>
+            <div class="weui-dialog">
+
+                <div class="weui-dialog__bd">
+                    已取消，“好看”想法已同步删除
+                </div>
+                <div class="weui-dialog__ft">
+                    <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" id="js_unlike_know">知道了</a>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <div class="like_comment_wrp" id="js_a_like_comment" style="display: none;">
+        <div class="like_comment_inner">
+            <div class="like_comment_hd" style="display:none" id="js_like_title"></div>
+            <div class="like_comment_bd">
+                <div class="tips_global_primary like_comment_tips">
+                    <i class="weui-icon-success"></i>已推荐到看一看<a href="javascript:;" class="like_comment_share_link"
+                                                               id="js_a_like_comment_share">和朋友分享想法</a>
+                </div>
+            </div>
+            <div class="like_comment_ft">
+                <span id="js_a_like_comment_msg" class="like_comment_msg" style="visibility:hidden">最多200字，当前共<span
+                        id="js_a_like_current_cnt"></span>字</span>
+                <button class="like_comment_btn" disabled="disabled" id="js_a_like_confirm">发送</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="js_like_toast" style="display: none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast">
+            <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+            <p class="weui-toast__content" id="js_toast_msg">已发送</p>
+        </div>
+    </div>
+
+
+    <div style="display: none;" id="js_b_comment_panel" class="like_comment_primary_pop">
+        <div class="like_comment_primary_wrp" id="js_b_wrp">
+            <div class="like_comment_primary_inner">
+                <div class="like_comment_primary_hd">
+                    <h4 class="like_comment_primary_title">
+                        朋友将在看一看看到 </h4>
+                    <button id="js_b_like_confirm" class="like_comment_primary_btn">确定</button>
+                </div>
+                <div id="js_b_comment_text_first" class="like_comment_primary_bd">
+        <span class="tips_global_primary">
+          分享你的想法...        </span>
+                </div>
+            </div>
+        </div>
+        <div class="like_comment_primary_mask" id="js_mask_1"></div>
+    </div>
+
+    <div style="display: none;" id="js_b_comment_final">
+        <div class="like_comment_primary_wrp editing" id="js_comment_wrp">
+            <div class="like_comment_primary_inner">
+                <div class="like_comment_primary_hd">
+                    <button class="like_comment_primary_cancel" id="js_b_comment_cancel">取消</button>
+                    <h4 class="like_comment_primary_title"> 分享想法到看一看 </h4>
+                    <button class="like_comment_primary_btn" id="js_b_comment_confirm">确定</button>
+                </div>
+                <div class="like_comment_primary_bd">
+                    <textarea class="like_comment_textarea weui-textarea" placeholder="分享你的想法..."
+                              id="js_b_comment_text_second"></textarea>
+                </div>
+                <span class="like_comment_msg" id="js_b_like_comment_msg" style="visibility: hidden;">最多200字，当前共<span
+                        id="js_b_like_current_cnt"></span>字</span>
+            </div>
+        </div>
+        <div class="like_comment_primary_mask" id="js_mask_2"></div>
+    </div>
+
+    <div id="js_loading" style=" display: none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast">
+            <i class="weui-loading weui-icon_toast"></i>
+            <p class="weui-toast__content">发送中</p>
+        </div>
+    </div>
+
+    <div id="js_fail" style="display:none">
+        <div class="weui-mask"></div>
+        <div class="weui-dialog">
+            <div class="weui-dialog__bd">
+                网络异常，请稍后重试
+            </div>
+            <div class="weui-dialog__ft">
+                <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" id="js_fail_inform">知道了</a>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+</body>
+</html>

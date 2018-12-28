@@ -572,63 +572,63 @@
 
 
     </build>
-    <repositories>
+    <!--<repositories>-->
 
-        <repository>
-            <id>nexus-aliyun</id>
-            <name>Nexus aliyun</name>
-            <layout>default</layout>
-            <url>https://maven.aliyun.com/repository/public/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-
-
-        <repository>
-            <id>maven2</id>
-            <name>maven2</name>
-            <layout>default</layout>
-            <url>http://central.maven.org/maven2/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
+        <!--<repository>-->
+            <!--<id>nexus-aliyun</id>-->
+            <!--<name>Nexus aliyun</name>-->
+            <!--<layout>default</layout>-->
+            <!--<url>https://maven.aliyun.com/repository/public/</url>-->
+            <!--<snapshots>-->
+                <!--<enabled>false</enabled>-->
+            <!--</snapshots>-->
+            <!--<releases>-->
+                <!--<enabled>true</enabled>-->
+            <!--</releases>-->
+        <!--</repository>-->
 
 
-    </repositories>
+        <!--<repository>-->
+            <!--<id>maven2</id>-->
+            <!--<name>maven2</name>-->
+            <!--<layout>default</layout>-->
+            <!--<url>http://central.maven.org/maven2/</url>-->
+            <!--<snapshots>-->
+                <!--<enabled>true</enabled>-->
+            <!--</snapshots>-->
+            <!--<releases>-->
+                <!--<enabled>true</enabled>-->
+            <!--</releases>-->
+        <!--</repository>-->
+
+
+    <!--</repositories>-->
 
 
     <distributionManagement>
         <snapshotRepository>
-            <id>nexus-snapshots</id>
+            <id>rdc-snapshots</id>
             <name>NexusSnapshotRepository</name>
-            <url>https://maven.aliyun.com/repository/snapshots/</url>
+            <url>https://repo.rdc.aliyun.com/repository/43543-snapshot-TbrzWE</url>
             <uniqueVersion>false</uniqueVersion>
         </snapshotRepository>
     </distributionManagement>
 
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>alinexus</id>
-            <name>local private nexus</name>
-            <url>https://maven.aliyun.com/repository/public/</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>maven2</id>
-            <name>maven2</name>
-            <url>http://central.maven.org/maven2/</url>
-        </pluginRepository>
+    <!--<pluginRepositories>-->
+        <!--<pluginRepository>-->
+            <!--<id>alinexus</id>-->
+            <!--<name>local private nexus</name>-->
+            <!--<url>https://maven.aliyun.com/repository/public/</url>-->
+        <!--</pluginRepository>-->
+        <!--<pluginRepository>-->
+            <!--<id>maven2</id>-->
+            <!--<name>maven2</name>-->
+            <!--<url>http://central.maven.org/maven2/</url>-->
+        <!--</pluginRepository>-->
 
 
-    </pluginRepositories>
+    <!--</pluginRepositories>-->
 
 
 </project>

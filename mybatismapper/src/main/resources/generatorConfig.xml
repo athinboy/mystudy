@@ -6,7 +6,7 @@
 <generatorConfiguration>
 
 
-    <properties resource="mbg.properties"/>
+    <properties resource="jdbc.properties"/>
 
 
     <context id="context1">

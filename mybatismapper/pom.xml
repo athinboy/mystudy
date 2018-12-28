@@ -2,13 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>studyjava</artifactId>
-        <groupId>net.fgq.study</groupId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
+    <!--<parent>-->
+        <!--<artifactId>studyjava</artifactId>-->
+        <!--<groupId>net.fgq.study</groupId>-->
+        <!--<version>1.0-SNAPSHOT</version>-->
+    <!--</parent>-->
 
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>net.fgq.study</groupId>
+    <version>1.0-SNAPSHOT</version>
     <artifactId>mybatis-mapper</artifactId>
 
 
@@ -16,12 +19,15 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-
+            <version> 8.0.13</version>
+            <scope> provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
+            <version> 3.4.6</version>
+            <scope> provided</scope>
         </dependency>
 
     </dependencies>
@@ -35,6 +41,8 @@
                 <version>1.3.7</version>
                 <configuration>
                     <configurationFile>src/main/resources/generatorConfig.xml</configurationFile>
+                    <verbose>true</verbose>
+                    <overwrite>true</overwrite>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -59,11 +67,35 @@
                         <goals>
                             <goal>generate</goal>
                         </goals>
+                        <!--避免install deploy 等操作时-->
+                        <phase>none</phase>
                     </execution>
                 </executions>
 
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/generatorConfig.xml</exclude>
+                        <exclude>**/jdbc.properties</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>rdc-snapshots</id>
+            <name>NexusSnapshotRepository</name>
+            <url>https://repo.rdc.aliyun.com/repository/43543-snapshot-TbrzWE</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
+
 
 </project>

@@ -27,6 +27,12 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+            <version>2.1.1.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <version>2.1.1.RELEASE</version>
         </dependency>
@@ -37,7 +43,6 @@
             <version>1.3.2</version>
 
         </dependency>
-
 
 
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis -->
@@ -61,12 +66,9 @@
 
         <dependency>
             <groupId>net.fgq.study</groupId>
-            <artifactId> mybatis-mapper</artifactId>
+            <artifactId>mybatis-mapper</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-
-
-
 
 
         <dependency>
@@ -77,10 +79,8 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-dbcp2</artifactId>
-            <version> 2.5.0</version>
+            <version>2.5.0</version>
         </dependency>
-
-
 
 
         <dependency>

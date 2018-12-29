@@ -15,15 +15,37 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-    <!--<typeAliases>-->
-        <!--<package name="sample.mybatis.domain"/>-->
-    <!--</typeAliases>-->
-    <!--<mappers>-->
-        <!--<mapper resource="sample/mybatis/mapper/CityMapper.xml"/>-->
-        <!--<mapper resource="sample/mybatis/mapper/HotelMapper.xml"/>-->
-    <!--</mappers>-->
 
-    <mappers>
-        <package name="org.fgq.study.mbgmapper"></package>
-    </mappers>
+
+
+    <settings>
+
+        <setting name="cacheEnabled" value="false"/>
+        <setting name="lazyLoadingEnabled" value="false"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <setting name="multipleResultSetsEnabled" value="true"/>
+        <setting name="useColumnLabel" value="true"/>
+        <setting name="defaultExecutorType" value="REUSE"/>
+        <setting name="defaultStatementTimeout" value="25000"/>
+
+    </settings>
+
+
+    <typeAliases>
+
+    </typeAliases>
+
+    <plugins>
+        <plugin interceptor="com.github.miemiedev.mybatis.paginator.OffsetLimitInterceptor">
+            <property name="dialectClass" value="com.github.miemiedev.mybatis.paginator.dialect.MySQLDialect"/>
+        </plugin>
+    </plugins>
+
+
+
+
+    <!--<mappers>-->
+        <!--<package name="org.fgq.study.mbgmapper"></package>-->
+        <!--<package name="org.fgq.study.springboot.dao"></package>-->
+    <!--</mappers>-->
 </configuration>

@@ -15,21 +15,21 @@ import javax.sql.DataSource;
  **/
 
 @Configuration
-@MapperScan(basePackages ={"org.fgq.study.mbgmapper"})
+@MapperScan(basePackages ={"org.fgq.study.mbgmapper","org.fgq.study.springboot.dao"})
 public class MybatisConfiguration {
 
     //region Getter And Setter
     // endregion
 
-    @Autowired
-    DataSource dataSource;
+//    @Autowired
+//    DataSource dataSource;
 
-    @Bean
-    public SqlSessionFactory sqlSessionFactory() throws Exception {
-        SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
-        sessionFactory.setDataSource(dataSource);
-        return sessionFactory.getObject();
-    }
+//    @Bean
+//    public SqlSessionFactory sqlSessionFactory() throws Exception {
+//        SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
+//        sessionFactory.setDataSource(dataSource);
+//        return sessionFactory.getObject();
+//    }
 
 
 

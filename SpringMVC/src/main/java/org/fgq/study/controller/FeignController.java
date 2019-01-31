@@ -47,14 +47,14 @@ public class FeignController implements OneService {
 
     @ResponseBody
     @RequestMapping("/testHello")
-    public void TestHello() throws IOException {
+    public String TestHello() throws IOException {
 
 
         OneService oneService = Feign.builder()
 //                .decoder(new GsonDecoder())
                 .decoder(new StringDecoder())
-                .target(OneService.class, "http://localhost:8100/mv/");
-        System.out.println(oneService.HelloName("fgq"));
+                .target(OneService.class, "http://localhost:8100/springmvc/mv/");
+        return oneService.HelloName("fgq");
 
 
     }

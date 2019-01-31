@@ -3,7 +3,9 @@ package net.fgq.study.flink;
 import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
 import org.apache.flink.api.java.io.jdbc.JDBCInputFormat;
 import org.apache.flink.api.java.typeutils.RowTypeInfo;
+import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.types.Row;
 
 /**
  * @author fenggqc
@@ -35,6 +37,12 @@ public class ReadMysqlOne {
                         BasicTypeInfo.STRING_TYPE_INFO,
                         BasicTypeInfo.STRING_TYPE_INFO))
                 .finish();
-        env.createInput(jdbcInputFormat);
+        DataStreamSource<Row> rowDataStreamSource = env.createInput(jdbcInputFormat);
+
+
+
+
+
+
     }
 }

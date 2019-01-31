@@ -19,9 +19,28 @@ public class Test {
 
 
     public static void main(String[] args) {
+//
+//        final Car car = Car.create( Car::new );
+//        System.out.println(a());
 
-        final Car car = Car.create( Car::new );
-        System.out.println(a());
+        Boolean s=null;
+
+//        if(false==s){
+//
+//        }
+        if(Boolean.FALSE.equals(s)){
+
+        }
+
+
+
+//        System.out.println(s!=false);
+//        System.out.println(false!=null);
+//        System.out.println();
+//       System.out.println( s==false);
+//        System.out.println(false== s);
+
+
     }
 
     public static boolean a() {
@@ -39,7 +58,8 @@ public class Test {
 
 
     public static class Car {
-        public static Car create( final Supplier< Car > supplier ) {
+        public static Car create( final Supplier< Car > supplier )
+        {
             return supplier.get();
         }
 

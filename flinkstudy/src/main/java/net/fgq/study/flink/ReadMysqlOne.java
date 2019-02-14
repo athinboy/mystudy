@@ -34,7 +34,7 @@ public class ReadMysqlOne {
                         BasicTypeInfo.STRING_TYPE_INFO))
                 .finish();
         DataStreamSource<Row> rowDataStreamSource = env.createInput(jdbcInputFormat);
-        rowDataStreamSource.windowAll()
+
         rowDataStreamSource.print();
 
     }

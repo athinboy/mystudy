@@ -12,37 +12,30 @@ import org.apache.flink.types.Row;
  * @create 2018-11-28 18:43
  **/
 
-
 public class ReadMysqlOne {
 
     //region Getter And Setter
     // endregion
 
-
     public static void main(String[] args) throws Exception {
-
 
         // get the execution environment
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-
         JDBCInputFormat jdbcInputFormat = JDBCInputFormat.buildJDBCInputFormat()
-                .setDBUrl("jdbc:mysql://127.0.0.1:3306/test")
+                .setDBUrl("jdbc:mysql://" + CommonConfig.DBIP + ":" + CommonConfig.DBPort + "/study")
                 .setDrivername("com.mysql.jdbc.Driver")
                 .setUsername("root")
                 .setPassword("123")
-                .setQuery("")
+                .setQuery("select room_id,room_name,room_cdesc from ba_room")
                 .setRowTypeInfo(new RowTypeInfo(
                         BasicTypeInfo.STRING_TYPE_INFO,
                         BasicTypeInfo.STRING_TYPE_INFO,
                         BasicTypeInfo.STRING_TYPE_INFO))
                 .finish();
         DataStreamSource<Row> rowDataStreamSource = env.createInput(jdbcInputFormat);
-
-
-
-
-
+        rowDataStreamSource.windowAll()
+        rowDataStreamSource.print();
 
     }
 }

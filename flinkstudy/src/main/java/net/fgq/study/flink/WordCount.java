@@ -34,6 +34,7 @@ public class WordCount {
             return;
         }
 
+
         // get the execution environment
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 

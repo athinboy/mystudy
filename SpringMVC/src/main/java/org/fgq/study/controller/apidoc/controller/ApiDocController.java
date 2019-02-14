@@ -38,8 +38,61 @@ public class ApiDocController {
      * "error": "NoAccessRight"
      * }
      */
-    public Object getUser() {
+    public User getUser() {
         return null;
+    }
+
+    public static class User {
+
+        private String name;
+        private Integer age;
+        private UserGroup userGroup;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public Integer getAge() {
+            return age;
+        }
+
+        public void setAge(Integer age) {
+            this.age = age;
+        }
+
+        public UserGroup getUserGroup() {
+            return userGroup;
+        }
+
+        public void setUserGroup(UserGroup userGroup) {
+            this.userGroup = userGroup;
+        }
+    }
+
+    public static class UserGroup {
+
+        private String groupName;
+        private String fullName;
+
+        public String getGroupName() {
+            return groupName;
+        }
+
+        public void setGroupName(String groupName) {
+            this.groupName = groupName;
+        }
+
+        public String getFullName() {
+            return fullName;
+        }
+
+        public void setFullName(String fullName) {
+            this.fullName = fullName;
+        }
     }
 
 }

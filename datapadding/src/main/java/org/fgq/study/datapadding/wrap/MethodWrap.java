@@ -6,20 +6,15 @@ import java.lang.reflect.Method;
  * @author fenggqc
  * @create 2018-10-29 16:25
  **/
-
-
 public class MethodWrap {
 
     private Method method;
     private Method[] paraMethods;
 
-
-    protected  MethodWrap(Method method){
-        this.method=method;
+    protected MethodWrap(Method method) {
+        this.method = method;
 
     }
-
-
 
     //region Getter And Setter
 
@@ -39,8 +34,6 @@ public class MethodWrap {
         this.paraMethods = paraMethods;
     }
 
-
     // endregion
-
 
 }

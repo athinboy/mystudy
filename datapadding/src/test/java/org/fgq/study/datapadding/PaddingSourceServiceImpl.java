@@ -14,7 +14,6 @@ public class PaddingSourceServiceImpl implements PaddingSourceService {
     //region Getter And Setter
     // endregion
 
-
     @Override
     public String getServiceA() {
         return "ServiceAValue";

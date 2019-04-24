@@ -6,39 +6,29 @@ import org.fgq.study.datapadding.annotation.NeedPad;
  * @author fenggqc
  * @create 2018-10-24 15:06
  **/
-
-
 public class PaddingClient {
 
-
-    private  String index;
-
-
-
+    private String index;
 
     @NeedPad(SourceClass = PaddingSourceService.class,
             SourceMethod = "getServiceA", ParaFieldNames = {})
     private String serviceA;
 
     @NeedPad(SourceClass = PaddingSourceService.class,
-            SourceMethod = "getServiceParaA", ParaFieldNames = {"index"},NoCache = true)
+            SourceMethod = "getServiceParaA", ParaFieldNames = {"index"}, NoCache = true)
     private String serviceParaA;
 
     @NeedPad(SourceClass = PaddingSourceService.class,
-            SourceMethod = "getServiceParaA", ParaFieldNames = {"staticA"},NoCache = true)
+            SourceMethod = "getServiceParaA", ParaFieldNames = {"staticA"}, NoCache = true)
     private String serviceParaB;
-
 
     @NeedPad(SourceClass = PaddingSource.class,
             SourceMethod = "getStatA", PadSort = 2)
     private String staticA;
 
-
     private String otherfield;
 
-
     //region Getter And Setter
-
 
     public String getServiceParaB() {
         return serviceParaB;
@@ -87,7 +77,6 @@ public class PaddingClient {
     public void setStaticA(String staticA) {
         this.staticA = staticA;
     }
-
 
     // endregion
 

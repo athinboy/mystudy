@@ -4,9 +4,7 @@ package org.fgq.study.datapadding.exception;
  * @author fenggqc
  * @create 2018-10-29 16:21
  **/
-
-
-public class WrongAnnotationException extends  DataPaddingException   {
+public class WrongAnnotationException extends DataPaddingException {
 
     //region Getter And Setter
     // endregion
@@ -18,6 +16,5 @@ public class WrongAnnotationException extends  DataPaddingException   {
     public WrongAnnotationException(String message) {
         super(message);
     }
-
 
 }

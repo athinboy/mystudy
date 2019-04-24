@@ -20,17 +20,13 @@ import java.util.*;
  * @author fenggqc
  * @create 2018-10-29 14:41
  **/
-
-
 public final class ClassWrap {
 
     private static HashMap<Class, ClassWrap> classWrapHashMap = new HashMap<>();
     private static PropertyUtilsBean propertyUtilsBean = org.apache.commons.beanutils.BeanUtilsBean.getInstance().getPropertyUtils();
 
-
     private Class destClass;
     private FieldWrap[] fieldWraps;
-
 
     private ClassWrap() {
 
@@ -75,7 +71,6 @@ public final class ClassWrap {
                 throw new DataPaddingException("运行异常！");
             }
 
-
             try {
                 sourceobject = InitBean.getSpringBeanFactory().getBean(needPad.SourceClass());
             } catch (Exception ex) {
@@ -94,7 +89,6 @@ public final class ClassWrap {
                     break;
                 }
 
-
             }
             if (findsourcemethod == false) {
                 throw new WrongSourceMethodException(needPad.SourceClass().toString() + needPad.SourceMethod());
@@ -103,7 +97,6 @@ public final class ClassWrap {
             findsourcemethod = true;
 
             methodWrap = new MethodWrap(method);
-
 
             fieldWrap = new FieldWrap(needPad, method);
             fieldWrap.setField(field);
@@ -128,29 +121,26 @@ public final class ClassWrap {
         classWrap.setFieldWraps(fieldWraplist.toArray(new FieldWrap[fieldWraplist.size()]));
         classWrapHashMap.put(destClass, classWrap);
 
-
         return classWrap;
 
     }
 
     private static Method[] getParaMethod(FieldWrap fieldWrap, Class destClass) throws Exception {
 
-
-        NeedPad needPad=fieldWrap.getNeedPad();
-        Method sourceMethod=fieldWrap.getSourceMethod();
+        NeedPad needPad = fieldWrap.getNeedPad();
+        Method sourceMethod = fieldWrap.getSourceMethod();
 
         if (fieldWrap.getParameterFields().length != sourceMethod.getParameters().length) {
             throw new WrongAnnotationException("方法参数数量不一致！" + sourceMethod.getName());
         }
 
-        if (fieldWrap.getParameterFields() == null ||fieldWrap.getParameterFields().length == 0) {
+        if (fieldWrap.getParameterFields() == null || fieldWrap.getParameterFields().length == 0) {
             return new Method[]{};
         }
 
         List<Method> paraMethodlist = new ArrayList<>();
 
         Object[] para = new Object[fieldWrap.getParameterFields().length];
-
 
         PropertyDescriptor[] propertyDescriptors = propertyUtilsBean.getPropertyDescriptors(destClass);
         PropertyDescriptor propertyDescriptor;
@@ -168,24 +158,20 @@ public final class ClassWrap {
 
                     paraMethodlist.add(method);
 
-
                     finded = true;
                     break;
                 }
             }
             if (false == finded) {
-                throw new WrongAnnotationException("未找到配置的方法参数字段" +fieldWrap.getParameterFields()[i]);
+                throw new WrongAnnotationException("未找到配置的方法参数字段" + fieldWrap.getParameterFields()[i]);
             }
 
         }
 
-
         return paraMethodlist.toArray(new Method[paraMethodlist.size()]);
     }
 
-
     //region Getter And Setter
-
 
     public FieldWrap[] getFieldWraps() {
         return fieldWraps;
@@ -202,7 +188,6 @@ public final class ClassWrap {
     public void setDestClass(Class destClass) {
         this.destClass = destClass;
     }
-
 
     // endregion
 }

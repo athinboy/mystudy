@@ -20,7 +20,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author fenggqc
  * @create 2018-10-30 14:18
  **/
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext.xml")
 public class TestClass {
@@ -30,11 +29,8 @@ public class TestClass {
 
     Logger logger = LoggerFactory.getLogger(TestClass.class);
 
-
     @Test
     public void T() {
-
-
 
         PaddingClient paddingClient = new PaddingClient();
 
@@ -46,20 +42,17 @@ public class TestClass {
             paddingClientList.add(paddingClient);
         }
 
-
         try {
 
             DataPadding.PadInfo(PaddingClient.class, paddingClientList);
 
-            System.out.println(JSON.toJSONString(paddingClientList,new SerializerFeature[]{SerializerFeature.PrettyFormat}));
+            System.out.println(JSON.toJSONString(paddingClientList, new SerializerFeature[]{SerializerFeature.PrettyFormat}));
 
         } catch (Exception e) {
             System.out.println(e.toString());
             logger.error("", e);
         }
 
-
     }
-
 
 }

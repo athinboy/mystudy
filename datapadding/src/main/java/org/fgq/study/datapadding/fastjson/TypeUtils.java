@@ -1,7 +1,5 @@
 package org.fgq.study.datapadding.fastjson;
 
-
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
@@ -1007,7 +1005,6 @@ public class TypeUtils {
 
         return clazz;
     }
-
 
     public static SerializeBeanInfo buildBeanInfo(Class<?> beanType, Map<String, String> aliasMap) {
         JSONType jsonType = beanType.getAnnotation(JSONType.class);

@@ -9,9 +9,7 @@ import org.springframework.beans.factory.BeanFactoryUtils;
  * @author fenggqc
  * @create 2018-10-24 9:18
  **/
-
-
-public class InitBean  implements BeanFactoryAware {
+public class InitBean implements BeanFactoryAware {
 
     //region Getter And Setter
     // endregion
@@ -20,7 +18,6 @@ public class InitBean  implements BeanFactoryAware {
 
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-
         springBeanFactory = beanFactory;
     }
 
@@ -29,6 +26,6 @@ public class InitBean  implements BeanFactoryAware {
     }
 
     public static void setSpringBeanFactory(BeanFactory springBeanFactory) {
-         springBeanFactory = springBeanFactory;
+        springBeanFactory = springBeanFactory;
     }
 }

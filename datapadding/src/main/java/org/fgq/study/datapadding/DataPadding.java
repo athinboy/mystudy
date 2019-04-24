@@ -1,7 +1,5 @@
 package org.fgq.study.datapadding;
 
-
-
 import org.apache.commons.beanutils.PropertyUtilsBean;
 import org.fgq.study.datapadding.annotation.NeedPad;
 import org.fgq.study.datapadding.exception.DataPaddingException;
@@ -11,25 +9,18 @@ import org.fgq.study.datapadding.wrap.MethodWrap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import java.lang.reflect.*;
 import java.util.*;
-
 
 /**
  * @author fenggqc
  * @create 2018-10-24 13:52
  **/
-
-
 public class DataPadding {
-
 
     static Logger logger = LoggerFactory.getLogger(DataPadding.class);
 
-
     static PropertyUtilsBean propertyUtilsBean = org.apache.commons.beanutils.BeanUtilsBean.getInstance().getPropertyUtils();
-
 
     //region Getter And Setter
     // endregion
@@ -42,9 +33,7 @@ public class DataPadding {
      */
     public static <T> void PadInfo(Class<T> tClass, Collection<T> collection) throws DataPaddingException {
 
-
         try {
-
 
             HashMap<Field, HashMap<Integer, HashMap<String, Object>>> cache = new HashMap<>();
 
@@ -61,7 +50,6 @@ public class DataPadding {
             HashMap<Integer, HashMap<String, Object>> fieldValueCacheMapItem = new HashMap<>();
             CacheResult cacheResult;
 
-
             for (FieldWrap fieldWrap : classWrap.getFieldWraps()) {
 
                 needPad = fieldWrap.getNeedPad();
@@ -75,7 +63,6 @@ public class DataPadding {
                     method = fieldWrap.getSourceMethod();
 
                     Object[] paras = getMethodPara(fieldWrap.getSourceMethodWrap(), t);
-
 
                     Object sourceValue = null;
                     if (needPad.NoCache() == false) {
@@ -101,9 +88,7 @@ public class DataPadding {
             throw new DataPaddingException("", ex);
         }
 
-
     }
-
 
     private static void saveCache(Object[] paras, HashMap<Integer, HashMap<String, Object>> fieldValueCacheMapItem,
                                   Object value) {
@@ -121,7 +106,6 @@ public class DataPadding {
         paraValueCacheMapItem.put(paraStr, value);
 
     }
-
 
     private static CacheResult findCache(Object[] paras, HashMap<Integer, HashMap<String, Object>> fieldValueCacheMapItem) {
 
@@ -147,11 +131,9 @@ public class DataPadding {
 
     }
 
-
     private static class CacheResult {
         private boolean hit;
         private Object value;
-
 
         public Object getValue() {
             return value;
@@ -169,7 +151,6 @@ public class DataPadding {
             this.hit = hit;
         }
     }
-
 
     private static String getParaStr(Object[] para) {
 
@@ -189,7 +170,6 @@ public class DataPadding {
         return stringBuilder.toString();
     }
 
-
     public static <T> void PadInfo(Class<T> tClass, T t) throws DataPaddingException {
 
         List<T> tList = new ArrayList<>();
@@ -197,7 +177,6 @@ public class DataPadding {
         PadInfo(tClass, tList);
 
     }
-
 
     /**
      * 获取方法参数。
@@ -222,7 +201,6 @@ public class DataPadding {
 
 //        SerializeBeanInfo serializeBeanInfo = TypeUtils.buildBeanInfo(t.getClass(), null);
 //        JavaBeanInfo javaBeanInfo = JavaBeanInfo.build(t.getClass(), t.getClass());
-
 
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {

@@ -24,7 +24,6 @@ public final class FieldWrap {
     private Object sourceObject;
     private String[] parameterFields;
 
-
     /**
      * @param needPad
      * @param sourceMethod

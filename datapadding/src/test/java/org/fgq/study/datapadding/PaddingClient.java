@@ -19,16 +19,36 @@ public class PaddingClient {
     private String serviceParaA;
 
     @NeedPad(SourceClass = PaddingSourceService.class,
-            SourceMethod = "getServiceParaA", ParaFieldNames = {"staticA"}, NoCache = true)
+            SourceMethod = "getServiceParaA", ParaFieldNames = {"staticString"}, NoCache = true)
     private String serviceParaB;
 
     @NeedPad(SourceClass = PaddingSource.class,
-            SourceMethod = "getStatA", PadSort = 2)
-    private String staticA;
+            SourceMethod = "getStaticString", PadSort = 2)
+    private String staticString;
+
+    @NeedPad(SourceClass = PaddingSource.class,
+            SourceMethod = "getInstanceString", PadSort = 3)
+    private String instanceString;
 
     private String otherfield;
 
     //region Getter And Setter
+
+    public String getStaticString() {
+        return staticString;
+    }
+
+    public void setStaticString(String staticString) {
+        this.staticString = staticString;
+    }
+
+    public String getInstanceString() {
+        return instanceString;
+    }
+
+    public void setInstanceString(String instanceString) {
+        this.instanceString = instanceString;
+    }
 
     public String getServiceParaB() {
         return serviceParaB;
@@ -68,14 +88,6 @@ public class PaddingClient {
 
     public void setOtherfield(String otherfield) {
         this.otherfield = otherfield;
-    }
-
-    public String getStaticA() {
-        return staticA;
-    }
-
-    public void setStaticA(String staticA) {
-        this.staticA = staticA;
     }
 
     // endregion

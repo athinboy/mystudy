@@ -41,7 +41,7 @@ public final class ClassWrap {
 
         classWrap = new ClassWrap();
         classWrap.destClass = destClass;
-        Object sourceobject;
+
         final Field[] fields = destClass.getDeclaredFields();
         Field field;
         boolean findsourcemethod = false;
@@ -71,12 +71,6 @@ public final class ClassWrap {
                 throw new DataPaddingException("运行异常！");
             }
 
-            try {
-                sourceobject = InitBean.getSpringBeanFactory().getBean(needPad.SourceClass());
-            } catch (Exception ex) {
-                throw new WrongSourceClassException("Spring获取对象失败：" + needPad.SourceClass().toString(), ex);
-            }
-
             Method[] methods = needPad.SourceClass().getMethods();
             Method method = null;
 
@@ -100,7 +94,7 @@ public final class ClassWrap {
 
             fieldWrap = new FieldWrap(needPad, method);
             fieldWrap.setField(field);
-            fieldWrap.setSourceObject(sourceobject);
+
             fieldWrap.setFieldWriteMethod(propertyDescriptor.getWriteMethod());
             if (needPad.enableParaFieldInfer() && needPad.ParaFieldNames().length == 0 && method.getParameters().length > 0) {
                 fieldWrap.inferParaField(fields);
@@ -163,7 +157,7 @@ public final class ClassWrap {
                 }
             }
             if (false == finded) {
-                throw new WrongAnnotationException("未找到配置的方法参数字段" + fieldWrap.getParameterFields()[i]);
+                throw new WrongAnnotationException("未找到配置的参数字段或者对应getter方法:" + fieldWrap.getParameterFields()[i]);
             }
 
         }

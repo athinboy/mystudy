@@ -6,6 +6,7 @@ import org.apache.commons.logging.impl.Log4JLogger;
 import org.fgq.study.datapadding.exception.DataPaddingException;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -36,17 +37,19 @@ public class TestClass {
 
         List<PaddingClient> paddingClientList = new ArrayList<PaddingClient>();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1000; i++) {
             paddingClient = new PaddingClient();
-            paddingClient.setIndex(String.valueOf(i / 3));
+            paddingClient.setIndex(String.valueOf(i));
             paddingClientList.add(paddingClient);
         }
 
         try {
 
+            long startime = new Date().getTime();
             DataPadding.PadInfo(PaddingClient.class, paddingClientList);
-
-            System.out.println(JSON.toJSONString(paddingClientList, new SerializerFeature[]{SerializerFeature.PrettyFormat}));
+            long endtime = new Date().getTime();
+            System.out.println(endtime - startime);
+            //System.out.println(JSON.toJSONString(paddingClientList, new SerializerFeature[]{SerializerFeature.PrettyFormat}));
 
         } catch (Exception e) {
             System.out.println(e.toString());

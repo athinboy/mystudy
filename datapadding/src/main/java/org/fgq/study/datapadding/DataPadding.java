@@ -35,9 +35,12 @@ public class DataPadding {
 
         try {
 
+            // 字段-》查询参数字符串hash-》查询字符串-》结果对象
             HashMap<Field, HashMap<Integer, HashMap<String, Object>>> cache = new HashMap<>();
 
-            if (collection == null || collection.size() == 0) return;
+            if (collection == null || collection.size() == 0) {
+                return;
+            }
 
             ClassWrap classWrap = ClassWrap.WrapClass(tClass);
 
@@ -49,6 +52,11 @@ public class DataPadding {
             NeedPad needPad = null;
             HashMap<Integer, HashMap<String, Object>> fieldValueCacheMapItem = new HashMap<>();
             CacheResult cacheResult;
+
+            for (FieldWrap fieldWrap : classWrap.getFieldWraps()) {
+
+                fieldWrap.prepare();
+            }
 
             for (FieldWrap fieldWrap : classWrap.getFieldWraps()) {
 
@@ -79,6 +87,8 @@ public class DataPadding {
                     }
                     fieldWrap.getFieldWriteMethod().invoke(t, sourceValue);
                 }
+                fieldWrap.finish();
+
             }
 
         } catch (Exception ex) {
@@ -152,6 +162,12 @@ public class DataPadding {
         }
     }
 
+    /**
+     * 构造查询参数的字符串。
+     *
+     * @param para
+     * @return
+     */
     private static String getParaStr(Object[] para) {
 
         if (para == null || para.length == 0) {
@@ -162,7 +178,8 @@ public class DataPadding {
         for (int i = 0; i < para.length; i++) {
             p = para[i];
             if (p == null) {
-                continue;
+
+                stringBuilder.append("-");
             } else {
                 stringBuilder.append(p.toString());
             }

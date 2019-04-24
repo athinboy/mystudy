@@ -20,6 +20,15 @@ public @interface NeedPad {
     Class SourceClass();
 
     /**
+     * 原对象为无状态对象。
+     * true：常用于spring中。原对象可以一直缓存起来被调用。
+     * false：原对象不能被缓存。完成一次填充调用后将被丢弃。
+     *
+     * @return
+     */
+    boolean SourceNoStatus() default true;
+
+    /**
      * 获取方法。
      *
      * @return

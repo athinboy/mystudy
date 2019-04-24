@@ -1,7 +1,9 @@
 package org.fgq.study.datapadding.wrap;
 
+import org.fgq.study.datapadding.InitBean;
 import org.fgq.study.datapadding.annotation.NeedPad;
 import org.fgq.study.datapadding.exception.WrongAnnotationException;
+import org.fgq.study.datapadding.exception.WrongSourceClassException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -11,8 +13,6 @@ import java.lang.reflect.Parameter;
  * @author fenggqc
  * @create 2018-10-29 14:42
  **/
-
-
 public final class FieldWrap {
 
     private Field field;
@@ -31,13 +31,18 @@ public final class FieldWrap {
     protected FieldWrap(NeedPad needPad, Method sourceMethod) {
         this.setNeedPad(needPad);
         this.setSourceMethod(sourceMethod);
-        parameterFields=needPad.ParaFieldNames();
-
+        parameterFields = needPad.ParaFieldNames();
     }
-
 
     //region Getter And Setter
 
+    public Object getSourceObject() {
+        return sourceObject;
+    }
+
+    public void setSourceObject(Object sourceObject) {
+        this.sourceObject = sourceObject;
+    }
 
     public String[] getParameterFields() {
         return parameterFields;
@@ -61,14 +66,6 @@ public final class FieldWrap {
 
     public void setFieldWriteMethod(Method fieldWriteMethod) {
         this.fieldWriteMethod = fieldWriteMethod;
-    }
-
-    public Object getSourceObject() {
-        return sourceObject;
-    }
-
-    public void setSourceObject(Object sourceObject) {
-        this.sourceObject = sourceObject;
     }
 
     public Method getSourceMethod() {
@@ -128,10 +125,26 @@ public final class FieldWrap {
             parafields[i] = fieldname;
 
         }
-        this.parameterFields=parafields;
+        this.parameterFields = parafields;
 
     }
 
+    public void prepare() throws WrongSourceClassException {
+        if (this.sourceObject == null) {
+            try {
+                this.sourceObject = InitBean.getBean(needPad.SourceClass());
+
+            } catch (Exception ex) {
+                throw new WrongSourceClassException("获取对象失败：" + needPad.SourceClass().toString(), ex);
+            }
+        }
+    }
+
+    public void finish() {
+        if (this.needPad.SourceNoStatus() == false) {
+            this.sourceObject = null;
+        }
+    }
 
     // endregion
 }

@@ -25,14 +25,14 @@ public class Test {
 
         Boolean s=null;
 
-//        if(false==s){
-//
-//        }
         if(Boolean.FALSE.equals(s)){
 
         }
 
 
+        if (false == s) {
+
+        }
 
 //        System.out.println(s!=false);
 //        System.out.println(false!=null);

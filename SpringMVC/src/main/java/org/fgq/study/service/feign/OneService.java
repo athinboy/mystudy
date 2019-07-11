@@ -3,8 +3,7 @@ package org.fgq.study.service.feign;
 
 import feign.*;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+
 import java.io.IOException;
 import java.util.Map;
 

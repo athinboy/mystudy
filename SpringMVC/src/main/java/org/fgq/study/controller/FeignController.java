@@ -2,12 +2,11 @@ package org.fgq.study.controller;
 
 
 import com.alibaba.fastjson.JSON;
-import com.rabbitmq.tools.json.JSONUtil;
+
 import feign.Feign;
 import feign.codec.StringDecoder;
 import feign.gson.GsonDecoder;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
+
 import org.fgq.study.service.feign.FeighResult;
 import org.fgq.study.service.feign.OneService;
 import org.springframework.beans.factory.annotation.Autowired;

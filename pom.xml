@@ -31,6 +31,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <springframework.version>5.1.2.RELEASE</springframework.version>
+        <springboot.version>2.1.7.RELEASE</springboot.version>
+
         <core.version>1.0-SNAPSHOT</core.version>
 
     </properties>

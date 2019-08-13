@@ -16,6 +16,7 @@
         <module>sparkstudy</module>
         <module>dubbo/dubboserverone</module>
         <module>dubbo/dubboservertwo</module>
+        <module>dubbo/dubbosdk</module>
         <module>datapadding</module>
         <module>flinkstudy</module>
         <module>MybatisPlusSpringMVC</module>
@@ -31,7 +32,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <springframework.version>5.1.2.RELEASE</springframework.version>
         <core.version>1.0-SNAPSHOT</core.version>
+
     </properties>
+
 
     <dependencyManagement>
         <dependencies>
@@ -422,11 +425,6 @@
                 <groupId>opensymphony</groupId>
                 <artifactId>sitemesh</artifactId>
                 <version>2.4.1</version>
-            </dependency>
-            <dependency>
-                <groupId>net.sf.dozer</groupId>
-                <artifactId>dozer</artifactId>
-                <version>5.5.1</version>
             </dependency>
 
 

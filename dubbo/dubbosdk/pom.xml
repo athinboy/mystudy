@@ -8,9 +8,12 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>net.fgq.study</groupId>
     <artifactId>dubbosdk</artifactId>
+    <name>dubbosdk</name>
+    <version>1.0-SNAPSHOT</version>
 
 
 </project>

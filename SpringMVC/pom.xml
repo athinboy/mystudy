@@ -125,7 +125,7 @@
         <!--<dependency>-->
         <!--<groupId>org.springframework</groupId>-->
         <!--<artifactId> spring-messaging</artifactId>-->
-        <!--<version>${spring.version}</version>-->
+        <!--<version>${springframework.version}</version>-->
         <!--</dependency>-->
 
 

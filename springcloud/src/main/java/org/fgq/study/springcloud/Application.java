@@ -15,7 +15,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  **/
 @EnableCaching
 @SpringBootApplication
-@EnableAutoConfiguration
 @RestController
 @EnableEurekaServer
 //@EnableDiscoveryClient is no longer required. You can put a DiscoveryClient implementation

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @EnableCaching
 @SpringBootApplication
-@EnableAutoConfiguration
 @RestController
 public class Application {
 

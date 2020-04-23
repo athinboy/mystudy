@@ -29,7 +29,7 @@
     <modelVersion>4.0.0</modelVersion>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <springframework.version>5.1.2.RELEASE</springframework.version>
+        <springframework.version>5.2.5.RELEASE</springframework.version>
         <springboot.version>2.2.6.RELEASE</springboot.version>
         <core.version>1.0-SNAPSHOT</core.version>
     </properties>

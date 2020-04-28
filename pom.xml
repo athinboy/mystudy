@@ -20,7 +20,10 @@
         <module>flinkstudy</module>
         <module>MybatisPlusSpringMVC</module>
         <module>mybatismapper</module>
-        <module>springcloud</module>
+        <module>springcloud/parent</module>
+        <module>springcloud/server</module>
+        <module>springcloud/client</module>
+        <module>springcloud/provider</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -31,6 +34,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <springframework.version>5.1.2.RELEASE</springframework.version>
         <springboot.version>2.2.6.RELEASE</springboot.version>
+        <springcloud.version>Hoxton.RELEASE</springcloud.version>
         <core.version>1.0-SNAPSHOT</core.version>
     </properties>
     <dependencyManagement>
@@ -106,11 +110,11 @@
                 <artifactId>spring-aop</artifactId>
                 <version>${springframework.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-aspects</artifactId>
-                <version>${springframework.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.springframework</groupId>-->
+<!--                <artifactId>spring-aspects</artifactId>-->
+<!--                <version>${springframework.version}</version>-->
+<!--            </dependency>-->
             <!-- spring end -->
             <!--mybatis begin -->
             <dependency>
@@ -144,27 +148,27 @@
                 <version>1.3.7</version>
                 <type>pom</type>
             </dependency>
-            <dependency>
-                <groupId>com.github.pagehelper</groupId>
-                <artifactId>pagehelper</artifactId>
-                <version>4.1.3</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.github.pagehelper</groupId>-->
+<!--                <artifactId>pagehelper</artifactId>-->
+<!--                <version>4.1.3</version>-->
+<!--            </dependency>-->
             <!--mybatis end -->
             <dependency>
                 <groupId>org.quartz-scheduler</groupId>
                 <artifactId>quartz</artifactId>
                 <version>2.3.0</version>
             </dependency>
-            <dependency>
-                <groupId>org.apache.poi</groupId>
-                <artifactId>poi</artifactId>
-                <version>3.13</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.poi</groupId>
-                <artifactId>poi-ooxml</artifactId>
-                <version>3.13</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.apache.poi</groupId>-->
+<!--                <artifactId>poi</artifactId>-->
+<!--                <version>3.13</version>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>org.apache.poi</groupId>-->
+<!--                <artifactId>poi-ooxml</artifactId>-->
+<!--                <version>3.13</version>-->
+<!--            </dependency>-->
 
 
             <dependency>
@@ -236,11 +240,11 @@
             <!---feign 结束-->
 
             <!-- 阿里巴巴数据源包 -->
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>druid</artifactId>
-                <version>1.0.29</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.alibaba</groupId>-->
+<!--                <artifactId>druid</artifactId>-->
+<!--                <version>1.1.21</version>-->
+<!--            </dependency>-->
 
             <dependency>
                 <groupId>org.aspectj</groupId>
@@ -254,24 +258,24 @@
             </dependency>
 
 
-            <dependency>
-                <groupId>org.mybatis.dynamic-sql</groupId>
-                <artifactId>mybatis-dynamic-sql</artifactId>
-                <version>1.1.0</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.mybatis.dynamic-sql</groupId>-->
+<!--                <artifactId>mybatis-dynamic-sql</artifactId>-->
+<!--                <version>1.1.0</version>-->
+<!--            </dependency>-->
 
 
             <!--分布式事务 Begin -->
-            <dependency>
-                <groupId>javax.transaction</groupId>
-                <artifactId>jta</artifactId>
-                <version>1.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.atomikos</groupId>
-                <artifactId>transactions-jdbc</artifactId>
-                <version>3.9.3</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>javax.transaction</groupId>-->
+<!--                <artifactId>jta</artifactId>-->
+<!--                <version>1.1</version>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>com.atomikos</groupId>-->
+<!--                <artifactId>transactions-jdbc</artifactId>-->
+<!--                <version>3.9.3</version>-->
+<!--            </dependency>-->
             <!--分布式事务 End -->
 
             <!-- LOG BEGIN -->
@@ -322,17 +326,17 @@
                 <artifactId>jackson-core</artifactId>
                 <version>2.8.7</version>
             </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.module</groupId>
-                <artifactId>jackson-module-jaxb-annotations</artifactId>
-                <version>2.7.0</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.fasterxml.jackson.module</groupId>-->
+<!--                <artifactId>jackson-module-jaxb-annotations</artifactId>-->
+<!--                <version>2.7.0</version>-->
+<!--            </dependency>-->
 
-            <dependency>
-                <groupId>com.fasterxml.jackson.jaxrs</groupId>
-                <artifactId>jackson-jaxrs-json-provider</artifactId>
-                <version>2.1.5</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.fasterxml.jackson.jaxrs</groupId>-->
+<!--                <artifactId>jackson-jaxrs-json-provider</artifactId>-->
+<!--                <version>2.1.5</version>-->
+<!--            </dependency>-->
             <!-- JSON END -->
 
             <!-- DATETIME -->
@@ -359,11 +363,11 @@
                 <artifactId>commons-lang3</artifactId>
                 <version>3.4</version>
             </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-collections4</artifactId>
-                <version>4.2</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.apache.commons</groupId>-->
+<!--                <artifactId>commons-collections4</artifactId>-->
+<!--                <version>4.2</version>-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
@@ -407,11 +411,11 @@
             <!-- message end-->
 
             <!-- 简单的监控 API -->
-            <dependency>
-                <groupId>org.javasimon</groupId>
-                <artifactId>javasimon-console-embed</artifactId>
-                <version>3.5.2</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.javasimon</groupId>-->
+<!--                <artifactId>javasimon-console-embed</artifactId>-->
+<!--                <version>3.5.2</version>-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>opensymphony</groupId>
                 <artifactId>sitemesh</artifactId>
@@ -425,11 +429,11 @@
                 <version>5.5.1</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-all</artifactId>
-                <version>1.2.4</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.apache.shiro</groupId>-->
+<!--                <artifactId>shiro-all</artifactId>-->
+<!--                <version>1.2.4</version>-->
+<!--            </dependency>-->
 
             <!--redis begin-->
             <dependency>
@@ -444,20 +448,20 @@
             </dependency>
 
 
-            <dependency>
-                <groupId>net.sf.ehcache</groupId>
-                <artifactId>ehcache-core</artifactId>
-                <version>2.6.10</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>net.sf.ehcache</groupId>-->
+<!--                <artifactId>ehcache-core</artifactId>-->
+<!--                <version>2.6.10</version>-->
+<!--            </dependency>-->
 
 
             <!-- JAX-RS begin -->
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-frontend-jaxrs</artifactId>
-                <!--<version>2.7.5</version>-->
-                <version>3.1.4</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.apache.cxf</groupId>-->
+<!--                <artifactId>cxf-rt-frontend-jaxrs</artifactId>-->
+<!--                &lt;!&ndash;<version>2.7.5</version>&ndash;&gt;-->
+<!--                <version>3.1.4</version>-->
+<!--            </dependency>-->
 
             <!-- JAX-RS end -->
             <dependency>
@@ -471,16 +475,16 @@
                 <version>2.0</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.google.zxing</groupId>
-                <artifactId>core</artifactId>
-                <version>3.0.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.zxing</groupId>
-                <artifactId>javase</artifactId>
-                <version>3.0.0</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.google.zxing</groupId>-->
+<!--                <artifactId>core</artifactId>-->
+<!--                <version>3.0.0</version>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>com.google.zxing</groupId>-->
+<!--                <artifactId>javase</artifactId>-->
+<!--                <version>3.0.0</version>-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>cglib</groupId>
                 <artifactId>cglib</artifactId>
@@ -491,11 +495,11 @@
                 <artifactId>asm</artifactId>
                 <version>4.2</version>
             </dependency>
-            <dependency>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm-util</artifactId>
-                <version>4.2</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.ow2.asm</groupId>-->
+<!--                <artifactId>asm-util</artifactId>-->
+<!--                <version>4.2</version>-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>com.alibaba.otter</groupId>
                 <artifactId>canal.client</artifactId>

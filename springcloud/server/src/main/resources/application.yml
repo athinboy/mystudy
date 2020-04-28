@@ -1,0 +1,12 @@
+spring:
+  cloud:
+    zookeeper:
+      connect-string: localhost:2181
+server:
+  port: 2001
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    fetch-registry: true
+    register-with-eureka: true

@@ -2,3 +2,5 @@ spring:
   cloud:
     zookeeper:
       connect-string: localhost:2181
+server:
+  port: 2001

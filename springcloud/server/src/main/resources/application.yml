@@ -1,12 +1,25 @@
+#spring:
+#  cloud:
+#    zookeeper:
+#      connect-string: localhost:2181
 spring:
+  application:
+    name: spring-cloud-eurekaserver
   cloud:
-    zookeeper:
-      connect-string: localhost:2181
+    loadbalancer:
+      ribbon:
+        enabled: false
 server:
   port: 2001
 eureka:
   instance:
     hostname: localhost
   client:
-    fetch-registry: true
-    register-with-eureka: true
+    fetch-registry: false
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://localhost:2001/eureka/
+ribbon:
+  eureka:
+    enabled: false
+

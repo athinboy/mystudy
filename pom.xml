@@ -22,7 +22,7 @@
         <module>mybatismapper</module>
         <module>springcloud/parent</module>
         <module>springcloud/server</module>
-        <module>springcloud/client</module>
+        <module>springcloud/consumer</module>
         <module>springcloud/provider</module>
     </modules>
     <packaging>pom</packaging>

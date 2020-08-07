@@ -6,52 +6,29 @@
 </head>
 <body>
 
-
-<h6>来自www.cnblogs.com/yilezhu/p/9941208.html</h6>
-<ul>
-    <li>
-        Redis异步尽量不用，因为Redis延迟本身很小，大概在100us-200us，再一个就是Redis本身是单线程的，异步任务切换的耗时比网络耗时还要大。List用法：物联网中数据上传，量比较大时，我们可以把这些数据先放在Redis的List中，比如说一秒钟1万条，然后再批量取出来然后批量插入数据库中。这时候要设置好key,可以前缀+时间，对于已经处理的List可以进行remove移除。
-    </li>
-    <li>在Linux上多实例部署，实例个数等于处理器个数，各实例最大内存直接为本机物理内存，避免单个实例内存撑爆（比方说8核心处理器，那么就部署8个实例）</li>
-    <li>把海量数据（10亿+）根据key哈希（Crc16/Crc32）存放在多个实例上，读写性能成倍增长采用二进制序列化，而非常见的Json序列化</li>
-    <li>合理设计每一对Key的Value大小，包括但不限于使用批量获取，原则是让每次网络包控制在1.4k字节附近，减少通信次数（实际经验几十k，几百k也是没问题的）</li>
-    <li>Redis客户端的Get/Set操作平均耗时200~600us（含往返网络通信），以此为参考评估网络环境和Redis客户端组件（达不到就看一下网络，序列化方式等等）</li>
-    <li>使用管道Pipeline合并一批命令</li>
-    <li>Redis的主要性能瓶颈是序列化、网络带宽和内存大小，滥用时处理器也会达到瓶颈</li>
-    <li></li>
- 
-
-</ul>
-
-
-<hr/>
-
-<h6>来自fgq</h6>
-<ul>
-    <li>序列化：存放json序列化的数据比二进制序列化更节省空间,而且二进制序列化速度偏慢。</li>
-    <li>keys指令会导致线程阻塞一段时间，线上服务会停顿，直到指令执行完毕，服务才能恢复。这个时候可以使用scan指令，scan指令可以无阻塞的提取出指定模式的key列表，但是会有一定的重复概率，在客户端做一次去重就可以了，但是整体所花费的时间会比直接用keys指令长</li>
-    <li>如果大量的key过期时间设置的过于集中，到过期的那个时间点，redis可能会出现短暂的卡顿现象。一般需要在时间上加一个随机值，使得过期时间分散一些。</li>
-</ul>
-<hr/>
-
-
-<h6>redis分区</h6>
-
-
-
-
-
-
-<hr/>
-<h6>来自https://blog.csdn.net/qq_34337272/article/details/80012284</h6>
-<ul>
-   <li>Master最好不要做任何持久化工作，如RDB内存快照和AOF日志文件</li>
-   <li>如果数据比较重要，某个Slave开启AOF备份数据，策略设置为每秒同步一次</li>
-   <li>为了主从复制的速度和连接的稳定性，Master和Slave最好在同一个局域网内</li>
-   <li>尽量避免在压力很大的主库上增加从库</li>
-</ul>
-
-
+<article class="_2rhmJa"><h1>redis底层原理：</h1>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;使用ziplist存储链表，ziplist是一种压缩链表，它的好处是更能节省内存空间，因为它所存储的内容都是在连续的内存区域当中的。</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;使用&nbsp;skiplist(跳跃表)来存储有序集合对象、查找上先从高Level查起、时间复杂度和红黑树相当，实现容易，无锁、并发性好。</p>
+    <h1>Redis经验分享：</h1>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Redis异步尽量不用，因为Redis延迟本身很小，大概在100us-200us，再一个就是Redis本身是单线程的，异步任务切换的耗时比网络耗时还要大。</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在Linux上多实例部署，实例个数等于处理器个数，各实例最大内存直接为本机物理内存，避免单个实例内存撑爆（比方说8核心处理器，那么就部署8个实例）。</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;把海量数据（10亿+）根据key哈希（Crc16/Crc32）存放在多个实例上，读写性能成倍增长。</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;采用二进制序列化，而非常见的Json序列化。</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;合理设计每一对Key的Value大小，包括但不限于使用批量获取，原则是让每次网络包控制在1.4k字节附近，减少通信次数（实际经验几十k，几百k也是没问题的）。</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Redis客户端的Get/Set操作平均耗时200~600us（含往返网络通信），以此为参考评估网络环境和Redis客户端组件（达不到就看一下网络，序列化方式等等）。</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;使用管道Pipeline合并一批命令。</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Redis的主要性能瓶颈是序列化、网络带宽和内存大小，滥用时处理器也会达到瓶颈。</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Redis实现ICache接口。它的孪生兄弟MemoryCache，内存缓存，千万级吞吐率。各应用强烈建议使用ICache接口编码设计，小数据时使用MemoryCache实现；数据增大（10万）以后，改用Redis实现，不需要修改业务代码。</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Master最好不要做任何持久化工作，如RDB内存快照和AOF日志文件。如果数据比较重要，某个Slave开启AOF备份数据，策略设置为每秒同步一次。</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;主从复制不要用图状结构，用单向链表结构更为稳定，即：Master &lt;- Slave1 &lt;- Slave2 &lt;-
+        Slave3...这样的结构方便解决单点故障问题，实现Slave对Master的替换。如果Master挂了，可以立刻启用Slave1做Master，其他不变。</p>
+    <p><b>Memcached</b><b>的多线程</b><b>&nbsp;vs. Redis</b><b>单线程</b></p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Memcached内部是多线程的，而Redis是单线程的。</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Redis的value的类型可以是list, hash,
+        set。在实际应用场景中，很容易出现多个客户端对同一个key的这个复杂的value数据结构进行并发操作，如果是多线程，势必要引入锁，而锁却是性能杀手。</p>
+    <p>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;相比较而言，memcached只有简单的get/set/add操作，没有复杂数据结构，在互斥这个问题上，没有redis那么严重。</p>
+</article>
 
 
 </body>

@@ -30,6 +30,7 @@ public class CyclicBarrier_One extends Thread {
                 System.out.println(String.format("   %s 完成", index.toString()));
 
                 mainCyclicBarrier.await();
+                System.out.println(String.format("   %s wait barrier", index.toString()));
                 batchEndCountDownLatch.countDown();
                 startCountDownLatch.await();
                 if(false==needrun){
@@ -91,7 +92,9 @@ public class CyclicBarrier_One extends Thread {
 
 
             try {
+                System.out.println(String.format("await endcountdown", String.valueOf(i)));
                 batchEndCountDownLatch.await();
+                System.out.println(String.format("barrier reset", String.valueOf(i)));
                 mainCyclicBarrier.reset();
                 System.out.println(String.format("%s完成", String.valueOf(i)));
 

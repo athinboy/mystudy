@@ -37,7 +37,7 @@ t1 finish
         */
 
         t1.start();
-        Thread.sleep(1000);
+        Thread.sleep(3000);
         System.out.println("unpark t1");
         LockSupport.unpark(t1);
 

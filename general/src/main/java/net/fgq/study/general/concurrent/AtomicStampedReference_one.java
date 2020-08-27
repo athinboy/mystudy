@@ -14,11 +14,16 @@ public class AtomicStampedReference_one {
     public static void main(String[] args) {
 
         new Thread(() -> {
+
             String value = asf.getReference();
             System.out.println("Thread1 current value: " + asf.getReference() + ", stamp: " + asf.getStamp());
-
             asf.compareAndSet(value, "B", asf.getStamp(), asf.getStamp() + 1);
             System.out.println("Thread1：" + value + "——>" + asf.getReference() + ",stamp:" + asf.getStamp());
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             value = asf.getReference();
             asf.compareAndSet(asf.getReference(), "A", asf.getStamp(), asf.getStamp() + 1);
             System.out.println("Thread1：" + value + "——>" + asf.getReference() + ",stamp:" + asf.getStamp());
@@ -26,7 +31,6 @@ public class AtomicStampedReference_one {
 
         new Thread(() -> {
             String value = asf.getReference();
-
             int stamp = asf.getStamp();
             System.out.println("Thread2 current value: " + asf.getReference() + ", stamp: " + stamp);
 
@@ -35,7 +39,7 @@ public class AtomicStampedReference_one {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("Thread2: " + value + "——>" + "B" + ",stamp:" + stamp + 1);
+            System.out.println("Thread2: " + value + "——>" + "B" + ",stamp:" + (stamp + 1));
             boolean flag = asf.compareAndSet(value, "B", stamp, stamp + 1);
             if (flag) {
                 System.out.println("Thread2 update from " + value + " to B");

@@ -60,7 +60,10 @@
                 <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
                 <version>2.2.2.RELEASE</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

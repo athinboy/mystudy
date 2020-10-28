@@ -1,5 +1,6 @@
 package net.fgq.study.pdf.annoation;
 
+import net.fgq.study.pdf.PdfTextPosition;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -11,6 +12,11 @@ import java.util.List;
  * Created by fengguoqiang 2020/10/27
  */
 public class Table {
+
+    /**
+     * 单元格行间最大空白
+     */
+    private float cellLineSpace = 2;
 
     /**
      * 列头区域
@@ -69,6 +75,14 @@ public class Table {
         this.pageIndex = pageIndex;
     }
 
+    /**
+     * 调整单元格内文字信息。
+     * 子类重新此方法，用于特殊格式的调整。
+     */
+    public void adjustCellText(List<List<PdfTextPosition>> tabCellTexts) {
+
+    }
+
     public int getPageIndex() {
         return pageIndex;
     }
@@ -115,5 +129,13 @@ public class Table {
 
     public void setJsonKey(String jsonKey) {
         this.jsonKey = jsonKey;
+    }
+
+    public float getCellLineSpace() {
+        return cellLineSpace;
+    }
+
+    public void setCellLineSpace(float cellLineSpace) {
+        this.cellLineSpace = cellLineSpace;
     }
 }

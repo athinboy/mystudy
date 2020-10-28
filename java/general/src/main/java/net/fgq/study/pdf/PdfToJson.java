@@ -2,12 +2,7 @@ package net.fgq.study.pdf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import javafx.scene.text.TextAlignment;
-import net.bytebuddy.build.Plugin;
-import net.fgq.study.pdf.annoation.Column;
-import net.fgq.study.pdf.annoation.Content;
-import net.fgq.study.pdf.annoation.Document;
-import net.fgq.study.pdf.annoation.Table;
+import net.fgq.study.pdf.annoation.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -31,10 +26,9 @@ public class PdfToJson {
 
     private static Logger logger = LoggerFactory.getLogger(PdfToJson.class);
 
-    /**
-     * 单元格行间最大空白
-     */
-    private float cellLineSpace = 3;
+    private Document document;
+
+    private PDDocument pdDocument;
 
     public PdfToJson() throws IOException {
         this.textPositionStripper = new PDFTextPositionStripper();
@@ -43,6 +37,8 @@ public class PdfToJson {
     }
 
     public JSONObject parse(PDDocument pdDocument, Document document) {
+        this.document = document;
+        this.pdDocument = pdDocument;
 
         try {
             JSONObject jsonObject = new JSONObject();
@@ -64,7 +60,7 @@ public class PdfToJson {
             if (CollectionUtils.isNotEmpty(document.getTables())) {
                 for (Table table : document.getTables()) {
                     parseTable(textPositions.stream().filter(x -> {
-                                return x.getPageIndex() == table.getPageIndex();
+                                return x.getPageIndex() == table.getPageIndex() && x.getText().trim().length() > 0;
                             }).collect(Collectors.toList()),
                             table, jsonObject);
                 }
@@ -84,6 +80,18 @@ public class PdfToJson {
         }
 
         List<List<PdfTextPosition>> tabCellTexts = parseColumn(textPositions, table);
+
+        //各个单元格文字，从上到下排序
+        for (List<PdfTextPosition> colTexts : tabCellTexts) {
+            colTexts.sort(new Comparator<PdfTextPosition>() {
+                @Override
+                public int compare(PdfTextPosition o1, PdfTextPosition o2) {
+                    return new Double(o1.getRectangle().getY()).compareTo(new Double(o2.getRectangle().getY()));
+                }
+            });
+        }
+
+        table.adjustCellText(tabCellTexts);
 
         JSONArray tableJsonArr = jsonObject.getJSONArray(table.getJsonKey());
         if (tableJsonArr == null) {
@@ -109,7 +117,7 @@ public class PdfToJson {
                         continue;
                     } else {
                         for (int i = 0; i < colTexts.size(); i++) {
-                            if (sameRow(currentCellText, colTexts.get(i))) {
+                            if (sameRow(table, currentCellText, colTexts.get(i))) {
                                 newitem.put(table.getColumns().get(j).getJsonKey(), colTexts.get(i).getText());
                                 colTexts.remove(i);
                                 break;
@@ -140,7 +148,7 @@ public class PdfToJson {
         Rectangle rectangle;
         for (int i = 0; i < headerPositions.size(); i++) {
             rectangle = headerPositions.get(i).getRectangle();
-            if (table.getColumns().get(i).getCellAlignment() == TextAlignment.RIGHT) {
+            if (table.getColumns().get(i).getCellHoriztalAlignment() == TextHorizontalAlignEnum.RIGHT) {
                 rectangle.x = new Double(rectangle.getMaxX() - rectangle.getWidth()).intValue();
             } else {
                 if (table.getColumns().get(i).getWidth() > rectangle.getWidth()) {
@@ -162,9 +170,11 @@ public class PdfToJson {
                 if (table.getPageIndex() != textPosition.getPageIndex()) {
                     continue;
                 }
-                if (headerRect.contains(textPosition.getRectangle())
-                        && textPosition.getText().contains(table.getColumns().get(i).getSign())) {
-                    headerPositions.add(textPosition);
+                if (headerRect.contains(textPosition.getRectangle())) {
+                    if (table.getColumns().get(i).getSignPatter().asPredicate().test(textPosition.getText())) {
+                        headerPositions.add(textPosition);
+                        break;
+                    }
                 }
             }
         }
@@ -188,7 +198,8 @@ public class PdfToJson {
 
         List<PdfTextPosition> colTexts;
 
-        List<List<PdfTextPosition>> tabCellTexts = new ArrayList<>();
+        List<List<PdfTextPosition>> tableCellTexts = new ArrayList<>();
+
         for (int i = 0; i < table.getColumns().size(); i++) {
 
             if (i == 0) {
@@ -213,21 +224,16 @@ public class PdfToJson {
                     colTexts.add(textPosition);
                 }
             }
-            merbeCellText(colTexts);
-            tabCellTexts.add(colTexts);
+            merbeCellText(colTexts, table);
+            tableCellTexts.add(colTexts);
         }
-        return tabCellTexts;
+        return tableCellTexts;
 
     }
 
     //合并单元格中多行
-    private void merbeCellText(List<PdfTextPosition> colTexts) {
-        colTexts.sort(new Comparator<PdfTextPosition>() {
-            @Override
-            public int compare(PdfTextPosition o1, PdfTextPosition o2) {
-                return new Double(o1.getRectangle().getY()).compareTo(new Double(o2.getRectangle().getY()));
-            }
-        });
+    private void merbeCellText(List<PdfTextPosition> colTexts, Table table) {
+
         PdfTextPosition o1;
         PdfTextPosition o2;
 
@@ -238,7 +244,7 @@ public class PdfToJson {
             for (int j = i + 1; j < colTexts.size(); j++) {
                 o1 = colTexts.get(i);
                 o2 = colTexts.get(j);
-                if (cellLineSpace > Math.abs(o1.getRectangle().getMaxY() - o2.getRectangle().getY())) {
+                if (table.getCellLineSpace() > Math.abs(o1.getRectangle().getMaxY() - o2.getRectangle().getY())) {
                     o1.getRectangle().width = Math.max(o1.getRectangle().width, o2.getRectangle().width);
                     o1.getRectangle().x = Math.max(o1.getRectangle().x, o2.getRectangle().x);
                     o1.getRectangle().height = new Double(o2.getRectangle().getMaxY() - o1.getRectangle().getY()).intValue();
@@ -253,13 +259,13 @@ public class PdfToJson {
     }
 
     //是否同行
-    private boolean sameRow(PdfTextPosition o1, PdfTextPosition o2) {
+    private boolean sameRow(Table table, PdfTextPosition o1, PdfTextPosition o2) {
         double o1m = o1.getRectangle().getY() + o1.getRectangle().getHeight() / 2;
         double o2m = o2.getRectangle().getY() + o2.getRectangle().getHeight() / 2;
-        if (Math.abs(o1m - o2m) <= cellLineSpace) {
+        if (Math.abs(o1m - o2m) <= table.getCellLineSpace()) {
             return true;
         }
-        if (Math.abs(o1.getRectangle().getY() - o2.getRectangle().getY()) <= cellLineSpace) {
+        if (Math.abs(o1.getRectangle().getY() - o2.getRectangle().getY()) <= table.getCellLineSpace()) {
             return true;
         }
         return false;
@@ -278,7 +284,7 @@ public class PdfToJson {
         if (false == colRect.intersects(textPosition.getRectangle())) {
             return false;
         }
-        if (column.getCellAlignment() == TextAlignment.RIGHT) {
+        if (column.getCellHoriztalAlignment() == TextHorizontalAlignEnum.RIGHT) {
             if (textPosition.getRectangle().getX() > colRect.getMaxX()) {//最左文字在区域中线右边
                 return false;
             }
@@ -300,6 +306,10 @@ public class PdfToJson {
 
         }
 
+        if (colRect.getMaxY() < textPosition.getRectangle().getMaxY()) {//文字下边界出界限
+            return false;
+        }
+
         return true;
     }
 
@@ -319,11 +329,4 @@ public class PdfToJson {
 
     }
 
-    public float getCellLineSpace() {
-        return cellLineSpace;
-    }
-
-    public void setCellLineSpace(float cellLineSpace) {
-        this.cellLineSpace = cellLineSpace;
-    }
 }

@@ -22,45 +22,24 @@ public class Two {
 
     public static void main(String[] args) throws Exception {
 //        T0();
-//        saveImage();
-        showTextPosition();
-        //  StripText();
+        //  saveImage();
+        //showTextPosition();
+        StripText();
     }
 
     private static void StripText() throws Exception {
         String filename = "D:\\fgq\\temp\\222.pdf";
         PDDocument document = PDDocument.load(new File(filename));
 
-        for (int i = 0; i < document.getPages().getCount(); i++) {
+        for (int i = 2; i < document.getPages().getCount() - 1; i++) {
             PDPage pdPage = document.getPages().get(i);
-
-            Rectangle textRrect = new Rectangle(39, 372, 209, 15);
+            Rectangle textRrect = new Rectangle(474, 126, 120, 20);
             String REGION_NAME = "text1";
             PDFTextStripperByArea textStripper = new PDFTextStripperByArea();
             textStripper.setSortByPosition(true);
             textStripper.addRegion(REGION_NAME, textRrect);
             textStripper.extractRegions(pdPage);
             String textContent = textStripper.getTextForRegion(REGION_NAME);
-            System.out.println(textContent);
-
-            if (textContent.length() > 0) {
-                return;
-            }
-
-            //--------------------------------------
-            REGION_NAME = "text1";
-            textRrect = new Rectangle(40, 190, 40, 20);
-            textStripper.addRegion(REGION_NAME, textRrect);
-            textStripper.extractRegions(pdPage);
-            textContent = textStripper.getTextForRegion(REGION_NAME);
-            System.out.println(textContent);
-
-            //--------------------------------------
-            REGION_NAME = "text3";
-            textRrect = new Rectangle(91, 650, 90, 16);
-            textStripper.addRegion(REGION_NAME, textRrect);
-            textStripper.extractRegions(pdPage);
-            textContent = textStripper.getTextForRegion(REGION_NAME);
             System.out.println(textContent);
 
         }

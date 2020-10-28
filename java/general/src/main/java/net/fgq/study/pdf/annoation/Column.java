@@ -1,7 +1,11 @@
 package net.fgq.study.pdf.annoation;
 
 import javafx.scene.text.TextAlignment;
+import net.fgq.study.pdf.PdfTextPosition;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by fengguoqiang 2020/10/27
@@ -14,9 +18,11 @@ import org.apache.commons.lang3.StringUtils;
 public class Column {
 
     /**
-     * 列头标记
+     * 列头标记正则表达式，同一个表格中，必须唯一
      */
     private String sign;
+
+    private Pattern signPatter;
 
     /**
      * 列json key name；
@@ -28,7 +34,9 @@ public class Column {
      */
     private int width;
 
-    private TextAlignment cellAlignment = TextAlignment.LEFT;
+    private TextHorizontalAlignEnum cellHoriztalAlignment = TextHorizontalAlignEnum.LEFT;
+
+    private TextVerticalAlignEnum cellVerticalAlignment = TextVerticalAlignEnum.TOP;
 
     public Column(String sign, String jsonKey, int width) {
 
@@ -36,15 +44,16 @@ public class Column {
             throw new IllegalArgumentException();
         }
 
-        this.sign = sign;
+        this.setSign(sign);
         this.jsonKey = jsonKey;
         this.width = width;
     }
 
-    public Column(String sign, String jsonKey, int width, TextAlignment cellAlignment) {
+    public Column(String sign, String jsonKey, int width, TextHorizontalAlignEnum cellHoriztalAlignment, TextVerticalAlignEnum cellVerticalAlignment) {
 
         this(sign, jsonKey, width);
-        this.cellAlignment = cellAlignment;
+        this.cellHoriztalAlignment = cellHoriztalAlignment;
+        this.cellVerticalAlignment = cellVerticalAlignment;
     }
 
     public String getSign() {
@@ -53,6 +62,15 @@ public class Column {
 
     public void setSign(String sign) {
         this.sign = sign;
+        this.signPatter = Pattern.compile(this.sign);
+    }
+
+    public Pattern getSignPatter() {
+        return signPatter;
+    }
+
+    public void setSignPatter(Pattern signPatter) {
+        this.signPatter = signPatter;
     }
 
     public String getJsonKey() {
@@ -71,11 +89,20 @@ public class Column {
         this.width = width;
     }
 
-    public TextAlignment getCellAlignment() {
-        return cellAlignment;
+    public TextHorizontalAlignEnum getCellHoriztalAlignment() {
+        return cellHoriztalAlignment;
     }
 
-    public void setCellAlignment(TextAlignment cellAlignment) {
-        this.cellAlignment = cellAlignment;
+    public void setCellHoriztalAlignment(TextHorizontalAlignEnum cellHoriztalAlignment) {
+        this.cellHoriztalAlignment = cellHoriztalAlignment;
     }
+
+    public TextVerticalAlignEnum getCellVerticalAlignment() {
+        return cellVerticalAlignment;
+    }
+
+    public void setCellVerticalAlignment(TextVerticalAlignEnum cellVerticalAlignment) {
+        this.cellVerticalAlignment = cellVerticalAlignment;
+    }
+
 }

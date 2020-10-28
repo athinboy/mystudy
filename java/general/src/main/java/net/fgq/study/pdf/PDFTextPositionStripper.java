@@ -18,6 +18,11 @@ import java.util.List;
 public class PDFTextPositionStripper extends PDFTextStripper {
 
     /**
+     * 字符间距
+     */
+    private int charGapSpace = 1;
+
+    /**
      * Instantiate a new PDFTextStripper object.
      *
      * @throws IOException If there is an error loading the properties.
@@ -26,7 +31,17 @@ public class PDFTextPositionStripper extends PDFTextStripper {
         super();
     }
 
+    public int getCharGapSpace() {
+        return charGapSpace;
+    }
+
+    public void setCharGapSpace(int charGapSpace) {
+        this.charGapSpace = charGapSpace;
+    }
+
     private List<PdfTextPosition> textPositions = null;
+
+    private int currentPageIndex;
 
     public List<PdfTextPosition> stripPosition(PDDocument document) throws IOException {
 
@@ -35,6 +50,7 @@ public class PDFTextPositionStripper extends PDFTextStripper {
         setEndPage(getCurrentPageNo());
 
         for (int i = 0; i < document.getPages().getCount(); i++) {
+            currentPageIndex = i;
             PDPage pdPage = document.getPages().get(i);
             if (pdPage.hasContents()) {
 
@@ -92,8 +108,13 @@ public class PDFTextPositionStripper extends PDFTextStripper {
 
         super.processTextPosition(text);
 
-        if (text.getX() == startX + width && text.getY() == startY) {
+        if (text.getY() == startY
+                && text.getX() <= startX + width + this.charGapSpace
+                && text.getX() + text.getWidth() > startX + width + this.charGapSpace) {
             lastStr = lastStr + text;
+            if ("保险费（元）".equals(lastStr)) {
+                System.out.println(lastStr);
+            }
             width = text.getX() + text.getWidth() - startX;
             height = Math.max(height, getHeight(text));
 
@@ -111,12 +132,15 @@ public class PDFTextPositionStripper extends PDFTextStripper {
     }
 
     private float getHeight(TextPosition text) {
+        if (text.getFontSize() > text.getWidth() * 1.5) {
+            return (float) (text.getWidth() * 1.2);
+        }
         return text.getFontSize();//text.getHeight()=text.getFontSize()/2;
     }
 
     private void savePosition() {
 
-        PdfTextPosition position = new PdfTextPosition(getCurrentPageNo(), lastStr,
+        PdfTextPosition position = new PdfTextPosition(currentPageIndex, lastStr,
                 (new Double(Math.ceil(startX))).intValue(),
                 (new Double(Math.ceil(startY))).intValue(),
                 (new Double(Math.floor(width))).intValue(),

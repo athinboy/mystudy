@@ -22,6 +22,8 @@ public class PDFTextPositionStripper extends PDFTextStripper {
      */
     private int charGapSpace = 1;
 
+    public boolean ShouwSystemOut = false;
+
     /**
      * Instantiate a new PDFTextStripper object.
      *
@@ -112,9 +114,7 @@ public class PDFTextPositionStripper extends PDFTextStripper {
                 && text.getX() <= startX + width + this.charGapSpace
                 && text.getX() + text.getWidth() > startX + width + this.charGapSpace) {
             lastStr = lastStr + text;
-            if ("保险费（元）".equals(lastStr)) {
-                System.out.println(lastStr);
-            }
+
             width = text.getX() + text.getWidth() - startX;
             height = Math.max(height, getHeight(text));
 
@@ -146,7 +146,7 @@ public class PDFTextPositionStripper extends PDFTextStripper {
                 (new Double(Math.floor(width))).intValue(),
                 (new Double(Math.floor(height))).intValue());
         this.textPositions.add(position);
-        if (1 == 1) {
+        if (ShouwSystemOut) {
             System.out.println(position.toString());
         }
     }

@@ -30,10 +30,22 @@ public class PdfToJson {
 
     private PDDocument pdDocument;
 
+    public boolean showSystemOut = false;
+
+    public boolean isShowSystemOut() {
+        return showSystemOut;
+    }
+
+    public void setShowSystemOut(boolean showSystemOut) {
+        this.showSystemOut = showSystemOut;
+        textPositionStripper.ShouwSystemOut = this.showSystemOut;
+    }
+
     public PdfToJson() throws IOException {
         this.textPositionStripper = new PDFTextPositionStripper();
         textPositionStripper.setSortByPosition(true);
         textPositionStripper.setSortByPosition(true);
+        textPositionStripper.ShouwSystemOut = this.showSystemOut;
     }
 
     public JSONObject parse(PDDocument pdDocument, Document document) {
@@ -112,13 +124,15 @@ public class PdfToJson {
                 } else {
                     if (currentCellText == null) {
                         currentCellText = colTexts.get(0);
-                        newitem.put(table.getColumns().get(j).getJsonKey(), currentCellText.getText());
+                        newitem.put(table.getColumns().get(j).getJsonKey(),
+                                table.getColumns().get(j).purseValue(currentCellText.getText()));
                         colTexts.remove(0);
                         continue;
                     } else {
                         for (int i = 0; i < colTexts.size(); i++) {
                             if (sameRow(table, currentCellText, colTexts.get(i))) {
-                                newitem.put(table.getColumns().get(j).getJsonKey(), colTexts.get(i).getText());
+                                newitem.put(table.getColumns().get(j).getJsonKey(),
+                                        table.getColumns().get(j).purseValue(colTexts.get(i).getText()));
                                 colTexts.remove(i);
                                 break;
                             }

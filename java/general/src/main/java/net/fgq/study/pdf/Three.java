@@ -3,11 +3,13 @@ package net.fgq.study.pdf;
 import com.alibaba.fastjson.JSONObject;
 import javafx.scene.text.TextAlignment;
 import net.fgq.study.pdf.annoation.*;
+import net.fgq.study.pdf.annoation.special.NumberColumn;
 import net.fgq.study.pdf.annoation.special.PingAnNewTable;
+import net.fgq.study.pdf.annoation.special.RenBaoNewTable;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,36 +29,45 @@ public class Three {
 
         File[] files = fileDirectory.listFiles();
         for (int i = 0; i < files.length; i++) {
+            try {
+
 //            String filename = "D:\\fgq\\temp\\222.pdf";
-            System.out.println(files[i].getName());
-            PDDocument document = PDDocument.load(files[i]);
+                System.out.println(files[i].getName());
+                PDDocument document = PDDocument.load(files[i]);
 
-            String content;
+                String content;
 
-            PDFTextStripper pts = new PDFTextStripper();
-            pts.setSortByPosition(true);
-            content = pts.getText(document);
-            if (content.contains("中国平安") && content.contains("机动车商业保险保险单")) {
-//                 parsePingAnNew(files[i], document);
-            } else if (content.contains("中国平安") && content.contains("机动车综合商业保险保险单")) {
-//                parsePingAnOld(files[i], document);
-            } else if (content.contains("人寿") && content.contains("机动车辆商业保险单")) {
-                //parseRenShouOld(files[i], document);
-            } else if (content.contains("人寿") && content.contains("机动车商业保险保险单")) {
-                //parseRenShouNew(files[i], document);
-            } else if (content.contains("太平财产保险") && content.contains("机动车商业保")) {
-                //parseTaiPing(files[i], document);
-            } else if (content.contains("PICC") && content.contains("机动车商业保险保险单")) {
-                //parseRenBao(files[i], document);
-            } else if (content.contains("CPIC") && content.contains("神行车保机动车保险单")) {
-                parseTaiPingYang(files[i], document);
-            } else {
-                System.out.println(content);
-                throw new Exception("33333333333333");
+                PDFTextStripper pts = new PDFTextStripper();
+                pts.setSortByPosition(true);
+                content = pts.getText(document);
+                //System.out.println(content);
+                if (content.contains("中国平安") && content.contains("机动车商业保险保险单")) {
+                    parsePingAnNew(files[i], document);
+                } else if (content.contains("中国平安") && content.contains("机动车综合商业保险保险单")) {
+                    parsePingAnOld(files[i], document);
+                } else if (content.contains("人寿") && content.contains("机动车辆商业保险单")) {
+                    parseRenShouOld(files[i], document);
+                } else if (content.contains("人寿") && content.contains("机动车商业保险保险单")) {
+                    parseRenShouNew(files[i], document);
+                } else if (content.contains("太平财产保险") && content.contains("机动车商业保")) {
+                    parseTaiPing(files[i], document);
+                } else if (content.contains("PICC") && content.contains("机动车商业保险保险单（电子保单）")) {
+                    parseRenBaoOld(files[i], document);//人保旧
+                } else if (content.contains("PICC") && content.contains("机动车商业保险保险单") && false == content.contains("机动车商业保险保险单（电子保单）")) {
+                    parseRenBaoNew(files[i], document);//人保新
+                } else if (content.contains("CPIC") && content.contains("神行车保机动车保险单")) {
+                    parseTaiPingYang(files[i], document);
+                } else {
+                    //System.out.println(content);
+                    //throw new Exception("33333333333333");
+                }
+
+            } catch (Exception ex) {
+                System.out.println(files[i].getName());
+                System.out.println(ExceptionUtils.getStackTrace(ex));
+                return;
             }
-
         }
-
     }
 
     /**
@@ -94,13 +105,50 @@ public class Three {
     }
 
     /**
-     * 人保
+     * 人保新
      *
      * @param file
      * @param document
      * @throws Exception
      */
-    private static void parseRenBao(File file, PDDocument document) throws Exception {
+    private static void parseRenBaoNew(File file, PDDocument document) throws Exception {
+
+        PdfToJson pdfToJson = new PdfToJson();
+        pdfToJson.setShowSystemOut(true);
+
+        Document purseDoc = new Document();
+        purseDoc.getContents().add(new Content(0, "保险单号", 412, 175, 87, 8));
+
+        List<Column> columnList = new ArrayList<>();
+        columnList.add(new Column("承保险种", "承保险种", 208, false));
+        columnList.add(new Column("绝对免赔率", "绝对免赔率", 40));
+        columnList.add(new Column("费率浮动", "费率浮动", 60, TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
+        columnList.add(new Column("保险金额/责任限额", "责任限额", 68, TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
+        columnList.add(new NumberColumn("保险费", "保险费", 80));
+
+        RenBaoNewTable table = new RenBaoNewTable(0, new Rectangle(39, 294, 530, 8), "除法律法规另有约定外", columnList, "明细");
+
+        purseDoc.getTables().add(table);
+
+        JSONObject jsonObject = pdfToJson.parse(document, purseDoc);
+        System.out.println("识别结果：");
+        System.out.println(file.getName());
+        System.out.println(jsonObject.toJSONString());
+
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
+
+    }
+
+    /**
+     * 人保旧
+     *
+     * @param file
+     * @param document
+     * @throws Exception
+     */
+    private static void parseRenBaoOld(File file, PDDocument document) throws Exception {
 
         PdfToJson pdfToJson = new PdfToJson();
         Document purseDoc = new Document();

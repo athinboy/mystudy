@@ -20,7 +20,7 @@ public class Four {
 
         //String filename = "D:\\fgq\\temp\\999.pdf";
 
-        File fileDirectory = new File("D:\\fgq\\temp\\新测试保单-2\\");
+        File fileDirectory = new File("D:\\fgq\\temp\\新测试保单-3\\");
 
         File[] files = fileDirectory.listFiles();
         for (int i = 0; i < files.length; i++) {
@@ -49,15 +49,16 @@ public class Four {
                 newFile = "太平洋";
             } else {
                 System.out.println(content);
-                throw new Exception("33333333333333");
+                //throw new Exception("33333333333333");
+                continue;
             }
 
             newFile += files[i].getName().replace("平安", "")
                     .replace("平安", "")
-                    .replace("平安", "")
-                    .replace("平安", "")
-                    .replace("平安", "")
-                    .replace("平安", "");
+                    .replace("人保", "")
+                    .replace("太平洋", "")
+                    .replace("太平", "")
+                    .replace("人寿", "");
 
             newFile = files[i].getParent() + File.separator + newFile;
             System.out.println(newFile);

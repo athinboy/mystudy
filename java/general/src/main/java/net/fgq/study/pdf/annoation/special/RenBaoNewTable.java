@@ -12,20 +12,20 @@ import java.util.List;
  */
 public class RenBaoNewTable extends Table {
 
-    public RenBaoNewTable(int pageIndex, Rectangle headRect, String footSign, List<Column> columns, String jsonKey) {
+    public RenBaoNewTable(int pageIndex, Rectangle headRect, String footSign, String jsonKey) {
 
-        super(pageIndex, headRect, footSign, columns, jsonKey);
+        super(pageIndex, headRect, footSign, jsonKey);
         this.init();
 
     }
 
-    public RenBaoNewTable(int pageIndex, Rectangle headRect, Rectangle footRect, List<Column> columns, String jsonKey) {
-        super(pageIndex, headRect, footRect, columns, jsonKey);
+    public RenBaoNewTable(int pageIndex, Rectangle headRect, List<Column> columns, String jsonKey) {
+        super(pageIndex, headRect, jsonKey);
         this.init();
 
     }
 
     private void init() {
-        this.setCellLineSpace(2.5F);
+        this.setCellLineSpace(3);
     }
 }

@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +29,7 @@ public class PdfToJson {
 
     private PDDocument pdDocument;
 
-    public boolean showSystemOut = false;
+    private boolean showSystemOut = false;
 
     public boolean isShowSystemOut() {
         return showSystemOut;
@@ -49,6 +48,9 @@ public class PdfToJson {
     }
 
     public JSONObject parse(PDDocument pdDocument, Document document) {
+
+        //todo 因为运行时生成数据，加锁，避免多线程，
+
         this.document = document;
         this.pdDocument = pdDocument;
 
@@ -59,6 +61,16 @@ public class PdfToJson {
             }
 
             List<PdfTextPosition> textPositions = textPositionStripper.stripPosition(pdDocument);
+
+            if (StringUtils.isNotBlank(document.getPageIndexSign())) {
+                for (PdfTextPosition textPosition : textPositions) {
+                    if (textPosition.getText().contains(document.getPageIndexSign())) {
+                        document.changePageIndex(textPosition.getPageIndex());
+                    }
+                }
+
+            }
+
             if (CollectionUtils.isNotEmpty(document.getContents())) {
                 for (Content content : document.getContents()) {
                     for (PdfTextPosition textPosition : textPositions) {
@@ -82,28 +94,29 @@ public class PdfToJson {
             logger.error("识别pdf失败", ex);
             System.out.println(ExceptionUtils.getStackTrace(ex));
             throw new PdfException(ex.getMessage());
+        } finally {
+            //todo 清理运行时生成数据
         }
 
     }
 
     private void parseTable(List<PdfTextPosition> textPositions, Table table, JSONObject jsonObject) {
-        if (StringUtils.isBlank(table.getFootSign()) && table.getFootRect() == null) {
+        if (CollectionUtils.isEmpty(table.getFootSigns())) {
             throw new IllegalArgumentException();
         }
 
-        List<List<PdfTextPosition>> tabCellTexts = parseColumn(textPositions, table);
+        List<PdfTextPosition> tabCellTexts = TableParse.parseCell(textPositions, table);
+        List<List<PdfTextPosition>> headTexts = TableParse.parseHeader(textPositions, table);
+
+        List<List<PdfTextPosition>> colCellTexts;// = parseColumn(textPositions, table);
+        colCellTexts = table.rangeCellToCol(tabCellTexts, headTexts);
 
         //各个单元格文字，从上到下排序
-        for (List<PdfTextPosition> colTexts : tabCellTexts) {
-            colTexts.sort(new Comparator<PdfTextPosition>() {
-                @Override
-                public int compare(PdfTextPosition o1, PdfTextPosition o2) {
-                    return new Double(o1.getRectangle().getY()).compareTo(new Double(o2.getRectangle().getY()));
-                }
-            });
+        for (List<PdfTextPosition> colTexts : colCellTexts) {
+            TableParse.sortByY(colTexts);
         }
 
-        table.adjustCellText(tabCellTexts);
+        table.adjustColCellText(colCellTexts);
 
         JSONArray tableJsonArr = jsonObject.getJSONArray(table.getJsonKey());
         if (tableJsonArr == null) {
@@ -118,21 +131,21 @@ public class PdfToJson {
             newitem = new JSONObject();
             currentCellText = null;
             for (int j = 0; j < table.getColumns().size(); j++) {
-                colTexts = tabCellTexts.get(j);
+                colTexts = colCellTexts.get(j);
                 if (colTexts.size() == 0) {
                     continue;
                 } else {
                     if (currentCellText == null) {
                         currentCellText = colTexts.get(0);
                         newitem.put(table.getColumns().get(j).getJsonKey(),
-                                table.getColumns().get(j).purseValue(currentCellText.getText()));
+                                table.getColumns().get(j).parseValue(currentCellText.getText()));
                         colTexts.remove(0);
                         continue;
                     } else {
                         for (int i = 0; i < colTexts.size(); i++) {
-                            if (sameRow(table, currentCellText, colTexts.get(i))) {
+                            if (TableParse.sameRow(table, currentCellText, colTexts.get(i))) {
                                 newitem.put(table.getColumns().get(j).getJsonKey(),
-                                        table.getColumns().get(j).purseValue(colTexts.get(i).getText()));
+                                        table.getColumns().get(j).parseValue(colTexts.get(i).getText()));
                                 colTexts.remove(i);
                                 break;
                             }
@@ -148,6 +161,7 @@ public class PdfToJson {
             }
 
         }
+        table.adjustJson(tableJsonArr);
     }
 
     /**
@@ -157,45 +171,31 @@ public class PdfToJson {
      * @param headerPositions
      * @param table
      */
-    private void adjustHeadRect(List<PdfTextPosition> headerPositions, Table table) {
+    private void adjustHeadRect(List<List<PdfTextPosition>> headerPositions, Table table) {
 
         Rectangle rectangle;
+        List<PdfTextPosition> colHeader;
         for (int i = 0; i < headerPositions.size(); i++) {
-            rectangle = headerPositions.get(i).getRectangle();
-            if (table.getColumns().get(i).getCellHoriztalAlignment() == TextHorizontalAlignEnum.RIGHT) {
-                rectangle.x = new Double(rectangle.getMaxX() - rectangle.getWidth()).intValue();
-            } else {
-                if (table.getColumns().get(i).getWidth() > rectangle.getWidth()) {
-                    rectangle.x = new Double(rectangle.x - (table.getColumns().get(i).getWidth() - rectangle.getWidth()) / 2).intValue();
-                    rectangle.width = table.getColumns().get(i).getWidth();
+            colHeader = headerPositions.get(i);
+            for (int j = 0; j < colHeader.size(); j++) {
+                rectangle = colHeader.get(j).getRectangle();
+                if (table.getColumns().get(i).getCellHoriztalAlignment() == TextHorizontalAlignEnum.RIGHT) {
+                    rectangle.x = new Double(rectangle.getMaxX() - rectangle.getWidth()).intValue();
+                } else {
+                    if (table.getColumns().get(i).getRuntimeWidth() > rectangle.getWidth()) {
+                        rectangle.x = new Double(rectangle.x - (table.getColumns().get(i).getRuntimeWidth() - rectangle.getWidth()) / 2).intValue();
+                        rectangle.width = table.getColumns().get(i).getRuntimeWidth();
+                    }
                 }
             }
+
         }
 
     }
 
     private List<List<PdfTextPosition>> parseColumn(List<PdfTextPosition> textPositions, Table table) {
 
-        Rectangle headerRect = table.getHeadRect();
-        List<PdfTextPosition> headerPositions = new ArrayList<>();
-
-        for (int i = 0; i < table.getColumns().size(); i++) {
-            for (PdfTextPosition textPosition : textPositions) {
-                if (table.getPageIndex() != textPosition.getPageIndex()) {
-                    continue;
-                }
-                if (headerRect.contains(textPosition.getRectangle())) {
-                    if (table.getColumns().get(i).getSignPatter().asPredicate().test(textPosition.getText())) {
-                        headerPositions.add(textPosition);
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (headerPositions.size() != table.getColumns().size()) {
-            throw new PdfException("无法确定表格列:" + table.getJsonKey());
-        }
+        List<List<PdfTextPosition>> headerPositions = TableParse.parseHeader(textPositions, table);
 
         adjustHeadRect(headerPositions, table);
 
@@ -203,11 +203,9 @@ public class PdfToJson {
         float rightX;
         float topY = (float) table.getHeadRect().getMaxY();
         float bottomY;
-        if (table.getFootRect() == null) {
-            bottomY = getTableFootTop(textPositions, table.getFootSign());
-        } else {
-            bottomY = table.getFootRect().y;
-        }
+
+        bottomY = TableParse.getTableFootTop(textPositions, table);
+
         Rectangle colRect;
 
         List<PdfTextPosition> colTexts;
@@ -219,12 +217,12 @@ public class PdfToJson {
             if (i == 0) {
                 leftX = (float) table.getHeadRect().getX();
             } else {
-                leftX = (float) headerPositions.get(i - 1).getRectangle().getMaxX();
+                leftX = (float) headerPositions.get(i - 1).get(0).getRectangle().getMaxX();
             }
             if (i == table.getColumns().size() - 1) {
                 rightX = (float) (table.getHeadRect().getMaxX());
             } else {
-                rightX = (float) headerPositions.get(i + 1).getRectangle().getX();
+                rightX = (float) headerPositions.get(i + 1).get(0).getRectangle().getX();
             }
             colRect = new Rectangle(
                     new Float(leftX).intValue(),
@@ -238,51 +236,10 @@ public class PdfToJson {
                     colTexts.add(textPosition);
                 }
             }
-            merbeCellText(colTexts, table);
+            TableParse.merbeCellText(colTexts, table);
             tableCellTexts.add(colTexts);
         }
         return tableCellTexts;
-
-    }
-
-    //合并单元格中多行
-    private void merbeCellText(List<PdfTextPosition> colTexts, Table table) {
-
-        PdfTextPosition o1;
-        PdfTextPosition o2;
-
-        for (int i = 0; i < colTexts.size(); i++) {
-            if (i == colTexts.size() - 1) {
-                break;
-            }
-            for (int j = i + 1; j < colTexts.size(); j++) {
-                o1 = colTexts.get(i);
-                o2 = colTexts.get(j);
-                if (table.getCellLineSpace() > Math.abs(o1.getRectangle().getMaxY() - o2.getRectangle().getY())) {
-                    o1.getRectangle().width = Math.max(o1.getRectangle().width, o2.getRectangle().width);
-                    o1.getRectangle().x = Math.max(o1.getRectangle().x, o2.getRectangle().x);
-                    o1.getRectangle().height = new Double(o2.getRectangle().getMaxY() - o1.getRectangle().getY()).intValue();
-                    o1.setText(o1.getText() + o2.getText());
-                    colTexts.remove(j);
-                    j--;
-                }
-            }
-
-        }
-
-    }
-
-    //是否同行
-    private boolean sameRow(Table table, PdfTextPosition o1, PdfTextPosition o2) {
-        double o1m = o1.getRectangle().getY() + o1.getRectangle().getHeight() / 2;
-        double o2m = o2.getRectangle().getY() + o2.getRectangle().getHeight() / 2;
-        if (Math.abs(o1m - o2m) <= table.getCellLineSpace()) {
-            return true;
-        }
-        if (Math.abs(o1.getRectangle().getY() - o2.getRectangle().getY()) <= table.getCellLineSpace()) {
-            return true;
-        }
-        return false;
 
     }
 
@@ -299,7 +256,7 @@ public class PdfToJson {
             return false;
         }
         if (column.getCellHoriztalAlignment() == TextHorizontalAlignEnum.RIGHT) {
-            if (textPosition.getRectangle().getX() > colRect.getMaxX()) {//最左文字在区域中线右边
+            if (textPosition.getRectangle().getX() > colRect.getMaxX()) {//最左文字在区域右边
                 return false;
             }
             if (textPosition.getRectangle().getMaxX() < colRect.getX()) {//最右文字在区域左边
@@ -323,24 +280,12 @@ public class PdfToJson {
         if (colRect.getMaxY() < textPosition.getRectangle().getMaxY()) {//文字下边界出界限
             return false;
         }
+        if (colRect.getMaxX() - textPosition.getRectangle().getX() <
+                textPosition.getRectangle().width / textPosition.getText().length() / 2) {//文字左边半个字在区域内
+            return false;
+        }
 
         return true;
-    }
-
-    /**
-     * 获取表格尾的上边距
-     *
-     * @return
-     */
-    private float getTableFootTop(List<PdfTextPosition> textPositions, String footsign) {
-
-        for (PdfTextPosition textPosition : textPositions) {
-            if (textPosition.getText().indexOf(footsign) != -1) {
-                return (float) textPosition.getRectangle().getY();
-            }
-        }
-        throw new PdfException("无法确定表格尾的上边距：" + footsign);
-
     }
 
 }

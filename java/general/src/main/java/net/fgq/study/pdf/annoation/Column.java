@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -19,12 +20,13 @@ import java.util.regex.Pattern;
  */
 public class Column {
 
+    private int index = 0;
+
     /**
      * 列头标记正则表达式，同一个表格中，必须唯一
+     * 用于多行列头。
      */
-    private String sign;
-
-    private Pattern signPatter;
+    private List<String> signs = new ArrayList<>();
 
     /**
      * 列json key name；
@@ -32,9 +34,29 @@ public class Column {
     private String jsonKey;
 
     /**
-     * 宽度。
+     * 运行时-宽度。
      */
-    private int width;
+    private int runtimeWidth;
+
+    /**
+     * 运行时-左边
+     */
+    private int runtimeMinX;
+
+    /**
+     * 运行时-右边
+     */
+    private int runtimeMaxX;
+
+    /**
+     * 运行时-头中线。
+     */
+    private int runtimeHeaderMiddleX;
+
+    /**
+     * 运行时-单元格字符宽度。
+     */
+    private  int runtimeCellCharWidth;
 
     /**
      * 值类型。
@@ -50,35 +72,40 @@ public class Column {
 
     private TextVerticalAlignEnum cellVerticalAlignment = TextVerticalAlignEnum.TOP;
 
-    public Column(String sign, String jsonKey, int width) {
+    public Column(String sign, String jsonKey) {
 
         if (StringUtils.isBlank(sign) || StringUtils.isBlank(jsonKey)) {
             throw new IllegalArgumentException();
         }
 
-        this.setSign(sign);
+        this.signs.add(sign);
         this.jsonKey = jsonKey;
-        this.width = width;
+
     }
 
-    public Column(String sign, String jsonKey, int width, boolean notEmpty) {
+    public Column(String sign, String jsonKey, boolean notEmpty) {
 
-        this(sign, jsonKey, width);
+        this(sign, jsonKey);
         this.setNotEmpty(notEmpty);
     }
 
-    public Column(String sign, String jsonKey, int width, TextHorizontalAlignEnum cellHoriztalAlignment, TextVerticalAlignEnum cellVerticalAlignment) {
+    public Column(String sign, String jsonKey, TextHorizontalAlignEnum cellHoriztalAlignment, TextVerticalAlignEnum cellVerticalAlignment) {
 
-        this(sign, jsonKey, width);
+        this(sign, jsonKey);
         this.cellHoriztalAlignment = cellHoriztalAlignment;
         this.cellVerticalAlignment = cellVerticalAlignment;
     }
 
-    public Column(String sign, String jsonKey, int width, TextHorizontalAlignEnum cellHoriztalAlignment,
+    public Column(String sign, String jsonKey, TextHorizontalAlignEnum cellHoriztalAlignment,
                   TextVerticalAlignEnum cellVerticalAlignment, Type valueType) {
 
-        this(sign, jsonKey, width, cellHoriztalAlignment, cellVerticalAlignment);
+        this(sign, jsonKey, cellHoriztalAlignment, cellVerticalAlignment);
         this.setValueType(valueType);
+    }
+
+    public Pattern getSignPattern() {
+        String singstr = "(" + String.join(")|(", this.getSigns()) + ")";
+        return Pattern.compile(singstr);
     }
 
     public boolean isNotEmpty() {
@@ -97,21 +124,12 @@ public class Column {
         this.valueType = valueType;
     }
 
-    public String getSign() {
-        return sign;
+    public List<String> getSigns() {
+        return signs;
     }
 
-    public void setSign(String sign) {
-        this.sign = sign;
-        this.signPatter = Pattern.compile(this.sign);
-    }
-
-    public Pattern getSignPatter() {
-        return signPatter;
-    }
-
-    public void setSignPatter(Pattern signPatter) {
-        this.signPatter = signPatter;
+    public void setSigns(List<String> signs) {
+        this.signs = signs;
     }
 
     public String getJsonKey() {
@@ -122,12 +140,36 @@ public class Column {
         this.jsonKey = jsonKey;
     }
 
-    public int getWidth() {
-        return width;
+    public int getRuntimeWidth() {
+        return runtimeWidth;
     }
 
-    public void setWidth(int width) {
-        this.width = width;
+    public void setRuntimeWidth(int runtimeWidth) {
+        this.runtimeWidth = runtimeWidth;
+    }
+
+    public int getRuntimeMinX() {
+        return runtimeMinX;
+    }
+
+    public void setRuntimeMinX(int runtimeMinX) {
+        this.runtimeMinX = runtimeMinX;
+    }
+
+    public int getRuntimeMaxX() {
+        return runtimeMaxX;
+    }
+
+    public void setRuntimeMaxX(int runtimeMaxX) {
+        this.runtimeMaxX = runtimeMaxX;
+    }
+
+    public int getRuntimeHeaderMiddleX() {
+        return runtimeHeaderMiddleX;
+    }
+
+    public void setRuntimeHeaderMiddleX(int runtimeHeaderMiddleX) {
+        this.runtimeHeaderMiddleX = runtimeHeaderMiddleX;
     }
 
     public TextHorizontalAlignEnum getCellHoriztalAlignment() {
@@ -152,9 +194,9 @@ public class Column {
      * @param text
      * @return
      */
-    public Object purseValue(String text) {
+    public Object parseValue(String text) {
         if (this.notEmpty && StringUtils.isBlank(text)) {
-            throw new IllegalArgumentException("值不可为空:" + this.sign);
+            throw new IllegalArgumentException("值不可为空:" + this.signs.get(0));
         }
         if (text == null) {
             return text;
@@ -162,10 +204,46 @@ public class Column {
         if (this.valueType.equals(String.class)) {
             return text;
         } else if (this.valueType.equals(BigDecimal.class)) {
-            return new BigDecimal(text);
+            try {
+                String vstr = text.replace(",", "")
+                        .replace("—", "")
+                        .replace("—", "")
+                        .replace("-", "");
+                if (vstr.length() > 0) {
+                    BigDecimal bgv = new BigDecimal(vstr);
+                    return bgv;
+                } else {
+                    return null;
+                }
+
+            } catch (Exception ex) {
+                throw new IllegalArgumentException("错误值：" + String.join("-", this.signs) + ":" + text);
+            }
+
         } else {
             return text;
         }
 
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public Column addSign(String sign) {
+        this.getSigns().add(sign);
+        return this;
+    }
+
+    public int getRuntimeCellCharWidth() {
+        return runtimeCellCharWidth;
+    }
+
+    public void setRuntimeCellCharWidth(int runtimeCellCharWidth) {
+        this.runtimeCellCharWidth = runtimeCellCharWidth;
     }
 }

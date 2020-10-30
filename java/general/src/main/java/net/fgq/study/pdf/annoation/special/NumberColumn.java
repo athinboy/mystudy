@@ -11,14 +11,23 @@ import java.math.BigDecimal;
  */
 public class NumberColumn extends Column {
 
-    public NumberColumn(String sign, String jsonKey, int width) {
-        super(sign, jsonKey, width);
+    public NumberColumn(String sign, String jsonKey) {
+        super(sign, jsonKey);
         this.setCellHoriztalAlignment(TextHorizontalAlignEnum.RIGHT);
         this.setValueType(BigDecimal.class);
+        this.setNotEmpty(true);
     }
 
-    public NumberColumn(String sign, String jsonKey, int width, boolean notEmpty) {
-        this(sign, jsonKey, width);
+    public NumberColumn(String sign, String jsonKey, TextHorizontalAlignEnum textHorizontalAlignEnum) {
+        super(sign, jsonKey);
+        this.setCellHoriztalAlignment(TextHorizontalAlignEnum.RIGHT);
+        this.setValueType(BigDecimal.class);
+        this.setNotEmpty(true);
+        setCellHoriztalAlignment(textHorizontalAlignEnum);
+    }
+
+    public NumberColumn(String sign, String jsonKey, boolean notEmpty) {
+        this(sign, jsonKey);
         this.setNotEmpty(notEmpty);
     }
 

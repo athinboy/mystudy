@@ -12,6 +12,16 @@ public class Document {
 
     private List<Table> tables = new ArrayList<>();
 
+    protected String pageIndexSign = null;
+
+    public String getPageIndexSign() {
+        return pageIndexSign;
+    }
+
+    public void setPageIndexSign(String pageIndexSign) {
+        this.pageIndexSign = pageIndexSign;
+    }
+
     public List<Content> getContents() {
         return contents;
     }
@@ -26,5 +36,14 @@ public class Document {
 
     public void setTables(List<Table> tables) {
         this.tables = tables;
+    }
+
+    public void changePageIndex(int pageIndex) {
+        for (Content content : this.contents) {
+            content.setPageIndex(pageIndex);
+        }
+        for (Table table : this.tables) {
+            table.setPageIndex(pageIndex);
+        }
     }
 }

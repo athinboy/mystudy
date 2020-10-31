@@ -56,7 +56,7 @@ public class Column {
     /**
      * 运行时-单元格字符宽度。
      */
-    private  int runtimeCellCharWidth;
+    private int runtimeCellCharWidth;
 
     /**
      * 值类型。

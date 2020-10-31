@@ -9,18 +9,18 @@ public class PdfTextPosition {
 
     private String text;
 
-    private Rectangle rectangle;
+    private PdfRectangle rectangle;
 
     private int pageIndex;
 
-    public PdfTextPosition(int pageIndex, String text, Rectangle rectangle) {
+    public PdfTextPosition(int pageIndex, String text, PdfRectangle rectangle) {
         this.text = text;
         this.rectangle = rectangle;
         this.pageIndex = pageIndex;
     }
 
     public PdfTextPosition(int pageIndex, String text, int x, int y, int width, int height) {
-        this(pageIndex, text, new Rectangle(x, y, width, height));
+        this(pageIndex, text, new PdfRectangle(x, y, width, height));
     }
 
     public String getText() {
@@ -31,11 +31,11 @@ public class PdfTextPosition {
         this.text = text;
     }
 
-    public Rectangle getRectangle() {
+    public PdfRectangle getRectangle() {
         return rectangle;
     }
 
-    public void setRectangle(Rectangle rectangle) {
+    public void setRectangle(PdfRectangle rectangle) {
         this.rectangle = rectangle;
     }
 

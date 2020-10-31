@@ -51,6 +51,16 @@ public class PdfToJson {
 
         //todo 因为运行时生成数据，加锁，避免多线程，
 
+        //todo 清理运行时生成数据
+        document.getTableGroups().forEach(x->{
+            x.getTables().forEach(t->{
+                t.setRuntimeParseRectangle(null);
+                t.getColumns().forEach(c->{
+
+                });
+            });
+        });
+
         this.document = document;
         this.pdDocument = pdDocument;
 
@@ -81,12 +91,31 @@ public class PdfToJson {
                     }
                 }
             }
-            if (CollectionUtils.isNotEmpty(document.getTables())) {
-                for (Table table : document.getTables()) {
-                    parseTable(textPositions.stream().filter(x -> {
-                                return x.getPageIndex() == table.getPageIndex() && x.getText().trim().length() > 0;
-                            }).collect(Collectors.toList()),
-                            table, jsonObject);
+            if (CollectionUtils.isNotEmpty(document.getTableGroups())) {
+                int errcount = 0;
+                TableGroup tableGroup;
+                for (int i = 0; i < document.getTableGroups().size(); i++) {
+                    tableGroup = document.getTableGroups().get(i);
+                    try {
+                        for (Table table : tableGroup.getTables()) {
+                            parseTable(textPositions.stream().filter(x -> {
+                                        return x.getPageIndex() == table.getPageIndex() && x.getText().trim().length() > 0;
+                                    }).collect(Collectors.toList()),
+                                    table, jsonObject);
+
+                        }
+                    } catch (PdfException pdfex) {
+                        logger.error("识别表格组失败", pdfex);
+                        errcount++;
+                    }
+                    if (errcount < i + 1) {
+                        break;
+                    }
+
+                }
+
+                if (errcount == document.getTableGroups().size()) {
+                    throw new PdfException("识别失败");
                 }
             }
             return jsonObject;
@@ -95,7 +124,7 @@ public class PdfToJson {
             System.out.println(ExceptionUtils.getStackTrace(ex));
             throw new PdfException(ex.getMessage());
         } finally {
-            //todo 清理运行时生成数据
+
         }
 
     }
@@ -107,7 +136,7 @@ public class PdfToJson {
 
         List<PdfTextPosition> tabCellTexts = TableParse.parseCell(textPositions, table);
         List<List<PdfTextPosition>> headTexts = TableParse.parseHeader(textPositions, table);
-
+        table.filterCell(tabCellTexts);
         List<List<PdfTextPosition>> colCellTexts;// = parseColumn(textPositions, table);
         colCellTexts = table.rangeCellToCol(tabCellTexts, headTexts);
 
@@ -236,7 +265,7 @@ public class PdfToJson {
                     colTexts.add(textPosition);
                 }
             }
-            TableParse.merbeCellText(colTexts, table);
+            TableParse.mergeCellText(colTexts, table);
             tableCellTexts.add(colTexts);
         }
         return tableCellTexts;

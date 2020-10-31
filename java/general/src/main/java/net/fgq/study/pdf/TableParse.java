@@ -63,6 +63,9 @@ public class TableParse {
         List<List<PdfTextPosition>> headTexts = new ArrayList<>();
         List<PdfTextPosition> colHeaderTexts;
         Column column;
+        int minX = Integer.MAX_VALUE;
+        int maxX = 0;
+
         for (int i = 0; i < table.getColumns().size(); i++) {
             column = table.getColumns().get(i);
             colHeaderTexts = new ArrayList<>();
@@ -74,6 +77,8 @@ public class TableParse {
                 Pattern signPatter = column.getSignPattern();
                 if (signPatter.asPredicate().test(textPosition.getText())) {
                     colHeaderTexts.add(textPosition);
+                    minX = Math.min(minX, textPosition.getRectangle().x);
+                    maxX = Math.max(maxX, textPosition.getRectangle().x + textPosition.getRectangle().width);
                     //break;
                 }
             }
@@ -81,6 +86,23 @@ public class TableParse {
                 throw new PdfException(String.valueOf(i));
             } else {
                 headTexts.add(colHeaderTexts);
+            }
+        }
+
+        if (table.isDouleColumn()) {
+            for (int i = 0; i < headTexts.size(); i++) {
+                colHeaderTexts = headTexts.get(i);
+                for (int j = 0; j < colHeaderTexts.size(); j++) {
+                    if ((i + 1) <= (table.getColumns().size() / 2)
+                            && colHeaderTexts.get(j).getRectangle().x > (minX + (maxX - minX) / 2)) {
+                        colHeaderTexts.remove(j--);
+                    }
+                    if ((i + 1) > (table.getColumns().size() / 2)
+                            && colHeaderTexts.get(j).getRectangle().x < (minX + (maxX - minX) / 2)) {
+                        colHeaderTexts.remove(j--);
+                    }
+                }
+
             }
         }
 
@@ -187,11 +209,16 @@ public class TableParse {
      */
     public static Rectangle parseHeaderRectangle2(List<PdfTextPosition> textPositions, Table table) {
 
-        Rectangle headerRect = new Rectangle();
+        Rectangle headerRect = null;
         List<PdfTextPosition> colHeaderTexts;
         List<List<PdfTextPosition>> headTexts = parseHeader(textPositions, table);
         for (int i = 0; i < headTexts.size(); i++) {
             colHeaderTexts = headTexts.get(i);
+
+            if (i == 0) {
+                headerRect = new Rectangle(colHeaderTexts.get(i).getRectangle());
+                continue;
+            }
             for (int j = 0; j < colHeaderTexts.size(); j++) {
                 headerRect.add(colHeaderTexts.get(j).getRectangle());
             }
@@ -226,7 +253,7 @@ public class TableParse {
                 if (table.getPageIndex() != textPosition.getPageIndex()) {
                     continue;
                 }
-                if (false == table.getParseRectangle().intersects(textPosition.getRectangle())) {
+                if (false == table.getRuntimeParseRectangle().intersects(textPosition.getRectangle())) {
                     continue;
                 }
                 Pattern signPatter = column.getSignPattern();
@@ -267,11 +294,11 @@ public class TableParse {
 
         Rectangle headerRect = new Rectangle();
         if (StringUtils.isNotBlank(table.getLeftReferenceText())) {
-            headerRect.x = table.getParseRectangle().x;
+            headerRect.x = table.getRuntimeParseRectangle().x;
         }
         if (StringUtils.isNotBlank(table.getTopReferenceText())) {
 
-            int spaceGap = (minY - table.getParseRectangle().y) / 2;
+            int spaceGap = (minY - table.getRuntimeParseRectangle().y) / 2;
 
             //table.getParseRectangle().y  表格之上文字的下边缘
             //minY 单元格文字的上边缘
@@ -280,13 +307,13 @@ public class TableParse {
         }
         if (StringUtils.isNotBlank(table.getLeftReferenceText())
                 && CollectionUtils.isNotEmpty(table.getRightReferenceText())) {
-            headerRect.width = table.getParseRectangle().width;
+            headerRect.width = table.getRuntimeParseRectangle().width;
         }
         return headerRect;
     }
 
     //合并单元格中多行
-    public static void merbeCellText(List<PdfTextPosition> colTexts, Table table) {
+    public static void mergeCellText(List<PdfTextPosition> colTexts, Table table) {
 
         PdfTextPosition o1;
         PdfTextPosition o2;
@@ -316,10 +343,21 @@ public class TableParse {
     public static boolean sameRow(Table table, PdfTextPosition o1, PdfTextPosition o2) {
         double o1m = o1.getRectangle().getY() + o1.getRectangle().getHeight() / 2;
         double o2m = o2.getRectangle().getY() + o2.getRectangle().getHeight() / 2;
-        if (Math.abs(o1m - o2m) <= table.getCellLineSpace()) {
+        int minHeight = Math.min(o1.getRectangle().height, o2.getRectangle().height);
+        minHeight /= 2;
+        if (Math.abs(o1m - o2m) <= minHeight) {
             return true;
         }
+
         if (Math.abs(o1.getRectangle().getY() - o2.getRectangle().getY()) <= table.getCellLineSpace()) {
+            return true;
+        }
+        if (o1.getRectangle().y > o2.getRectangle().y && o1.getRectangle().getMaxY() < o2.getRectangle().getMaxY()) {
+            //o2包含o1
+            return true;
+        }
+        if (o1.getRectangle().y < o2.getRectangle().y && o1.getRectangle().getMaxY() > o2.getRectangle().getMaxY()) {
+            //o1包含o2
             return true;
         }
         return false;
@@ -332,10 +370,10 @@ public class TableParse {
      */
     public static void parseTableRectByReference(Table table, List<PdfTextPosition> textPositions) {
 
-        if (table.getParseRectangle() != null) {
+        if (table.getRuntimeParseRectangle() != null) {
             return;
         }
-        table.setParseRectangle(new Rectangle());
+        table.setRuntimeParseRectangle(new Rectangle());
 
         if (StringUtils.isBlank(table.getLeftReferenceText()) ||
                 StringUtils.isBlank(table.getTopReferenceText()) ||
@@ -375,17 +413,17 @@ public class TableParse {
         }
 
         if (StringUtils.isNotBlank(table.getLeftReferenceText())) {
-            table.getParseRectangle().x = left;
+            table.getRuntimeParseRectangle().x = left;
         }
         if (StringUtils.isNotBlank(table.getTopReferenceText())) {
-            table.getParseRectangle().y = minY;
+            table.getRuntimeParseRectangle().y = minY;
         }
         if (StringUtils.isNotBlank(table.getLeftReferenceText())
                 && CollectionUtils.isNotEmpty(table.getRightReferenceText())) {
-            table.getParseRectangle().width = Math.max(0, right - left);
+            table.getRuntimeParseRectangle().width = Math.max(0, right - left);
 
         }
-        table.getParseRectangle().height = Math.max(0, maxY - minY);
+        table.getRuntimeParseRectangle().height = Math.max(0, maxY - minY);
 
     }
 
@@ -396,15 +434,25 @@ public class TableParse {
      */
     public static int getTableFootTop(List<PdfTextPosition> textPositions, Table table) {
         List<String> footsigns = table.getFootSigns();
+        int minY = Integer.MAX_VALUE;
         for (PdfTextPosition textPosition : textPositions) {
             if (textPosition.getPageIndex() == table.getPageIndex()) {
                 for (String footsign : footsigns) {
                     if (textPosition.getText().indexOf(footsign) != -1) {
-                        return textPosition.getRectangle().y;
+                        minY = Math.min(minY, textPosition.getRectangle().y);
+                        for (int i = 0; i < textPositions.size(); i++) {
+                            if (sameRow(table, textPosition, textPositions.get(i))) {
+                                minY = Math.min(minY, textPositions.get(i).getRectangle().y);
+                            }
+                        }
+
                     }
 
                 }
             }
+        }
+        if (minY < Integer.MAX_VALUE) {
+            return minY;
         }
         throw new PdfException("无法确定表格尾的上边距：" + String.join(",", footsigns));
 

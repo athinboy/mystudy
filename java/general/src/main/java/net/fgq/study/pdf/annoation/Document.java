@@ -1,5 +1,7 @@
 package net.fgq.study.pdf.annoation;
 
+import net.fgq.study.pdf.annoation.special.TaiPingYangNewTable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +12,7 @@ public class Document {
 
     private List<Content> contents = new ArrayList<>();
 
-    private List<Table> tables = new ArrayList<>();
+    private List<TableGroup> tableGroups = new ArrayList<>();
 
     protected String pageIndexSign = null;
 
@@ -30,20 +32,36 @@ public class Document {
         this.contents = contents;
     }
 
-    public List<Table> getTables() {
-        return tables;
+    public List<TableGroup> getTableGroups() {
+        return tableGroups;
     }
 
-    public void setTables(List<Table> tables) {
-        this.tables = tables;
+    public void setTableGroups(List<TableGroup> tableGroups) {
+        this.tableGroups = tableGroups;
     }
 
     public void changePageIndex(int pageIndex) {
         for (Content content : this.contents) {
             content.setPageIndex(pageIndex);
         }
-        for (Table table : this.tables) {
-            table.setPageIndex(pageIndex);
+        for (TableGroup tableGroup : this.tableGroups) {
+            for (Table table : tableGroup.getTables()) {
+                table.setPageIndex(pageIndex);
+            }
+
         }
+    }
+
+    public TableGroup addTableGroup(TableGroup tableGroup) {
+        tableGroups.add(tableGroup);
+        return tableGroup;
+    }
+
+    public TableGroup addTable(Table table) {
+        if (tableGroups.size() == 0) {
+            tableGroups.add(new TableGroup());
+        }
+        tableGroups.get(0).getTables().add(table);
+        return tableGroups.get(0);
     }
 }

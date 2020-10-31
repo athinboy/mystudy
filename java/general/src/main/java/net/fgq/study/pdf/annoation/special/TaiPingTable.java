@@ -11,15 +11,11 @@ import java.util.List;
  */
 public class TaiPingTable extends Table {
 
-    public TaiPingTable(int pageIndex, Rectangle headRect, String jsonKey) {
+    public TaiPingTable(int pageIndex, Rectangle headRect,String jsonKey) {
 
         super(pageIndex, headRect, "除法律法规另有约定外，涉及本保险", jsonKey);
         this.init();
-        this.setLeftReferenceText("被保险人证件号码");
-        this.setTopReferenceText("核定载质量");
-        this.getRightReferenceText().add("本保单承保非营业车辆");
-        this.getRightReferenceText().add("故障救援服务仅限");
-        this.getRightReferenceText().add("投保车辆在当地覆盖区域使用");
+
     }
 
     private void init() {

@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import net.fgq.study.pdf.PdfException;
 import net.fgq.study.pdf.PdfTextPosition;
 import net.fgq.study.pdf.TableParse;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
@@ -16,6 +15,11 @@ import java.util.List;
  * Created by fengguoqiang 2020/10/27
  */
 public class Table {
+
+    /**
+     * 重复列。
+     */
+    private boolean douleColumn = false;
 
     /**
      * 单元格行间最大空白
@@ -75,12 +79,11 @@ public class Table {
     /**
      * 推测的区域
      */
-    protected Rectangle parseRectangle = null;
+    protected Rectangle runtimeParseRectangle = null;
 
     public Table(int pageIndex, Rectangle headRect, String footSign, String jsonKey) {
 
         if (StringUtils.isBlank(jsonKey)
-                || headRect == null
                 || StringUtils.isBlank(footSign)) {
             throw new IllegalArgumentException();
         }
@@ -93,8 +96,7 @@ public class Table {
     }
 
     public Table(int pageIndex, Rectangle headRect, String jsonKey) {
-        if (StringUtils.isBlank(jsonKey)
-                || headRect == null) {
+        if (StringUtils.isBlank(jsonKey)) {
             throw new IllegalArgumentException();
         }
         this.headRect = headRect;
@@ -201,12 +203,12 @@ public class Table {
         this.leftReferenceText = leftReferenceText;
     }
 
-    public Rectangle getParseRectangle() {
-        return parseRectangle;
+    public Rectangle getRuntimeParseRectangle() {
+        return runtimeParseRectangle;
     }
 
-    public void setParseRectangle(Rectangle parseRectangle) {
-        this.parseRectangle = parseRectangle;
+    public void setRuntimeParseRectangle(Rectangle runtimeParseRectangle) {
+        this.runtimeParseRectangle = runtimeParseRectangle;
     }
 
     /**
@@ -261,7 +263,7 @@ public class Table {
         }
 
         for (List<PdfTextPosition> colText : colTexts) {
-            TableParse.merbeCellText(colText, this);
+            TableParse.mergeCellText(colText, this);
         }
         return colTexts;
 
@@ -286,7 +288,7 @@ public class Table {
             minX = colHeaders.get(0).getRectangle().x;
             maxX = colHeaders.get(0).getRectangle().x + colHeaders.get(0).getRectangle().width;
 
-            int m = colHeaders.get(0).getRectangle().x + (new Double(colHeaders.get(0).getRectangle().width / 2)).intValue();
+            int m = colHeaders.get(0).getRectangle().getMiddleX();
             this.getColumns().get(i).setRuntimeHeaderMiddleX(m);
 
             col = colTexts.get(i);
@@ -310,45 +312,108 @@ public class Table {
 
         int minX;
         int maxX;
+        int headerMiddleX = 0;
         int charWidth = 0;
         if (headTexts.size() != colTexts.size()) {
             throw new PdfException("");
         }
+        boolean middleCol;
+        boolean leftestCol;
+        boolean rightestCol;
+        boolean find = false;
+        Column currentColumn;
         for (int i = 0; i < colTexts.size(); i++) {
-
-            minX = this.columns.get(i).getRuntimeMinX();
-            maxX = this.columns.get(i).getRuntimeMaxX();
-            charWidth = this.columns.get(i).getRuntimeCellCharWidth();
+            find = false;
+            currentColumn = this.columns.get(i);
+            leftestCol = i == 0;
+            rightestCol = i == colTexts.size() - 1;
+            middleCol = false == (i == 0 || i == colTexts.size() - 1);
+            minX = currentColumn.getRuntimeMinX();
+            maxX = currentColumn.getRuntimeMaxX();
+            headerMiddleX = currentColumn.getRuntimeHeaderMiddleX();
+            charWidth = currentColumn.getRuntimeCellCharWidth();
             if (maxX < minX) {
                 throw new PdfException(String.valueOf(i));
             }
-            if (text.getRectangle().x >= minX + charWidth / 2 || text.getRectangle().getMaxX() <= maxX + charWidth / 2) {
-                colTexts.get(i).add(text);
-                return true;
-            } else if (i == 0 && text.getRectangle().x <= minX) {
-                colTexts.get(i).add(text);
-                return true;
+            if (text.getRectangle().x >= minX + charWidth / 2 && text.getRectangle().getMaxX() <= maxX + charWidth / 2) {//左右均位于现有区域内
+                find = true;
+            } else if (i == 0 && text.getRectangle().x <= minX) {//最左边列
+                find = true;
 
-            } else if (i == colTexts.size() - 1 && text.getRectangle().getMaxX() >= maxX) {
-                colTexts.get(i).add(text);
-                return true;
+            } else if (i == colTexts.size() - 1 && text.getRectangle().getMaxX() >= maxX) {//最右面列
+                find = true;
 
             } else if (text.getRectangle().x - minX < charWidth || Math.abs(text.getRectangle().getMaxX() - maxX) < charWidth) {
                 //接近现有文字的左边缘或者右边缘。
-                colTexts.get(i).add(text);
-                return true;
+                find = true;
 
             } else {
 
-                if (this.columns.get(i).getCellHoriztalAlignment() == TextHorizontalAlignEnum.LEFT) {
+                if (currentColumn.getCellHoriztalAlignment() == TextHorizontalAlignEnum.LEFT) {
+                    if (leftestCol) {
+                        if (text.getRectangle().x <= currentColumn.getRuntimeHeaderMiddleX()) {
+                            find = true;
+                        } else {
+
+                        }
+                    } else if (middleCol) {
+                        if (this.columns.get(i - 1).getCellHoriztalAlignment() == TextHorizontalAlignEnum.LEFT ||
+                                this.columns.get(i - 1).getCellHoriztalAlignment() == TextHorizontalAlignEnum.CENTER) {
+
+                            if (text.getRectangle().x > this.columns.get(i - 1).getRuntimeHeaderMiddleX() + charWidth
+                                    && text.getRectangle().x <= currentColumn.getRuntimeHeaderMiddleX()) {
+                                find = true;
+                            }
+
+                        } else if (this.columns.get(i - 1).getCellHoriztalAlignment() == TextHorizontalAlignEnum.RIGHT) {
+
+                        } else {
+
+                        }
+                    }
+
+                } else if (currentColumn.getCellHoriztalAlignment() == TextHorizontalAlignEnum.RIGHT) {
+                    if (text.getRectangle().getMaxX() <= currentColumn.getRuntimeHeaderMiddleX()) {
+                        find = false;
+                    } else {
+                        if (middleCol || leftestCol) {
+                            if (this.columns.get(i + 1).getCellHoriztalAlignment() == TextHorizontalAlignEnum.LEFT) {
+                                if (text.getRectangle().x >= headerMiddleX
+                                        && text.getRectangle().getMaxX() < this.columns.get(i + 1).getRuntimeMinX()) {
+
+                                    find = true;
+                                } else if (text.getRectangle().x < currentColumn.getRuntimeMaxX()) {
+                                    find = true;
+                                }
+                            } else if (this.columns.get(i + 1).getCellHoriztalAlignment() == TextHorizontalAlignEnum.RIGHT) {
+                                if (text.getRectangle().getMaxX() > currentColumn.getRuntimeHeaderMiddleX()
+                                        //&& text.getRectangle().x > currentColumn.getRuntimeMinX()
+                                        && text.getRectangle().getMaxX() < this.columns.get(i + 1).getRuntimeMinX()) {
+                                    find = true;
+                                }
+
+                            } else if (this.columns.get(i + 1).getCellHoriztalAlignment() == TextHorizontalAlignEnum.CENTER) {
+                                if (text.getRectangle().getMaxX() > currentColumn.getRuntimeHeaderMiddleX()
+                                        //&& text.getRectangle().x > currentColumn.getRuntimeMinX()
+                                        && text.getRectangle().getMaxX() < this.columns.get(i + 1).getRuntimeMinX()) {
+                                    find = true;
+                                }
+                            }
+                        }
+                    }
+
+                } else if (currentColumn.getCellHoriztalAlignment() == TextHorizontalAlignEnum.CENTER) {
+                    if (middleCol) {
+                        if (text.getRectangle().getMiddleX() - currentColumn.getRuntimeHeaderMiddleX() <= charWidth) {
+                            find = true;
+                        }
+                    }
 
                 }
-                if (this.columns.get(i).getCellHoriztalAlignment() == TextHorizontalAlignEnum.RIGHT) {
-
-                }
-                if (this.columns.get(i).getCellHoriztalAlignment() == TextHorizontalAlignEnum.CENTER) {
-
-                }
+            }
+            if (find) {
+                colTexts.get(i).add(text);
+                return true;
             }
         }
 
@@ -408,4 +473,14 @@ public class Table {
 
     }
 
+    public boolean isDouleColumn() {
+        return douleColumn;
+    }
+
+    public void setDouleColumn(boolean douleColumn) {
+        this.douleColumn = douleColumn;
+    }
+
+    public void filterCell(List<PdfTextPosition> tabCellTexts) {
+    }
 }

@@ -28,29 +28,35 @@ public class TaiPingYangNewTable extends Table {
 
     private void init() {
         this.setHeaderLineSpace(0);
+        this.setDouleColumn(true);
+    }
+
+    @Override
+    public void filterCell(List<PdfTextPosition> tabCellTexts) {
+
+        super.filterCell(tabCellTexts);
+        PdfTextPosition lvfd = null;
+
+        for (int i = 0; i < tabCellTexts.size(); i++) {
+            if ("费率浮动（+/-）".equals(tabCellTexts.get(i).getText())) {
+                lvfd = tabCellTexts.get(i);
+                tabCellTexts.remove(i--);
+                continue;
+            }
+            if (lvfd != null
+                    && TableParse.sameRow(this, lvfd, tabCellTexts.get(i))
+                    && lvfd.getRectangle().getX() < tabCellTexts.get(i).getRectangle().getX()) {
+                tabCellTexts.remove(i--);
+            }
+
+        }
+
     }
 
     @Override
     public void adjustColCellText(List<List<PdfTextPosition>> tabCellTexts) {
         super.adjustColCellText(tabCellTexts);
         //清除 费率浮动（+/- 及其右侧内容
-
-        PdfTextPosition lvfd = null;
-        for (List<PdfTextPosition> tabCellText : tabCellTexts) {
-            for (int i = 0; i < tabCellText.size(); i++) {
-                if ("费率浮动（+/-）".equals(tabCellText.get(i).getText())) {
-                    lvfd = tabCellText.get(i);
-                    tabCellText.remove(i--);
-                    continue;
-                }
-                if (lvfd != null
-                        && TableParse.sameRow(this, lvfd, tabCellText.get(i))
-                        && lvfd.getRectangle().getX() < tabCellText.get(i).getRectangle().getX()) {
-                    tabCellText.remove(i--);
-                }
-
-            }
-        }
 
     }
 
@@ -60,7 +66,7 @@ public class TaiPingYangNewTable extends Table {
         Object v;
         JSONObject newJson = null;
 
-        for (String s : Arrays.asList(new String[]{"承保险种1","保险金额1","免赔率1","保险费1"})) {
+        for (String s : Arrays.asList(new String[]{"承保险种1", "保险金额1", "免赔率1", "保险费1"})) {
             v = jsonitem.get(s);
             if (v != null) {
                 newJson = newJson == null ? new JSONObject() : newJson;

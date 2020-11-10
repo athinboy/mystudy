@@ -19,8 +19,8 @@ public class Three {
 
         //String filename = "D:\\fgq\\temp\\999.pdf";
 
-        File fileDirectory = new File("D:\\fgq\\temp\\新测试保单-3\\");
-        //     File fileDirectory = new File("D:\\fgq\\temp\\4\\");
+        //       File fileDirectory = new File("D:\\fgq\\temp\\新测试保单-3\\");
+     File fileDirectory = new File("D:\\fgq\\temp\\4\\");
        File[] files = fileDirectory.listFiles();
         for (int i = 0; i < files.length; i++) {
 
@@ -39,7 +39,7 @@ public class Three {
                     parsePingAnNew(files[i], document);
                 } else if (content.contains("中国平安") && content.contains("机动车综合商业保险保险单")) {
                     parsePingAnOld(files[i], document);
-                } else if (content.contains("人寿") && content.contains("机动车辆商业保险单")) {
+                } else if (content.contains("人寿") && content.contains("机动车辆商业保险")) {
                     parseRenShouOld(files[i], document);
                 } else if (content.contains("人寿") && content.contains("机动车商业保险保险单")) {
                     parseRenShouNew(files[i], document);
@@ -275,7 +275,7 @@ public class Three {
         Document parseDoc = new Document();
         parseDoc.getContents().add(new Content(0, "保险单号", 453, 155, 150, 8));
 
-        Table table = new Table(0, new Rectangle(33, 329, 530, 10), "保险费合计(人民币大", "明细");
+        Table table = new Table(0, new Rectangle(33, 329, 530, 10), "保险费合计\\S{0,}人民币大", "明细");
         parseDoc.addTable(table);
         table.addColumn(new Column("承保险种", "承保险种", false));
         table.addColumn(new Column("不计免赔率", "不计免赔率"));

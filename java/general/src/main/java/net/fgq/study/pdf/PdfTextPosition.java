@@ -9,6 +9,11 @@ public class PdfTextPosition {
 
     private String text;
 
+    /**
+     * 去除空格的内容。
+     */
+    private String trimedText;
+
     private PdfRectangle rectangle;
 
     private int pageIndex;
@@ -29,6 +34,21 @@ public class PdfTextPosition {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getTrimedText() {
+        if (trimedText == null) {
+
+            trimedText = this.getText();
+            trimedText = trimedText.replaceAll("\\s", "");
+
+        }
+
+        return trimedText;
+    }
+
+    public void setTrimedText(String trimedText) {
+        this.trimedText = trimedText;
     }
 
     public PdfRectangle getRectangle() {

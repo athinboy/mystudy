@@ -75,7 +75,7 @@ public class TableParse {
                 }
 
                 Pattern signPatter = column.getSignPattern();
-                if (signPatter.asPredicate().test(textPosition.getText())) {
+                if (signPatter.asPredicate().test(textPosition.getTrimedText())) {
                     colHeaderTexts.add(textPosition);
                     minX = Math.min(minX, textPosition.getRectangle().x);
                     maxX = Math.max(maxX, textPosition.getRectangle().x + textPosition.getRectangle().width);
@@ -257,7 +257,7 @@ public class TableParse {
                     continue;
                 }
                 Pattern signPatter = column.getSignPattern();
-                if (signPatter.asPredicate().test(textPosition.getText())) {
+                if (signPatter.asPredicate().test(textPosition.getTrimedText())) {
                     colHeaderTexts.add(textPosition);
                     //break;
                 }
@@ -438,7 +438,9 @@ public class TableParse {
         for (PdfTextPosition textPosition : textPositions) {
             if (textPosition.getPageIndex() == table.getPageIndex()) {
                 for (String footsign : footsigns) {
-                    if (textPosition.getText().indexOf(footsign) != -1) {
+                    Pattern signPatter = Pattern.compile(footsign.replace("(", "\\(")+"\\S{1,}");//避免之前输入的(造成无法编译
+                    if (textPosition.getText().indexOf(footsign) != -1
+                            || signPatter.asPredicate().test(textPosition.getText())) {
                         minY = Math.min(minY, textPosition.getRectangle().y);
                         for (int i = 0; i < textPositions.size(); i++) {
                             if (sameRow(table, textPosition, textPositions.get(i))) {

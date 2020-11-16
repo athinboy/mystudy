@@ -341,6 +341,13 @@ public class TableParse {
 
     //是否同行
     public static boolean sameRow(Table table, PdfTextPosition o1, PdfTextPosition o2) {
+
+        return sameRow(table.getCellLineSpace(), o1, o2);
+
+    }
+
+    //是否同行
+    public static boolean sameRow(int cellLineSpace, PdfTextPosition o1, PdfTextPosition o2) {
         double o1m = o1.getRectangle().getY() + o1.getRectangle().getHeight() / 2;
         double o2m = o2.getRectangle().getY() + o2.getRectangle().getHeight() / 2;
         int minHeight = Math.min(o1.getRectangle().height, o2.getRectangle().height);
@@ -349,7 +356,7 @@ public class TableParse {
             return true;
         }
 
-        if (Math.abs(o1.getRectangle().getY() - o2.getRectangle().getY()) <= table.getCellLineSpace()) {
+        if (Math.abs(o1.getRectangle().getY() - o2.getRectangle().getY()) <= cellLineSpace) {
             return true;
         }
         if (o1.getRectangle().y > o2.getRectangle().y && o1.getRectangle().getMaxY() < o2.getRectangle().getMaxY()) {
@@ -438,7 +445,7 @@ public class TableParse {
         for (PdfTextPosition textPosition : textPositions) {
             if (textPosition.getPageIndex() == table.getPageIndex()) {
                 for (String footsign : footsigns) {
-                    Pattern signPatter = Pattern.compile(footsign.replace("(", "\\(")+"\\S{1,}");//避免之前输入的(造成无法编译
+                    Pattern signPatter = Pattern.compile(footsign.replace("(", "\\(") + "\\S{1,}");//避免之前输入的(造成无法编译
                     if (textPosition.getText().indexOf(footsign) != -1
                             || signPatter.asPredicate().test(textPosition.getText())) {
                         minY = Math.min(minY, textPosition.getRectangle().y);

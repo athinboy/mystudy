@@ -10,6 +10,7 @@ import org.apache.pdfbox.text.TextPosition;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public class PDFTextPositionStripper extends PDFTextStripper {
      */
     private int charGapSpace = 1;
 
-    public boolean ShouwSystemOut = false;
+    public boolean ShowSystemOut = false;
 
     /**
      * Instantiate a new PDFTextStripper object.
@@ -146,7 +147,7 @@ public class PDFTextPositionStripper extends PDFTextStripper {
                 (new Double(Math.floor(width))).intValue(),
                 (new Double(Math.floor(height))).intValue());
         this.textPositions.add(position);
-        if (ShouwSystemOut) {
+        if (ShowSystemOut) {
             System.out.println(position.toString());
         }
     }
@@ -158,4 +159,41 @@ public class PDFTextPositionStripper extends PDFTextStripper {
                 "height:" + String.valueOf(textPosition.getHeight());
     }
 
+    /**
+     * 获取按照位置排列的文字
+     *
+     * @param document
+     * @return
+     */
+    public String getRangedText(PDDocument document) throws IOException {
+        List<PdfTextPosition> pdfTextPositions = this.stripPosition(document);
+
+        pdfTextPositions.sort(new Comparator<PdfTextPosition>() {
+            @Override
+            public int compare(PdfTextPosition o1, PdfTextPosition o2) {
+                int xc = new Integer(o1.getRectangle().x).compareTo(new Integer(o2.getRectangle().x));
+                int yc = new Integer(o1.getRectangle().y).compareTo(new Integer(o2.getRectangle().y));
+                if (yc == 0) {
+                    if (xc == 0) {
+                        return o1.getText().compareTo(o2.getText());
+                    } else {
+                        return xc;
+                    }
+                } else {
+                    return yc;
+                }
+            }
+        });
+        StringBuilder resultText = new StringBuilder();
+        for (int i = 0; i < pdfTextPositions.size(); i++) {
+            resultText.append(pdfTextPositions.get(i).getText());
+            if (i < pdfTextPositions.size() - 1) {
+                if (false == TableParse.sameRow(2, pdfTextPositions.get(i), pdfTextPositions.get(i + 1))) {
+                    resultText.append(System.lineSeparator());
+                }
+            }
+        }
+
+        return resultText.toString();
+    }
 }

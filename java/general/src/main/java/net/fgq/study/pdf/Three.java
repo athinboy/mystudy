@@ -20,8 +20,8 @@ public class Three {
         //String filename = "D:\\fgq\\temp\\999.pdf";
 
         //       File fileDirectory = new File("D:\\fgq\\temp\\新测试保单-3\\");
-     File fileDirectory = new File("D:\\fgq\\temp\\4\\");
-       File[] files = fileDirectory.listFiles();
+        File fileDirectory = new File("D:\\fgq\\temp\\5\\");
+        File[] files = fileDirectory.listFiles();
         for (int i = 0; i < files.length; i++) {
 
             String content = "";
@@ -31,9 +31,20 @@ public class Three {
                 System.out.println(files[i].getName());
                 PDDocument document = PDDocument.load(files[i]);
 
+                PDFTextPositionStripper textPositionStripper = new PDFTextPositionStripper();
+                textPositionStripper.setSortByPosition(true);
+                textPositionStripper.setSortByPosition(true);
+                textPositionStripper.ShowSystemOut = false;
+                String positionText = textPositionStripper.getRangedText(document);
+                if (false) {
+                    System.out.println(positionText);
+                    continue;
+                }
+
                 PDFTextStripper pts = new PDFTextStripper();
                 pts.setSortByPosition(true);
                 content = pts.getText(document);
+
                 //System.out.println(content);
                 if (content.contains("中国平安") && content.contains("机动车商业保险保险单")) {
                     parsePingAnNew(files[i], document);

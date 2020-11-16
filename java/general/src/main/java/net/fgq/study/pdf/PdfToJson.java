@@ -37,14 +37,14 @@ public class PdfToJson {
 
     public void setShowSystemOut(boolean showSystemOut) {
         this.showSystemOut = showSystemOut;
-        textPositionStripper.ShouwSystemOut = this.showSystemOut;
+        textPositionStripper.ShowSystemOut = this.showSystemOut;
     }
 
     public PdfToJson() throws IOException {
         this.textPositionStripper = new PDFTextPositionStripper();
         textPositionStripper.setSortByPosition(true);
         textPositionStripper.setSortByPosition(true);
-        textPositionStripper.ShouwSystemOut = this.showSystemOut;
+        textPositionStripper.ShowSystemOut = this.showSystemOut;
     }
 
     public JSONObject parse(PDDocument pdDocument, Document document) {

@@ -9,3 +9,5 @@ target/
 .factorypath
 bin/
 obj/
+.vs/
+.config/

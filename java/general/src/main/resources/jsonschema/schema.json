@@ -1,0 +1,57 @@
+{
+  "type": "object",
+  "description": "测试接口",
+  "properties": {
+    "productCode": {
+      "type": "string",
+      "minLength": 1
+    },
+    "birthday": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "empty_message": "请选择出生日期",
+      "error_message": "出生日期格式不正确"
+    },
+    "gender": {
+      "type": "string",
+      "enum": [
+        "M",
+        "F"
+      ],
+      "empty_message": "请选择性别",
+      "error_message": "性别输入非法"
+    },
+    "period": {
+      "type": "string",
+      "enum": [
+        "20",
+        "30",
+        "999"
+      ],
+      "empty_message": "请选择期间",
+      "error_message": "期间输入非法"
+    },
+    "buyCount": {
+      "type": "number",
+      "multipleOf": 1,
+      "minimum": 5,
+      "maximum": 10,
+      "exclusiveMinimum": false,
+      "exclusiveMaximum": false,
+      "empty_message": "请选择购买份数",
+      "error_message": "购买份数输入非法"
+    },
+    "amount": {
+      "type": "number",
+      "empty_message": "请输入金额"
+    }
+  },
+  "required": [
+    "productCode",
+    "birthday",
+    "gender",
+    "period",
+    "buyCount",
+    "amount"
+  ]
+}

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration.Json;
 
 using System.IO;
 
-namespace Core
+namespace org.fgq.study.dotnet.rabbitmq.Core
 {
     public class Config
     {
@@ -21,9 +21,11 @@ namespace Core
                 {
                     if (instance == null)
                     {
-                        instance = new Config();
+                        instance = new Config();                
+                        System.Console.WriteLine(System.AppContext.BaseDirectory);
+                       
                         var configurationBuilder = new ConfigurationBuilder()
-                                             .SetBasePath(Directory.GetCurrentDirectory())
+                                             .SetBasePath(System.AppContext.BaseDirectory)
                                                                   .AddJsonFile("config.json");
                         configurationBuilder.Build().Bind(instance);
 

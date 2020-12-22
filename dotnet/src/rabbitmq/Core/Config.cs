@@ -13,6 +13,12 @@ namespace org.fgq.study.dotnet.rabbitmq.Core
 
         private static Config instance = null;
 
+        public string QueueName1 { get; set; }="q1";
+        public string QueueName2 { get; set; }="q2";
+        
+
+
+
         public static Config GetInstance()
         {
             if (instance == null)
@@ -22,7 +28,7 @@ namespace org.fgq.study.dotnet.rabbitmq.Core
                     if (instance == null)
                     {
                         instance = new Config();                
-                        System.Console.WriteLine(System.AppContext.BaseDirectory);
+                        //System.Console.WriteLine(System.AppContext.BaseDirectory);
                        
                         var configurationBuilder = new ConfigurationBuilder()
                                              .SetBasePath(System.AppContext.BaseDirectory)

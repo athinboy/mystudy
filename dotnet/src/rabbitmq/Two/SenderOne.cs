@@ -31,7 +31,7 @@ namespace org.fgq.study.dotnet.rabbitmq.One
                 string message = i.ToString();
                 var body = Encoding.UTF8.GetBytes(message);
                 channel.BasicPublish(exchange: "",
-                                     routingKey: config.QueueName1,
+                                     routingKey: config.QueueName2,
                                      basicProperties: properties,
                                      body: body);
                 Console.WriteLine(" [x] Sent {0}", message);
@@ -48,11 +48,7 @@ namespace org.fgq.study.dotnet.rabbitmq.One
 
             channel = connection.CreateModel();
 
-            // channel.QueueDeclare(queue: config.QueueName,
-            //             durable: false,
-            //             exclusive: false,
-            //             autoDelete: false,
-            //             arguments: null);
+ 
 
             properties = channel.CreateBasicProperties();
             properties.Persistent = true;

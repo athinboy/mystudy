@@ -45,7 +45,7 @@ namespace org.fgq.study.dotnet.rabbitmq.One
 
             channel = connection.CreateModel();
 
-            channel.QueueDeclare(queue: config.QueueName1,
+            channel.QueueDeclare(queue: config.QueueName2,
                                  durable: false,
                                  exclusive: false,
                                  autoDelete: false,
@@ -62,8 +62,9 @@ namespace org.fgq.study.dotnet.rabbitmq.One
                     var body = ea.Body.ToArray();
                     var message = Encoding.UTF8.GetString(body);
                     Console.WriteLine("Sgin:{0}  Receive:{1}   count:{2}", Sgin, message, (receivedCount++).ToString());
-                    Thread.Sleep(1000 * (random.Next() % 10));
-                    //channel.BasicAck(ea.DeliveryTag,false);
+
+                    Thread.Sleep(1000 * (1 + int.Parse(Sgin)));
+                    channel.BasicAck(ea.DeliveryTag, false);
 
 
                 }
@@ -73,8 +74,8 @@ namespace org.fgq.study.dotnet.rabbitmq.One
                 }
 
             };
-            channel.BasicConsume(queue: config.QueueName1,
-                                 autoAck: true,
+            channel.BasicConsume(queue: config.QueueName2,
+                                 autoAck: false,
                                  consumer: consumer);
 
 

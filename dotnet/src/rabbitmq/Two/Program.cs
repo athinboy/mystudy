@@ -8,7 +8,7 @@ namespace org.fgq.study.dotnet.rabbitmq.One
     {
         static void Main(string[] args)
         {
-            int rcount = 5;
+            int rcount = 4;
 
             List<ReceiverOne> receivers = new List<ReceiverOne>();
             for (int i = 0; i < rcount; i++)

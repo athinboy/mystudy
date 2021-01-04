@@ -40,7 +40,7 @@ namespace org.fgq.study.dotnet.rabbitmq.One
             Config config = Config.GetInstance();
 
 
-            factory = new ConnectionFactory() { HostName = "localhost" };
+            factory = new ConnectionFactory() { HostName = config.HostName};
             connection = factory.CreateConnection();
 
             channel = connection.CreateModel();

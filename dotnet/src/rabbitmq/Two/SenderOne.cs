@@ -28,13 +28,24 @@ namespace org.fgq.study.dotnet.rabbitmq.One
         {
             for (int i = 0; i < count; i++)
             {
-                string message = i.ToString();
-                var body = Encoding.UTF8.GetBytes(message);
-                channel.BasicPublish(exchange: "",
-                                     routingKey: config.QueueName2,
-                                     basicProperties: properties,
-                                     body: body);
-                Console.WriteLine(" [x] Sent {0}", message);
+                try
+                {
+                    string message = i.ToString();
+                    var body = Encoding.UTF8.GetBytes(message);
+
+
+                    ulong deliveTag = channel.NextPublishSeqNo;
+                    channel.BasicPublish(exchange: "",
+                                         routingKey: config.QueueName2,
+                                         basicProperties: properties,
+                                         body: body);
+                    Console.WriteLine(" [x] Sent {0}", message);
+                    //channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 1));
+                }
+                catch (System.Exception ex)
+                {
+                    System.Console.WriteLine(ex.ToString());
+                }
             }
         }
 
@@ -47,8 +58,20 @@ namespace org.fgq.study.dotnet.rabbitmq.One
             connection = factory.CreateConnection();
 
             channel = connection.CreateModel();
+            channel.ConfirmSelect();
 
- 
+            channel.BasicAcks += (sender, ea) =>
+{
+    // code when message is confirmed
+    System.Console.WriteLine("basicAck:" + ea.DeliveryTag.ToString());
+
+};
+            channel.BasicNacks += (sender, ea) =>
+            {
+                //code when message is nack-ed
+            };
+
+
 
             properties = channel.CreateBasicProperties();
             properties.Persistent = true;

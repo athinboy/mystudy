@@ -15,9 +15,7 @@ namespace org.fgq.study.dotnet.rabbitmq.Core
 
         public string QueueName1 { get; set; }="q1";
         public string QueueName2 { get; set; }="q2";
-        
-
-
+        public string HostName { get; set; }="localhost" ;
 
         public static Config GetInstance()
         {

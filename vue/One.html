@@ -14,7 +14,14 @@
 <body>
   <div id="app">
     {{ message }}
+    <p>Using mustaches: {{ rawHtml }}</p>
+    <p>Using v-html directive: <span v-html="rawHtml"></span></p>
   </div>
+
+  <br />
+  <br />
+  <br />
+  <br />
   <div id="app-2">
     <span v-bind:title="message">
       鼠标悬停几秒钟查看此处动态绑定的提示信息！
@@ -28,9 +35,34 @@
     var app = new Vue({
       el: '#app',
       data: {
-        message: 'Hello Vue!'
-      }
+        message: 'Hello Vue!',
+        rawHtml: '<span style="color: red">This should be red.</span>'
+      },
+      beforeCreate: function () {
+        console.info('app-beforeCreate');
+      },
+      created:function(){
+        console.info('app-create');
+      },
+      beforeMount:function(){
+             console.info('app-beforeMount');
+      },
+      mounted:function(){
+        console.info('app-mounted');
+      },
+      beforeUpdate:function(){
+        console.info('app-beforeUpdate');
+      } ,
+      activated:function(){
+        console.info('app-activated');
+      } ,
+      beforeDestroy:function(){
+        console.info('app-beforeDestroy');
+      } 
+
+
     })
+
     var app2 = new Vue({
       el: '#app-2',
       data: {

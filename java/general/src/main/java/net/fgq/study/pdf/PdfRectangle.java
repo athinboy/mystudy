@@ -42,4 +42,23 @@ public class PdfRectangle extends Rectangle {
     public PdfRectangle(Dimension d) {
         super(d);
     }
+
+    /**
+     * 是否同一行
+     * @param o
+     * @param lineheight 行高
+     * @return
+     */
+    public boolean checkSameLine(PdfRectangle o,int lineheight){
+        return Math.abs(this.getMiddleY() - o.getMiddleY()) < lineheight / 2;
+    }
+    /**
+     * 是否在右侧
+     * @param o
+     * @return
+     */
+    public boolean checkRightSide(PdfRectangle o){
+        return o.x > this.x;
+    }
+
 }

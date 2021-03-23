@@ -14,6 +14,8 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -52,10 +54,10 @@ public class PdfToJson {
         //todo 因为运行时生成数据，加锁，避免多线程，
 
         //todo 清理运行时生成数据
-        document.getTableGroups().forEach(x->{
-            x.getTables().forEach(t->{
+        document.getTableGroups().forEach(x -> {
+            x.getTables().forEach(t -> {
                 t.setRuntimeParseRectangle(null);
-                t.getColumns().forEach(c->{
+                t.getColumns().forEach(c -> {
 
                 });
             });
@@ -82,14 +84,7 @@ public class PdfToJson {
             }
 
             if (CollectionUtils.isNotEmpty(document.getContents())) {
-                for (Content content : document.getContents()) {
-                    for (PdfTextPosition textPosition : textPositions) {
-                        if (content.getPageIndex() == textPosition.getPageIndex()
-                                && content.getRectangle().contains(textPosition.getRectangle())) {
-                            jsonObject.put(content.getJsonKey(), textPosition.getText());
-                        }
-                    }
-                }
+                ContentParse.parseContent(document, jsonObject, textPositions);
             }
             if (CollectionUtils.isNotEmpty(document.getTableGroups())) {
                 int errcount = 0;

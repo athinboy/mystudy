@@ -83,7 +83,7 @@ public class TableParse {
                 }
             }
             if (colHeaderTexts.size() == 0 || colHeaderTexts.size() < column.getSigns().size()) {
-                throw new PdfException(String.valueOf(i));
+                throw new PdfException("查询列信息失败" + column.toString());
             } else {
                 headTexts.add(colHeaderTexts);
             }

@@ -1,5 +1,9 @@
-package net.fgq.study.pdf;
+package net.fgq.study.pdf.test;
 
+import net.fgq.study.pdf.Cell;
+import net.fgq.study.pdf.PDFCellStripper;
+import net.fgq.study.pdf.PDFCustomerRender;
+import net.fgq.study.pdf.PDFTextPositionStripper;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.PDDocument;

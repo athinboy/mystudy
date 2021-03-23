@@ -1,6 +1,8 @@
-package net.fgq.study.pdf;
+package net.fgq.study.pdf.test;
 
 import com.alibaba.fastjson.JSONObject;
+import net.fgq.study.pdf.PDFTextPositionStripper;
+import net.fgq.study.pdf.PdfToJson;
 import net.fgq.study.pdf.annoation.*;
 import net.fgq.study.pdf.annoation.special.*;
 import org.apache.commons.lang3.exception.ExceptionUtils;

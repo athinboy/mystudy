@@ -23,7 +23,7 @@ public class Column {
     private int index = 0;
 
     /**
-     * 列头标记正则表达式，同一个表格中，必须唯一
+     * 列头标记正则表达式，同一个表格中，必须唯一。
      * 用于多行列头。
      */
     private List<String> signs = new ArrayList<>();
@@ -245,5 +245,14 @@ public class Column {
 
     public void setRuntimeCellCharWidth(int runtimeCellCharWidth) {
         this.runtimeCellCharWidth = runtimeCellCharWidth;
+    }
+
+    @Override
+    public String toString() {
+        return "Column{" +
+                "index=" + index +
+                ", signs=" + signs +
+                ", jsonKey='" + jsonKey + '\'' +
+                '}';
     }
 }

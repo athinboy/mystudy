@@ -1,4 +1,4 @@
-package net.fgq.study.pdf;
+package net.fgq.study.pdf.test;
 
 import com.spire.pdf.PdfDocument;
 import com.spire.pdf.PdfPageBase;

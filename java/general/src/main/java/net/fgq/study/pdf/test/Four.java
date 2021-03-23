@@ -1,4 +1,4 @@
-package net.fgq.study.pdf;
+package net.fgq.study.pdf.test;
 
 import com.alibaba.fastjson.JSONObject;
 import net.fgq.study.pdf.PdfToJson;

@@ -108,7 +108,7 @@ public class PdfTextPosition {
 
         for (PdfTextPosition candidateText : candidateTexts) {
             str += candidateText.getText();
-            pdfRectangle.union(candidateText.getRectangle());
+            pdfRectangle = new PdfRectangle(pdfRectangle.union(candidateText.getRectangle()));
         }
         PdfTextPosition newPosition = new PdfTextPosition(pageIndex, str, pdfRectangle);
 

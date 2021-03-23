@@ -100,14 +100,17 @@ public class ContentParse {
                     if (candidateRect.intersects(textPosition.getRectangle())) {
                         candidateValueTexts.add(textPosition);
 
-                        PdfTextPosition newText = PdfTextPosition.merge(candidateValueTexts);
-                        newText = findExtendBlock(textPositions, newText);
-                        if ((candidateValueStr = parseValue(content, newText)) != null) {
-                            candidateValues.add(candidateValueStr);
-                        }
-
                     }
                 }
+
+
+                PdfTextPosition newText = PdfTextPosition.merge(candidateValueTexts);
+                newText = findExtendBlock(textPositions, newText);
+                if ((candidateValueStr = parseValue(content, newText)) != null) {
+                    candidateValues.add(candidateValueStr);
+                }
+
+
             }
             if (candidateValues.size() == 1) {
 
@@ -135,16 +138,36 @@ public class ContentParse {
         temp.addAll(textPositions);
         temp.sort(PdfTextPosition.getYXSortCompare());
         for (PdfTextPosition position : temp) {
+            //左边距排除
             if (Math.abs(position.getRectangle().x - textPosition.getRectangle().x) > position.lineHeight() / 2) {
                 continue;
             }
+            //上边距排除
             if (position.getRectangle().y >= textPosition.getRectangle().y && position.getRectangle().y <= textPosition.getRectangle().getMaxY()) {
                 continue;
             }
-
+            candidates.add(position);
         }
-        candidates.add(textPosition);
-        return PdfTextPosition.merge(candidates);
+        temp.clear();
+        int minY = textPosition.getRectangle().y;
+        int maxY = textPosition.getRectangle().y + textPosition.getRectangle().height;
+        //从上往下找相邻
+        for (int i = 0; i < candidates.size(); i++) {
+            if (Math.abs(candidates.get(i).getRectangle().y - maxY) < candidates.get(i).lineHeight() / 2) {
+                maxY = candidates.get(i).getRectangle().maxY();
+                temp.add(candidates.get(i));
+            }
+        }
+        //从下往上找相邻
+        for (int i = candidates.size() - 1; i >= 0; i--) {
+            if (Math.abs(minY - candidates.get(i).getRectangle().maxY()) < candidates.get(i).lineHeight() / 2) {
+                minY = candidates.get(i).getRectangle().y;
+                temp.add(candidates.get(i));
+            }
+        }
+
+        temp.add(textPosition);
+        return PdfTextPosition.merge(temp);
 
     }
 

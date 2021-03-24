@@ -1,4 +1,4 @@
-package net.fgq.study.pdf.annoation.special;
+package net.fgq.study.pdf.annoation.special.table;
 
 import net.fgq.study.pdf.PdfTextPosition;
 import net.fgq.study.pdf.annoation.Column;

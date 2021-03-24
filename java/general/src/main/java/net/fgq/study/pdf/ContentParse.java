@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import net.fgq.study.pdf.annoation.Content;
 import net.fgq.study.pdf.annoation.Document;
 import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.regex.Pattern;
  */
 public class ContentParse {
 
-    public static void parseContent(Document document, JSONObject jsonObject, List<PdfTextPosition> textPositions) {
+    public static void parseContent(Document document, JSONObject jsonObject, final List<PdfTextPosition> textPositions) {
         String candidateValueStr;
         List<PdfRectangle> candidateRects = new ArrayList<>();
         for (Content content : document.getContents()) {
@@ -103,13 +104,11 @@ public class ContentParse {
                     }
                 }
 
-
                 PdfTextPosition newText = PdfTextPosition.merge(candidateValueTexts);
                 newText = findExtendBlock(textPositions, newText);
                 if ((candidateValueStr = parseValue(content, newText)) != null) {
                     candidateValues.add(candidateValueStr);
                 }
-
 
             }
             if (candidateValues.size() == 1) {
@@ -172,7 +171,7 @@ public class ContentParse {
     }
 
     private static void formatValue(JSONObject jsonObject, Content content, String valuestr) {
-        jsonObject.put(content.getJsonKey(), valuestr);
+        jsonObject.put(content.getJsonKey(), content.formatValue(valuestr));
     }
 
     /**
@@ -183,7 +182,7 @@ public class ContentParse {
      * @param textPositions
      * @return
      */
-    public static boolean parseContentByPosition(Content content, JSONObject jsonObject, List<PdfTextPosition> textPositions) {
+    public static boolean parseContentByPosition(Content content, JSONObject jsonObject, final List<PdfTextPosition> textPositions) {
         for (PdfTextPosition textPosition : textPositions) {
 
             if (content.getPageIndex() == textPosition.getPageIndex()
@@ -203,7 +202,7 @@ public class ContentParse {
      * @param candidateText
      * @return null：提取失败
      */
-    private static String parseValue(Content content, PdfTextPosition candidateText) {
+    private static String parseValue(Content content, final PdfTextPosition candidateText) {
 
         String valueCandidateStr = candidateText.getTrimedText();
 
@@ -212,11 +211,14 @@ public class ContentParse {
             valueCandidateStr = valueCandidateStr.substring(matcher.end());
 
         }
+        if (StringUtils.isBlank(valueCandidateStr)) {
+            return null;
+        }
 
         if (content.getValueRegstr().size() > 0) {
             Pattern valuePattern = content.getValuePattern();
 
-            if (valuePattern.asPredicate().test(candidateText.getTrimedText())) {
+            if (valuePattern.asPredicate().test(valueCandidateStr)) {
                 matcher = valuePattern.matcher(valueCandidateStr);
                 if (matcher.find()) {
                     valueCandidateStr = valueCandidateStr.substring(matcher.start(), matcher.end());

@@ -1,7 +1,5 @@
 package net.fgq.study.pdf.annoation;
 
-import net.fgq.study.pdf.annoation.special.TaiPingYangNewTable;
-
 import java.util.ArrayList;
 import java.util.List;
 

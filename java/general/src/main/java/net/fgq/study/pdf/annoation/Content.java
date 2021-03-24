@@ -54,6 +54,7 @@ public class Content {
 
     private int pageIndex;
 
+
     public Content(int pageIndex, String jsonKey, String... lablesigns) {
 
         if (StringUtils.isBlank(jsonKey) || lablesigns == null || lablesigns.length == 0) {
@@ -138,5 +139,9 @@ public class Content {
                 ", lableSigns=" + lableSigns +
                 ", pageIndex=" + pageIndex +
                 '}';
+    }
+
+    public Object formatValue(final String valuestr) {
+        return valuestr;
     }
 }

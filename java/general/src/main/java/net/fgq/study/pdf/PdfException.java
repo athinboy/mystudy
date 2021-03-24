@@ -7,4 +7,8 @@ public class PdfException extends RuntimeException {
     public PdfException(String message) {
         super(message);
     }
+
+    public static PdfException getInstance(String message) {
+        return new PdfException(message);
+    }
 }

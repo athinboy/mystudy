@@ -2,6 +2,7 @@ package net.fgq.study.pdf;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.spire.pdf.PdfDocument;
 import net.fgq.study.pdf.annoation.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -14,6 +15,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -26,10 +28,6 @@ public class PdfToJson {
     private PDFTextPositionStripper textPositionStripper;
 
     private static Logger logger = LoggerFactory.getLogger(PdfToJson.class);
-
-    private Document document;
-
-    private PDDocument pdDocument;
 
     private boolean showSystemOut = false;
 
@@ -49,7 +47,97 @@ public class PdfToJson {
         textPositionStripper.ShowSystemOut = this.showSystemOut;
     }
 
+    /**
+     * 商业险标记
+     */
+    private static Predicate<String> commecialSign = Pattern.compile("(商业保险单)|(神行车保机动车)").asPredicate();
+
+    /**
+     * 交强险标记
+     */
+    private static Predicate<String> compluseSign = Pattern.compile("(交{0,1}(强制)保险)").asPredicate();
+
+    /**
+     * 保单页而非“强制保险标志”页。
+     */
+    private static Predicate<String> orderSign = Pattern.compile("保险{0,1}费合计").asPredicate();
+
+    private boolean checkOrderInfoPage(List<PdfTextPosition> textPositions, int pageindex) {
+
+        for (PdfTextPosition textPosition : textPositions) {
+            if (textPosition.getPageIndex() == pageindex && orderSign.test(textPosition.getTrimedText())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public JSONObject parse(PDDocument pdfDocument) {
+
+        try {
+            JSONObject jsonObject = new JSONObject();
+            if (pdfDocument.getPages().getCount() == 0) {
+                return jsonObject;
+            }
+
+            List<PdfTextPosition> textPositions = textPositionStripper.stripPosition(pdfDocument);
+            PdfResult pdfResult = new PdfResult();
+            int commecialIndex = -1;
+            int compluseIndex = -1;
+            for (PdfTextPosition textPosition : textPositions) {
+                if (commecialSign.test(textPosition.getTrimedText()) && checkOrderInfoPage(textPositions, textPosition.getPageIndex())) {
+                    if (commecialIndex != -1 && commecialIndex != textPosition.getPageIndex()) {
+                        throw PdfException.getInstance("获取商业险页码失败");
+                    }
+                    commecialIndex = textPosition.getPageIndex();
+                }
+                if (compluseSign.test(textPosition.getTrimedText()) && checkOrderInfoPage(textPositions, textPosition.getPageIndex())) {
+                    if (compluseIndex != -1 && compluseIndex != textPosition.getPageIndex()) {
+                        throw PdfException.getInstance("获取交强险页码失败");
+                    }
+                    compluseIndex = textPosition.getPageIndex();
+                }
+            }
+            InsOrderDocument document;
+            if (commecialIndex != -1) {
+                document=new CommecialDocument(commecialIndex);
+                pdfResult.setCommercialDocument(document);
+
+                parse(pdfDocument,document,textPositions);
+
+            }
+            if (compluseIndex != -1) {
+                document=new CompluseDocument(commecialIndex);
+                pdfResult.setCompulsoryDocument(document);
+                parse(pdfDocument,document,textPositions);
+
+            }
+        } catch (Exception ex) {
+            logger.error("识别pdf失败", ex);
+            System.out.println(ExceptionUtils.getStackTrace(ex));
+            throw new PdfException(ex.getMessage());
+        } finally {
+
+        }
+        return null;
+
+    }
+
     public JSONObject parse(PDDocument pdDocument, Document document) {
+        try {
+            List<PdfTextPosition> textPositions = textPositionStripper.stripPosition(pdDocument);
+            return parse(pdDocument, document, textPositions);
+        } catch (Exception ex) {
+            logger.error("识别pdf失败", ex);
+            System.out.println(ExceptionUtils.getStackTrace(ex));
+            throw new PdfException(ex.getMessage());
+        } finally {
+
+        }
+    }
+
+    private JSONObject parse(PDDocument pdDocument, Document document, List<PdfTextPosition> textPositions) {
 
         //todo 因为运行时生成数据，加锁，避免多线程，
 
@@ -63,16 +151,11 @@ public class PdfToJson {
             });
         });
 
-        this.document = document;
-        this.pdDocument = pdDocument;
-
         try {
             JSONObject jsonObject = new JSONObject();
             if (pdDocument.getPages().getCount() == 0) {
                 return jsonObject;
             }
-
-            List<PdfTextPosition> textPositions = textPositionStripper.stripPosition(pdDocument);
 
             if (StringUtils.isNotBlank(document.getPageIndexSign())) {
                 for (PdfTextPosition textPosition : textPositions) {

@@ -1,15 +1,9 @@
 package net.fgq.study.pdf.test;
 
-import com.alibaba.fastjson.JSONObject;
-import net.fgq.study.pdf.PdfToJson;
-import net.fgq.study.pdf.annoation.special.PingAnNewTable;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
-import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by fengguoqiang 2020/10/27

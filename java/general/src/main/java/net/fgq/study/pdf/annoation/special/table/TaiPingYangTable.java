@@ -1,4 +1,4 @@
-package net.fgq.study.pdf.annoation.special;
+package net.fgq.study.pdf.annoation.special.table;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

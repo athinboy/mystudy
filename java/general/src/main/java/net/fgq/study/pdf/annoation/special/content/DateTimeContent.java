@@ -9,17 +9,25 @@ import org.apache.commons.lang3.time.DateUtils;
 import java.util.Date;
 
 /**
- * 失效日期
  * Created by fengguoqiang 2021/3/24
  */
-public class ExpireDateContent extends Content {
+public class DateTimeContent extends Content {
 
     {
-        this.getValueRegstr().add("(至|起至)\\d{4}年\\d{2}月\\d{2}日((零|(\\d{1,2}))时\\d{1,2}分(\\d{1,2}秒){0,1}){0,1}止{0,1}");
+        this.getValueRegstr().add(ContentValueTypeEnum.Date.getRegexStr());
     }
 
-    public ExpireDateContent(int pageIndex, String jsonKey, String[] lablesigns) {
+    public DateTimeContent(int pageIndex, String jsonKey, String... lablesigns) {
         super(pageIndex, jsonKey, lablesigns);
+
+    }
+
+    public DateTimeContent(int pageIndex, String jsonKey, java.awt.Rectangle rectangle) {
+        super(pageIndex, jsonKey, rectangle);
+    }
+
+    public DateTimeContent(int pageIndex, String jsonKey, int x, int y, int width, int height) {
+        super(pageIndex, jsonKey, x, y, width, height);
     }
 
     @Override

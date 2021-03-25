@@ -101,16 +101,16 @@ public class PdfToJson {
             }
             InsOrderDocument document;
             if (commecialIndex != -1) {
-                document=new CommecialDocument(commecialIndex);
+                document = new CommecialDocument(commecialIndex);
                 pdfResult.setCommercialDocument(document);
-
-                parse(pdfDocument,document,textPositions);
+                document.parseContent( textPositions);
+                parse(pdfDocument, document, textPositions);
 
             }
             if (compluseIndex != -1) {
-                document=new CompluseDocument(commecialIndex);
+                document = new CompluseDocument(commecialIndex);
                 pdfResult.setCompulsoryDocument(document);
-                parse(pdfDocument,document,textPositions);
+                parse(pdfDocument, document, textPositions);
 
             }
         } catch (Exception ex) {

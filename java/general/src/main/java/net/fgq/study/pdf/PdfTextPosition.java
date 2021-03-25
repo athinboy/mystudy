@@ -17,11 +17,19 @@ public class PdfTextPosition {
      */
     private String trimedText;
 
+    /**
+     * 行数
+     */
     private int lineNumber = 1;
 
     private PdfRectangle rectangle = null;
 
     private int pageIndex;
+
+    /**
+     * 作为信息标签的可能性。
+     */
+    private int keyPercent = 0;
 
     public PdfTextPosition(int pageIndex, String text, PdfRectangle rectangle) {
         this.text = text;
@@ -187,6 +195,7 @@ public class PdfTextPosition {
                 "trimedText='" + trimedText + '\'' +
                 ", rectangle=" + rectangle +
                 ", pageIndex=" + pageIndex +
+                ", keyPercent=" + keyPercent +
                 '}';
     }
 
@@ -194,8 +203,33 @@ public class PdfTextPosition {
         return this.getRectangle().height / this.lineNumber;
     }
 
+    /**
+     * 是否同一行
+     *
+     * @param textPosition
+     * @return
+     */
     public boolean checkSameLine(PdfTextPosition textPosition) {
-        int lineheight = (this.lineHeight() + textPosition.lineHeight()) / 2;
+        int lineheight = (this.lineHeight() + textPosition.lineHeight()) / 2 / 2;
         return this.getRectangle().checkSameLine(textPosition.getRectangle(), lineheight);
+    }
+
+    public int getKeyPercent() {
+        return keyPercent;
+    }
+
+    public void setKeyPercent(int keyPercent) {
+        this.keyPercent = keyPercent;
+    }
+
+    /**
+     * 是否左边距相同
+     *
+     * @param other
+     * @return
+     */
+    public boolean checkSameLeft(PdfTextPosition other) {
+        int lineheight = (this.lineHeight() + other.lineHeight()) / 2 / 2;
+        return Math.abs(this.getRectangle().x - other.getRectangle().x) < lineheight;
     }
 }

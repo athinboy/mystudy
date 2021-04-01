@@ -18,6 +18,8 @@ import java.util.function.Predicate;
  */
 public class InsOrderDocument extends Document {
 
+    protected InsCompanyType insCompanyType;
+
     Logger logger = LoggerFactory.getLogger(InsOrderDocument.class);
     private int pageIndex;
 
@@ -43,8 +45,24 @@ public class InsOrderDocument extends Document {
         this.orderItemInfos = orderItemInfos;
     }
 
+    private void identityCompany(final List<PdfTextPosition> textPositions) {
+        for (PdfTextPosition textPosition : textPositions) {
+            if (textPosition.getTrimedText().contains("中国平安")) {
+                this.insCompanyType = InsCompanyType.pingan;
+                return;
+            }
+            if (textPosition.getTrimedText().contains("太平洋")) {
+                this.insCompanyType = InsCompanyType.tpyang;
+                return;
+            }
+        }
+        throw PdfException.getInstance("无法识别的保险公司类型");
+    }
+
     public void parseContent(final List<PdfTextPosition> textPositions) {
 
+        identityCompany(textPositions);
+        preStructText(textPositions);
         List<PdfTextPosition> allCandidateTexts = new ArrayList<>();
 
         for (OrderItemInfo orderItemInfo : orderItemInfos) {
@@ -108,17 +126,25 @@ public class InsOrderDocument extends Document {
                 if ((false == orderItemInfo.getMuiltValue())
                         && (false == itemInfo.getMuiltValue())
                         && orderItemInfo.getCandidateKeyTexts().get(0) == itemInfo.getCandidateKeyTexts().get(0)) {
-                    throw PdfException.getInstance(String.format("相同的候选项：%s:%s:%s",
+                    throw PdfException.getInstance(String.format("相同的候选项：\r\n%s\r\n:%s\r\n:%s\r\n",
                             orderItemInfo.toString(),
                             itemInfo.toString(),
                             orderItemInfo.getCandidateKeyTexts().get(0)));
                 }
             }
-            if(orderItemInfo.getCandidateKeyTexts().size()>0) {
+            if (orderItemInfo.getCandidateKeyTexts().size() > 0) {
                 addContent(orderItemInfo, orderItemInfo.getCandidateKeyTexts().get(0));
             }
         }
 
+    }
+
+    /**
+     * 预规整数据。
+     * @param textPositions
+     */
+    private void preStructText(List<PdfTextPosition> textPositions) {
+        InsOrderStructor.struct(textPositions,this.insCompanyType);
     }
 
     private void addContent(OrderItemInfo orderItemInfo, PdfTextPosition pdfTextPosition) {

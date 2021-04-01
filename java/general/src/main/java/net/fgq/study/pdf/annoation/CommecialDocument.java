@@ -38,24 +38,19 @@ public class CommecialDocument extends InsOrderDocument {
         this.orderItemInfos.add(new OrderItemInfo("initialRegistration", "初登日期", "初次登记日期"));//String
         //厂牌型号
         this.orderItemInfos.add(new OrderItemInfo("factoryPlateModel", "厂牌型号"));
-        //核定载质量
-        this.orderItemInfos.add(new OrderItemInfo("approvedLoad", true, true, "(核定载质量)|(核定载客/载质量)"));
-        //核定载客人数
-        this.orderItemInfos.add(new OrderItemInfo("approvedPassengersCapacity", "核定载客"));//
+//        //核定载质量
+//        this.orderItemInfos.add(new OrderItemInfo("approvedLoad",   "(核定载质量)|(核定载客/载质量)"));
+//        //核定载客人数
+//        this.orderItemInfos.add(new OrderItemInfo("approvedPassengersCapacity", "核定载客"));//
         //使用性质
         this.orderItemInfos.add(new OrderItemInfo("useCharacter", "使用性质"));//
         //机动车种类
         this.orderItemInfos.add(new OrderItemInfo("vehicleType", "机动车种类"));//
 
-        /**
-         * 排量
-         */
-        this.orderItemInfos.add(new OrderItemInfo("displacement", "排量"));//
-
-        /**
-         * 功率
-         */
-        this.orderItemInfos.add(new OrderItemInfo("capacityFactor", "功率"));//
+//        //排量
+//        this.orderItemInfos.add(new OrderItemInfo("displacement", "排量"));//
+//        //功率
+//        this.orderItemInfos.add(new OrderItemInfo("capacityFactor", "功率"));//
 
         /**
          * 车损险每次事故绝对免赔额

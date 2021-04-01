@@ -24,7 +24,7 @@ public class OrderItemInfo {
     /**
      * 多个值包含在同一个文本中比如保险期间。
      */
-    private boolean muiltValue = false;
+    private boolean muiltValue = true;
 
     private List<PdfTextPosition> candidateKeyTexts = new ArrayList<>();
 
@@ -44,20 +44,24 @@ public class OrderItemInfo {
         this.muiltValue = muiltValue;
     }
 
+    public OrderItemInfo(String jsonKey, ContentValueTypeEnum valueType, boolean require, String... keySigns) {
+        this(jsonKey, valueType, true, require, keySigns);
+    }
+
     public OrderItemInfo(String jsonKey, boolean muiltValue, boolean require, String... keySigns) {
-        this(jsonKey, ContentValueTypeEnum.Text, muiltValue, require, keySigns);
+        this(jsonKey, ContentValueTypeEnum.Text, require, keySigns);
     }
 
     public OrderItemInfo(String jsonKey, boolean require, String... keySigns) {
-        this(jsonKey, ContentValueTypeEnum.Text, false, require, keySigns);
+        this(jsonKey, ContentValueTypeEnum.Text, require, keySigns);
     }
 
     public OrderItemInfo(String jsonKey, ContentValueTypeEnum valueType, String... keySigns) {
-        this(jsonKey, valueType, false, true, keySigns);
+        this(jsonKey, valueType, true, keySigns);
     }
 
     public OrderItemInfo(String jsonKey, String... keySigns) {
-        this(jsonKey, ContentValueTypeEnum.Text, false, true, keySigns);
+        this(jsonKey, ContentValueTypeEnum.Text, true, keySigns);
     }
 
     public Predicate<String> getSignPredicate() {

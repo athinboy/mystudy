@@ -21,6 +21,9 @@ public class ContentParse {
         String candidateValueStr;
         List<PdfRectangle> candidateRects = new ArrayList<>();
         for (Content content : document.getContents()) {
+            if(content.getLableSigns().get(0).equals("保险期间")){
+                int i=0;
+            }
 
             if (content.getRectangle() != null) {
                 parseContentByPosition(content, jsonObject, textPositions);
@@ -82,13 +85,15 @@ public class ContentParse {
                         }
                     }
 
+
+
                 }
-                PdfTextPosition newTextPosition = PdfTextPosition.merge(candidateValueTexts);
+                PdfTextPosition newTextPosition = PdfTextPositionHelper.merge(candidateValueTexts);
                 if (null != (candidateValueStr = parseValue(content, newTextPosition))) {
                     formatValue(jsonObject, content, candidateValueStr);
                     continue;
                 } else {
-                    throw new PdfException("提取值识别：" + JSON.toJSONString(newTextPosition.toString()));
+                    throw new PdfException("提取值失败：" + content.toString() + "\r\n" + JSON.toJSONString(newTextPosition.toString()));
                 }
 //                throw new NotImplementedException("未配置右侧标签的情况");
             }
@@ -104,7 +109,7 @@ public class ContentParse {
                     }
                 }
 
-                PdfTextPosition newText = PdfTextPosition.merge(candidateValueTexts);
+                PdfTextPosition newText = PdfTextPositionHelper.merge(candidateValueTexts);
                 newText = findExtendBlock(textPositions, newText);
                 if ((candidateValueStr = parseValue(content, newText)) != null) {
                     candidateValues.add(candidateValueStr);
@@ -135,7 +140,7 @@ public class ContentParse {
 
         List<PdfTextPosition> temp = new ArrayList<>();
         temp.addAll(textPositions);
-        temp.sort(PdfTextPosition.getYXSortCompare());
+        temp.sort(PdfTextPositionHelper.getYXSortCompare());
         for (PdfTextPosition position : temp) {
             //左边距排除
             if (Math.abs(position.getRectangle().x - textPosition.getRectangle().x) > position.lineHeight() / 2) {
@@ -166,7 +171,7 @@ public class ContentParse {
         }
 
         temp.add(textPosition);
-        return PdfTextPosition.merge(temp);
+        return PdfTextPositionHelper.merge(temp);
 
     }
 

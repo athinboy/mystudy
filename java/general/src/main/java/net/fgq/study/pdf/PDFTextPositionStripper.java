@@ -103,6 +103,15 @@ public class PDFTextPositionStripper extends PDFTextStripper {
 
     }
 
+    protected void writeString(String text, List<TextPosition> textPositions) throws IOException
+    {
+        super.writeString(text,textPositions);
+        if (ShowSystemOut) {
+            System.out.println(text);
+        }
+    }
+
+
     /**
      * {@inheritDoc}
      */

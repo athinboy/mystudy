@@ -24,7 +24,6 @@ public class PDFCustomerRender extends PDFRenderer {
      */
     public PDFCustomerRender(PDDocument document) {
         super(document);
-        rectangle = document.getPages().get(0).getCropBox();
 
     }
 
@@ -40,6 +39,7 @@ public class PDFCustomerRender extends PDFRenderer {
     protected PageDrawer createPageDrawer(PageDrawerParameters parameters) throws IOException {
 
         pageLineStripper = new PageLineStripper(parameters);
+        rectangle = parameters.getPage().getCropBox();
 
         pdDocument = new PDDocument();
         pdDocument.addPage(new PDPage());

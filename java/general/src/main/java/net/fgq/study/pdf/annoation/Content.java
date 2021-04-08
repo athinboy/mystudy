@@ -1,5 +1,6 @@
 package net.fgq.study.pdf.annoation;
 
+import net.fgq.study.pdf.Item.OrderItemInfo;
 import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
@@ -31,6 +32,12 @@ public class Content {
      * 值正则模式
      */
     private List<String> valueRegstr = new ArrayList<>();
+    /**
+     * 列多行，需要上下扩展。
+     */
+    private boolean valueMultiLine = false;
+
+    private OrderItemInfo orderItem;
 
     public Pattern getValuePattern() {
         String singstr = "(" + String.join(")|(", this.getValueRegstr()) + ")";
@@ -53,7 +60,6 @@ public class Content {
     }
 
     private int pageIndex;
-
 
     public Content(int pageIndex, String jsonKey, String... lablesigns) {
 
@@ -143,5 +149,21 @@ public class Content {
 
     public Object formatValue(final String valuestr) {
         return valuestr;
+    }
+
+    public boolean getValueMultiLine() {
+        return valueMultiLine;
+    }
+
+    public void setValueMultiLine(boolean valueMultiLine) {
+        this.valueMultiLine = valueMultiLine;
+    }
+
+    public void setOrderItem(OrderItemInfo orderItem) {
+        this.orderItem = orderItem;
+    }
+
+    public OrderItemInfo getOrderItem() {
+        return orderItem;
     }
 }

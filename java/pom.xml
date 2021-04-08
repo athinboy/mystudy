@@ -38,6 +38,7 @@
         <springboot.version>2.2.6.RELEASE</springboot.version>
         <springcloud.version>Hoxton.RELEASE</springcloud.version>
         <core.version>1.0-SNAPSHOT</core.version>
+        <dubbo.version>2.6.9</dubbo.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -444,7 +445,7 @@
             <dependency>
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson</artifactId>
-                <version>3.13.2</version>
+                <version>3.15.0</version>
             </dependency>
             <dependency>
                 <groupId>redis.clients</groupId>
@@ -534,6 +535,13 @@
                 <version>5.0.2.RELEASE</version>
             </dependency>
 
+
+            <!-- https://mvnrepository.com/artifact/com.alibaba/dubbo -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>dubbo</artifactId>
+                <version>${dubbo.version}</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>

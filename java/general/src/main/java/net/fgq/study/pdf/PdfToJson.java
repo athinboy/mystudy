@@ -1,5 +1,6 @@
 package net.fgq.study.pdf;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.spire.pdf.PdfDocument;
@@ -43,7 +44,6 @@ public class PdfToJson {
     public PdfToJson() throws IOException {
         this.textPositionStripper = new PDFTextPositionStripper();
         textPositionStripper.setSortByPosition(true);
-        textPositionStripper.setSortByPosition(true);
         textPositionStripper.ShowSystemOut = this.showSystemOut;
     }
 
@@ -73,12 +73,12 @@ public class PdfToJson {
         return false;
     }
 
-    public JSONObject parse(PDDocument pdfDocument) {
+    public PdfResult parse(PDDocument pdfDocument) throws Exception {
 
         try {
-            JSONObject jsonObject = new JSONObject();
+            JSONObject jsonObject;
             if (pdfDocument.getPages().getCount() == 0) {
-                return jsonObject;
+                return null;
             }
 
             List<PdfTextPosition> textPositions = textPositionStripper.stripPosition(pdfDocument);
@@ -102,25 +102,30 @@ public class PdfToJson {
             InsOrderDocument document;
             if (commecialIndex != -1) {
                 document = new CommecialDocument(commecialIndex);
-                pdfResult.setCommercialDocument(document);
-                document.parseContent( textPositions);
-                parse(pdfDocument, document, textPositions);
+                document.parseContent(textPositions);
+                jsonObject = parse(pdfDocument, document, textPositions);
+                document.validate(jsonObject);
+                pdfResult.setCommercialDocument(jsonObject);
 
             }
             if (compluseIndex != -1) {
-                document = new CompluseDocument(commecialIndex);
-                pdfResult.setCompulsoryDocument(document);
-                parse(pdfDocument, document, textPositions);
+                document = new CompluseDocument(compluseIndex);
+                document.parseContent(textPositions);
+                jsonObject = parse(pdfDocument, document, textPositions);
+                document.validate(jsonObject);
+                pdfResult.setCompulsoryDocument(jsonObject);
 
             }
+            return pdfResult;
         } catch (Exception ex) {
             logger.error("识别pdf失败", ex);
             System.out.println(ExceptionUtils.getStackTrace(ex));
             throw new PdfException(ex.getMessage());
         } finally {
-
+            if (pdfDocument != null) {
+                pdfDocument.close();
+            }
         }
-        return null;
 
     }
 

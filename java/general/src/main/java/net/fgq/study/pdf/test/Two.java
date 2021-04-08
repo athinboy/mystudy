@@ -1,9 +1,6 @@
 package net.fgq.study.pdf.test;
 
-import net.fgq.study.pdf.Cell;
-import net.fgq.study.pdf.PDFCellStripper;
-import net.fgq.study.pdf.PDFCustomerRender;
-import net.fgq.study.pdf.PDFTextPositionStripper;
+import net.fgq.study.pdf.*;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -25,10 +22,11 @@ import java.util.List;
 public class Two {
 
     public static void main(String[] args) throws Exception {
-//        T0();
+       T0();
+        //T1();
         //  saveImage();
         //showTextPosition();
-        StripText();
+        //StripText();
     }
 
     private static void StripText() throws Exception {
@@ -55,6 +53,9 @@ public class Two {
         PDDocument document = PDDocument.load(new File(filename));
 
         PDFCellStripper pdfCellStripper = new PDFCellStripper(document);
+        PDFTextPositionStripper textPositionStripper = new PDFTextPositionStripper();
+        textPositionStripper.setSortByPosition(true);
+        textPositionStripper.ShowSystemOut = true;
         List<Cell> cells = pdfCellStripper.stripCell(0);
 
         //-------------------
@@ -63,15 +64,32 @@ public class Two {
         PDPageContentStream contentStream = new PDPageContentStream(newdoc, newdoc.getPage(0),
                 PDPageContentStream.AppendMode.APPEND, false, true);
 
+        PDFTextStripperByArea pdfTextStripperByArea = new PDFTextStripperByArea();
+
         for (Cell cell : cells) {
             Rectangle rectangle = cell.getRect();
-            contentStream.addRect((float) rectangle.getX(),
-                    (float) rectangle.getY(),
-                    (float) rectangle.getWidth(),
-                    (float) rectangle.getHeight());
+//            contentStream.addRect((float) rectangle.getX(),
+//                    (float) rectangle.getY(),
+//                    (float) rectangle.getWidth(),
+//                    (float) rectangle.getHeight());
+
+            //pdfTextStripperByArea.addRegion(String.valueOf(cell.hashCode()), rectangle);
 
         }
-        contentStream.closeAndStroke();
+
+        textPositionStripper.stripPosition(document);
+
+//        pdfTextStripperByArea.extractRegions(document.getPage(0));
+//        for (Cell cell : cells) {
+//            String str = pdfTextStripperByArea.getTextForRegion(String.valueOf(cell.hashCode()));
+//            System.out.println(str);
+//        }
+
+        for (Line line : pdfCellStripper.getPageLineStripper().getLines()) {
+            contentStream.moveTo(line.getX1(), line.getY1());
+            contentStream.lineTo(line.getX2(), line.getY2());
+            contentStream.closeAndStroke();
+        }
 
         contentStream.close();
         String filename2 = "D:\\fgq\\temp\\" + DateFormatUtils.format(new Date(), "yyyyMMddhhmmss") + ".pdf";

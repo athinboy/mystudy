@@ -1,5 +1,7 @@
 package net.fgq.study.pdf;
 
+import java.awt.geom.Point2D;
+
 /**
  * Created by fengguoqiang 2020/10/26
  */
@@ -21,6 +23,14 @@ public class Line implements Comparable {
         this.y1 = y1;
         this.x2 = x2;
         this.y2 = y2;
+    }
+
+    public Point2D.Float getStartPoint() {
+        return new Point2D.Float(x1, y1);
+    }
+
+    public Point2D.Float getEndStartPoint() {
+        return new Point2D.Float(x2, y2);
     }
 
     public float getX1() {

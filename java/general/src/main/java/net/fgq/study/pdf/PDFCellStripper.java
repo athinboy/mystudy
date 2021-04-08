@@ -18,13 +18,6 @@ public class PDFCellStripper {
     public PDFCellStripper(PDDocument document) {
         render = new PDFCustomerRender(document);
 
-//        pdDocument = new PDDocument();
-//        pdDocument.addPage(new PDPage());
-//        pageLineStripper.pageContentStream = new PDPageContentStream(
-//                pdDocument,
-//                pdDocument.getPages().get(0),
-//                PDPageContentStream.AppendMode.APPEND,
-//                false);
 
     }
 
@@ -37,4 +30,11 @@ public class PDFCellStripper {
 
     }
 
+    public PageLineStripper getPageLineStripper() {
+        return pageLineStripper;
+    }
+
+    public void setPageLineStripper(PageLineStripper pageLineStripper) {
+        this.pageLineStripper = pageLineStripper;
+    }
 }

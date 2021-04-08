@@ -38,7 +38,9 @@ public class DateContent extends Content {
         }
         try {
 
-            String str = valuestr.replace("年", "-")
+            String str = valuestr
+                    .replaceAll("/", "-")
+                    .replace("年", "-")
                     .replace("月", "-")
                     .replace("日", "");
             Date value = DateUtils.parseDate(str, "yyyy-MM-dd");

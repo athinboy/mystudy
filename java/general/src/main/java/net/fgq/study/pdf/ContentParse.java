@@ -4,8 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import net.fgq.study.pdf.annoation.Content;
 import net.fgq.study.pdf.annoation.Document;
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +18,23 @@ import java.util.regex.Pattern;
  */
 public class ContentParse {
 
-    public static void parseContent(Document document, JSONObject jsonObject, final List<PdfTextPosition> textPositions) {
+    static Logger logger = LoggerFactory.getLogger(ContentParse.class);
+
+    public static void parseContent(Document document, JSONObject jsonObject, final List<PdfTextPosition> pdfTextPositions) {
+
         String candidateValueStr;
         List<PdfRectangle> candidateRects = new ArrayList<>();
+
         for (Content content : document.getContents()) {
-            if(content.getLableSigns().get(0).equals("保险期间")){
-                int i=0;
+            if (content.getOrderItem().getJsonKey().equals("deathCompensation")) {
+                int i = 0;
+            }
+
+            List<PdfTextPosition> textPositions = new ArrayList<>();
+            for (PdfTextPosition textPosition : pdfTextPositions) {
+                if (content.getPageIndex() == textPosition.getPageIndex()) {
+                    textPositions.add(textPosition);
+                }
             }
 
             if (content.getRectangle() != null) {
@@ -34,15 +46,23 @@ public class ContentParse {
             List<PdfTextPosition> candidateValueTexts = new ArrayList<>();
             List<PdfTextPosition> candidateRightLables = new ArrayList<>();
             for (PdfTextPosition textPosition : textPositions) {
+                if (content.getOrderItem().getMuiltValue() == false) {
+                    if (textPosition.getCandidateOrderItems().size() == 1 && textPosition.getCandidateOrderItems().get(0) != content.getOrderItem()) {
+                        continue;
+                    }
+                }
                 if (content.getLableSignsPattern().asPredicate().test(textPosition.getTrimedText())) {
                     candidateLableTexts.add(textPosition);
                 }
             }
             if (candidateLableTexts.size() == 0) {
-                throw new PdfException("定位内容失败：" + content.toString());
+                if (content.getOrderItem().isRequire()) {
+                    throw new PdfException("定位内容失败：" + content.toString());
+                } else {
+                    continue;
+                }
             }
-            if (candidateLableTexts.size() == 1 && content.getLableSigns().size() == 1) {
-
+            if (candidateLableTexts.size() == 1) {
                 if ((candidateValueStr = parseValue(content, candidateLableTexts.get(0))) != null) {
                     formatValue(jsonObject, content, candidateValueStr);
                     continue;
@@ -58,11 +78,10 @@ public class ContentParse {
                 }
                 for (PdfTextPosition candidateText : candidateLableTexts) {
                     for (PdfTextPosition candidateRightLable : candidateRightLables) {
-
-                        if (candidateText.checkSameLine(candidateRightLable)) {
-                            int x = candidateText.getRectangle().x + candidateText.getRectangle().width;
+                        if (candidateText.checkRightSameLine(candidateRightLable)) {
+                            int x = candidateText.getRectangle().x;
                             int y = candidateText.getRectangle().y;
-                            int width = candidateRightLable.getRectangle().x - x;
+                            int width = candidateRightLable.getRectangle().x + candidateRightLable.getRectangle().width - x;
                             int height = Math.max(candidateText.getRectangle().height, candidateRightLable.getRectangle().height);
                             if (width <= 0 || height <= 0) {
                                 throw new PdfException("推断值区域异常："
@@ -76,26 +95,23 @@ public class ContentParse {
 
             } else {
 
+                PdfRectangle rectangle;
                 for (PdfTextPosition candidateText : candidateLableTexts) {
                     candidateValueTexts.clear();
-
+                    rectangle = null;
                     for (PdfTextPosition textPosition : textPositions) {
-                        if (candidateText.checkSameLine(textPosition)) {
+                        if (candidateText.checkRightSameLine(textPosition)) {
                             candidateValueTexts.add(textPosition);
+                            rectangle = rectangle == null ? textPosition.getRectangle() : new PdfRectangle(rectangle.union(textPosition.getRectangle()));
                         }
                     }
-
-
+                    if (rectangle != null) {
+                        rectangle = new PdfRectangle(candidateText.getRectangle().union(rectangle));
+                        candidateRects.add(rectangle);
+                    }
 
                 }
-                PdfTextPosition newTextPosition = PdfTextPositionHelper.merge(candidateValueTexts);
-                if (null != (candidateValueStr = parseValue(content, newTextPosition))) {
-                    formatValue(jsonObject, content, candidateValueStr);
-                    continue;
-                } else {
-                    throw new PdfException("提取值失败：" + content.toString() + "\r\n" + JSON.toJSONString(newTextPosition.toString()));
-                }
-//                throw new NotImplementedException("未配置右侧标签的情况");
+
             }
 
             List<String> candidateValues = new ArrayList<>();
@@ -110,7 +126,9 @@ public class ContentParse {
                 }
 
                 PdfTextPosition newText = PdfTextPositionHelper.merge(candidateValueTexts);
-                newText = findExtendBlock(textPositions, newText);
+                if (content.getValueMultiLine()) {
+                    newText = findExtendBlock(textPositions, newText, 1);
+                }
                 if ((candidateValueStr = parseValue(content, newText)) != null) {
                     candidateValues.add(candidateValueStr);
                 }
@@ -121,7 +139,7 @@ public class ContentParse {
                 formatValue(jsonObject, content, candidateValues.get(0));
                 continue;
             } else {
-                throw new PdfException("提取值识别：" + JSON.toJSONString(candidateValues.toString()));
+                throw new PdfException("提取值识别：" + content.toString() + "\r\n" + JSON.toJSONString(candidateValues.toString()));
             }
 
         }
@@ -132,9 +150,10 @@ public class ContentParse {
      *
      * @param textPositions
      * @param textPosition
+     * @param linegap       行距
      * @return
      */
-    private static PdfTextPosition findExtendBlock(List<PdfTextPosition> textPositions, PdfTextPosition textPosition) {
+    private static PdfTextPosition findExtendBlock(List<PdfTextPosition> textPositions, PdfTextPosition textPosition, int linegap) {
 
         List<PdfTextPosition> candidates = new ArrayList<>();
 
@@ -155,16 +174,17 @@ public class ContentParse {
         temp.clear();
         int minY = textPosition.getRectangle().y;
         int maxY = textPosition.getRectangle().y + textPosition.getRectangle().height;
+
         //从上往下找相邻
         for (int i = 0; i < candidates.size(); i++) {
-            if (Math.abs(candidates.get(i).getRectangle().y - maxY) < candidates.get(i).lineHeight() / 2) {
+            if (Math.abs(candidates.get(i).getRectangle().y - maxY) < linegap) {
                 maxY = candidates.get(i).getRectangle().maxY();
                 temp.add(candidates.get(i));
             }
         }
         //从下往上找相邻
         for (int i = candidates.size() - 1; i >= 0; i--) {
-            if (Math.abs(minY - candidates.get(i).getRectangle().maxY()) < candidates.get(i).lineHeight() / 2) {
+            if (Math.abs(minY - candidates.get(i).getRectangle().maxY()) < linegap) {
                 minY = candidates.get(i).getRectangle().y;
                 temp.add(candidates.get(i));
             }
@@ -176,7 +196,18 @@ public class ContentParse {
     }
 
     private static void formatValue(JSONObject jsonObject, Content content, String valuestr) {
-        jsonObject.put(content.getJsonKey(), content.formatValue(valuestr));
+
+        try {
+            if (StringUtils.isBlank(valuestr)) {
+                return;
+            }
+            jsonObject.put(content.getJsonKey(), content.formatValue(valuestr));
+        } catch (Exception ex) {
+            String str = jsonObject.toJSONString() + "\r\n" + content.toString() + "\r\n" + valuestr;
+            logger.error(str, ex);
+            throw ex;
+        }
+
     }
 
     /**
@@ -209,7 +240,14 @@ public class ContentParse {
      */
     private static String parseValue(Content content, final PdfTextPosition candidateText) {
 
+//        if (candidateText.getText().contains("日0时")) {//021年03月13日0时起至2022年03月12日24时止
+//            candidateText.setText(candidateText.getText().replace("日0时", "日00时"));
+//            candidateText.setTrimedText(null);
+//        }
+
         String valueCandidateStr = candidateText.getTrimedText();
+
+
 
         Matcher matcher = content.getLableSignsPattern().matcher(valueCandidateStr);
         if (matcher.find()) {

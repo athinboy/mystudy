@@ -3,6 +3,7 @@ package net.fgq.study.pdf.test;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import net.fgq.study.pdf.PDFTextPositionStripper;
+import net.fgq.study.pdf.PdfResult;
 import net.fgq.study.pdf.PdfToJson;
 import net.fgq.study.pdf.annoation.Content;
 import net.fgq.study.pdf.annoation.ContentValueTypeEnum;
@@ -41,8 +42,8 @@ public class Six {
             System.out.println(positionText);
 
             PdfToJson pdfToJson = new PdfToJson();
-            JSONObject jsonObject = pdfToJson.parse(pdfDocument);
-            System.out.println(JSON.toJSONString(jsonObject));
+            PdfResult pdfResult = pdfToJson.parse(pdfDocument);
+            System.out.println(JSON.toJSONString(pdfResult));
         } catch (Exception var4) {
             var4.printStackTrace();
 

@@ -1,5 +1,7 @@
 package net.fgq.study.pdf;
 
+import net.fgq.study.pdf.Item.OrderItemInfo;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -26,7 +28,12 @@ public class PdfTextPosition {
 
     private int pageIndex;
 
-    private PdfTextPosition origText = null;
+    /**
+     * 可能的OrderItemInfo。
+     */
+    private List<OrderItemInfo> candidateOrderItems = new ArrayList<>();
+
+    private List<PdfTextPosition> origTexts = new ArrayList<>();
 
     /**
      *
@@ -37,6 +44,11 @@ public class PdfTextPosition {
      * 作为信息标签的可能性。
      */
     private int keyPercent = 0;
+    /**
+     * 是否信息组
+     */
+    private boolean isGroupInfo = false;
+    private List<PdfTextPosition> groupItems;
 
     public PdfTextPosition(int pageIndex, String text, PdfRectangle rectangle) {
         this.text = text;
@@ -47,8 +59,6 @@ public class PdfTextPosition {
     public PdfTextPosition(int pageIndex, String text, int x, int y, int width, int height) {
         this(pageIndex, text, new PdfRectangle(x, y, width, height));
     }
-
-
 
     public String getText() {
         return text;
@@ -102,7 +112,6 @@ public class PdfTextPosition {
                 ", rectangle=" + rectangle +
                 ", pageIndex=" + pageIndex +
                 ", keyPercent=" + keyPercent +
-                ", origText=" + (origText == null ? "" : origText.toString()) +
                 '}';
     }
 
@@ -113,12 +122,26 @@ public class PdfTextPosition {
     /**
      * 是否同一行
      *
-     * @param textPosition
+     * @param other
      * @return
      */
-    public boolean checkSameLine(PdfTextPosition textPosition) {
-        int lineheight = (this.lineHeight() + textPosition.lineHeight()) / 2 / 2;
-        return this.getRectangle().checkSameLine(textPosition.getRectangle(), lineheight);
+    public boolean checkSameLine(PdfTextPosition other) {
+        int lineheight = (this.lineHeight() + other.lineHeight()) / 2 / 2;
+
+        return this.pageIndex == other.pageIndex &&
+                this.getRectangle().checkSameLine(other.getRectangle(), lineheight)
+                || (Math.abs(this.rectangle.y - other.getRectangle().y) < lineheight && this.lineNumber == other.lineNumber);//因为高度可能不准确。所以依据上边缘比较。
+    }
+
+    /**
+     * 在右侧，且同一行
+     *
+     * @param other
+     * @return
+     */
+    public boolean checkRightSameLine(PdfTextPosition other) {
+        return this.pageIndex == other.pageIndex
+                && (this.getRectangle().x < other.getRectangle().x) && checkSameLine(other);
     }
 
     public int getKeyPercent() {
@@ -137,7 +160,8 @@ public class PdfTextPosition {
      */
     public boolean checkSameLeft(PdfTextPosition other) {
         int lineheight = (this.lineHeight() + other.lineHeight()) / 2 / 2;
-        return Math.abs(this.getRectangle().x - other.getRectangle().x) < lineheight;
+        return this.pageIndex == other.pageIndex &&
+                Math.abs(this.getRectangle().x - other.getRectangle().x) < lineheight;
     }
 
     public boolean isStructed() {
@@ -148,11 +172,35 @@ public class PdfTextPosition {
         this.structed = structed;
     }
 
-    public PdfTextPosition getOrigText() {
-        return origText;
+    public List<PdfTextPosition> getOrigTexts() {
+        return origTexts;
     }
 
-    public void setOrigText(PdfTextPosition origText) {
-        this.origText = origText;
+    public void setOrigTexts(List<PdfTextPosition> origTexts) {
+        this.origTexts = origTexts;
+    }
+
+    public List<OrderItemInfo> getCandidateOrderItems() {
+        return candidateOrderItems;
+    }
+
+    public void setCandidateOrderItems(List<OrderItemInfo> candidateOrderItems) {
+        this.candidateOrderItems = candidateOrderItems;
+    }
+
+    public void setIsGroupInfo(boolean isGroupInfo) {
+        this.isGroupInfo = isGroupInfo;
+    }
+
+    public boolean getIsGroupInfo() {
+        return isGroupInfo;
+    }
+
+    public void setGroupItems(List<PdfTextPosition> groupItems) {
+        this.groupItems = groupItems;
+    }
+
+    public List<PdfTextPosition> getGroupItems() {
+        return groupItems;
     }
 }

@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.Date;
+import java.util.regex.Pattern;
 
 /**
  * Created by fengguoqiang 2021/3/24
@@ -14,7 +15,7 @@ import java.util.Date;
 public class DateTimeContent extends Content {
 
     {
-        this.getValueRegstr().add(ContentValueTypeEnum.Date.getRegexStr());
+        this.getValueRegstr().add(ContentValueTypeEnum.DateTime.getRegexStr());
     }
 
     public DateTimeContent(int pageIndex, String jsonKey, String... lablesigns) {
@@ -38,7 +39,9 @@ public class DateTimeContent extends Content {
         }
         try {
 
-            String str = valuestr.replace("年", "-")
+            String str = valuestr
+                    .replaceAll("/", "-")
+                    .replace("年", "-")
                     .replace("月", "-")
                     .replace("日", " ")
                     .replaceAll("时", ":")
@@ -51,7 +54,14 @@ public class DateTimeContent extends Content {
             if (str.endsWith(":")) {
                 str = str + "00";
             }
-            Date value = DateUtils.parseDate(str, "yyyy-MM-dd HH:mm:ss");
+
+            //投保确认时间：2021-03-1217:44
+            if (Pattern.compile("\\d{4}:\\d{2}").asPredicate().test(valuestr)) {
+                str += ":00";
+            }
+
+            Date value = DateUtils.parseDate(str, "yyyy-MM-ddHH:mm:ss");
+
             return value;
         } catch (Exception ex) {
             throw new PdfException("处理日期字符串异常：" + valuestr);

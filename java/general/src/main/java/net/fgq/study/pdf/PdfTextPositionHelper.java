@@ -3,6 +3,7 @@ package net.fgq.study.pdf;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -21,9 +22,8 @@ public class PdfTextPositionHelper {
         return new Comparator<PdfTextPosition>() {
             @Override
             public int compare(PdfTextPosition o1, PdfTextPosition o2) {
-                if (o1.getRectangle().y < o2.getRectangle().y) {
-                    return -1;
-                } else if (o1.getRectangle().y == o2.getRectangle().y) {
+
+                if (o1.checkSameLine(o2)) {
 
                     if (o1.getRectangle().x < o2.getRectangle().x) {
                         return -1;
@@ -33,12 +33,16 @@ public class PdfTextPositionHelper {
                         return 1;
                     }
 
+                } else if (o1.getRectangle().y < o2.getRectangle().y) {
+                    return -1;
                 } else {
                     return 1;
                 }
 
             }
-        };
+        }
+
+                ;
     }
 
     /**
@@ -76,6 +80,17 @@ public class PdfTextPositionHelper {
      * @param candidateTexts
      * @return
      */
+    public static PdfTextPosition merge(PdfTextPosition... candidateTexts) {
+
+        return merge(Arrays.asList(candidateTexts));
+    }
+
+    /**
+     * 合并多个信息。
+     *
+     * @param candidateTexts
+     * @return
+     */
     public static PdfTextPosition merge(final List<PdfTextPosition> candidateTexts) {
         if (candidateTexts.size() == 0) {
             return null;
@@ -85,6 +100,7 @@ public class PdfTextPositionHelper {
         String str = "";
         PdfRectangle pdfRectangle = candidateTexts.get(0).getRectangle();
 
+        candidateTexts.sort(PdfTextPositionHelper.getYXSortCompare());
         for (PdfTextPosition candidateText : candidateTexts) {
             str += candidateText.getText();
             pdfRectangle = new PdfRectangle(pdfRectangle.union(candidateText.getRectangle()));
@@ -120,15 +136,28 @@ public class PdfTextPositionHelper {
      *
      * @param candidateTexts
      * @param textPosition
+     * @param needSameLine   是否要求同一行
      * @return
      */
-    public static List<PdfTextPosition> getRightAll(final List<PdfTextPosition> candidateTexts, PdfTextPosition textPosition) {
+    public static List<PdfTextPosition> getRightAll(final List<PdfTextPosition> candidateTexts, PdfTextPosition textPosition, boolean needSameLine) {
 
         List<PdfTextPosition> temp = new ArrayList<>();
         for (PdfTextPosition candidateText : candidateTexts) {
-            if (textPosition.checkSameLine(candidateText) && textPosition.getRectangle().checkRightSide(candidateText.getRectangle())) {
-                temp.add(candidateText);
+            if (candidateText == textPosition
+                    || candidateText.getPageIndex() != textPosition.getPageIndex()) continue;
+            if (textPosition.getRectangle().checkRightSide(candidateText.getRectangle())) {
+                if (needSameLine) {
+                    if (textPosition.checkSameLine(candidateText)) {
+                        temp.add(candidateText);
+                    }
+                } else {
+                    if (candidateText.getRectangle().maxY() > textPosition.getRectangle().y
+                            && candidateText.getRectangle().y < textPosition.getRectangle().maxY()) {
+                        temp.add(candidateText);
+                    }
+                }
             }
+
         }
         temp.sort(getXYSortCompare());
         return temp;
@@ -144,7 +173,7 @@ public class PdfTextPositionHelper {
      */
     public static PdfTextPosition getRightNeighbor(final List<PdfTextPosition> candidateTexts, PdfTextPosition textPosition) {
 
-        List<PdfTextPosition> temp = getRightAll(candidateTexts, textPosition);
+        List<PdfTextPosition> temp = getRightAll(candidateTexts, textPosition, true);
         temp.sort(getXYSortCompare());
         return temp.size() > 0 ? temp.get(0) : null;
 
@@ -173,4 +202,84 @@ public class PdfTextPositionHelper {
 
     }
 
+    /**
+     * 是否邻居
+     *
+     * @param o1
+     * @param o2
+     * @return
+     */
+    public static boolean checkNeighbor(PdfTextPosition o1, PdfTextPosition o2, List<PdfTextPosition> allTexts) {
+        if (o1 == o2) {
+            throw PdfException.getInstance("同一个对象:" + o1.toString());
+        }
+        if (o1.getPageIndex() != o2.getPageIndex()) return false;
+
+        if (true == o1.checkSameLeft(o2)) {
+            for (PdfTextPosition text : allTexts) {
+                if (text == o1 || text == o2 || o1.checkSameLeft(text) == false) continue;
+                if (text.getRectangle().y > Math.min(o1.getRectangle().y, o2.getRectangle().y)
+                        && text.getRectangle().y < Math.max(o1.getRectangle().y, o2.getRectangle().y)
+                ) {
+                    return false;
+                }
+
+            }
+            return true;
+        }
+        if (false == o1.checkSameLine(o2)) {
+            for (PdfTextPosition text : allTexts) {
+                if (text == o1 || text == o2 || o1.checkSameLine(text) == false) continue;
+                if (text.getRectangle().x > Math.min(o1.getRectangle().x, o2.getRectangle().x)
+                        && text.getRectangle().x < Math.max(o1.getRectangle().x, o2.getRectangle().x)
+                ) {
+                    return false;
+                }
+
+            }
+
+            return true;
+        }
+        if (o1.getRectangle().y > o2.getRectangle().y) {
+            PdfTextPosition t = o2;
+            o2 = o1;
+            o1 = t;
+        }
+        if (o2.getRectangle().x >= o1.getRectangle().x && o2.getRectangle().x < o1.getRectangle().getMaxX()) {
+            if (checkBollowNeighbor(o1, o2, allTexts)) {
+                return true;
+            }
+
+        }
+
+        return false;
+
+    }
+
+    /**
+     * o2 是o1 的下方邻居
+     *
+     * @param o1
+     * @param o2
+     * @param allTexts
+     * @return
+     */
+    public static boolean checkBollowNeighbor(PdfTextPosition o1, PdfTextPosition o2, List<PdfTextPosition> allTexts) {
+        if (o1.getPageIndex() != o2.getPageIndex()) return false;
+        if (o2.getRectangle().x > o1.getRectangle().getMaxX() || o2.getRectangle().getMaxX() < o1.getRectangle().x) {
+            return false;
+        }
+
+        for (PdfTextPosition text : allTexts) {
+            if (text == o1 || text == o2 || text.getPageIndex() != o1.getPageIndex()) continue;
+            if (text.getRectangle().y > Math.min(o1.getRectangle().y, o2.getRectangle().y)
+                    && text.getRectangle().y < Math.max(o1.getRectangle().y, o2.getRectangle().y)
+            ) {
+                return false;
+            }
+
+        }
+        return true;
+
+    }
 }

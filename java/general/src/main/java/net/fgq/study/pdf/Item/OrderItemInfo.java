@@ -1,8 +1,10 @@
 package net.fgq.study.pdf.Item;
 
+import com.alibaba.fastjson.JSONObject;
 import net.fgq.study.pdf.PdfException;
 import net.fgq.study.pdf.PdfTextPosition;
 import net.fgq.study.pdf.annoation.ContentValueTypeEnum;
+import net.fgq.study.pdf.annoation.InfoGroup;
 import org.apache.commons.lang3.StringUtils;
 
 import java.nio.channels.MulticastChannel;
@@ -21,6 +23,7 @@ public class OrderItemInfo {
     private ContentValueTypeEnum valueType;
     private String[] keySigns;
     private boolean require;
+    private InfoGroup infoGroup;
     /**
      * 多个值包含在同一个文本中比如保险期间。
      */
@@ -124,5 +127,28 @@ public class OrderItemInfo {
 
     public void setMuiltValue(boolean muiltValue) {
         this.muiltValue = muiltValue;
+    }
+
+    public void validate(JSONObject jsonObject) {
+        if (this.isRequire()) {
+            Object o = jsonObject.get(this.jsonKey);
+            if (null == o || StringUtils.isBlank(o.toString())) {
+                throw PdfException.getInstance("未提取：" + this.jsonKey);
+            }
+        }
+
+        return;
+    }
+
+    public InfoGroup getInfoGroup() {
+        return infoGroup;
+    }
+
+    public void setInfoGroup(InfoGroup infoGroup) {
+        this.infoGroup = infoGroup;
+    }
+
+    public boolean isMuiltValue() {
+        return muiltValue;
     }
 }

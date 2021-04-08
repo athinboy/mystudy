@@ -1,5 +1,6 @@
 package net.fgq.study.pdf;
 
+import com.alibaba.fastjson.JSONObject;
 import net.fgq.study.pdf.annoation.Document;
 
 /**
@@ -7,27 +8,23 @@ import net.fgq.study.pdf.annoation.Document;
  */
 public class PdfResult {
 
-    private Document compulsoryDocument;
+    private JSONObject compulsoryDocument;
 
-    private Document commercialDocument;
+    private JSONObject commercialDocument;
 
-
-
-
-
-    public Document getCompulsoryDocument() {
+    public JSONObject getCompulsoryDocument() {
         return compulsoryDocument;
     }
 
-    public void setCompulsoryDocument(Document compulsoryDocument) {
+    public void setCompulsoryDocument(JSONObject compulsoryDocument) {
         this.compulsoryDocument = compulsoryDocument;
     }
 
-    public Document getCommercialDocument() {
+    public JSONObject getCommercialDocument() {
         return commercialDocument;
     }
 
-    public void setCommercialDocument(Document commercialDocument) {
+    public void setCommercialDocument(JSONObject commercialDocument) {
         this.commercialDocument = commercialDocument;
     }
 }

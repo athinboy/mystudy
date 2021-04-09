@@ -64,7 +64,7 @@ public class InsOrderDocument extends Document {
         this.orderItemInfos.add(new OrderItemInfo("insuredBirthday", false, "出生日期"));//string
         this.orderItemInfos.add(new OrderItemInfo("insuredEMail", false, "[Mm]ail"));
         //通讯地址
-        this.orderItemInfos.add(new OrderItemInfo("insuredContactAddress", "(通讯|被保险人){0,1}地址"));
+        this.orderItemInfos.add(new OrderItemInfo("insuredContactAddress", "[^公司]?(通讯|被保险人){0,1}地址"));
         this.orderItemInfos.add(new OrderItemInfo("platNum", "号牌号码"));
         this.orderItemInfos.add(new OrderItemInfo("vin", "vin", "VIN", "车架号"));
         //发动机号
@@ -100,7 +100,8 @@ public class InsOrderDocument extends Document {
         /**
          * 投保确认时间
          */
-        this.orderItemInfos.add(new OrderItemInfo("insuranceConfirmationTime", ContentValueTypeEnum.DateTime, "生成(有效){0,1}保单时间", "有效保单生成时间"));//Date
+        this.orderItemInfos.add(new OrderItemInfo("insuranceConfirmationTime", ContentValueTypeEnum.DateTime,
+                "生成(有效)?保单时间", "(有效)?保单生成时间"));//Date
 
         /**
          * 经办人
@@ -160,7 +161,7 @@ public class InsOrderDocument extends Document {
 
         boolean succ = false;
         for (OrderItemInfo orderItemInfo : orderItemInfos) {
-            if (orderItemInfo.getJsonKey().equals("effectiveDate")) {
+            if (orderItemInfo.getJsonKey().equals("insuranceConfirmationTime")) {
                 int i = 0;
             }
             succ = false;
@@ -209,6 +210,9 @@ public class InsOrderDocument extends Document {
         }
 
         for (OrderItemInfo orderItemInfo : orderItemInfos) {
+            if (orderItemInfo.getJsonKey().equals("expireDate")) {
+                int i = 0;
+            }
             List<PdfTextPosition> temps = orderItemInfo.getCandidateKeyTexts();
             if (temps.size() > 1) {
                 for (int i = 0; i < temps.size(); i++) {
@@ -226,8 +230,13 @@ public class InsOrderDocument extends Document {
             }
         }
         for (OrderItemInfo orderItemInfo : orderItemInfos) {
-
+            if (orderItemInfo.getJsonKey().equals("expireDate")) {
+                int i = 0;
+            }
             for (OrderItemInfo itemInfo : orderItemInfos) {
+                if (orderItemInfo.getJsonKey().equals("expireDate")) {
+                    int i = 0;
+                }
                 if (orderItemInfo == itemInfo) {
                     continue;
                 }
@@ -245,10 +254,6 @@ public class InsOrderDocument extends Document {
                             orderItemInfo.getCandidateKeyTexts().get(0)));
                 }
             }
-
-            if (orderItemInfo.getJsonKey().equals("insuredName")) {
-                int i = 0;
-            }
             if (orderItemInfo.getCandidateKeyTexts().size() == 1) {
 
                 PdfTextPosition pdfTextPosition = orderItemInfo.getCandidateKeyTexts().get(0);
@@ -260,7 +265,8 @@ public class InsOrderDocument extends Document {
             } else {
                 for (int i = 0; i < orderItemInfo.getCandidateKeyTexts().size(); i++) {
                     PdfTextPosition pdfTextPosition = orderItemInfo.getCandidateKeyTexts().get(i);
-                    if (pdfTextPosition.getCandidateOrderItems().size() == 1) {
+                    if (orderItemInfo.getMuiltValue() == false
+                            && pdfTextPosition.getCandidateOrderItems().size() == 1) {
                         //对方一一对应，我方解除候选
                         orderItemInfo.getCandidateKeyTexts().remove(i--);
                         break;

@@ -20,7 +20,7 @@ public class CompluseDocument extends InsOrderDocument {
         /**
          * 死亡伤残赔偿限额
          */
-        this.orderItemInfos.add(new OrderItemInfo("deathCompensation", ContentValueTypeEnum.Money, "死亡伤残赔偿限额"));//BigDecimal
+        this.orderItemInfos.add(new OrderItemInfo("deathCompensation", ContentValueTypeEnum.Money, "([^任]|^)死亡伤残赔偿限额"));//BigDecimal
 
         /**
          * 无责任死亡伤残赔偿限额
@@ -30,7 +30,7 @@ public class CompluseDocument extends InsOrderDocument {
         /**
          * 医疗费用赔偿限额
          */
-        this.orderItemInfos.add(new OrderItemInfo("medicalCompensation", ContentValueTypeEnum.Money, "医疗费用赔偿限额"));//BigDecimal
+        this.orderItemInfos.add(new OrderItemInfo("medicalCompensation", ContentValueTypeEnum.Money, "([^任]|^)医疗费用赔偿限额"));//BigDecimal
 
         /**
          * 无责任医疗费用赔偿限额
@@ -40,7 +40,7 @@ public class CompluseDocument extends InsOrderDocument {
         /**
          * 财产损失赔偿限额
          */
-        this.orderItemInfos.add(new OrderItemInfo("propertyCompensation", ContentValueTypeEnum.Money, "财产损失赔偿限额"));//BigDecimal
+        this.orderItemInfos.add(new OrderItemInfo("propertyCompensation", ContentValueTypeEnum.Money, "([^任]|^)财产损失赔偿限额"));//BigDecimal
 
         /**
          * 无责任财产损失赔偿限额

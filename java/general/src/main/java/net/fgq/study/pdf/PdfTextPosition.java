@@ -15,6 +15,11 @@ public class PdfTextPosition {
     private String text;
 
     /**
+     * 最原始的内容。
+     */
+    private String originalStr;
+
+    /**
      * 去除空格的内容。
      */
     private String trimedText;
@@ -49,6 +54,10 @@ public class PdfTextPosition {
      */
     private boolean isGroupInfo = false;
     private List<PdfTextPosition> groupItems;
+    /**
+     * 内容是否已经规格化
+     */
+    private boolean standaredized=false;
 
     public PdfTextPosition(int pageIndex, String text, PdfRectangle rectangle) {
         this.text = text;
@@ -202,5 +211,22 @@ public class PdfTextPosition {
 
     public List<PdfTextPosition> getGroupItems() {
         return groupItems;
+    }
+
+    public void setOriginalStr(String originalStr) {
+
+        this.originalStr = originalStr;
+    }
+
+    public String getOriginalStr() {
+        return originalStr;
+    }
+
+    public boolean getStandaredized() {
+        return standaredized;
+    }
+
+    public void setStandaredized(boolean standaredized) {
+        this.standaredized = standaredized;
     }
 }

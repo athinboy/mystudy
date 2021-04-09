@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
@@ -39,6 +40,18 @@ public class Content {
 
     private OrderItemInfo orderItem;
 
+    private Predicate<String> valuePredicate = null;
+    private Predicate<String> lableSignsPredicate = null;
+    private Predicate<String> rightSignsPredicate = null;
+
+    public Predicate<String> getValuePredicate() {
+        if (valuePredicate == null) {
+            String singstr = "(" + String.join(")|(", this.getValueRegstr()) + ")";
+            valuePredicate = Pattern.compile(singstr).asPredicate();
+        }
+        return valuePredicate;
+    }
+
     public Pattern getValuePattern() {
         String singstr = "(" + String.join(")|(", this.getValueRegstr()) + ")";
         return Pattern.compile(singstr);
@@ -47,17 +60,29 @@ public class Content {
     public Pattern getLableSignsPattern() {
         String singstr = "(" + String.join(")|(", this.getLableSigns()) + ")";
         return Pattern.compile(singstr);
+
+    }
+
+    public Predicate<String> getLableSignsPredicate() {
+        if (lableSignsPredicate == null) {
+            String singstr = "(" + String.join(")|(", this.getLableSigns()) + ")";
+            lableSignsPredicate = Pattern.compile(singstr).asPredicate();
+        }
+        return lableSignsPredicate;
+    }
+
+    public Predicate<String> getRightSignsPredicate() {
+        if (rightSignsPredicate == null) {
+            String singstr = "(" + String.join(")|(", this.getRightSigns()) + ")";
+            rightSignsPredicate = Pattern.compile(singstr).asPredicate();
+        }
+        return rightSignsPredicate;
     }
 
     /**
      * 右侧标记文字（正则表达式）
      */
     private List<String> rightSigns = new ArrayList<>();
-
-    public Pattern getRightSignsPattern() {
-        String singstr = "(" + String.join(")|(", this.getRightSigns()) + ")";
-        return Pattern.compile(singstr);
-    }
 
     private int pageIndex;
 

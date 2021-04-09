@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import net.fgq.study.pdf.annoation.Content;
 import net.fgq.study.pdf.annoation.Document;
+import net.fgq.study.pdf.annoation.InsOrderStructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ public class ContentParse {
         List<PdfRectangle> candidateRects = new ArrayList<>();
 
         for (Content content : document.getContents()) {
-            if (content.getOrderItem().getJsonKey().equals("deathCompensation")) {
+            if (content.getOrderItem().getJsonKey().equals("effectiveDate")) {
                 int i = 0;
             }
 
@@ -51,8 +52,17 @@ public class ContentParse {
                         continue;
                     }
                 }
-                if (content.getLableSignsPattern().asPredicate().test(textPosition.getTrimedText())) {
-                    candidateLableTexts.add(textPosition);
+
+                if (content.getLableSignsPredicate().test(textPosition.getTrimedText())) {
+
+                    if (textPosition.getCandidateOrderItems().size() > 0 && content.getOrderItem() != null) {
+                        if (textPosition.getCandidateOrderItems().contains(content.getOrderItem())) {
+                            candidateLableTexts.add(textPosition);
+                        }
+                    } else {
+                        candidateLableTexts.add(textPosition);
+                    }
+
                 }
             }
             if (candidateLableTexts.size() == 0) {
@@ -72,7 +82,7 @@ public class ContentParse {
 
             if (content.getRightSigns().size() > 0) {
                 for (PdfTextPosition textPosition : textPositions) {
-                    if (content.getRightSignsPattern().asPredicate().test(textPosition.getTrimedText())) {
+                    if (content.getRightSignsPredicate().test(textPosition.getTrimedText())) {
                         candidateRightLables.add(textPosition);
                     }
                 }
@@ -100,16 +110,20 @@ public class ContentParse {
                     candidateValueTexts.clear();
                     rectangle = null;
                     for (PdfTextPosition textPosition : textPositions) {
-                        if (candidateText.checkRightSameLine(textPosition)) {
+                        if (candidateText != textPosition
+                                && (false == candidateLableTexts.contains(textPosition))
+                                && candidateText.checkRightSameLine(textPosition)) {
                             candidateValueTexts.add(textPosition);
                             rectangle = rectangle == null ? textPosition.getRectangle() : new PdfRectangle(rectangle.union(textPosition.getRectangle()));
                         }
                     }
                     if (rectangle != null) {
                         rectangle = new PdfRectangle(candidateText.getRectangle().union(rectangle));
-                        candidateRects.add(rectangle);
-                    }
 
+                    } else {
+                        rectangle = new PdfRectangle(candidateText.getRectangle());
+                    }
+                    candidateRects.add(rectangle);
                 }
 
             }
@@ -246,8 +260,10 @@ public class ContentParse {
 //        }
 
         String valueCandidateStr = candidateText.getTrimedText();
-
-
+        if (false == candidateText.getStandaredized()) {
+            String str;
+            valueCandidateStr = (str = InsOrderStructor.standaredize(valueCandidateStr)) == null ? valueCandidateStr : str;
+        }
 
         Matcher matcher = content.getLableSignsPattern().matcher(valueCandidateStr);
         if (matcher.find()) {

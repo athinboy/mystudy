@@ -67,9 +67,14 @@ public class OrderItemInfo {
         this(jsonKey, ContentValueTypeEnum.Text, true, keySigns);
     }
 
+    private Predicate<String> signPredicate = null;
+
     public Predicate<String> getSignPredicate() {
-        String singstr = "(" + String.join(")|(", this.keySigns) + ")";
-        return Pattern.compile(singstr).asPredicate();
+        if (signPredicate == null) {
+            String singstr = "(" + String.join(")|(", this.keySigns) + ")";
+            signPredicate = Pattern.compile(singstr).asPredicate();
+        }
+        return signPredicate;
 
     }
 

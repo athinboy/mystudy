@@ -6,11 +6,16 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by fengguoqiang 2021/3/29
  */
 public class InsOrderStructor {
+
+    private static Pattern p1 = Pattern.compile("日\\d{1,2}(:)\\d{1,2}(时)");
 
     public static void struct(InsOrderDocument insOrderDocument, final List<PdfTextPosition> textPositions, InsCompanyType insCompanyType) {
 
@@ -38,7 +43,13 @@ public class InsOrderStructor {
 
         textPositions.sort(PdfTextPositionHelper.getXYSortCompare());
         for (PdfTextPosition textPosition : textPositions) {
-
+            String str;
+            if (null != (str = standaredize(textPosition.getTrimedText()))) {
+                textPosition.setOriginalStr(textPosition.getText());
+                textPosition.setText(str);
+                textPosition.setTrimedText(null);
+                textPosition.setStandaredized(true);
+            }
         }
 
         switch (insCompanyType) {
@@ -107,4 +118,21 @@ public class InsOrderStructor {
         }
 
     }
+
+    public static String standaredize(String value) {
+        if (StringUtils.isBlank(value)) return null;
+        if (p1.asPredicate().test(value)) {
+            String str = value;
+            while (p1.asPredicate().test(str)) {
+                Matcher matcher = p1.matcher(str);
+                if (matcher.find()) {
+                    str = str.replaceFirst("(?<=日\\d{1,2}):(?=\\d{1,2}时)", "时");
+                    str = str.replaceFirst("(?<=日\\d{1,2}时\\d{1,2})时", "分");
+                    return str;
+                }
+            }
+        }
+        return null;
+    }
+
 }

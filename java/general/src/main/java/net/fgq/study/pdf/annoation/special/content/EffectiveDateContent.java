@@ -15,7 +15,7 @@ import java.util.Date;
 public class EffectiveDateContent extends Content {
 
     {
-        this.getValueRegstr().add("\\d{4}年\\d{2}月\\d{2}日((零|(\\d{1,2}))时(\\d{1,2}分(\\d{1,2}秒){0,1}){0,1}){0,1}起{0,1}至");
+        this.getValueRegstr().add("\\d{4}年\\d{1,2}月\\d{1,2}日((零|(\\d{1,2}))时(\\d{1,2}分(\\d{1,2}秒){0,1}){0,1}){0,1}起{0,1}至");
     }
 
     public EffectiveDateContent(int pageIndex, String jsonKey, String[] lablesigns) {

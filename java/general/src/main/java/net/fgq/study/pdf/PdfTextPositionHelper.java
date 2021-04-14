@@ -1,6 +1,7 @@
 package net.fgq.study.pdf;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.pdfbox.text.TextPosition;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -95,8 +96,17 @@ public class PdfTextPositionHelper {
         if (candidateTexts.size() == 0) {
             return null;
         }
-
         int pageIndex = candidateTexts.get(0).getPageIndex();
+        List<TextPositionEx> allTexts = new ArrayList<>();
+        for (PdfTextPosition candidateText : candidateTexts) {
+            allTexts.addAll(candidateText.getTextPositions());
+        }
+        PdfTextPosition pdfTextPosition = TextPositionExHelper.mergeBlock(allTexts);
+        if (pdfTextPosition != null) {
+            pdfTextPosition.setPageIndex(pageIndex);
+            return pdfTextPosition;
+        }
+
         String str = "";
         PdfRectangle pdfRectangle = candidateTexts.get(0).getRectangle();
 

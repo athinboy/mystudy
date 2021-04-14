@@ -2,6 +2,7 @@ package net.fgq.study.pdf.test;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import net.fgq.study.pdf.ContentParse;
 import net.fgq.study.pdf.PDFTextPositionStripper;
 import net.fgq.study.pdf.PdfResult;
 import net.fgq.study.pdf.PdfToJson;
@@ -28,7 +29,10 @@ public class Six {
 
         //String filepath = "C:\\Users\\fengguoqiang\\Desktop\\temp\\识别失败保单\\运通汇未识别保单\\新建文件夹\\LSYKDAAA5HK056512付裕.pdf";
 
-        String filepath = "D:\\fgq\\temp\\新测试保单-3\\太平洋交强+商业险-1.pdf";
+//        String filepath = "D:\\fgq\\temp\\新测试保单-3\\太平洋交强+商业险-1.pdf";
+       String filepath = "D:\\fgq\\temp\\新测试保单-3\\太平洋交强+商业.pdf";
+
+        //  String filepath = "D:\\fgq\\temp\\新测试保单-3\\于克兰2.pdf";
         try {
 
             PDDocument pdfDocument = PDDocument.load(new File(filepath));
@@ -42,6 +46,9 @@ public class Six {
             System.out.println(positionText);
 
             PdfToJson pdfToJson = new PdfToJson();
+
+            ContentParse.errsign="chargeConfirmationTime";
+
             PdfResult pdfResult = pdfToJson.parse(pdfDocument);
             System.out.println(JSON.toJSONString(pdfResult));
         } catch (Exception var4) {

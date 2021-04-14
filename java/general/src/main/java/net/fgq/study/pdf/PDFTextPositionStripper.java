@@ -1,5 +1,6 @@
 package net.fgq.study.pdf;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.contentstream.operator.Operator;
 import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -42,13 +43,13 @@ public class PDFTextPositionStripper extends PDFTextStripper {
         this.charGapSpace = charGapSpace;
     }
 
-    private List<PdfTextPosition> textPositions = null;
+    private List<PdfTextPosition> pdfTextPositions = null;
 
     private int currentPageIndex;
 
     public List<PdfTextPosition> stripPosition(PDDocument document) throws IOException {
 
-        textPositions = new ArrayList<>();
+        pdfTextPositions = new ArrayList<>();
         setStartPage(getCurrentPageNo());
         setEndPage(getCurrentPageNo());
 
@@ -58,6 +59,7 @@ public class PDFTextPositionStripper extends PDFTextStripper {
             if (pdPage.hasContents()) {
 
                 lastStr = "";
+                textPositions = new ArrayList<>();
                 startX = 0;
                 startY = 0;
                 width = 0;
@@ -71,11 +73,12 @@ public class PDFTextPositionStripper extends PDFTextStripper {
 
         }
 
-        return textPositions;
+        return pdfTextPositions;
 
     }
 
     private String lastStr = "";
+    private List<TextPositionEx> textPositions = new ArrayList<>();
     private float startX = 0;
     private float startY = 0;
     private float width = 0;
@@ -103,14 +106,25 @@ public class PDFTextPositionStripper extends PDFTextStripper {
 
     }
 
-    protected void writeString(String text, List<TextPosition> textPositions) throws IOException
-    {
-        super.writeString(text,textPositions);
+    protected void writeString(String text, List<TextPosition> textPositions) throws IOException {
+        super.writeString(text, textPositions);
+
+        System.out.println("ffffffffff:" + text);
+
         if (ShowSystemOut) {
             System.out.println(text);
+            for (TextPosition textPosition : textPositions) {
+                if ("S".equals(textPosition.getUnicode()) || "s".equals(textPosition.getUnicode())) {
+                    System.out.println(textPosition.getUnicode());
+                }
+            }
         }
     }
 
+    @Override
+    protected void writeLineSeparator() throws IOException {
+        super.writeLineSeparator();
+    }
 
     /**
      * {@inheritDoc}
@@ -120,32 +134,61 @@ public class PDFTextPositionStripper extends PDFTextStripper {
 
         super.processTextPosition(text);
 
-        if (text.getY() == startY
+//        if (this.mergeTextPosition(text)) {
+//            return;
+//        }
+        if (textPositions.size() == 0 && StringUtils.isBlank(text.getUnicode())) {
+            return;
+        }
+        if (text.getUnicode().equals("大")) {
+            System.out.println(text.getX());
+        }
+
+        boolean b = false;
+        if (StringUtils.isBlank(text.getUnicode())
+                && text.getY() >= startY - this.charGapSpace
+                && text.getY() < startY + height / 2) {
+            b = true;
+        }
+        if (b || (text.getY() == startY
                 && text.getX() <= startX + width + this.charGapSpace
-                && text.getX() + text.getWidth() > startX + width + this.charGapSpace) {
-            lastStr = lastStr + text;
+                && text.getX() + text.getWidth() >= startX + width + this.charGapSpace)) {
+            lastStr = lastStr + text.getUnicode();
+            textPositions.add(new TextPositionEx(text));
 
             width = text.getX() + text.getWidth() - startX;
-            height = Math.max(height, getHeight(text));
+            height = Math.max(height, TextPositionExHelper.getHeight(text));
 
         } else {
             if (lastStr.length() > 0) {
                 savePosition();
             }
             lastStr = text.getUnicode();
+            textPositions = new ArrayList<>();
+            textPositions.add(new TextPositionEx(text));
             startX = text.getX();
             startY = text.getY();
             width = text.getWidth();
-            height = getHeight(text);
+            height = TextPositionExHelper.getHeight(text);
+            this.charGapSpace = (Double.valueOf(text.getWidthOfSpace())).intValue();
         }
 
     }
 
-    private float getHeight(TextPosition text) {
-        if (text.getFontSize() > text.getWidth() * 1.5) {
-            return (float) (text.getWidth() * 1.2);
-        }
-        return text.getFontSize();//text.getHeight()=text.getFontSize()/2;
+    /**
+     * 将TextPosition合并到现有的信息中。
+     *
+     * @param text
+     * @return
+     */
+    private boolean mergeTextPosition(TextPosition text) {
+
+//        for (PdfTextPosition pdfTextPosition : pdfTextPositions) {
+//            if (pdfTextPosition.mergeBlack(text)) {
+//                return true;
+//            }
+//        }
+        return false;
     }
 
     private void savePosition() {
@@ -155,7 +198,9 @@ public class PDFTextPositionStripper extends PDFTextStripper {
                 (new Double(Math.ceil(startY))).intValue(),
                 (new Double(Math.floor(width))).intValue(),
                 (new Double(Math.floor(height))).intValue());
-        this.textPositions.add(position);
+        position.setTextPositions(textPositions);
+
+        this.pdfTextPositions.add(position);
         if (ShowSystemOut) {
             System.out.println(position.toString());
         }

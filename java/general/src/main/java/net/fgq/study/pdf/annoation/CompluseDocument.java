@@ -50,7 +50,8 @@ public class CompluseDocument extends InsOrderDocument {
         /**
          * 与道路交通安全违法行为和道路交通事故相联系的浮动比率
          */
-        this.orderItemInfos.add(new OrderItemInfo("floatingRate", false, "与道路交通安全违法行为和道路交通事故"));//
+        this.orderItemInfos.add(new OrderItemInfo("floatingRate", false,
+                "与道路交通安全违法行为和道路交通事故相联系的浮动比率："));//
 
         /**
          * 交强险保费合计
@@ -75,24 +76,24 @@ public class CompluseDocument extends InsOrderDocument {
         /**
          * 代收车船税-当年应缴
          */
-        this.orderItemInfos.add(new OrderItemInfo("vtCurrentPayable", false, "当年应缴"));//
+        this.orderItemInfos.add(new OrderItemInfo("vtCurrentPayable", ContentValueTypeEnum.Money, false, "当年应缴"));//
 
         /**
          * 代收车船税-往年应缴
          */
-        this.orderItemInfos.add(new OrderItemInfo("vtPastPayable", false, "往年应缴"));//
+        this.orderItemInfos.add(new OrderItemInfo("vtPastPayable", ContentValueTypeEnum.Money, false, "往年[应补]缴"));//
 
         /**
          * 代收车船税-滞纳金
          */
-        this.orderItemInfos.add(new OrderItemInfo("vtLateFee", false, "滞纳金"));//
+        this.orderItemInfos.add(new OrderItemInfo("vtLateFee", ContentValueTypeEnum.Money, false, "滞纳金"));//
 
         /**
          * 代收车船税-完税凭证号
          */
         this.orderItemInfos.add(new OrderItemInfo("vtPaymentNo", false, "完税凭证号"));//
 
-        this.setItemGroup(this.addInfoGroup("DSCYS", "代收车船税")
+        this.constructItemArea(this.addInfoArea("DSCYS", "代收车船税", "代收车船")
                 , "vehicleTaxFee"
                 , "vtCurbWeight"
                 , "vtTaxpayerIdentification"
@@ -108,4 +109,18 @@ public class CompluseDocument extends InsOrderDocument {
     public void parseContent(final List<PdfTextPosition> textPositions) {
         super.parseContent(textPositions);
     }
+
+    @Override
+    protected void specialOrder() {
+
+        switch (this.insCompanyType) {
+            case tpyang:
+                break;
+            case renshou:
+                OrderItemInfo o=this.getOrderItemInfo("platNum");
+                o.setRequire(false);
+                break;
+        }
+    }
+
 }

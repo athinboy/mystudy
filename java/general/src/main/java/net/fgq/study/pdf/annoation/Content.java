@@ -43,6 +43,7 @@ public class Content {
     private Predicate<String> valuePredicate = null;
     private Predicate<String> lableSignsPredicate = null;
     private Predicate<String> rightSignsPredicate = null;
+    private int priority = 1;
 
     public Predicate<String> getValuePredicate() {
         if (valuePredicate == null) {
@@ -190,5 +191,13 @@ public class Content {
 
     public OrderItemInfo getOrderItem() {
         return orderItem;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }

@@ -1,10 +1,11 @@
 package net.fgq.study.pdf;
 
 import net.fgq.study.pdf.Item.OrderItemInfo;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.pdfbox.text.TextPosition;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -33,6 +34,8 @@ public class PdfTextPosition {
 
     private int pageIndex;
 
+    private List<TextPositionEx> textPositions = new ArrayList<>();
+
     /**
      * 可能的OrderItemInfo。
      */
@@ -50,14 +53,15 @@ public class PdfTextPosition {
      */
     private int keyPercent = 0;
     /**
-     * 是否信息组
+     * 是否信息区域
      */
-    private boolean isGroupInfo = false;
+    private boolean isAreaInfo = false;
+
     private List<PdfTextPosition> groupItems;
     /**
      * 内容是否已经规格化
      */
-    private boolean standaredized=false;
+    private boolean standaredized = false;
 
     public PdfTextPosition(int pageIndex, String text, PdfRectangle rectangle) {
         this.text = text;
@@ -80,7 +84,9 @@ public class PdfTextPosition {
     public String getTrimedText() {
         if (trimedText == null) {
             trimedText = this.getText();
-            trimedText = trimedText.replaceAll("\\s", "");
+            trimedText = trimedText
+                    .replaceAll("\\s", "")
+                    .replaceAll("\\u00A0+", "");//特殊的空格-ASCII码值160
         }
         return trimedText;
     }
@@ -135,11 +141,10 @@ public class PdfTextPosition {
      * @return
      */
     public boolean checkSameLine(PdfTextPosition other) {
-        int lineheight = (this.lineHeight() + other.lineHeight()) / 2 / 2;
-
+        int lineheight = Math.min(this.lineHeight() / 2, other.lineHeight() / 2);
         return this.pageIndex == other.pageIndex &&
-                this.getRectangle().checkSameLine(other.getRectangle(), lineheight)
-                || (Math.abs(this.rectangle.y - other.getRectangle().y) < lineheight && this.lineNumber == other.lineNumber);//因为高度可能不准确。所以依据上边缘比较。
+                (this.getRectangle().checkSameLine(other.getRectangle(), lineheight)
+                || (Math.abs(this.rectangle.y - other.getRectangle().y) < lineheight && this.lineNumber == other.lineNumber));//因为高度可能不准确。所以依据上边缘比较。
     }
 
     /**
@@ -197,12 +202,16 @@ public class PdfTextPosition {
         this.candidateOrderItems = candidateOrderItems;
     }
 
-    public void setIsGroupInfo(boolean isGroupInfo) {
-        this.isGroupInfo = isGroupInfo;
+    public boolean isAreaInfo() {
+        return isAreaInfo;
     }
 
-    public boolean getIsGroupInfo() {
-        return isGroupInfo;
+    public void setAreaInfo(boolean areaInfo) {
+        isAreaInfo = areaInfo;
+    }
+
+    public boolean isStandaredized() {
+        return standaredized;
     }
 
     public void setGroupItems(List<PdfTextPosition> groupItems) {
@@ -229,4 +238,65 @@ public class PdfTextPosition {
     public void setStandaredized(boolean standaredized) {
         this.standaredized = standaredized;
     }
+
+    public List<TextPositionEx> getTextPositions() {
+        return textPositions;
+    }
+
+    public void setTextPositions(List<TextPositionEx> textPositions) {
+        this.textPositions = textPositions;
+    }
+
+    public void addOrigTexts(List<PdfTextPosition> mergedTexts) {
+        this.getOrigTexts().addAll(mergedTexts);
+
+    }
+
+//    /**
+//     * 合并信息来替代现在的空白区域。
+//     *
+//     * @param o
+//     * @return
+//     */
+//    public boolean mergeBlack(TextPosition o) {
+//
+//        int oHeight = (new Double(Math.ceil(PDFTextPositionStripper.getHeight(o))).intValue());
+//        int oX = (new Double(Math.ceil(o.getX())).intValue());
+//        int oY = (new Double(Math.ceil(o.getY())).intValue());
+//        int oWidth = (new Double(Math.ceil(o.getWidth())).intValue());
+//        int oMiddleX = (new Double(Math.ceil(o.getX() + o.getWidth() / 2)).intValue());
+//        int oMiddleY = (new Double(Math.ceil(o.getY() + oHeight / 2)).intValue());
+//
+//        Rectangle oRec = new Rectangle(oX, oY, oWidth, oHeight);
+//        for (int i = 0; i < this.getTextPositions().size(); i++) {
+//            TextPositionEx textPosition = this.getTextPositions().get(i);
+//
+//            if (StringUtils.isNotBlank(textPosition.getTextPosition().getUnicode())) {
+//                continue;
+//            }
+//            int tHeight = (new Double(Math.ceil(PDFTextPositionStripper.getHeight(textPosition))).intValue());
+//            int tX = (new Double(Math.ceil(textPosition.getX())).intValue());
+//            int tY = (new Double(Math.ceil(textPosition.getY())).intValue());
+//            int tWidth = (new Double(Math.ceil(textPosition.getWidth())).intValue());
+//            int tMiddleX = (new Double(Math.ceil(textPosition.getX() + textPosition.getWidth() / 2)).intValue());
+//            int tMiddleY = (new Double(Math.ceil(textPosition.getY() + tHeight / 2)).intValue());
+//            Rectangle tRec = new Rectangle(tX, tY, tWidth, tHeight);
+//            if (tRec.contains(oMiddleX, oMiddleY) && tRec.contains(oRec)) {
+//                Rectangle interRec = tRec.intersection(oRec);
+//                if (interRec.width * interRec.height > oRec.width * oRec.height * 0.8
+//                        || interRec.width * interRec.height > tRec.width * tRec.height * 0.8) {
+//                    this.getTextPositions().set(i, o);
+//                    this.setTrimedText(null);
+//                    String val = "";
+//                    for (int j = 0; j < this.getTextPositions().size(); j++) {
+//                        val += this.getTextPositions().get(j).getUnicode();
+//                    }
+//                    this.setText(val);
+//                    return true;
+//                }
+//            }
+//        }
+//
+//        return false;
+//    }
 }

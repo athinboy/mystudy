@@ -15,7 +15,7 @@ import java.util.Date;
 public class ExpireDateContent extends Content {
 
     {
-        this.getValueRegstr().add("(至|起至)\\d{4}年\\d{2}月\\d{2}日((零|(\\d{1,2}))时(\\d{1,2}分(\\d{1,2}秒){0,1}){0,1}){0,1}止{0,1}");
+        this.getValueRegstr().add("(至|起至)\\d{4}年\\d{1,2}月\\d{1,2}日((零|(\\d{1,2}))时(\\d{1,2}分(\\d{1,2}秒){0,1}){0,1}){0,1}止{0,1}");
     }
 
     public ExpireDateContent(int pageIndex, String jsonKey, String[] lablesigns) {

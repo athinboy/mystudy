@@ -1,20 +1,23 @@
 package net.fgq.study.pdf.annoation;
 
-import net.fgq.study.pdf.PdfTextPosition;
+import net.fgq.study.pdf.PdfRectangle;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by fengguoqiang 2021/4/8
+ * 信息组。
+ * Created by fengguoqiang 2021/4/12
  */
 public class InfoGroup {
 
+    public InfoGroup(String key) {
+        this.key = key;
+    }
+
     private String key;
-
-    private List<String> signs = new ArrayList<>();
-
-    private PdfTextPosition textPosition;
+    private PdfRectangle rectangle;
 
     public String getKey() {
         return key;
@@ -24,23 +27,47 @@ public class InfoGroup {
         this.key = key;
     }
 
-    public List<String> getSigns() {
-        return signs;
+    public PdfRectangle getRectangle() {
+        return rectangle;
     }
 
-    public void setSigns(List<String> signs) {
-        this.signs = signs;
+    public void setRectangle(PdfRectangle rectangle) {
+        this.rectangle = rectangle;
     }
 
-    public InfoGroup(String key) {
-        this.key = key;
-    }
+    /**
+     * 合并最近(仅仅考虑垂直方向的距离)的 PdfRectangle；
+     *
+     * @param candidateRects
+     * @return
+     */
+    public List<PdfRectangle> mergeNear(List<PdfRectangle> candidateRects) {
 
-    public PdfTextPosition getTextPosition() {
-        return textPosition;
-    }
+        if (candidateRects == null || candidateRects.size() == 0) return candidateRects;
+        if (candidateRects.size() == 1) {
+            this.rectangle = this.rectangle == null ? new PdfRectangle(candidateRects.get(0)) : new PdfRectangle(this.rectangle.union(candidateRects.get(0)));
+            return candidateRects;
+        }
+        if (this.rectangle == null) {
+            return candidateRects;
+        }
 
-    public void setTextPosition(PdfTextPosition textPosition) {
-        this.textPosition = textPosition;
+        List<PdfRectangle> result = new ArrayList<>();
+        int minD = Integer.MAX_VALUE;
+        for (PdfRectangle candidateRect : candidateRects) {
+            int d = candidateRect.getYDistinct(this.rectangle);
+            if (result.size() == 0) {
+                minD = d;
+                result.add(candidateRect);
+            } else {
+                if (minD > d) {
+                    minD = d;
+                    result.clear();
+                    result.add(candidateRect);
+                }
+            }
+        }
+        return result;
+
     }
 }

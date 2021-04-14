@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,27 +14,27 @@ import java.util.regex.Pattern;
  */
 public class InsOrderStructor {
 
-    private static Pattern p1 = Pattern.compile("日\\d{1,2}(:)\\d{1,2}(时)");
+
 
     public static void struct(InsOrderDocument insOrderDocument, final List<PdfTextPosition> textPositions, InsCompanyType insCompanyType) {
 
-        List<InfoGroup> infoGroups = insOrderDocument.getInfoGroups();
-        for (InfoGroup infoGroup : infoGroups) {
-            infoGroup.setTextPosition(null);
-            for (String sign : infoGroup.getSigns()) {
+        List<InfoArea> infoAreas = insOrderDocument.getInfoAreas();
+        for (InfoArea infoArea : infoAreas) {
+            infoArea.setTextPosition(null);
+            for (String sign : infoArea.getSigns()) {
                 for (PdfTextPosition textPosition : textPositions) {
                     if (insOrderDocument.getPageIndex() != textPosition.getPageIndex()) {
                         continue;
                     }
                     if (sign.indexOf(textPosition.getTrimedText()) == 0) {
-                        PdfTextPosition result = groupTextPosition(sign, textPosition, new ArrayList<>(textPositions));
+                        PdfTextPosition result = findTxtArea(sign, textPosition, new ArrayList<>(textPositions));
                         if (result != null) {
-                            infoGroup.setTextPosition(result);
+                            infoArea.setTextPosition(result);
                             break;
                         }
                     }
                 }
-                if (infoGroup.getTextPosition() != null) {
+                if (infoArea.getTextPosition() != null) {
                     break;
                 }
             }
@@ -59,9 +58,9 @@ public class InsOrderStructor {
         }
     }
 
-    private static PdfTextPosition groupTextPosition(String infoGroupSign, PdfTextPosition textPosition, List<PdfTextPosition> textPositions) {
+    private static PdfTextPosition findTxtArea(String infoAreaSign, PdfTextPosition textPosition, List<PdfTextPosition> textPositions) {
 
-        String sign = infoGroupSign.substring(textPosition.getTrimedText().length());
+        String sign = infoAreaSign.substring(textPosition.getTrimedText().length());
         PdfTextPosition nextText;
         PdfTextPosition resultText = textPosition;
         List<PdfTextPosition> mergedTexts = new ArrayList<>();
@@ -93,12 +92,14 @@ public class InsOrderStructor {
             textPositions.addAll(mergedTexts);
             return null;//寻找失败
         }
-        resultText.getOrigTexts().addAll(mergedTexts);
+        //resultText.addOrigTexts(mergedTexts);
+        resultText = PdfTextPositionHelper.merge(mergedTexts);
         textPositions.removeAll(mergedTexts);
-        List<PdfTextPosition> groupItems = PdfTextPositionHelper.getRightAll(textPositions, resultText, false);
-        resultText.setGroupItems(groupItems);
-        if (groupItems.size() > 0) {
-            resultText.setIsGroupInfo(true);
+
+        List<PdfTextPosition> areaItems = PdfTextPositionHelper.getRightAll(textPositions, resultText, false);
+        resultText.setGroupItems(areaItems);
+        if (areaItems.size() > 0) {
+            resultText.setAreaInfo(true);
         }
         textPositions.add(resultText);
         return resultText;
@@ -119,20 +120,48 @@ public class InsOrderStructor {
 
     }
 
-    public static String standaredize(String value) {
+    private static Pattern p1 = Pattern.compile("日\\d{1,2}(:)\\d{1,2}(时)");
+    private static Pattern p2 = Pattern.compile("\\d{1,2}日二十四时");
+
+    /**
+     * 未做任何修改时，切记返回null
+     *
+     * @param value
+     * @return
+     */
+    public static String standaredize(final String value) {
         if (StringUtils.isBlank(value)) return null;
-        if (p1.asPredicate().test(value)) {
-            String str = value;
+        String str = value;
+        boolean dealed = false;
+        if (p1.asPredicate().test(str)) {
+
             while (p1.asPredicate().test(str)) {
                 Matcher matcher = p1.matcher(str);
                 if (matcher.find()) {
                     str = str.replaceFirst("(?<=日\\d{1,2}):(?=\\d{1,2}时)", "时");
                     str = str.replaceFirst("(?<=日\\d{1,2}时\\d{1,2})时", "分");
-                    return str;
+
                 }
             }
+            return str;
         }
-        return null;
+        if (p2.asPredicate().test(str)) {
+
+            while (p2.asPredicate().test(str)) {
+                Matcher matcher = p2.matcher(str);
+                if (matcher.find()) {
+                    str = str.replaceFirst("(?<=\\d{1,2}日)二十四(?=时)", "24");
+                }
+            }
+            return str;
+        }
+
+
+        if (dealed == false) {
+            return null;
+        } else {
+            return str;
+        }
     }
 
 }

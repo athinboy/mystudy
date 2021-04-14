@@ -56,7 +56,7 @@ public class DateTimeContent extends Content {
             }
 
             //投保确认时间：2021-03-1217:44
-            if (Pattern.compile("\\d{4}:\\d{2}").asPredicate().test(valuestr)) {
+            if (Pattern.compile("\\d{4}:\\d{2}$").asPredicate().test(valuestr)) {
                 str += ":00";
             }
 

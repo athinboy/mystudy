@@ -27,12 +27,24 @@ public class CommecialDocument extends InsOrderDocument {
          */
         this.orderItemInfos.add(new OrderItemInfo("insuranceFee", ContentValueTypeEnum.Money, "保险{0,1}费合计"));//BigDecimal
 
-
-
     }
 
     @Override
     public void parseContent(final List<PdfTextPosition> textPositions) {
         super.parseContent(textPositions);
     }
+
+    @Override
+    protected void specialOrder() {
+
+        switch (this.insCompanyType) {
+            case tpyang:
+                break;
+            case renshou:
+                OrderItemInfo o=this.getOrderItemInfo("platNum");
+                o.setRequire(false);
+                break;
+        }
+    }
+
 }

@@ -67,4 +67,37 @@ public class PdfRectangle extends Rectangle {
     public int maxY() {
         return this.y + this.height;
     }
+
+    public int maxX() {
+        return this.x + this.width;
+    }
+
+    /**
+     * 获取垂直的距离。
+     *
+     * @param o
+     * @return
+     */
+    public int getYDistinct(PdfRectangle o) {
+
+        if (this.intersects(o)) {
+            return 0;
+        }
+        if (this.maxY() <= o.y) {
+            return o.y - this.maxY();
+        }
+        if (o.maxY() <= this.y) {
+            return this.y - o.maxY();
+        }
+        return 0;
+
+    }
+
+    /**
+     * 面积
+     * @return
+     */
+    public int area() {
+        return this.width*this.height;
+    }
 }

@@ -4,10 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import net.fgq.study.pdf.PdfException;
 import net.fgq.study.pdf.PdfTextPosition;
 import net.fgq.study.pdf.annoation.ContentValueTypeEnum;
+import net.fgq.study.pdf.annoation.InfoArea;
 import net.fgq.study.pdf.annoation.InfoGroup;
 import org.apache.commons.lang3.StringUtils;
 
-import java.nio.channels.MulticastChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,13 +23,24 @@ public class OrderItemInfo {
     private ContentValueTypeEnum valueType;
     private String[] keySigns;
     private boolean require;
+    private InfoArea infoArea;
     private InfoGroup infoGroup;
+    /**
+     * 值正则模式
+     */
+    private List<String> valueRegstr = new ArrayList<>();
+    /**
+     * 后补字段，比如签单日期，如果无法解析，则可以从其他字段取值。
+     */
+    private String backupItem;
     /**
      * 多个值包含在同一个文本中比如保险期间。
      */
-    private boolean muiltValue = true;
+    private boolean muiltValue = false;
 
     private List<PdfTextPosition> candidateKeyTexts = new ArrayList<>();
+    private boolean valueMultiLine;
+    private int priority=1;
 
     public OrderItemInfo(String jsonKey, ContentValueTypeEnum valueType, boolean muiltValue, boolean require, String... keySigns) {
         if (StringUtils.isBlank(jsonKey) || keySigns == null || keySigns.length == 0) {
@@ -48,7 +59,7 @@ public class OrderItemInfo {
     }
 
     public OrderItemInfo(String jsonKey, ContentValueTypeEnum valueType, boolean require, String... keySigns) {
-        this(jsonKey, valueType, true, require, keySigns);
+        this(jsonKey, valueType, false, require, keySigns);
     }
 
     public OrderItemInfo(String jsonKey, boolean muiltValue, boolean require, String... keySigns) {
@@ -145,6 +156,18 @@ public class OrderItemInfo {
         return;
     }
 
+    public InfoArea getInfoArea() {
+        return infoArea;
+    }
+
+    public void setInfoArea(InfoArea infoArea) {
+        this.infoArea = infoArea;
+    }
+
+    public boolean isMuiltValue() {
+        return muiltValue;
+    }
+
     public InfoGroup getInfoGroup() {
         return infoGroup;
     }
@@ -153,7 +176,39 @@ public class OrderItemInfo {
         this.infoGroup = infoGroup;
     }
 
-    public boolean isMuiltValue() {
-        return muiltValue;
+    public String getBackupItem() {
+        return backupItem;
+    }
+
+    public void setBackupItem(String backupItem) {
+        this.backupItem = backupItem;
+    }
+
+    public List<String> getValueRegstr() {
+        return valueRegstr;
+    }
+
+    public void setValueRegstr(List<String> valueRegstr) {
+        this.valueRegstr = valueRegstr;
+    }
+
+    public void setSignPredicate(Predicate<String> signPredicate) {
+        this.signPredicate = signPredicate;
+    }
+
+    public void setValueMultiLine(boolean valueMultiLine) {
+        this.valueMultiLine = valueMultiLine;
+    }
+
+    public boolean getValueMultiLine() {
+        return valueMultiLine;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }

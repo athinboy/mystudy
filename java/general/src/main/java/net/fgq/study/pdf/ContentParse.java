@@ -21,142 +21,213 @@ public class ContentParse {
 
     static Logger logger = LoggerFactory.getLogger(ContentParse.class);
 
+    //todo :need to del
+    public static String errsign = "";
+
     public static void parseContent(Document document, JSONObject jsonObject, final List<PdfTextPosition> pdfTextPositions) {
 
         String candidateValueStr;
         List<PdfRectangle> candidateRects = new ArrayList<>();
 
-        for (Content content : document.getContents()) {
-            if (content.getOrderItem().getJsonKey().equals("effectiveDate")) {
-                int i = 0;
-            }
-
-            List<PdfTextPosition> textPositions = new ArrayList<>();
-            for (PdfTextPosition textPosition : pdfTextPositions) {
-                if (content.getPageIndex() == textPosition.getPageIndex()) {
-                    textPositions.add(textPosition);
+        int priority = 0;
+        while (priority <= 3) {
+            priority += 1;
+            for (Content content : document.getContents()) {
+                if (content.getPriority() != priority) {
+                    continue;
                 }
-            }
+                if (content.getOrderItem().getJsonKey().equals(errsign)) {
+                    int i = 0;
+                }
 
-            if (content.getRectangle() != null) {
-                parseContentByPosition(content, jsonObject, textPositions);
-                continue;
-            }
+                List<PdfTextPosition> textPositions = new ArrayList<>();
+                if (content.getOrderItem().getInfoArea() != null
+                        && content.getOrderItem().getInfoArea().getTextPosition() != null) {
+                    textPositions = content.getOrderItem().getInfoArea().getTextPosition().getGroupItems();
+                } else {
+                    for (PdfTextPosition textPosition : pdfTextPositions) {
+                        if (content.getPageIndex() == textPosition.getPageIndex()) {
+                            textPositions.add(textPosition);
+                        }
+                    }
+                }
 
-            List<PdfTextPosition> candidateLableTexts = new ArrayList<>();
-            List<PdfTextPosition> candidateValueTexts = new ArrayList<>();
-            List<PdfTextPosition> candidateRightLables = new ArrayList<>();
-            for (PdfTextPosition textPosition : textPositions) {
-                if (content.getOrderItem().getMuiltValue() == false) {
-                    if (textPosition.getCandidateOrderItems().size() == 1 && textPosition.getCandidateOrderItems().get(0) != content.getOrderItem()) {
+                if (content.getRectangle() != null) {
+                    parseContentByPosition(content, jsonObject, textPositions);
+                    continue;
+                }
+
+                List<PdfTextPosition> candidateLableTexts = new ArrayList<>();
+
+                List<PdfTextPosition> candidateRightLables = new ArrayList<>();
+                if (content.getOrderItem().getCandidateKeyTexts().size() == 1) {
+                    candidateLableTexts.add(content.getOrderItem().getCandidateKeyTexts().get(0));
+                } else {
+                    for (PdfTextPosition textPosition : textPositions) {
+                        if (content.getOrderItem().getMuiltValue() == false) {
+                            if (textPosition.getCandidateOrderItems().size() == 1
+                                    && textPosition.getCandidateOrderItems().get(0) != content.getOrderItem()) {
+                                continue;
+                            }
+                        }
+
+                        if (content.getLableSignsPredicate().test(textPosition.getTrimedText())) {
+
+                            if (textPosition.getCandidateOrderItems().size() > 0 && content.getOrderItem() != null) {
+                                if (textPosition.getCandidateOrderItems().contains(content.getOrderItem())) {
+                                    candidateLableTexts.add(textPosition);
+                                }
+                            } else {
+                                candidateLableTexts.add(textPosition);
+                            }
+
+                        }
+                    }
+                }
+
+                if (candidateLableTexts.size() == 0) {
+                    if (content.getOrderItem().isRequire()) {
+                        throw new PdfException("定位内容失败：" + content.toString());
+                    } else {
                         continue;
                     }
                 }
+                //对于类似下列形式无效
+                // 保险费合计（人民币大写）：                           （￥：          元）
+                // 100 捌佰伍拾伍圆整
 
-                if (content.getLableSignsPredicate().test(textPosition.getTrimedText())) {
+//                if (candidateLableTexts.size() == 1) {
+//                    if ((candidateValueStr = parseValue(content, candidateLableTexts.get(0))) != null) {
+//                        formatValue(jsonObject, content, candidateValueStr);
+//                        continue;
+//                    }
+//                }
+                candidateRects.clear();
 
-                    if (textPosition.getCandidateOrderItems().size() > 0 && content.getOrderItem() != null) {
-                        if (textPosition.getCandidateOrderItems().contains(content.getOrderItem())) {
-                            candidateLableTexts.add(textPosition);
-                        }
-                    } else {
-                        candidateLableTexts.add(textPosition);
-                    }
-
-                }
-            }
-            if (candidateLableTexts.size() == 0) {
-                if (content.getOrderItem().isRequire()) {
-                    throw new PdfException("定位内容失败：" + content.toString());
-                } else {
-                    continue;
-                }
-            }
-            if (candidateLableTexts.size() == 1) {
-                if ((candidateValueStr = parseValue(content, candidateLableTexts.get(0))) != null) {
-                    formatValue(jsonObject, content, candidateValueStr);
-                    continue;
-                }
-            }
-            candidateRects.clear();
-
-            if (content.getRightSigns().size() > 0) {
-                for (PdfTextPosition textPosition : textPositions) {
-                    if (content.getRightSignsPredicate().test(textPosition.getTrimedText())) {
-                        candidateRightLables.add(textPosition);
-                    }
-                }
-                for (PdfTextPosition candidateText : candidateLableTexts) {
-                    for (PdfTextPosition candidateRightLable : candidateRightLables) {
-                        if (candidateText.checkRightSameLine(candidateRightLable)) {
-                            int x = candidateText.getRectangle().x;
-                            int y = candidateText.getRectangle().y;
-                            int width = candidateRightLable.getRectangle().x + candidateRightLable.getRectangle().width - x;
-                            int height = Math.max(candidateText.getRectangle().height, candidateRightLable.getRectangle().height);
-                            if (width <= 0 || height <= 0) {
-                                throw new PdfException("推断值区域异常："
-                                        + "r1:" + candidateText.getRectangle().toString()
-                                        + "r2:" + candidateRightLable.getRectangle().toString());
-                            }
-                            candidateRects.add(new PdfRectangle(x, y, width, height));
-                        }
-                    }
-                }
-
-            } else {
-
-                PdfRectangle rectangle;
-                for (PdfTextPosition candidateText : candidateLableTexts) {
-                    candidateValueTexts.clear();
-                    rectangle = null;
+                if (content.getRightSigns().size() > 0) {
                     for (PdfTextPosition textPosition : textPositions) {
-                        if (candidateText != textPosition
-                                && (false == candidateLableTexts.contains(textPosition))
-                                && candidateText.checkRightSameLine(textPosition)) {
-                            candidateValueTexts.add(textPosition);
-                            rectangle = rectangle == null ? textPosition.getRectangle() : new PdfRectangle(rectangle.union(textPosition.getRectangle()));
+                        if (content.getRightSignsPredicate().test(textPosition.getTrimedText())) {
+                            candidateRightLables.add(textPosition);
                         }
                     }
-                    if (rectangle != null) {
-                        rectangle = new PdfRectangle(candidateText.getRectangle().union(rectangle));
+                    for (PdfTextPosition candidateText : candidateLableTexts) {
+                        for (PdfTextPosition candidateRightLable : candidateRightLables) {
+                            if (candidateText.checkRightSameLine(candidateRightLable)) {
+                                int x = candidateText.getRectangle().x;
+                                int y = candidateText.getRectangle().y;
+                                int width = candidateRightLable.getRectangle().x + candidateRightLable.getRectangle().width - x;
+                                int height = Math.max(candidateText.getRectangle().height, candidateRightLable.getRectangle().height);
+                                if (width <= 0 || height <= 0) {
+                                    throw new PdfException("推断值区域异常："
+                                            + "r1:" + candidateText.getRectangle().toString()
+                                            + "r2:" + candidateRightLable.getRectangle().toString());
+                                }
+                                candidateRects.add(new PdfRectangle(x, y, width, height));
+                            }
+                        }
+                    }
 
+                } else {
+
+                    PdfRectangle rectangle;
+                    for (PdfTextPosition candidateText : candidateLableTexts) {
+
+                        rectangle = null;
+                        int minX = Integer.MAX_VALUE;
+                        for (PdfTextPosition textPosition : textPositions) {
+
+                            if (candidateText != textPosition
+                                    && (false == candidateLableTexts.contains(textPosition))
+                                    && candidateText.checkRightSameLine(textPosition)) {
+                                if (textPosition.getCandidateOrderItems().size() >= 1) {
+                                    minX = Math.min(textPosition.getRectangle().x, minX);
+                                    continue;
+                                }
+                                if (textPosition.getRectangle().getX() > minX) {
+                                    continue;
+                                }
+                                rectangle = rectangle == null ? textPosition.getRectangle() : new PdfRectangle(rectangle.union(textPosition.getRectangle()));
+                            }
+                        }
+                        if (rectangle != null) {
+                            rectangle = new PdfRectangle(candidateText.getRectangle().union(rectangle));
+
+                        } else {
+                            rectangle = new PdfRectangle(candidateText.getRectangle().x//必须从X开始。比如保险期间自  年 月  日 时 分起至  年  月  日  时  分止
+                                    , candidateText.getRectangle().y
+                                    , minX - candidateText.getRectangle().x//未找到合适的右侧信息那就直到右侧边缘。
+                                    , candidateText.getRectangle().height);
+                        }
+                        candidateRects.add(rectangle);
+                    }
+
+                }
+
+                List<String> candidateValues = new ArrayList<>();
+
+                if (content.getOrderItem().getInfoGroup() != null) {
+                    List<PdfRectangle> rectangles = content.getOrderItem().getInfoGroup().mergeNear(candidateRects);
+                    if (rectangles.size() == 1) {
+                        candidateRects = rectangles;
                     } else {
-                        rectangle = new PdfRectangle(candidateText.getRectangle());
+                        content.setPriority(content.getPriority() + 1);
+                        if (content.getPriority() <= 3) {
+                            continue;
+                        }
                     }
-                    candidateRects.add(rectangle);
+
                 }
+                List<PdfTextPosition> candidateValueTexts = new ArrayList<>();
 
-            }
+                for (PdfRectangle candidateRect : candidateRects) {
+                    candidateValueTexts.clear();
+                    for (PdfTextPosition textPosition : textPositions) {
+                        if (candidateRect.intersects(textPosition.getRectangle())) {
+                            candidateValueTexts.add(textPosition);
 
-            List<String> candidateValues = new ArrayList<>();
+                        }
+                    }
+                    if (candidateValueTexts.size() > 0) {
 
-            for (PdfRectangle candidateRect : candidateRects) {
-                candidateValueTexts.clear();
-                for (PdfTextPosition textPosition : textPositions) {
-                    if (candidateRect.intersects(textPosition.getRectangle())) {
-                        candidateValueTexts.add(textPosition);
-
+                        PdfTextPosition newText = PdfTextPositionHelper.merge(candidateValueTexts);
+                        if (content.getValueMultiLine()) {
+                            newText = findExtendBlock(textPositions, newText, 1);
+                        }
+                        if ((candidateValueStr = parseValue(content, newText)) != null) {
+                            candidateValues.add(candidateValueStr);
+                        }
+                    } else {
+                        System.out.println(34);
                     }
                 }
+                if (candidateValues.size() == 1) {
 
-                PdfTextPosition newText = PdfTextPositionHelper.merge(candidateValueTexts);
-                if (content.getValueMultiLine()) {
-                    newText = findExtendBlock(textPositions, newText, 1);
+                    formatValue(jsonObject, content, candidateValues.get(0));
+                    continue;
+                } else {
+
+                    if (StringUtils.isNotBlank(content.getOrderItem().getBackupItem())) {
+                        Object o;
+                        content.setPriority(content.getPriority() + 1);
+                        if (content.getPriority() <= 3) {
+                            continue;
+                        }
+                        if (null != (o = jsonObject.get(content.getOrderItem().getBackupItem()))) {
+                            jsonObject.put(content.getJsonKey(), o);
+                            continue;
+                        }
+                    }
+                    errsign = content.getOrderItem().getJsonKey();
+                    if (content.getOrderItem().isRequire() == false) {
+                        continue;
+                    }
+                    throw new PdfException("提取值识别：" + content.toString() + "\r\n" + JSON.toJSONString(candidateValues.toString()));
                 }
-                if ((candidateValueStr = parseValue(content, newText)) != null) {
-                    candidateValues.add(candidateValueStr);
-                }
 
-            }
-            if (candidateValues.size() == 1) {
-
-                formatValue(jsonObject, content, candidateValues.get(0));
-                continue;
-            } else {
-                throw new PdfException("提取值识别：" + content.toString() + "\r\n" + JSON.toJSONString(candidateValues.toString()));
             }
 
         }
+
     }
 
     /**

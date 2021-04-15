@@ -8,6 +8,8 @@ import java.awt.Point;
  */
 public class PdfRectangle extends Rectangle {
 
+    private int pageIndex;
+
     public int getMiddleX() {
         return this.x + this.width / 2;
     }
@@ -19,28 +21,41 @@ public class PdfRectangle extends Rectangle {
     public PdfRectangle() {
     }
 
-    public PdfRectangle(Rectangle r) {
+    public PdfRectangle(int pageIndex, Rectangle r) {
         super(r);
+        this.pageIndex = pageIndex;
     }
 
-    public PdfRectangle(int x, int y, int width, int height) {
+    public PdfRectangle(int pageIndex, int x, int y, int width, int height) {
         super(x, y, width, height);
+        this.pageIndex = pageIndex;
     }
 
-    public PdfRectangle(int width, int height) {
+    public PdfRectangle(int pageIndex, int width, int height) {
         super(width, height);
+        this.pageIndex = pageIndex;
     }
 
-    public PdfRectangle(Point p, Dimension d) {
+    public PdfRectangle(int pageIndex, Point p, Dimension d) {
         super(p, d);
+        this.pageIndex = pageIndex;
     }
 
-    public PdfRectangle(Point p) {
+    public PdfRectangle(int pageIndex, Point p) {
         super(p);
+        this.pageIndex = pageIndex;
     }
 
-    public PdfRectangle(Dimension d) {
+    public PdfRectangle(int pageIndex, Dimension d) {
         super(d);
+        this.pageIndex = pageIndex;
+    }
+
+    public boolean intersects(PdfRectangle r) {
+        if (this.pageIndex != r.pageIndex) {
+            return false;
+        }
+        return super.intersects(r);
     }
 
     /**
@@ -95,9 +110,18 @@ public class PdfRectangle extends Rectangle {
 
     /**
      * 面积
+     *
      * @return
      */
     public int area() {
-        return this.width*this.height;
+        return this.width * this.height;
+    }
+
+    public int getPageIndex() {
+        return pageIndex;
+    }
+
+    public void setPageIndex(int pageIndex) {
+        this.pageIndex = pageIndex;
     }
 }

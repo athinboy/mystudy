@@ -106,15 +106,11 @@ public class CompluseDocument extends InsOrderDocument {
     }
 
     @Override
-    public void parseContent(final List<PdfTextPosition> textPositions) {
-        super.parseContent(textPositions);
-    }
-
-    @Override
     protected void specialOrder() {
 
         switch (this.insCompanyType) {
             case tpyang:
+                this.getOrderItemInfo("platNum").setRequire(false);
                 break;
             case renshou:
                 OrderItemInfo o=this.getOrderItemInfo("platNum");

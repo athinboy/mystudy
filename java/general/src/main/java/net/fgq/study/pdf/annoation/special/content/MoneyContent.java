@@ -16,16 +16,20 @@ public class MoneyContent extends Content {
         this.getValueRegstr().add(ContentValueTypeEnum.Money.getRegexStr());
     }
 
+    public MoneyContent(int startPageIndex, int endPageIndex, String jsonKey, String... lablesigns) {
+        super(startPageIndex, endPageIndex, jsonKey, lablesigns);
+    }
+
     public MoneyContent(int pageIndex, String jsonKey, String... lablesigns) {
-        super(pageIndex, jsonKey, lablesigns);
+        this(pageIndex, pageIndex, jsonKey, lablesigns);
     }
 
-    public MoneyContent(int pageIndex, String jsonKey, java.awt.Rectangle rectangle) {
-        super(pageIndex, jsonKey, rectangle);
+    public MoneyContent(int startPageIndex, int endPageIndex, String jsonKey, java.awt.Rectangle rectangle) {
+        super(startPageIndex, endPageIndex, jsonKey, rectangle);
     }
 
-    public MoneyContent(int pageIndex, String jsonKey, int x, int y, int width, int height) {
-        super(pageIndex, jsonKey, x, y, width, height);
+    public MoneyContent(int startPageIndex, int endPageIndex, String jsonKey, int x, int y, int width, int height) {
+        super(startPageIndex, endPageIndex, jsonKey, x, y, width, height);
     }
 
     @Override

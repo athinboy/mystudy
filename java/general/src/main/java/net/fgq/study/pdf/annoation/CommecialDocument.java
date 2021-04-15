@@ -2,6 +2,7 @@ package net.fgq.study.pdf.annoation;
 
 import net.fgq.study.pdf.Item.OrderItemInfo;
 import net.fgq.study.pdf.PdfTextPosition;
+import org.apache.pdfbox.pdmodel.PDDocument;
 
 import java.util.List;
 
@@ -30,18 +31,14 @@ public class CommecialDocument extends InsOrderDocument {
     }
 
     @Override
-    public void parseContent(final List<PdfTextPosition> textPositions) {
-        super.parseContent(textPositions);
-    }
-
-    @Override
     protected void specialOrder() {
 
         switch (this.insCompanyType) {
             case tpyang:
+                this.getOrderItemInfo("platNum").setRequire(false);
                 break;
             case renshou:
-                OrderItemInfo o=this.getOrderItemInfo("platNum");
+                OrderItemInfo o = this.getOrderItemInfo("platNum");
                 o.setRequire(false);
                 break;
         }

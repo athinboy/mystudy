@@ -14,8 +14,6 @@ import java.util.regex.Pattern;
  */
 public class InsOrderStructor {
 
-
-
     public static void struct(InsOrderDocument insOrderDocument, final List<PdfTextPosition> textPositions, InsCompanyType insCompanyType) {
 
         List<InfoArea> infoAreas = insOrderDocument.getInfoAreas();
@@ -23,7 +21,7 @@ public class InsOrderStructor {
             infoArea.setTextPosition(null);
             for (String sign : infoArea.getSigns()) {
                 for (PdfTextPosition textPosition : textPositions) {
-                    if (insOrderDocument.getPageIndex() != textPosition.getPageIndex()) {
+                    if (false == insOrderDocument.checkPage(textPosition.getPageIndex())) {
                         continue;
                     }
                     if (sign.indexOf(textPosition.getTrimedText()) == 0) {
@@ -155,7 +153,6 @@ public class InsOrderStructor {
             }
             return str;
         }
-
 
         if (dealed == false) {
             return null;

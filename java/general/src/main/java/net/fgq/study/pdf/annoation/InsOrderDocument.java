@@ -1,12 +1,15 @@
 package net.fgq.study.pdf.annoation;
 
 import com.alibaba.fastjson.JSONObject;
+import com.spire.pdf.PdfDocument;
 import net.fgq.study.pdf.Item.OrderItemInfo;
 import net.fgq.study.pdf.LexicHelper;
 import net.fgq.study.pdf.PdfException;
 import net.fgq.study.pdf.PdfTextPosition;
 import net.fgq.study.pdf.annoation.special.content.*;
 import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +26,9 @@ public class InsOrderDocument extends Document {
     protected InsCompanyType insCompanyType;
 
     Logger logger = LoggerFactory.getLogger(InsOrderDocument.class);
-    private int pageIndex;
+
+    private int startPageIndex;
+    private int endPageIndex;
 
     protected List<OrderItemInfo> orderItemInfos = new ArrayList<>();
 
@@ -31,17 +36,37 @@ public class InsOrderDocument extends Document {
 
     private List<InfoGroup> infoGroups = new ArrayList<>();
 
-    public int getPageIndex() {
-        return pageIndex;
+    public int getStartPageIndex() {
+        return startPageIndex;
     }
 
-    public void setPageIndex(int pageIndex) {
-        this.pageIndex = pageIndex;
+    public void setStartPageIndex(int startPageIndex) {
+        this.startPageIndex = startPageIndex;
+    }
+
+    public int getEndPageIndex() {
+        return endPageIndex;
+    }
+
+    public void setEndPageIndex(int endPageIndex) {
+        this.endPageIndex = endPageIndex;
+    }
+
+    public InsOrderDocument(int startPageIndex, int endPageIndex) {
+        this.startPageIndex = startPageIndex;
+        this.endPageIndex = endPageIndex;
+        init();
     }
 
     public InsOrderDocument(int pageIndex) {
-        this.pageIndex = pageIndex;
-        init();
+        this(pageIndex, pageIndex);
+    }
+
+    @Override
+    protected void changePageIndex(int startPageIndex, int endPageIndex) {
+        super.changePageIndex(startPageIndex, endPageIndex);
+        this.setStartPageIndex(startPageIndex);
+        this.setEndPageIndex(endPageIndex);
     }
 
     private void init() {
@@ -54,7 +79,7 @@ public class InsOrderDocument extends Document {
         this.orderItemInfos.add(newItem = new OrderItemInfo("insuredPhone", "联系(电话|方式)"));
         //证件号
         this.orderItemInfos.add(newItem = new OrderItemInfo("insuredIDNumer",
-                "(被保险人)?((身份证?)|(证件))号码(（组织机构代码）)?"));
+                "(被保险人)?((身份证?)|(证件))号码((（组织机构代码）|(（团体客户代码）)))?"));
         newItem.getValueRegstr().add("\\d+");
 
         //性别
@@ -63,7 +88,8 @@ public class InsOrderDocument extends Document {
         this.orderItemInfos.add(newItem = new OrderItemInfo("insuredBirthday", false, "出生日期"));//string
         this.orderItemInfos.add(newItem = new OrderItemInfo("insuredEMail", false, "[Mm]ail"));
         //通讯地址
-        this.orderItemInfos.add(newItem = new OrderItemInfo("insuredContactAddress", "[^公司]?(通讯|被保险人){0,1}地址"));
+        this.orderItemInfos.add(newItem = new OrderItemInfo("insuredContactAddress",
+                "[^公司]?(通讯|被保险人){0,1}地址"));
         this.orderItemInfos.add(newItem = new OrderItemInfo("platNum", "号牌号码"));
         this.orderItemInfos.add(newItem = new OrderItemInfo("vin", "vin", "VIN", "车架号"));
         //发动机号
@@ -169,13 +195,33 @@ public class InsOrderDocument extends Document {
         throw PdfException.getInstance("无法识别的保险公司类型");
     }
 
-    public void parseContent(final List<PdfTextPosition> pdfTextPositions) {
+    public void parseContent(PDDocument pdfDocument, final List<PdfTextPosition> pdfTextPositions) {
 
         List<PdfTextPosition> textPositions = new ArrayList<>();
         identityCompany(pdfTextPositions);
         specialOrder();
+
+        if (StringUtils.isNotBlank(this.getPageIndexSign())) {
+            for (PdfTextPosition textPosition : textPositions) {
+                if (textPosition.getText().contains(this.getPageIndexSign())) {
+                    if (this instanceof CompluseDocument) {
+                        this.changePageIndex(textPosition.getPageIndex(), textPosition.getPageIndex());
+                    } else {
+                        this.changePageIndex(textPosition.getPageIndex(), pdfDocument.getPages().getCount() - 1);
+                    }
+
+                    break;
+                }
+            }
+
+        } else {
+            if (this instanceof CommecialDocument) {
+                this.changePageIndex(this.getStartPageIndex(), pdfDocument.getPages().getCount() - 1);
+            }
+        }
+
         for (PdfTextPosition pdfTextPosition : pdfTextPositions) {
-            if (pdfTextPosition.getPageIndex() == this.pageIndex) {
+            if (pdfTextPosition.getPageIndex() >= this.startPageIndex && pdfTextPosition.getPageIndex() <= this.endPageIndex) {
                 textPositions.add(pdfTextPosition);
             }
         }
@@ -354,24 +400,24 @@ public class InsOrderDocument extends Document {
         Content content = null;
         switch (orderItemInfo.getJsonKey()) {
             case "effectiveDate":
-                this.addContent(orderItemInfo, content = new EffectiveDateContent(this.pageIndex, "effectiveDate", orderItemInfo.getKeySigns()));
+                this.addContent(orderItemInfo, content = new EffectiveDateContent(this.startPageIndex, this.endPageIndex, "effectiveDate", orderItemInfo.getKeySigns()));
                 break;
             case "expireDate":
-                this.addContent(orderItemInfo, content = new ExpireDateContent(this.pageIndex, "expireDate", orderItemInfo.getKeySigns()));
+                this.addContent(orderItemInfo, content = new ExpireDateContent(this.startPageIndex, this.endPageIndex, "expireDate", orderItemInfo.getKeySigns()));
                 break;
             default:
                 switch (orderItemInfo.getValueType()) {
                     case Date:
-                        this.addContent(orderItemInfo, content = new DateContent(this.pageIndex, orderItemInfo.getJsonKey(), orderItemInfo.getKeySigns()));
+                        this.addContent(orderItemInfo, content = new DateContent(this.startPageIndex, this.endPageIndex, orderItemInfo.getJsonKey(), orderItemInfo.getKeySigns()));
                         break;
                     case Money:
-                        this.addContent(orderItemInfo, content = new MoneyContent(this.pageIndex, orderItemInfo.getJsonKey(), orderItemInfo.getKeySigns()));
+                        this.addContent(orderItemInfo, content = new MoneyContent(this.startPageIndex, this.endPageIndex, orderItemInfo.getJsonKey(), orderItemInfo.getKeySigns()));
                         break;
                     case DateTime:
-                        this.addContent(orderItemInfo, content = new DateTimeContent(this.pageIndex, orderItemInfo.getJsonKey(), orderItemInfo.getKeySigns()));
+                        this.addContent(orderItemInfo, content = new DateTimeContent(this.startPageIndex, this.endPageIndex, orderItemInfo.getJsonKey(), orderItemInfo.getKeySigns()));
                         break;
                     case Text:
-                        this.addContent(orderItemInfo, content = new Content(this.pageIndex, orderItemInfo.getJsonKey(), orderItemInfo.getKeySigns()));
+                        this.addContent(orderItemInfo, content = new Content(this.startPageIndex, this.endPageIndex, orderItemInfo.getJsonKey(), orderItemInfo.getKeySigns()));
                         break;
                 }
         }
@@ -443,5 +489,9 @@ public class InsOrderDocument extends Document {
             }
         }
         return null;
+    }
+
+    public boolean checkPage(int pageIndex) {
+        return this.startPageIndex <= pageIndex && this.endPageIndex >= pageIndex;
     }
 }

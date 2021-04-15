@@ -11,9 +11,11 @@ public class TextPositionEx {
 
     private TextPosition textPosition;
     private PdfRectangle rectangle = null;
+    private int pageIndex;
 
-    public TextPositionEx(TextPosition textPosition) {
+    public TextPositionEx(int pageIndex, TextPosition textPosition) {
         this.textPosition = textPosition;
+        this.pageIndex = pageIndex;
     }
 
     public TextPosition getTextPosition() {
@@ -54,7 +56,8 @@ public class TextPositionEx {
 
     public PdfRectangle getRectangle() {
         if (this.rectangle == null) {
-            this.rectangle = new PdfRectangle(Double.valueOf(this.textPosition.getX()).intValue()
+            this.rectangle = new PdfRectangle(this.pageIndex
+                    , Double.valueOf(this.textPosition.getX()).intValue()
                     , Double.valueOf(this.textPosition.getY()).intValue()
                     , Double.valueOf(this.textPosition.getWidth()).intValue()
                     , Double.valueOf(TextPositionExHelper.getHeight(this.textPosition)).intValue());
@@ -71,5 +74,13 @@ public class TextPositionEx {
         return "TextPositionEx{" +
                 "textPosition=" + textPosition +
                 '}';
+    }
+
+    public int getPageIndex() {
+        return pageIndex;
+    }
+
+    public void setPageIndex(int pageIndex) {
+        this.pageIndex = pageIndex;
     }
 }

@@ -17,17 +17,24 @@ public class DateContent extends Content {
         this.getValueRegstr().add(ContentValueTypeEnum.Date.getRegexStr());
     }
 
-    public DateContent(int pageIndex, String jsonKey, String... lablesigns) {
-        super(pageIndex, jsonKey, lablesigns);
+    public DateContent(int startPageIndex, int endPageIndex, String jsonKey, String... lablesigns) {
+        super(startPageIndex, endPageIndex, jsonKey, lablesigns);
+    }
 
+    public DateContent(int pageIndex, String jsonKey, String... lablesigns) {
+        this(pageIndex, pageIndex, jsonKey, lablesigns);
+    }
+
+    public DateContent(int startPageIndex, int endPageIndex, String jsonKey, java.awt.Rectangle rectangle) {
+        super(startPageIndex, endPageIndex, jsonKey, rectangle);
     }
 
     public DateContent(int pageIndex, String jsonKey, java.awt.Rectangle rectangle) {
-        super(pageIndex, jsonKey, rectangle);
+        this(pageIndex, pageIndex, jsonKey, rectangle);
     }
 
-    public DateContent(int pageIndex, String jsonKey, int x, int y, int width, int height) {
-        super(pageIndex, jsonKey, x, y, width, height);
+    public DateContent(int startPageIndex, int endPageIndex, String jsonKey, int x, int y, int width, int height) {
+        super(startPageIndex, endPageIndex, jsonKey, x, y, width, height);
     }
 
     @Override

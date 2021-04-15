@@ -85,9 +85,10 @@ public class Content {
      */
     private List<String> rightSigns = new ArrayList<>();
 
-    private int pageIndex;
+    private int startPageIndex;
+    private int endPageIndex;
 
-    public Content(int pageIndex, String jsonKey, String... lablesigns) {
+    public Content(int startPageIndex, int endPageIndex, String jsonKey, String... lablesigns) {
 
         if (StringUtils.isBlank(jsonKey) || lablesigns == null || lablesigns.length == 0) {
             throw new IllegalArgumentException();
@@ -96,24 +97,31 @@ public class Content {
         for (int i = 0; i < lablesigns.length; i++) {
             this.lableSigns.add(lablesigns[i]);
         }
-        this.pageIndex = pageIndex;
-
+        this.startPageIndex = startPageIndex;
+        this.endPageIndex = endPageIndex;
     }
 
-    public Content(int pageIndex, String jsonKey, java.awt.Rectangle rectangle) {
+    public Content(int startPageIndex, int endPageIndex, String jsonKey, java.awt.Rectangle rectangle) {
 
         if (StringUtils.isBlank(jsonKey) || rectangle == null) {
             throw new IllegalArgumentException();
         }
         this.jsonKey = jsonKey;
         this.Rectangle = rectangle;
-        this.pageIndex = pageIndex;
+        this.startPageIndex = startPageIndex;
+        this.endPageIndex = endPageIndex;
 
+    }
+
+    public Content(int startPageIndex, int endPageIndex, String jsonKey, int x, int y, int width, int height) {
+        this(startPageIndex, endPageIndex, jsonKey, new Rectangle(x, y, width, height));
     }
 
     public Content(int pageIndex, String jsonKey, int x, int y, int width, int height) {
-        this(pageIndex, jsonKey, new Rectangle(x, y, width, height));
+        this(pageIndex, pageIndex, jsonKey, new Rectangle(x, y, width, height));
     }
+
+
 
     public String getJsonKey() {
         return jsonKey;
@@ -129,14 +137,6 @@ public class Content {
 
     public void setRectangle(java.awt.Rectangle rectangle) {
         Rectangle = rectangle;
-    }
-
-    public int getPageIndex() {
-        return pageIndex;
-    }
-
-    public void setPageIndex(int pageIndex) {
-        this.pageIndex = pageIndex;
     }
 
     public List<String> getLableSigns() {
@@ -169,7 +169,10 @@ public class Content {
         return "Content{" +
                 "jsonKey='" + jsonKey + '\'' +
                 ", lableSigns=" + lableSigns +
-                ", pageIndex=" + pageIndex +
+                ", valueRegstr=" + valueRegstr +
+                ", priority=" + priority +
+                ", startPageIndex=" + startPageIndex +
+                ", endPageIndex=" + endPageIndex +
                 '}';
     }
 
@@ -199,5 +202,25 @@ public class Content {
 
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+
+    public boolean checkPage(int pageIndex) {
+        return this.startPageIndex <= pageIndex && this.endPageIndex >= pageIndex;
+    }
+
+    public int getStartPageIndex() {
+        return startPageIndex;
+    }
+
+    public void setStartPageIndex(int startPageIndex) {
+        this.startPageIndex = startPageIndex;
+    }
+
+    public int getEndPageIndex() {
+        return endPageIndex;
+    }
+
+    public void setEndPageIndex(int endPageIndex) {
+        this.endPageIndex = endPageIndex;
     }
 }

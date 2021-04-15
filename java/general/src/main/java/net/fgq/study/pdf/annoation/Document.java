@@ -38,13 +38,15 @@ public class Document {
         this.tableGroups = tableGroups;
     }
 
-    public void changePageIndex(int pageIndex) {
+    protected void changePageIndex(int startPageIndex, int endPageIndex) {
+
         for (Content content : this.contents) {
-            content.setPageIndex(pageIndex);
+            content.setStartPageIndex(startPageIndex);
+            content.setEndPageIndex(endPageIndex);
         }
         for (TableGroup tableGroup : this.tableGroups) {
             for (Table table : tableGroup.getTables()) {
-                table.setPageIndex(pageIndex);
+                table.setPageIndex(startPageIndex);
             }
 
         }

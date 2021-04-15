@@ -70,7 +70,7 @@ public class PdfTextPosition {
     }
 
     public PdfTextPosition(int pageIndex, String text, int x, int y, int width, int height) {
-        this(pageIndex, text, new PdfRectangle(x, y, width, height));
+        this(pageIndex, text, new PdfRectangle(pageIndex, x, y, width, height));
     }
 
     public String getText() {
@@ -144,7 +144,7 @@ public class PdfTextPosition {
         int lineheight = Math.min(this.lineHeight() / 2, other.lineHeight() / 2);
         return this.pageIndex == other.pageIndex &&
                 (this.getRectangle().checkSameLine(other.getRectangle(), lineheight)
-                || (Math.abs(this.rectangle.y - other.getRectangle().y) < lineheight && this.lineNumber == other.lineNumber));//因为高度可能不准确。所以依据上边缘比较。
+                        || (Math.abs(this.rectangle.y - other.getRectangle().y) < lineheight && this.lineNumber == other.lineNumber));//因为高度可能不准确。所以依据上边缘比较。
     }
 
     /**

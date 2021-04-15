@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.ToIntFunction;
 import java.util.regex.Pattern;
 
 /**
@@ -96,6 +97,15 @@ public class PdfTextPositionHelper {
         if (candidateTexts.size() == 0) {
             return null;
         }
+        if (1 != candidateTexts.stream().mapToInt(new ToIntFunction<PdfTextPosition>() {
+            @Override
+            public int applyAsInt(PdfTextPosition value) {
+                return value.getPageIndex();
+            }
+        }).distinct().count()) {
+            throw PdfException.getInstance("非同一页的信息");
+        }
+
         int pageIndex = candidateTexts.get(0).getPageIndex();
         List<TextPositionEx> allTexts = new ArrayList<>();
         for (PdfTextPosition candidateText : candidateTexts) {
@@ -113,7 +123,7 @@ public class PdfTextPositionHelper {
         candidateTexts.sort(PdfTextPositionHelper.getYXSortCompare());
         for (PdfTextPosition candidateText : candidateTexts) {
             str += candidateText.getText();
-            pdfRectangle = new PdfRectangle(pdfRectangle.union(candidateText.getRectangle()));
+            pdfRectangle = new PdfRectangle(pdfRectangle.getPageIndex(), pdfRectangle.union(candidateText.getRectangle()));
         }
         PdfTextPosition newPosition = new PdfTextPosition(pageIndex, str, pdfRectangle);
 

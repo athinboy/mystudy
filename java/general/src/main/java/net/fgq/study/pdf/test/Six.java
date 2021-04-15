@@ -47,7 +47,7 @@ public class Six {
 
             PdfToJson pdfToJson = new PdfToJson();
 
-            ContentParse.errsign="chargeConfirmationTime";
+            ContentParse.errsign="insuredIDNumer";
 
             PdfResult pdfResult = pdfToJson.parse(pdfDocument);
             System.out.println(JSON.toJSONString(pdfResult));

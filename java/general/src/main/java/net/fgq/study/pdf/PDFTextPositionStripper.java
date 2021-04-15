@@ -154,7 +154,7 @@ public class PDFTextPositionStripper extends PDFTextStripper {
                 && text.getX() <= startX + width + this.charGapSpace
                 && text.getX() + text.getWidth() >= startX + width + this.charGapSpace)) {
             lastStr = lastStr + text.getUnicode();
-            textPositions.add(new TextPositionEx(text));
+            textPositions.add(new TextPositionEx(currentPageIndex, text));
 
             width = text.getX() + text.getWidth() - startX;
             height = Math.max(height, TextPositionExHelper.getHeight(text));
@@ -165,7 +165,7 @@ public class PDFTextPositionStripper extends PDFTextStripper {
             }
             lastStr = text.getUnicode();
             textPositions = new ArrayList<>();
-            textPositions.add(new TextPositionEx(text));
+            textPositions.add(new TextPositionEx(currentPageIndex, text));
             startX = text.getX();
             startY = text.getY();
             width = text.getWidth();

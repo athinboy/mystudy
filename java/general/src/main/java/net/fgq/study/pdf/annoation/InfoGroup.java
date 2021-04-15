@@ -45,7 +45,8 @@ public class InfoGroup {
 
         if (candidateRects == null || candidateRects.size() == 0) return candidateRects;
         if (candidateRects.size() == 1) {
-            this.rectangle = this.rectangle == null ? new PdfRectangle(candidateRects.get(0)) : new PdfRectangle(this.rectangle.union(candidateRects.get(0)));
+            this.rectangle = this.rectangle == null ? new PdfRectangle(candidateRects.get(0).getPageIndex(), candidateRects.get(0))
+                    : new PdfRectangle(candidateRects.get(0).getPageIndex(), this.rectangle.union(candidateRects.get(0)));
             return candidateRects;
         }
         if (this.rectangle == null) {

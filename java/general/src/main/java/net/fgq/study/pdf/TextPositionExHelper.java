@@ -75,7 +75,7 @@ public class TextPositionExHelper {
         PdfRectangle rectangle = allTexts.get(0).getRectangle();
         for (TextPositionEx allText : allTexts) {
             str += allText.getTextPosition().getUnicode();
-            rectangle = new PdfRectangle(rectangle.union(allText.getRectangle()));
+            rectangle = new PdfRectangle(rectangle.getPageIndex(),rectangle.union(allText.getRectangle()));
         }
         List<TextPositionEx> textRow;
 
@@ -151,7 +151,7 @@ public class TextPositionExHelper {
         PdfRectangle rectangle = allTexts.get(0).getRectangle();
         for (TextPositionEx allText : allTexts) {
             str += allText.getTextPosition().getUnicode();
-            rectangle = new PdfRectangle(rectangle.union(allText.getRectangle()));
+            rectangle = new PdfRectangle(rectangle.getPageIndex(), rectangle.union(allText.getRectangle()));
         }
         PdfTextPosition result = new PdfTextPosition(0, str, rectangle);
         result.setLineNumber(1);
@@ -165,8 +165,8 @@ public class TextPositionExHelper {
      */
     public static boolean checkXBeside(TextPositionEx o1, TextPositionEx o2) {
 
-        PdfRectangle o1Rec = new PdfRectangle(o1.getRectangle());
-        PdfRectangle o2Rec = new PdfRectangle(o2.getRectangle());
+        PdfRectangle o1Rec = new PdfRectangle(o1.getPageIndex(), o1.getRectangle());
+        PdfRectangle o2Rec = new PdfRectangle(o2.getPageIndex(), o2.getRectangle());
         if (o1Rec.x > o2Rec.x) {
             o1Rec.x = o1Rec.x - o1Rec.width;
         } else {
@@ -187,13 +187,14 @@ public class TextPositionExHelper {
      * 检查是否垂直紧靠。
      * 注意：对于下列情况无效：第二行文字正好处于第一行两个文字中间。
      * 车牌
-     *  A
+     * A
+     *
      * @return
      */
     public static boolean checkYBeside(TextPositionEx o1, TextPositionEx o2) {
 
-        PdfRectangle o1Rec = new PdfRectangle(o1.getRectangle());
-        PdfRectangle o2Rec = new PdfRectangle(o2.getRectangle());
+        PdfRectangle o1Rec = new PdfRectangle(o1.getPageIndex(), o1.getRectangle());
+        PdfRectangle o2Rec = new PdfRectangle(o2.getPageIndex(), o2.getRectangle());
         if (o1Rec.y > o2Rec.y) {
             o1Rec.y = o1Rec.y - o1Rec.height;
         } else {

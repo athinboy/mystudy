@@ -102,7 +102,7 @@ public class PdfToJson {
             InsOrderDocument document;
             if (commecialIndex != -1) {
                 document = new CommecialDocument(commecialIndex);
-                document.parseContent(textPositions);
+                document.parseContent(pdfDocument, textPositions);
                 jsonObject = parse(pdfDocument, document, textPositions);
                 document.validate(jsonObject);
                 pdfResult.setCommercialDocument(jsonObject);
@@ -110,7 +110,7 @@ public class PdfToJson {
             }
             if (compluseIndex != -1) {
                 document = new CompluseDocument(compluseIndex);
-                document.parseContent(textPositions);
+                document.parseContent(pdfDocument, textPositions);
                 jsonObject = parse(pdfDocument, document, textPositions);
                 document.validate(jsonObject);
                 pdfResult.setCompulsoryDocument(jsonObject);
@@ -160,15 +160,6 @@ public class PdfToJson {
             JSONObject jsonObject = new JSONObject();
             if (pdDocument.getPages().getCount() == 0) {
                 return jsonObject;
-            }
-
-            if (StringUtils.isNotBlank(document.getPageIndexSign())) {
-                for (PdfTextPosition textPosition : textPositions) {
-                    if (textPosition.getText().contains(document.getPageIndexSign())) {
-                        document.changePageIndex(textPosition.getPageIndex());
-                    }
-                }
-
             }
 
             if (CollectionUtils.isNotEmpty(document.getContents())) {

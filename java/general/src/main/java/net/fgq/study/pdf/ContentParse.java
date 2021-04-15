@@ -46,7 +46,7 @@ public class ContentParse {
                     textPositions = content.getOrderItem().getInfoArea().getTextPosition().getGroupItems();
                 } else {
                     for (PdfTextPosition textPosition : pdfTextPositions) {
-                        if (content.getPageIndex() == textPosition.getPageIndex()) {
+                        if (content.checkPage(textPosition.getPageIndex())) {
                             textPositions.add(textPosition);
                         }
                     }
@@ -122,7 +122,7 @@ public class ContentParse {
                                             + "r1:" + candidateText.getRectangle().toString()
                                             + "r2:" + candidateRightLable.getRectangle().toString());
                                 }
-                                candidateRects.add(new PdfRectangle(x, y, width, height));
+                                candidateRects.add(new PdfRectangle(candidateText.getPageIndex(), x, y, width, height));
                             }
                         }
                     }
@@ -146,14 +146,17 @@ public class ContentParse {
                                 if (textPosition.getRectangle().getX() > minX) {
                                     continue;
                                 }
-                                rectangle = rectangle == null ? textPosition.getRectangle() : new PdfRectangle(rectangle.union(textPosition.getRectangle()));
+                                rectangle = rectangle == null ? textPosition.getRectangle()
+                                        : new PdfRectangle(candidateText.getPageIndex(), rectangle.union(textPosition.getRectangle()));
                             }
                         }
                         if (rectangle != null) {
-                            rectangle = new PdfRectangle(candidateText.getRectangle().union(rectangle));
+                            rectangle = new PdfRectangle(candidateText.getPageIndex(), candidateText.getRectangle().union(rectangle));
 
                         } else {
-                            rectangle = new PdfRectangle(candidateText.getRectangle().x//必须从X开始。比如保险期间自  年 月  日 时 分起至  年  月  日  时  分止
+                            rectangle = new PdfRectangle(
+                                    candidateText.getPageIndex()
+                                    , candidateText.getRectangle().x//必须从X开始。比如保险期间自  年 月  日 时 分起至  年  月  日  时  分止
                                     , candidateText.getRectangle().y
                                     , minX - candidateText.getRectangle().x//未找到合适的右侧信息那就直到右侧边缘。
                                     , candidateText.getRectangle().height);
@@ -234,11 +237,11 @@ public class ContentParse {
      * 通过扩展查询对象所属的文本块。
      *
      * @param textPositions
-     * @param textPosition
+     * @param middleTexts
      * @param linegap       行距
      * @return
      */
-    private static PdfTextPosition findExtendBlock(List<PdfTextPosition> textPositions, PdfTextPosition textPosition, int linegap) {
+    private static PdfTextPosition findExtendBlock(List<PdfTextPosition> textPositions, PdfTextPosition middleTexts, int linegap) {
 
         List<PdfTextPosition> candidates = new ArrayList<>();
 
@@ -246,19 +249,22 @@ public class ContentParse {
         temp.addAll(textPositions);
         temp.sort(PdfTextPositionHelper.getYXSortCompare());
         for (PdfTextPosition position : temp) {
+            if (position.getPageIndex() != middleTexts.getPageIndex()) {
+                continue;
+            }
             //左边距排除
-            if (Math.abs(position.getRectangle().x - textPosition.getRectangle().x) > position.lineHeight() / 2) {
+            if (Math.abs(position.getRectangle().x - middleTexts.getRectangle().x) > position.lineHeight() / 2) {
                 continue;
             }
             //上边距排除
-            if (position.getRectangle().y >= textPosition.getRectangle().y && position.getRectangle().y <= textPosition.getRectangle().getMaxY()) {
+            if (position.getRectangle().y >= middleTexts.getRectangle().y && position.getRectangle().y <= middleTexts.getRectangle().getMaxY()) {
                 continue;
             }
             candidates.add(position);
         }
         temp.clear();
-        int minY = textPosition.getRectangle().y;
-        int maxY = textPosition.getRectangle().y + textPosition.getRectangle().height;
+        int minY = middleTexts.getRectangle().y;
+        int maxY = middleTexts.getRectangle().y + middleTexts.getRectangle().height;
 
         //从上往下找相邻
         for (int i = 0; i < candidates.size(); i++) {
@@ -275,7 +281,7 @@ public class ContentParse {
             }
         }
 
-        temp.add(textPosition);
+        temp.add(middleTexts);
         return PdfTextPositionHelper.merge(temp);
 
     }
@@ -306,7 +312,7 @@ public class ContentParse {
     public static boolean parseContentByPosition(Content content, JSONObject jsonObject, final List<PdfTextPosition> textPositions) {
         for (PdfTextPosition textPosition : textPositions) {
 
-            if (content.getPageIndex() == textPosition.getPageIndex()
+            if (content.checkPage(textPosition.getPageIndex())
                     && content.getRectangle().contains(textPosition.getRectangle())) {
                 jsonObject.put(content.getJsonKey(), textPosition.getText());
                 return true;
@@ -338,7 +344,11 @@ public class ContentParse {
 
         Matcher matcher = content.getLableSignsPattern().matcher(valueCandidateStr);
         if (matcher.find()) {
-            valueCandidateStr = valueCandidateStr.substring(matcher.end());
+            int endIndex = matcher.end();
+            while (matcher.find()) {
+                endIndex = matcher.end();
+            }
+            valueCandidateStr = valueCandidateStr.substring(endIndex);
 
         }
         if (StringUtils.isBlank(valueCandidateStr)) {

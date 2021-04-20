@@ -1,8 +1,9 @@
 package net.fgq.study.pdf;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.text.TextPosition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -14,7 +15,14 @@ import java.util.List;
  */
 public class TextPositionExHelper {
 
+    private static Logger logger = LoggerFactory.getLogger(TextPositionExHelper.class);
+
     public static float getHeight(TextPosition text) {
+
+        if (text.getFont().getFontDescriptor().getCapHeight() == 0) {
+            return text.getFontSizeInPt();
+        }
+
         if (text.getFontSize() > text.getWidth() * 1.5) {
             return (float) (text.getWidth() * 1.2);
         }
@@ -53,57 +61,110 @@ public class TextPositionExHelper {
         };
     }
 
-    private static PdfTextPosition merge(List<TextPositionEx> allTexts) {
+    public static Comparator<? super TextPositionEx> getXYSortCompare() {
+        return new Comparator<TextPositionEx>() {
+            @Override
+            public int compare(TextPositionEx o1, TextPositionEx o2) {
+
+                if (o1.getRectangle().x < o2.getRectangle().x) {
+                    return -1;
+                } else if (o1.getRectangle().x == o2.getRectangle().x) {
+                    if (o1.getRectangle().y < o2.getRectangle().y) {
+                        return -1;
+                    } else if (o1.getRectangle().y < o2.getRectangle().y) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                } else {
+                    return 1;
+                }
+
+            }
+        };
+    }
+
+    /**
+     * 支持：-为空白
+     * 1、
+     * 姓名----jfiewji
+     * -------fefwf
+     * 2、
+     * 车牌----京A235235235
+     * 号码
+     * 3、
+     * 车牌号----京A235235235
+     * -码
+     * <p>
+     * 不支持：
+     * 1、
+     * 车牌京A235235235
+     * 号码
+     *
+     * @param allTexts
+     * @return
+     */
+    private static PdfTextPosition mergeBlock(final List<TextPositionEx> allTexts) {
         if (allTexts == null || allTexts.size() == 0) {
             return null;
         }
+        List<TextPositionEx> tempTexts = new ArrayList<>();
 
         for (int i = 0; i < allTexts.size(); i++) {
-            if (StringUtils.isBlank(allTexts.get(i).getTextPosition().getUnicode())) {
-                allTexts.remove(i--);
+            if (false == StringUtils.isBlank(allTexts.get(i).getTextPosition().getUnicode())) {
+                tempTexts.add(allTexts.get(i));
             }
         }
+
+        String str = "";
+        List<TextPositionEx> textRow;
+
         try {
-            allTexts.sort(TextPositionExHelper.getYXSortCompare());
+            tempTexts.sort(TextPositionExHelper.getYXSortCompare());
+//            tempTexts.sort(TextPositionExHelper.getXYSortCompare());
         } catch (IllegalArgumentException ilex) {
             System.out.println(ilex.getMessage());
             throw ilex;
         }
+        List<TextBlock> blocks = new ArrayList<>();
+        TextBlock block;
 
-        List<List<TextPositionEx>> textRows = new ArrayList<>();
-        String str = "";
-        PdfRectangle rectangle = allTexts.get(0).getRectangle();
-        for (TextPositionEx allText : allTexts) {
-            str += allText.getTextPosition().getUnicode();
-            rectangle = new PdfRectangle(rectangle.getPageIndex(),rectangle.union(allText.getRectangle()));
-        }
-        List<TextPositionEx> textRow;
-
-        while (allTexts.size() > 0) {
-            TextPositionEx candidateText = allTexts.get(0);
-            allTexts.remove(0);
-            textRow = new ArrayList<>();
-            textRow.add(candidateText);
-            textRows.add(textRow);
-            for (int i = 0; i < allTexts.size(); i++) {
-                if (candidateText.checkSameLine(allTexts.get(i))) {
-                    textRow.add(allTexts.get(i));
-                    allTexts.remove(i--);
+        block = new TextBlock(tempTexts.get(0));
+        blocks.add(block);
+        boolean merged;
+        for (int i = 1; i < tempTexts.size(); i++) {
+            merged = false;
+            for (TextBlock textBlock : blocks) {
+                if (textBlock.appendMerge(tempTexts.get(i))) {
+                    merged = true;
                 }
             }
-
+            if (merged == false) {
+                block = new TextBlock(tempTexts.get(i));
+                blocks.add(block);
+            }
         }
+        int lineNumber = blocks.stream().mapToInt(x -> x.getLineNumber()).max().getAsInt();
 
+        blocks.sort(PdfTextPositionHelper.getXYSortCompare());
+
+        for (TextBlock textBlock : blocks) {
+            str += textBlock.getTrimedText();
+        }
+        PdfRectangle rectangle = blocks.get(0).getRectangle();
+        for (TextBlock allText : blocks) {
+            rectangle = new PdfRectangle(rectangle.getPageIndex(), rectangle.union(allText.getRectangle()));
+        }
         PdfTextPosition result = new PdfTextPosition(0, str, rectangle);
-        result.setLineNumber(textRows.size());
+        result.setLineNumber(lineNumber);
         return result;
 
     }
 
-    public static PdfTextPosition mergeBlock(List<TextPositionEx> allTexts) {
+    public static PdfTextPosition merge(List<TextPositionEx> allTexts) {
 
         if (allTexts == null || allTexts.size() <= 1) {
-            return merge(allTexts);
+            return mergeBlock(allTexts);
         }
         allTexts.sort(new Comparator<TextPositionEx>() {
             @Override
@@ -124,7 +185,7 @@ public class TextPositionExHelper {
             }
         });
 
-        boolean singleOne = true;
+        boolean singleOneRow = true;
         for (int i = 1; i < allTexts.size(); i++) {
             if (StringUtils.isBlank(allTexts.get(i).getTextPosition().getUnicode())) {
                 continue;
@@ -134,15 +195,15 @@ public class TextPositionExHelper {
             //         y
             //y的x比大的x大，但是y在第二行
             if (allTexts.get(i).getRectangle().x < allTexts.get(i - 1).getRectangle().getMiddleX()) {
-                singleOne = false;
+                singleOneRow = false;
             }
         }
-        if (singleOne) {
+        if (singleOneRow) {
             return mergeSingleRow(allTexts);
         }
         List<TextPositionEx> singleRow = new ArrayList<>();
         List<TextPositionEx> multiRow = new ArrayList<>();
-        return merge(allTexts);
+        return mergeBlock(allTexts);
 
     }
 
@@ -175,7 +236,7 @@ public class TextPositionExHelper {
         if (o1Rec.intersects(o2Rec)) {
             Rectangle intersectR = o1Rec.intersection(o2Rec);
             int area = intersectR.width * intersectR.height;
-            if (area >= o1Rec.area() * 0.8 && area >= o2Rec.area() * 0.8) {
+            if (area >= o1Rec.area() * 0.8 || area >= o2Rec.area() * 0.8) {
                 return true;
             }
         }

@@ -26,6 +26,10 @@ public class OrderItemInfo {
     private InfoArea infoArea;
     private InfoGroup infoGroup;
     /**
+     * 垂直顺序
+     */
+    private int verticalSort = -1;
+    /**
      * 值正则模式
      */
     private List<String> valueRegstr = new ArrayList<>();
@@ -40,7 +44,7 @@ public class OrderItemInfo {
 
     private List<PdfTextPosition> candidateKeyTexts = new ArrayList<>();
     private boolean valueMultiLine;
-    private int priority=1;
+    private int priority = 1;
 
     public OrderItemInfo(String jsonKey, ContentValueTypeEnum valueType, boolean muiltValue, boolean require, String... keySigns) {
         if (StringUtils.isBlank(jsonKey) || keySigns == null || keySigns.length == 0) {
@@ -70,12 +74,22 @@ public class OrderItemInfo {
         this(jsonKey, ContentValueTypeEnum.Text, require, keySigns);
     }
 
+    public OrderItemInfo(int verticalSort, String jsonKey, boolean require, String... keySigns) {
+        this(jsonKey, ContentValueTypeEnum.Text, require, keySigns);
+        this.verticalSort = verticalSort;
+    }
+
     public OrderItemInfo(String jsonKey, ContentValueTypeEnum valueType, String... keySigns) {
         this(jsonKey, valueType, true, keySigns);
     }
 
     public OrderItemInfo(String jsonKey, String... keySigns) {
         this(jsonKey, ContentValueTypeEnum.Text, true, keySigns);
+    }
+
+    public OrderItemInfo(int verticalSort, String jsonKey, String... keySigns) {
+        this(jsonKey, ContentValueTypeEnum.Text, true, keySigns);
+        this.verticalSort = verticalSort;
     }
 
     private Predicate<String> signPredicate = null;
@@ -210,5 +224,17 @@ public class OrderItemInfo {
 
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+
+    public int getVerticalSort() {
+        return verticalSort;
+    }
+
+    public void setVerticalSort(int verticalSort) {
+        this.verticalSort = verticalSort;
+    }
+
+    public boolean isValueMultiLine() {
+        return valueMultiLine;
     }
 }

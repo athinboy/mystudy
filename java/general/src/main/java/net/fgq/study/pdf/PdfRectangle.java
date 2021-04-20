@@ -24,16 +24,25 @@ public class PdfRectangle extends Rectangle {
     public PdfRectangle(int pageIndex, Rectangle r) {
         super(r);
         this.pageIndex = pageIndex;
+        if (r.height <= 0) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public PdfRectangle(int pageIndex, int x, int y, int width, int height) {
         super(x, y, width, height);
         this.pageIndex = pageIndex;
+        if (height <= 0) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public PdfRectangle(int pageIndex, int width, int height) {
         super(width, height);
         this.pageIndex = pageIndex;
+        if (height <= 0) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public PdfRectangle(int pageIndex, Point p, Dimension d) {
@@ -56,6 +65,13 @@ public class PdfRectangle extends Rectangle {
             return false;
         }
         return super.intersects(r);
+    }
+
+    public PdfRectangle union(PdfRectangle r) {
+        if (this.pageIndex != r.pageIndex) {
+            throw new IllegalArgumentException();
+        }
+        return new PdfRectangle(this.getPageIndex(), super.union(r));
     }
 
     /**

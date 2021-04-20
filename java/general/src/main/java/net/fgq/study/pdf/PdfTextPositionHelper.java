@@ -1,7 +1,6 @@
 package net.fgq.study.pdf;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.pdfbox.text.TextPosition;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -111,9 +110,10 @@ public class PdfTextPositionHelper {
         for (PdfTextPosition candidateText : candidateTexts) {
             allTexts.addAll(candidateText.getTextPositions());
         }
-        PdfTextPosition pdfTextPosition = TextPositionExHelper.mergeBlock(allTexts);
+        PdfTextPosition pdfTextPosition = TextPositionExHelper.merge(allTexts);
         if (pdfTextPosition != null) {
             pdfTextPosition.setPageIndex(pageIndex);
+            System.out.println(pdfTextPosition.toString());
             return pdfTextPosition;
         }
 

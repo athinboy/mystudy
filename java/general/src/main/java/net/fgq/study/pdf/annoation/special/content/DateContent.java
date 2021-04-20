@@ -17,12 +17,12 @@ public class DateContent extends Content {
         this.getValueRegstr().add(ContentValueTypeEnum.Date.getRegexStr());
     }
 
-    public DateContent(int startPageIndex, int endPageIndex, String jsonKey, String... lablesigns) {
-        super(startPageIndex, endPageIndex, jsonKey, lablesigns);
+    public DateContent(int startPageIndex, int endPageIndex, String jsonKey, String... labelsigns) {
+        super(startPageIndex, endPageIndex, jsonKey, labelsigns);
     }
 
-    public DateContent(int pageIndex, String jsonKey, String... lablesigns) {
-        this(pageIndex, pageIndex, jsonKey, lablesigns);
+    public DateContent(int pageIndex, String jsonKey, String... labelsigns) {
+        this(pageIndex, pageIndex, jsonKey, labelsigns);
     }
 
     public DateContent(int startPageIndex, int endPageIndex, String jsonKey, java.awt.Rectangle rectangle) {

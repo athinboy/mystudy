@@ -83,4 +83,13 @@ public class TextPositionEx {
     public void setPageIndex(int pageIndex) {
         this.pageIndex = pageIndex;
     }
+
+    public boolean checkSameLeft(TextPositionEx o) {
+        if (this.getPageIndex() != o.getPageIndex()) {
+            throw new IllegalArgumentException();
+        }
+        return Math.abs(this.getRectangle().x - o.getRectangle().x)
+                < Math.min(this.getRectangle().width, o.getRectangle().width) / 4;
+
+    }
 }

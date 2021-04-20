@@ -67,10 +67,24 @@ public class PdfTextPosition {
         this.text = text;
         this.rectangle = rectangle;
         this.pageIndex = pageIndex;
+        if (rectangle.getWidth() <= 0) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public PdfTextPosition(int pageIndex, String text, int x, int y, int width, int height) {
         this(pageIndex, text, new PdfRectangle(pageIndex, x, y, width, height));
+        if (width <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+    }
+
+    public PdfTextPosition(TextPositionEx textPositionEx) {
+        this(textPositionEx.getPageIndex(), textPositionEx.getTextPosition().getUnicode(),
+                new PdfRectangle(textPositionEx.getPageIndex(), textPositionEx.getRectangle()));
+        this.getTextPositions().add(textPositionEx);
+
     }
 
     public String getText() {
@@ -122,8 +136,8 @@ public class PdfTextPosition {
     @Override
     public String toString() {
         return "PdfTextPosition{" +
-                "text='" + text + '\'' +
-                "trimedText='" + trimedText + '\'' +
+                " text='" + text + '\'' +
+                ", trimedText='" + trimedText + '\'' +
                 ", rectangle=" + rectangle +
                 ", pageIndex=" + pageIndex +
                 ", keyPercent=" + keyPercent +
@@ -142,9 +156,10 @@ public class PdfTextPosition {
      */
     public boolean checkSameLine(PdfTextPosition other) {
         int lineheight = Math.min(this.lineHeight() / 2, other.lineHeight() / 2);
-        return this.pageIndex == other.pageIndex &&
-                (this.getRectangle().checkSameLine(other.getRectangle(), lineheight)
-                        || (Math.abs(this.rectangle.y - other.getRectangle().y) < lineheight && this.lineNumber == other.lineNumber));//因为高度可能不准确。所以依据上边缘比较。
+        return this.pageIndex == other.pageIndex
+                && Math.abs(this.getRectangle().height - other.getRectangle().height) < 2 * Math.min(this.getRectangle().height, other.getRectangle().height)
+                && (this.getRectangle().checkSameLine(other.getRectangle(), lineheight)
+                || (Math.abs(this.rectangle.y - other.getRectangle().y) < lineheight && this.lineNumber == other.lineNumber));//因为高度可能不准确。所以依据上边缘比较。
     }
 
     /**
@@ -249,6 +264,59 @@ public class PdfTextPosition {
 
     public void addOrigTexts(List<PdfTextPosition> mergedTexts) {
         this.getOrigTexts().addAll(mergedTexts);
+
+    }
+
+    public boolean appendHoriz(TextPositionEx t) {
+        TextPositionEx text;
+        if (textPositions.size() > 0) {
+            text = textPositions.get(textPositions.size() - 1);
+            if (t.getRectangle().x > text.getRectangle().x
+                    && TextPositionExHelper.checkXBeside(text, t)) {
+                this.getTextPositions().add(t);
+                this.reGenerate();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean mergeHoriz(TextPositionEx t) {
+        TextPositionEx text;
+        for (int i = 0; i < this.getTextPositions().size(); i++) {
+            text = textPositions.get(i);
+            if (TextPositionExHelper.checkXBeside(text, t)) {
+                this.getTextPositions().add(t);
+                this.reGenerate();
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    protected void sortTextPosition() {
+        this.getTextPositions().sort(TextPositionExHelper.getXYSortCompare());
+    }
+
+    public void reGenerate() {
+        sortTextPosition();
+        String str = "";
+        this.setRectangle(this.getTextPositions().get(0).getRectangle());
+        for (int i = 0; i < this.getTextPositions().size(); i++) {
+            str = str + this.getTextPositions().get(i).getTextPosition().getUnicode();
+            this.setRectangle(this.getRectangle().union(this.getTextPositions().get(i).getRectangle()));
+        }
+        this.setTrimedText(null);
+        this.setText(str);
+
+    }
+
+    public void clearContent() {
+        this.originalStr = this.getText();
+        this.setTrimedText(null);
+        this.setText("");
+        this.textPositions.clear();
 
     }
 

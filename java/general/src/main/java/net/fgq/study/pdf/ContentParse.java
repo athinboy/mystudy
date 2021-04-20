@@ -5,11 +5,13 @@ import com.alibaba.fastjson.JSONObject;
 import net.fgq.study.pdf.annoation.Content;
 import net.fgq.study.pdf.annoation.Document;
 import net.fgq.study.pdf.annoation.InsOrderStructor;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,6 +31,25 @@ public class ContentParse {
         String candidateValueStr;
         List<PdfRectangle> candidateRects = new ArrayList<>();
 
+        document.getContents().sort(new Comparator<Content>() {
+            @Override
+            public int compare(Content o1, Content o2) {
+                if (o1.getOrderItem().getCandidateKeyTexts().size() != o2.getOrderItem().getCandidateKeyTexts().size()) {
+                    return Integer.compare(o1.getOrderItem().getCandidateKeyTexts().size(), o2.getOrderItem().getCandidateKeyTexts().size());
+                }
+                if (o1.getVerticalSort() != o2.getVerticalSort()) {
+                    return -1 * Integer.compare(o1.getVerticalSort(), o2.getVerticalSort());
+                }
+                return o1.getOrderItem().getJsonKey().compareTo(o2.getOrderItem().getJsonKey());
+            }
+        });
+
+        //每一个垂直顺序的上边距
+        //
+        int[] verticalUpperLimit = new int[]{
+                -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
+        };
+
         int priority = 0;
         while (priority <= 3) {
             priority += 1;
@@ -42,10 +63,18 @@ public class ContentParse {
 
                 List<PdfTextPosition> textPositions = new ArrayList<>();
                 if (content.getOrderItem().getInfoArea() != null
-                        && content.getOrderItem().getInfoArea().getTextPosition() != null) {
+                        && content.getOrderItem().getInfoArea().getTextPosition() != null
+                        && CollectionUtils.isNotEmpty(content.getOrderItem().getInfoArea().getTextPosition().getGroupItems())) {
                     textPositions = content.getOrderItem().getInfoArea().getTextPosition().getGroupItems();
                 } else {
                     for (PdfTextPosition textPosition : pdfTextPositions) {
+                        if (content.getVerticalSort() != -1
+                                && verticalUpperLimit[content.getVerticalSort() + 1] != -1
+                                && verticalUpperLimit[content.getVerticalSort() + 1] < (textPosition.getRectangle().getPageIndex() * 10000 + textPosition.getRectangle().y)
+                        ) {
+                            continue;
+                        }
+
                         if (content.checkPage(textPosition.getPageIndex())) {
                             textPositions.add(textPosition);
                         }
@@ -56,12 +85,13 @@ public class ContentParse {
                     parseContentByPosition(content, jsonObject, textPositions);
                     continue;
                 }
+                textPositions.sort(PdfTextPositionHelper.getXYSortCompare());
 
-                List<PdfTextPosition> candidateLableTexts = new ArrayList<>();
+                List<PdfTextPosition> candidateLabelTexts = new ArrayList<>();
 
-                List<PdfTextPosition> candidateRightLables = new ArrayList<>();
+                List<PdfTextPosition> candidateRightLabels = new ArrayList<>();
                 if (content.getOrderItem().getCandidateKeyTexts().size() == 1) {
-                    candidateLableTexts.add(content.getOrderItem().getCandidateKeyTexts().get(0));
+                    candidateLabelTexts.add(content.getOrderItem().getCandidateKeyTexts().get(0));
                 } else {
                     for (PdfTextPosition textPosition : textPositions) {
                         if (content.getOrderItem().getMuiltValue() == false) {
@@ -71,21 +101,21 @@ public class ContentParse {
                             }
                         }
 
-                        if (content.getLableSignsPredicate().test(textPosition.getTrimedText())) {
+                        if (content.getLabelSignsPredicate().test(textPosition.getTrimedText())) {
 
                             if (textPosition.getCandidateOrderItems().size() > 0 && content.getOrderItem() != null) {
                                 if (textPosition.getCandidateOrderItems().contains(content.getOrderItem())) {
-                                    candidateLableTexts.add(textPosition);
+                                    candidateLabelTexts.add(textPosition);
                                 }
                             } else {
-                                candidateLableTexts.add(textPosition);
+                                candidateLabelTexts.add(textPosition);
                             }
 
                         }
                     }
                 }
 
-                if (candidateLableTexts.size() == 0) {
+                if (candidateLabelTexts.size() == 0) {
                     if (content.getOrderItem().isRequire()) {
                         throw new PdfException("定位内容失败：" + content.toString());
                     } else {
@@ -96,8 +126,8 @@ public class ContentParse {
                 // 保险费合计（人民币大写）：                           （￥：          元）
                 // 100 捌佰伍拾伍圆整
 
-//                if (candidateLableTexts.size() == 1) {
-//                    if ((candidateValueStr = parseValue(content, candidateLableTexts.get(0))) != null) {
+//                if (candidateLabelTexts.size() == 1) {
+//                    if ((candidateValueStr = parseValue(content, candidateLabelTexts.get(0))) != null) {
 //                        formatValue(jsonObject, content, candidateValueStr);
 //                        continue;
 //                    }
@@ -107,20 +137,20 @@ public class ContentParse {
                 if (content.getRightSigns().size() > 0) {
                     for (PdfTextPosition textPosition : textPositions) {
                         if (content.getRightSignsPredicate().test(textPosition.getTrimedText())) {
-                            candidateRightLables.add(textPosition);
+                            candidateRightLabels.add(textPosition);
                         }
                     }
-                    for (PdfTextPosition candidateText : candidateLableTexts) {
-                        for (PdfTextPosition candidateRightLable : candidateRightLables) {
-                            if (candidateText.checkRightSameLine(candidateRightLable)) {
+                    for (PdfTextPosition candidateText : candidateLabelTexts) {
+                        for (PdfTextPosition candidateRightLabel : candidateRightLabels) {
+                            if (candidateText.checkRightSameLine(candidateRightLabel)) {
                                 int x = candidateText.getRectangle().x;
                                 int y = candidateText.getRectangle().y;
-                                int width = candidateRightLable.getRectangle().x + candidateRightLable.getRectangle().width - x;
-                                int height = Math.max(candidateText.getRectangle().height, candidateRightLable.getRectangle().height);
+                                int width = candidateRightLabel.getRectangle().x + candidateRightLabel.getRectangle().width - x;
+                                int height = Math.max(candidateText.getRectangle().height, candidateRightLabel.getRectangle().height);
                                 if (width <= 0 || height <= 0) {
                                     throw new PdfException("推断值区域异常："
                                             + "r1:" + candidateText.getRectangle().toString()
-                                            + "r2:" + candidateRightLable.getRectangle().toString());
+                                            + "r2:" + candidateRightLabel.getRectangle().toString());
                                 }
                                 candidateRects.add(new PdfRectangle(candidateText.getPageIndex(), x, y, width, height));
                             }
@@ -130,27 +160,29 @@ public class ContentParse {
                 } else {
 
                     PdfRectangle rectangle;
-                    for (PdfTextPosition candidateText : candidateLableTexts) {
 
+                    for (PdfTextPosition candidateText : candidateLabelTexts) {
                         rectangle = null;
-                        int minX = Integer.MAX_VALUE;
+                        int maxX = Integer.MAX_VALUE;
+
                         for (PdfTextPosition textPosition : textPositions) {
 
                             if (candidateText != textPosition
-                                    && (false == candidateLableTexts.contains(textPosition))
+                                    && (false == candidateLabelTexts.contains(textPosition))
                                     && candidateText.checkRightSameLine(textPosition)) {
                                 if (textPosition.getCandidateOrderItems().size() >= 1) {
-                                    minX = Math.min(textPosition.getRectangle().x, minX);
+                                    maxX = Math.min(textPosition.getRectangle().x, maxX);
                                     continue;
                                 }
-                                if (textPosition.getRectangle().getX() > minX) {
+                                if (textPosition.getRectangle().getX() > maxX) {
                                     continue;
                                 }
                                 rectangle = rectangle == null ? textPosition.getRectangle()
                                         : new PdfRectangle(candidateText.getPageIndex(), rectangle.union(textPosition.getRectangle()));
                             }
                         }
-                        if (rectangle != null) {
+
+                        if (rectangle != null && rectangle.getX() < maxX) {
                             rectangle = new PdfRectangle(candidateText.getPageIndex(), candidateText.getRectangle().union(rectangle));
 
                         } else {
@@ -158,9 +190,13 @@ public class ContentParse {
                                     candidateText.getPageIndex()
                                     , candidateText.getRectangle().x//必须从X开始。比如保险期间自  年 月  日 时 分起至  年  月  日  时  分止
                                     , candidateText.getRectangle().y
-                                    , minX - candidateText.getRectangle().x//未找到合适的右侧信息那就直到右侧边缘。
+                                    , maxX - candidateText.getRectangle().x//未找到合适的右侧信息那就直到右侧边缘。
                                     , candidateText.getRectangle().height);
                         }
+                        //值项目可能是多行，或者打印位置偏高，造成无法获取值，所以高度扩展0.5倍。
+                        rectangle.y = rectangle.y - rectangle.height / 4;
+                        rectangle.height = Double.valueOf(rectangle.height * 1.5).intValue();
+
                         candidateRects.add(rectangle);
                     }
 
@@ -181,7 +217,7 @@ public class ContentParse {
 
                 }
                 List<PdfTextPosition> candidateValueTexts = new ArrayList<>();
-
+                PdfTextPosition newText = null;
                 for (PdfRectangle candidateRect : candidateRects) {
                     candidateValueTexts.clear();
                     for (PdfTextPosition textPosition : textPositions) {
@@ -190,9 +226,12 @@ public class ContentParse {
 
                         }
                     }
+                    if (content.getOrderItem().getJsonKey().equals(errsign)) {
+                        int i = 0;
+                    }
                     if (candidateValueTexts.size() > 0) {
 
-                        PdfTextPosition newText = PdfTextPositionHelper.merge(candidateValueTexts);
+                        newText = PdfTextPositionHelper.merge(candidateValueTexts);
                         if (content.getValueMultiLine()) {
                             newText = findExtendBlock(textPositions, newText, 1);
                         }
@@ -204,7 +243,7 @@ public class ContentParse {
                     }
                 }
                 if (candidateValues.size() == 1) {
-
+                    setUpperLimit(content, verticalUpperLimit, newText);
                     formatValue(jsonObject, content, candidateValues.get(0));
                     continue;
                 } else {
@@ -220,17 +259,27 @@ public class ContentParse {
                             continue;
                         }
                     }
-                    errsign = content.getOrderItem().getJsonKey();
+
                     if (content.getOrderItem().isRequire() == false) {
                         continue;
                     }
-                    throw new PdfException("提取值识别：" + content.toString() + "\r\n" + JSON.toJSONString(candidateValues.toString()));
+                    errsign = content.getOrderItem().getJsonKey();
+                    throw new PdfException("提取值失败：" + content.toString() + "\r\n" + JSON.toJSONString(candidateValues.toString()));
                 }
 
             }
 
         }
 
+    }
+
+    private static void setUpperLimit(Content content, int[] verticalUpperLimit, PdfTextPosition newText) {
+        if (content.getVerticalSort() == -1) return;
+
+        verticalUpperLimit[content.getVerticalSort()] =
+                verticalUpperLimit[content.getVerticalSort()] == -1
+                        ? newText.getRectangle().getPageIndex() * 10000 + newText.getRectangle().y
+                        : Math.min(newText.getRectangle().getPageIndex() * 10000 + newText.getRectangle().y, verticalUpperLimit[content.getVerticalSort()]);
     }
 
     /**
@@ -342,7 +391,7 @@ public class ContentParse {
             valueCandidateStr = (str = InsOrderStructor.standaredize(valueCandidateStr)) == null ? valueCandidateStr : str;
         }
 
-        Matcher matcher = content.getLableSignsPattern().matcher(valueCandidateStr);
+        Matcher matcher = content.getLabelSignsPattern().matcher(valueCandidateStr);
         if (matcher.find()) {
             int endIndex = matcher.end();
             while (matcher.find()) {

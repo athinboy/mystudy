@@ -50,7 +50,7 @@ public class PdfToJson {
     /**
      * 商业险标记
      */
-    private static Predicate<String> commecialSign = Pattern.compile("(商业保险单)|(神行车保机动车)").asPredicate();
+    private static Predicate<String> commecialSign = Pattern.compile("(商业保险(保险)?单)|(神行车保机动车)").asPredicate();
 
     /**
      * 交强险标记
@@ -102,7 +102,7 @@ public class PdfToJson {
             InsOrderDocument document;
             if (commecialIndex != -1) {
                 document = new CommecialDocument(commecialIndex);
-                document.parseContent(pdfDocument, textPositions);
+                document.parseContent(document,pdfDocument, textPositions);
                 jsonObject = parse(pdfDocument, document, textPositions);
                 document.validate(jsonObject);
                 pdfResult.setCommercialDocument(jsonObject);
@@ -110,7 +110,7 @@ public class PdfToJson {
             }
             if (compluseIndex != -1) {
                 document = new CompluseDocument(compluseIndex);
-                document.parseContent(pdfDocument, textPositions);
+                document.parseContent(document,pdfDocument, textPositions);
                 jsonObject = parse(pdfDocument, document, textPositions);
                 document.validate(jsonObject);
                 pdfResult.setCompulsoryDocument(jsonObject);

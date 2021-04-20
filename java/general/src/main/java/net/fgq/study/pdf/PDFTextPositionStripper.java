@@ -5,6 +5,7 @@ import org.apache.pdfbox.contentstream.operator.Operator;
 import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.graphics.state.PDGraphicsState;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.TextPosition;
 
@@ -22,7 +23,7 @@ public class PDFTextPositionStripper extends PDFTextStripper {
     /**
      * 字符间距
      */
-    private int charGapSpace = 1;
+    private float charGapSpace = 1;
 
     public boolean ShowSystemOut = false;
 
@@ -33,14 +34,6 @@ public class PDFTextPositionStripper extends PDFTextStripper {
      */
     public PDFTextPositionStripper() throws IOException {
         super();
-    }
-
-    public int getCharGapSpace() {
-        return charGapSpace;
-    }
-
-    public void setCharGapSpace(int charGapSpace) {
-        this.charGapSpace = charGapSpace;
     }
 
     private List<PdfTextPosition> pdfTextPositions = null;
@@ -108,13 +101,11 @@ public class PDFTextPositionStripper extends PDFTextStripper {
 
     protected void writeString(String text, List<TextPosition> textPositions) throws IOException {
         super.writeString(text, textPositions);
-
-        System.out.println("ffffffffff:" + text);
-
+        //System.out.println("ffffffffff:" + text);
         if (ShowSystemOut) {
             System.out.println(text);
             for (TextPosition textPosition : textPositions) {
-                if ("S".equals(textPosition.getUnicode()) || "s".equals(textPosition.getUnicode())) {
+                if ("国".equals(textPosition.getUnicode()) || "国".equals(textPosition.getUnicode())) {
                     System.out.println(textPosition.getUnicode());
                 }
             }
@@ -126,35 +117,43 @@ public class PDFTextPositionStripper extends PDFTextStripper {
         super.writeLineSeparator();
     }
 
+    private float floatGap = 0.5F;//修正由于浮点变为整数造成的偏差
+
     /**
      * {@inheritDoc}
      */
     @Override
     protected void processTextPosition(TextPosition text) {
+        PDGraphicsState pdGraphicsState = this.getGraphicsState();
 
         super.processTextPosition(text);
+        TextPositionEx tex = new TextPositionEx(currentPageIndex, text);
 
-//        if (this.mergeTextPosition(text)) {
-//            return;
-//        }
+        if (this.mergeTextPosition(tex)) {
+            return;
+        }
         if (textPositions.size() == 0 && StringUtils.isBlank(text.getUnicode())) {
             return;
         }
-        if (text.getUnicode().equals("大")) {
+        if (text.getUnicode().equals("国") || text.getUnicode().equals("完")) {
             System.out.println(text.getX());
         }
 
         boolean b = false;
         if (StringUtils.isBlank(text.getUnicode())
-                && text.getY() >= startY - this.charGapSpace
+                && text.getX() - floatGap <= startX + width + this.charGapSpace
+                && text.getX() + floatGap >= startX + width
+                && text.getY() >= startY - height / 2
                 && text.getY() < startY + height / 2) {
             b = true;
         }
         if (b || (text.getY() == startY
-                && text.getX() <= startX + width + this.charGapSpace
-                && text.getX() + text.getWidth() >= startX + width + this.charGapSpace)) {
+                && tex.getRectangle().getMiddleY() < startY + height
+                && text.getX() - floatGap <= startX + width + this.charGapSpace
+                && text.getX() + floatGap >= startX + width //不明白为啥存在这个条件，字母文字存在误判，所以注释掉 + this.charGapSpace
+        )) {
             lastStr = lastStr + text.getUnicode();
-            textPositions.add(new TextPositionEx(currentPageIndex, text));
+            textPositions.add(tex);
 
             width = text.getX() + text.getWidth() - startX;
             height = Math.max(height, TextPositionExHelper.getHeight(text));
@@ -181,13 +180,13 @@ public class PDFTextPositionStripper extends PDFTextStripper {
      * @param text
      * @return
      */
-    private boolean mergeTextPosition(TextPosition text) {
+    private boolean mergeTextPosition(TextPositionEx text) {
 
-//        for (PdfTextPosition pdfTextPosition : pdfTextPositions) {
-//            if (pdfTextPosition.mergeBlack(text)) {
-//                return true;
-//            }
-//        }
+        for (PdfTextPosition pdfTextPosition : pdfTextPositions) {
+            if (pdfTextPosition.mergeHoriz(text)) {
+                return true;
+            }
+        }
         return false;
     }
 

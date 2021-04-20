@@ -18,8 +18,8 @@ public class DateTimeContent extends Content {
         this.getValueRegstr().add(ContentValueTypeEnum.DateTime.getRegexStr());
     }
 
-    public DateTimeContent(int startPageIndex, int endPageIndex, String jsonKey, String... lablesigns) {
-        super(startPageIndex, endPageIndex, jsonKey, lablesigns);
+    public DateTimeContent(int startPageIndex, int endPageIndex, String jsonKey, String... labelsigns) {
+        super(startPageIndex, endPageIndex, jsonKey, labelsigns);
     }
 
     public DateTimeContent(int startPageIndex, int endPageIndex, String jsonKey, java.awt.Rectangle rectangle) {

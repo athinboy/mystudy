@@ -25,9 +25,9 @@ public class Content {
     private Rectangle Rectangle;
 
     /**
-     * lable标记文字（正则表达式）
+     * Label标记文字（正则表达式）
      */
-    private List<String> lableSigns = new ArrayList<>();
+    private List<String> LabelSigns = new ArrayList<>();
 
     /**
      * 值正则模式
@@ -40,8 +40,13 @@ public class Content {
 
     private OrderItemInfo orderItem;
 
+    /**
+     * 垂直顺序,从0到6.
+     */
+    private int verticalSort = -1;
+
     private Predicate<String> valuePredicate = null;
-    private Predicate<String> lableSignsPredicate = null;
+    private Predicate<String> labelSignsPredicate = null;
     private Predicate<String> rightSignsPredicate = null;
     private int priority = 1;
 
@@ -58,18 +63,18 @@ public class Content {
         return Pattern.compile(singstr);
     }
 
-    public Pattern getLableSignsPattern() {
-        String singstr = "(" + String.join(")|(", this.getLableSigns()) + ")";
+    public Pattern getLabelSignsPattern() {
+        String singstr = "(" + String.join(")|(", this.getLabelSigns()) + ")";
         return Pattern.compile(singstr);
 
     }
 
-    public Predicate<String> getLableSignsPredicate() {
-        if (lableSignsPredicate == null) {
-            String singstr = "(" + String.join(")|(", this.getLableSigns()) + ")";
-            lableSignsPredicate = Pattern.compile(singstr).asPredicate();
+    public Predicate<String> getLabelSignsPredicate() {
+        if (labelSignsPredicate == null) {
+            String singstr = "(" + String.join(")|(", this.getLabelSigns()) + ")";
+            labelSignsPredicate = Pattern.compile(singstr).asPredicate();
         }
-        return lableSignsPredicate;
+        return labelSignsPredicate;
     }
 
     public Predicate<String> getRightSignsPredicate() {
@@ -88,14 +93,14 @@ public class Content {
     private int startPageIndex;
     private int endPageIndex;
 
-    public Content(int startPageIndex, int endPageIndex, String jsonKey, String... lablesigns) {
+    public Content(int startPageIndex, int endPageIndex, String jsonKey, String... Labelsigns) {
 
-        if (StringUtils.isBlank(jsonKey) || lablesigns == null || lablesigns.length == 0) {
+        if (StringUtils.isBlank(jsonKey) || Labelsigns == null || Labelsigns.length == 0) {
             throw new IllegalArgumentException();
         }
         this.jsonKey = jsonKey;
-        for (int i = 0; i < lablesigns.length; i++) {
-            this.lableSigns.add(lablesigns[i]);
+        for (int i = 0; i < Labelsigns.length; i++) {
+            this.LabelSigns.add(Labelsigns[i]);
         }
         this.startPageIndex = startPageIndex;
         this.endPageIndex = endPageIndex;
@@ -121,8 +126,6 @@ public class Content {
         this(pageIndex, pageIndex, jsonKey, new Rectangle(x, y, width, height));
     }
 
-
-
     public String getJsonKey() {
         return jsonKey;
     }
@@ -139,12 +142,12 @@ public class Content {
         Rectangle = rectangle;
     }
 
-    public List<String> getLableSigns() {
-        return lableSigns;
+    public List<String> getLabelSigns() {
+        return LabelSigns;
     }
 
-    public void setLableSigns(List<String> lableSigns) {
-        this.lableSigns = lableSigns;
+    public void setLabelSigns(List<String> LabelSigns) {
+        this.LabelSigns = LabelSigns;
     }
 
     public List<String> getRightSigns() {
@@ -168,7 +171,7 @@ public class Content {
     public String toString() {
         return "Content{" +
                 "jsonKey='" + jsonKey + '\'' +
-                ", lableSigns=" + lableSigns +
+                ", LabelSigns=" + LabelSigns +
                 ", valueRegstr=" + valueRegstr +
                 ", priority=" + priority +
                 ", startPageIndex=" + startPageIndex +
@@ -222,5 +225,17 @@ public class Content {
 
     public void setEndPageIndex(int endPageIndex) {
         this.endPageIndex = endPageIndex;
+    }
+
+    public boolean isValueMultiLine() {
+        return valueMultiLine;
+    }
+
+    public int getVerticalSort() {
+        return verticalSort;
+    }
+
+    public void setVerticalSort(int verticalSort) {
+        this.verticalSort = verticalSort;
     }
 }

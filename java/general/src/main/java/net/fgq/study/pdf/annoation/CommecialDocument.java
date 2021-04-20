@@ -2,8 +2,10 @@ package net.fgq.study.pdf.annoation;
 
 import net.fgq.study.pdf.Item.OrderItemInfo;
 import net.fgq.study.pdf.PdfTextPosition;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -32,14 +34,46 @@ public class CommecialDocument extends InsOrderDocument {
 
     @Override
     protected void specialOrder() {
-
+        super.specialOrder();
         switch (this.insCompanyType) {
+            case pingan:
+                this.getOrderItemInfo("insuredName").setKeySigns(ArrayUtils.addAll(
+                        this.getOrderItemInfo("insuredName").getKeySigns(), "正式名称"));
+                this.getOrderItemInfo("insuredName").setValueMultiLine(true);
+                break;
             case tpyang:
                 this.getOrderItemInfo("platNum").setRequire(false);
+
+                this.getOrderItemInfo("insuranceConfirmationTime").setKeySigns(ArrayUtils.addAll(
+                        this.getOrderItemInfo("insuranceConfirmationTime").getKeySigns(), "[收保]费确认时间"));
+
+                //this.getOrderItemInfo("insuredContactAddress").setKeySigns(new String[]{"被保险人地址"});
+
                 break;
             case renshou:
+
+                this.getCombineLabelSign().add("姓名/名称");
+
                 OrderItemInfo o = this.getOrderItemInfo("platNum");
                 o.setRequire(false);
+                this.getOrderItemInfo("insuredName").setKeySigns(new String[]{"姓名/名称"});
+                //不可使用，人寿的 被保险人 只占用一行文字，无法提取右侧的三行文本
+//                this.constructItemArea(this.addInfoArea("BBXR", "被保险人")
+//                        , "insuredName"
+//                        , "insuredPhone"
+//                        , "insuredIDNumer"
+//                        , "insuredSex"
+//                        , "insuredBirthday"
+//                        , "insuredEMail"
+//                        , "insuredContactAddress");
+
+
+                break;
+            case renbao:
+                this.getOrderItemInfo("insuredIDNumer").setRequire(false);
+                this.getOrderItemInfo("insuredContactAddress").setRequire(false);
+                this.getOrderItemInfo("insuredPhone").setRequire(false);
+                this.getOrderItemInfo("insuranceConfirmationTime").setKeySigns(new String[]{"收费确认时间"});
                 break;
         }
     }

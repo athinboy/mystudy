@@ -10,6 +10,7 @@ public class LexicHelper {
 
     private static List<String> excludeLexics = Arrays.asList(
             "发生本保险合同约定的保险事故"
+            ,"即时生效"
             , "在保险期间内可享受出险代步车服");
 
     /**

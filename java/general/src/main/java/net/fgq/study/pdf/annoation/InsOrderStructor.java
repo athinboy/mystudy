@@ -2,6 +2,7 @@ package net.fgq.study.pdf.annoation;
 
 import net.fgq.study.pdf.PdfTextPosition;
 import net.fgq.study.pdf.PdfTextPositionHelper;
+import net.fgq.study.pdf.TextPositionExHelper;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public class InsOrderStructor {
 
     public static void struct(InsOrderDocument insOrderDocument, final List<PdfTextPosition> textPositions, InsCompanyType insCompanyType) {
 
+        //整理区域
         List<InfoArea> infoAreas = insOrderDocument.getInfoAreas();
         for (InfoArea infoArea : infoAreas) {
             infoArea.setTextPosition(null);
@@ -49,11 +51,68 @@ public class InsOrderStructor {
             }
         }
 
+        combineLabel(insOrderDocument, textPositions, insCompanyType);
+        for (int i = 0; i < textPositions.size(); i++) {
+            if (textPositions.get(i).getTrimedText().equals("SALI")) {
+                for (PdfTextPosition origText : textPositions.get(i).getOrigTexts()) {
+                    origText.clearContent();
+                }
+                textPositions.get(i).clearContent();
+
+            }
+        }
+
         switch (insCompanyType) {
             case tpyang:
-                structTPY(textPositions);
+                TPYHelper.adjust(textPositions);
                 return;
         }
+    }
+
+    private static void combineLabel(InsOrderDocument insOrderDocument, final List<PdfTextPosition> textPositions, InsCompanyType insCompanyType) {
+        PdfTextPosition text;
+
+        textPositions.sort(PdfTextPositionHelper.getXYSortCompare());
+
+        List<String> combineLabels = insOrderDocument.getCombineLabelSign();
+        for (String combineLabel : combineLabels) {
+            String label = combineLabel;
+            List<PdfTextPosition> combineTexts = new ArrayList<>();
+            for (int pageIndex = 0; pageIndex < 10; pageIndex++) {
+                for (int i = 0; i < textPositions.size(); i++) {
+                    label = combineLabel;
+                    combineTexts.clear();
+                    text = textPositions.get(i);
+                    if (text.getPageIndex() != pageIndex || StringUtils.isBlank(text.getTrimedText())) continue;
+                    if (label.length() > text.getTrimedText().length()
+                            && label.startsWith(text.getTrimedText())) {
+                        label = label.substring(text.getTrimedText().length());
+                        combineTexts.add(text);
+                        for (int j = i + 1; j < textPositions.size(); j++) {
+
+                            if (text.checkRightSameLine(textPositions.get(j)) && label.startsWith(textPositions.get(j).getTrimedText())) {
+                                if (label.length() == textPositions.get(j).getTrimedText().length()) {
+                                    label = "";
+                                } else {
+                                    label = label.substring(textPositions.get(j).getTrimedText().length());
+                                }
+                                combineTexts.add(textPositions.get(j));
+                            }
+
+                        }
+                        if (label.length() == 0) {
+                            PdfTextPosition result = PdfTextPositionHelper.merge(combineTexts);
+                            result.getOrigTexts().addAll(combineTexts);
+                            textPositions.removeAll(combineTexts);
+                            textPositions.add(result);
+                        }
+
+                    }
+
+                }
+            }
+        }
+
     }
 
     private static PdfTextPosition findTxtArea(String infoAreaSign, PdfTextPosition textPosition, List<PdfTextPosition> textPositions) {
@@ -104,22 +163,10 @@ public class InsOrderStructor {
 
     }
 
-    /**
-     * 太平洋
-     *
-     * @param textPositions
-     */
-    private static void structTPY(List<PdfTextPosition> textPositions) {
-
-        for (int i = 0; i < textPositions.size(); i++) {
-//收费确认时间：2020/08/16 16:55:14 有效保单生成时间：2020/08/16 16:55:18 电子保单生成时间：2020/08/16 16:56:20
-
-        }
-
-    }
-
     private static Pattern p1 = Pattern.compile("日\\d{1,2}(:)\\d{1,2}(时)");
     private static Pattern p2 = Pattern.compile("\\d{1,2}日二十四时");
+    private static Pattern p3 = Pattern.compile("零时零分");
+    private static Pattern p4 = Pattern.compile("二十四时零分");
 
     /**
      * 未做任何修改时，切记返回null
@@ -131,6 +178,27 @@ public class InsOrderStructor {
         if (StringUtils.isBlank(value)) return null;
         String str = value;
         boolean dealed = false;
+
+        if (p3.asPredicate().test(str)) {
+
+            while (p3.asPredicate().test(str)) {
+                Matcher matcher = p3.matcher(str);
+                if (matcher.find()) {
+                    str = str.replaceFirst("零时零分", "00时00分");
+                }
+            }
+            dealed = true;
+        }
+        if (p4.asPredicate().test(str)) {
+
+            while (p4.asPredicate().test(str)) {
+                Matcher matcher = p4.matcher(str);
+                if (matcher.find()) {
+                    str = str.replaceFirst("二十四时零分", "24时00分");
+                }
+            }
+            dealed = true;
+        }
         if (p1.asPredicate().test(str)) {
 
             while (p1.asPredicate().test(str)) {
@@ -141,7 +209,7 @@ public class InsOrderStructor {
 
                 }
             }
-            return str;
+            dealed = true;
         }
         if (p2.asPredicate().test(str)) {
 
@@ -151,7 +219,7 @@ public class InsOrderStructor {
                     str = str.replaceFirst("(?<=\\d{1,2}日)二十四(?=时)", "24");
                 }
             }
-            return str;
+            dealed = true;
         }
 
         if (dealed == false) {

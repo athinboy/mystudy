@@ -85,7 +85,7 @@ public class InsOrderDocument extends Document {
                 "联系(电话|方式)[:：]?"));
 
         //电话总机
-        this.orderItemInfos.add(newItem = new OrderItemInfo(1, "DHZJ",
+        this.orderItemInfos.add(newItem = new OrderItemInfo(1, "DHZJ", false,
                 "电话总机[:：]?"));
 
         //证件号

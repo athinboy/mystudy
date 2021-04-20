@@ -111,7 +111,7 @@ public class TextPositionExHelper {
         List<TextPositionEx> tempTexts = new ArrayList<>();
 
         for (int i = 0; i < allTexts.size(); i++) {
-            if (false == StringUtils.isBlank(allTexts.get(i).getTextPosition().getUnicode())) {
+            if (false == StringUtils.isBlank(allTexts.get(i).getTrimedText())) {
                 tempTexts.add(allTexts.get(i));
             }
         }
@@ -161,11 +161,20 @@ public class TextPositionExHelper {
 
     }
 
-    public static PdfTextPosition merge(List<TextPositionEx> allTexts) {
+    public static PdfTextPosition merge(final List<TextPositionEx> texts) {
 
-        if (allTexts == null || allTexts.size() <= 1) {
-            return mergeBlock(allTexts);
+        if (texts == null || texts.size() <= 1) {
+            return mergeBlock(texts);
         }
+
+        List<TextPositionEx> allTexts = new ArrayList<>();
+
+        for (int i = 0; i < texts.size(); i++) {
+            if (false == StringUtils.isBlank(texts.get(i).getTrimedText())) {
+                allTexts.add(texts.get(i));
+            }
+        }
+
         allTexts.sort(new Comparator<TextPositionEx>() {
             @Override
             public int compare(TextPositionEx o1, TextPositionEx o2) {
@@ -187,9 +196,10 @@ public class TextPositionExHelper {
 
         boolean singleOneRow = true;
         for (int i = 1; i < allTexts.size(); i++) {
-            if (StringUtils.isBlank(allTexts.get(i).getTextPosition().getUnicode())) {
+            if (StringUtils.isBlank(allTexts.get(i).getTrimedText())) {
                 continue;
             }
+
             //有漏洞,比如
             //SSSSSSSS大
             //         y
@@ -211,7 +221,7 @@ public class TextPositionExHelper {
         String str = "";
         PdfRectangle rectangle = allTexts.get(0).getRectangle();
         for (TextPositionEx allText : allTexts) {
-            str += allText.getTextPosition().getUnicode();
+            str += allText.getTrimedText();
             rectangle = new PdfRectangle(rectangle.getPageIndex(), rectangle.union(allText.getRectangle()));
         }
         PdfTextPosition result = new PdfTextPosition(0, str, rectangle);
@@ -225,6 +235,11 @@ public class TextPositionExHelper {
      * @return
      */
     public static boolean checkXBeside(TextPositionEx o1, TextPositionEx o2) {
+
+        if (Math.abs(o1.getTextPosition().getFontSize() - o2.getTextPosition().getFontSize()) >
+                Math.min(o1.getTextPosition().getFontSize(), o2.getTextPosition().getFontSize())) {
+            return false;
+        }
 
         PdfRectangle o1Rec = new PdfRectangle(o1.getPageIndex(), o1.getRectangle());
         PdfRectangle o2Rec = new PdfRectangle(o2.getPageIndex(), o2.getRectangle());

@@ -31,7 +31,7 @@ public class Six {
         //String filepath = "C:\\Users\\fengguoqiang\\Desktop\\temp\\识别失败保单\\运通汇未识别保单\\新建文件夹\\LSYKDAAA5HK056512付裕.pdf";
 
 //        String filepath = "D:\\fgq\\temp\\新测试保单-3\\太平洋交强+商业险-1.pdf";
-       String filepath = "D:\\fgq\\temp\\新测试保单-3\\北京创盈科技产业集团有限公司  商业.pdf";
+       String filepath = "D:\\fgq\\temp\\新测试保单-3\\太平交强险-国爱民.pdf";
 
         //  String filepath = "D:\\fgq\\temp\\新测试保单-3\\于克兰2.pdf";
         try {
@@ -48,8 +48,8 @@ public class Six {
 
             PdfToJson pdfToJson = new PdfToJson();
 
-            ContentParse.errsign="insuredName";
-            InsOrderDocument.errorSign="";
+            ContentParse.errsign="";
+            InsOrderDocument.errorSign="insuranceConfirmationTime";
 
             PdfResult pdfResult = pdfToJson.parse(pdfDocument);
             System.out.println(JSON.toJSONString(pdfResult));

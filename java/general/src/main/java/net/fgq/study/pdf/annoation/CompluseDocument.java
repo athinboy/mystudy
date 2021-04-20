@@ -108,7 +108,6 @@ public class CompluseDocument extends InsOrderDocument {
                 , "vtLateFee"
                 , "vtPaymentNo"
 
-
         );
 
     }
@@ -128,6 +127,9 @@ public class CompluseDocument extends InsOrderDocument {
             case renshou:
                 OrderItemInfo o = this.getOrderItemInfo("platNum");
                 o.setRequire(false);
+                break;
+            case taiping:
+                this.getOrderItemInfo("insuranceConfirmationTime").setKeySigns(new String[]{"保费确认时间"});
                 break;
         }
     }

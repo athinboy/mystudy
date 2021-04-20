@@ -92,4 +92,16 @@ public class TextPositionEx {
                 < Math.min(this.getRectangle().width, o.getRectangle().width) / 4;
 
     }
+
+    private String trimedText = null;
+
+    public String getTrimedText() {
+
+        if (trimedText == null) {
+            trimedText = this.getTextPosition().getUnicode()
+                    .replaceAll("\\s", "")
+                    .replaceAll("\\u00A0+", "");//特殊的空格-ASCII码值160
+        }
+        return trimedText;
+    }
 }

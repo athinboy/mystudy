@@ -304,7 +304,7 @@ public class PdfTextPosition {
         String str = "";
         this.setRectangle(this.getTextPositions().get(0).getRectangle());
         for (int i = 0; i < this.getTextPositions().size(); i++) {
-            str = str + this.getTextPositions().get(i).getTextPosition().getUnicode();
+            str = str + this.getTextPositions().get(i).getTrimedText();
             this.setRectangle(this.getRectangle().union(this.getTextPositions().get(i).getRectangle()));
         }
         this.setTrimedText(null);
@@ -339,7 +339,7 @@ public class PdfTextPosition {
 //        for (int i = 0; i < this.getTextPositions().size(); i++) {
 //            TextPositionEx textPosition = this.getTextPositions().get(i);
 //
-//            if (StringUtils.isNotBlank(textPosition.getTextPosition().getUnicode())) {
+//            if (StringUtils.isNotBlank(textPosition.gettrimedtext())) {
 //                continue;
 //            }
 //            int tHeight = (new Double(Math.ceil(PDFTextPositionStripper.getHeight(textPosition))).intValue());

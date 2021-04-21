@@ -285,10 +285,8 @@ public class PdfTextPositionHelper {
      * @return
      */
     public static boolean checkBollowNeighbor(PdfTextPosition o1, PdfTextPosition o2, List<PdfTextPosition> allTexts) {
-        if (o1.getPageIndex() != o2.getPageIndex()) return false;
-        if (o2.getRectangle().x > o1.getRectangle().getMaxX() || o2.getRectangle().getMaxX() < o1.getRectangle().x) {
-            return false;
-        }
+
+        if (checkBollow(o1, o2) == false) return false;
 
         for (PdfTextPosition text : allTexts) {
             if (text == o1 || text == o2 || text.getPageIndex() != o1.getPageIndex()) continue;
@@ -302,4 +300,61 @@ public class PdfTextPositionHelper {
         return true;
 
     }
+
+    /**
+     * 一定要考虑到：(-为空白)
+     * ------BBBBBBB
+     * --AA--CCCCCCC
+     * ------DDDD
+     *
+     * @param texts
+     */
+    public static void XYSort(List<PdfTextPosition> texts) {
+
+        texts.sort(PdfTextPositionHelper.getXYSortCompare());
+        boolean beginMultiLine = false;
+
+        List<PdfTextPosition> rightMulti = new ArrayList<>();
+        List<PdfTextPosition> leftSingle = new ArrayList<>();
+
+        for (int i = 0; i < texts.size(); i++) {
+
+            for (int j = i + 1; j < texts.size(); j++) {
+                if (true == PdfTextPositionHelper.checkBollow(texts.get(i), texts.get(j))) {
+                    beginMultiLine = true;
+                    break;
+                }
+            }
+            if (beginMultiLine == false) {
+                leftSingle.add(texts.get(i));
+            } else {
+                rightMulti.add(texts.get(i));
+            }
+        }
+        rightMulti.sort(PdfTextPositionHelper.getYXSortCompare());
+        texts.clear();
+        texts.addAll(leftSingle);
+        texts.addAll(rightMulti);
+
+    }
+
+    /**
+     * 检查o2是否在o1的下方
+     *
+     * @param o1
+     * @param o2
+     * @return
+     */
+    public static boolean checkBollow(PdfTextPosition o1, PdfTextPosition o2) {
+        if (o1.getPageIndex() != o2.getPageIndex()) return false;
+        if (o2.getRectangle().x > o1.getRectangle().getMaxX() || o2.getRectangle().getMaxX() < o1.getRectangle().x) {
+            return false;
+        }
+        if (o2.getRectangle().y <= o2.getRectangle().getMiddleY()) {
+            return false;
+        }
+        return true;
+    }
+
+
 }

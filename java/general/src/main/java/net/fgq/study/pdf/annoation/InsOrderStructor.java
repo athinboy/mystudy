@@ -167,6 +167,8 @@ public class InsOrderStructor {
     private static Pattern p2 = Pattern.compile("\\d{1,2}日二十四时");
     private static Pattern p3 = Pattern.compile("零时零分");
     private static Pattern p4 = Pattern.compile("二十四时零分");
+    private static Pattern p5= Pattern.compile("([0-9a-zA-Z]+)\\\\\\1");
+
 
     /**
      * 未做任何修改时，切记返回null
@@ -178,6 +180,16 @@ public class InsOrderStructor {
         if (StringUtils.isBlank(value)) return null;
         String str = value;
         boolean dealed = false;
+//        if (p5.asPredicate().test(str)) {
+//
+//            while (p5.asPredicate().test(str)) {
+//                Matcher matcher = p3.matcher(str);
+//                if (matcher.find()) {
+//                    str = str.replaceFirst("零时零分", "00时00分");
+//                }
+//            }
+//            dealed = true;
+//        }
 
         if (p3.asPredicate().test(str)) {
 

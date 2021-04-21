@@ -126,7 +126,7 @@ public class TextPositionExHelper {
             System.out.println(ilex.getMessage());
             throw ilex;
         }
-        List<TextBlock> blocks = new ArrayList<>();
+        List<PdfTextPosition> blocks = new ArrayList<>();
         TextBlock block;
 
         block = new TextBlock(tempTexts.get(0));
@@ -134,9 +134,10 @@ public class TextPositionExHelper {
         boolean merged;
         for (int i = 1; i < tempTexts.size(); i++) {
             merged = false;
-            for (TextBlock textBlock : blocks) {
-                if (textBlock.appendMerge(tempTexts.get(i))) {
+            for (PdfTextPosition textBlock : blocks) {
+                if (((TextBlock) textBlock).appendMerge(tempTexts.get(i))) {
                     merged = true;
+                    break;
                 }
             }
             if (merged == false) {
@@ -146,13 +147,15 @@ public class TextPositionExHelper {
         }
         int lineNumber = blocks.stream().mapToInt(x -> x.getLineNumber()).max().getAsInt();
 
-        blocks.sort(PdfTextPositionHelper.getXYSortCompare());
+//        blocks.sort(PdfTextPositionHelper.getXYSortCompare());
 
-        for (TextBlock textBlock : blocks) {
+        PdfTextPositionHelper.XYSort(blocks);
+
+        for (PdfTextPosition textBlock : blocks) {
             str += textBlock.getTrimedText();
         }
         PdfRectangle rectangle = blocks.get(0).getRectangle();
-        for (TextBlock allText : blocks) {
+        for (PdfTextPosition allText : blocks) {
             rectangle = new PdfRectangle(rectangle.getPageIndex(), rectangle.union(allText.getRectangle()));
         }
         PdfTextPosition result = new PdfTextPosition(0, str, rectangle);
@@ -251,7 +254,7 @@ public class TextPositionExHelper {
         if (o1Rec.intersects(o2Rec)) {
             Rectangle intersectR = o1Rec.intersection(o2Rec);
             int area = intersectR.width * intersectR.height;
-            if (area >= o1Rec.area() * 0.8 || area >= o2Rec.area() * 0.8) {
+            if (area >= o1Rec.area() * 0.7 || area >= o2Rec.area() * 0.7) {//以前是0.8,造成判断错误
                 return true;
             }
         }

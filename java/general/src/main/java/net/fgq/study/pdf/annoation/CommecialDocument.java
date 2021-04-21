@@ -36,6 +36,10 @@ public class CommecialDocument extends InsOrderDocument {
     protected void specialOrder() {
         super.specialOrder();
         switch (this.insCompanyType) {
+
+            case taiping:
+                this.getOrderItemInfo("insuranceConfirmationTime").setKeySigns(new String[]{"保费确认时间"});
+                break;
             case pingan:
                 this.getOrderItemInfo("insuredName").setKeySigns(ArrayUtils.addAll(
                         this.getOrderItemInfo("insuredName").getKeySigns(), "正式名称"));
@@ -57,6 +61,10 @@ public class CommecialDocument extends InsOrderDocument {
                 OrderItemInfo o = this.getOrderItemInfo("platNum");
                 o.setRequire(false);
                 this.getOrderItemInfo("insuredName").setKeySigns(new String[]{"姓名/名称"});
+                this.getOrderItemInfo("engineNumber").setValueMultiLine(true);
+                this.getOrderItemInfo("vin").setRequire(false);
+
+
                 //不可使用，人寿的 被保险人 只占用一行文字，无法提取右侧的三行文本
 //                this.constructItemArea(this.addInfoArea("BBXR", "被保险人")
 //                        , "insuredName"

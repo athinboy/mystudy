@@ -108,6 +108,8 @@ public class InsOrderDocument extends Document {
 
         this.orderItemInfos.add(newItem = new OrderItemInfo(2, "platNum", "号牌号码"));
         this.orderItemInfos.add(newItem = new OrderItemInfo(2, "vin", "vin", "VIN", "车架号([）)])?"));
+        newItem.getValueRegstr().add("[0-9a-zA-Z]+");
+
         //发动机号
         this.orderItemInfos.add(newItem = new OrderItemInfo(2, "engineNumber", "发动机号(码)?"));
         //初登日期
@@ -138,6 +140,12 @@ public class InsOrderDocument extends Document {
          * 银行流水号
          */
         this.orderItemInfos.add(newItem = new OrderItemInfo("bankSerialNumber", false, "(银行){0,1}流水号[:：]?"));//
+        newItem.getValueRegstr().add("[0-9a-zA-Z]+");
+
+        /**
+         * 参考号/支票号
+         */
+        this.orderItemInfos.add(newItem = new OrderItemInfo("CKHZPH", false, "参考号\\/支票号[:：]?"));//
 
         /**
          * 收费确认时间
@@ -157,7 +165,7 @@ public class InsOrderDocument extends Document {
         /**
          * 经办人
          */
-        this.orderItemInfos.add(newItem = new OrderItemInfo("agentName", "经办(人{0,1})"));//String
+        this.orderItemInfos.add(newItem = new OrderItemInfo("agentName", "经办(人{0,1})[:：]?"));//String
 
         /**
          * 出单日期

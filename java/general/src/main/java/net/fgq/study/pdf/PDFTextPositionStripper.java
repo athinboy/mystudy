@@ -129,7 +129,7 @@ public class PDFTextPositionStripper extends PDFTextStripper {
         super.processTextPosition(text);
         TextPositionEx tex = new TextPositionEx(currentPageIndex, text);
 
-        if (text.getUnicode().equals("确") || text.getUnicode().equals("确")) {
+        if (text.getUnicode().equals("浮") || text.getUnicode().equals("浮")) {
             System.out.println(text.getX());
         }
 

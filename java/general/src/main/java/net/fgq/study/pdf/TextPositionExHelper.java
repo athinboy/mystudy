@@ -18,16 +18,22 @@ public class TextPositionExHelper {
     private static Logger logger = LoggerFactory.getLogger(TextPositionExHelper.class);
 
     public static float getHeight(TextPosition text) {
+        if ("¥".equals(text.getUnicode())) {
+            System.out.println(text.getUnicode());
+        }
 
         if (text.getFont().getFontDescriptor().getCapHeight() == 0) {
-            return text.getFontSizeInPt();
+
+            if (text.getFontSize() > text.getWidth() * 1.5) {
+                return (float) (text.getWidth() * 1.2);
+            } else {
+                return text.getFontSizeInPt();
+            }
         }
 
-        if (text.getFontSize() > text.getWidth() * 1.5) {
-            return (float) (text.getWidth() * 1.2);
-        }
         //return text.getFontSize();//text.getHeight()=text.getFontSize()/2;
-        return text.getFont().getFontDescriptor().getCapHeight() / 1000 * text.getFontSize();
+        float size = text.getFont().getFontDescriptor().getCapHeight() / 1000 * text.getFontSize();
+        return Math.min(size, (float) (text.getWidth() * 1.2));
     }
 
     /**

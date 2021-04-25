@@ -23,7 +23,11 @@ public class CommecialDocument extends InsOrderDocument {
         /**
          * 车损险每次事故绝对免赔额
          */
-        this.orderItemInfos.add(new OrderItemInfo("deductible", false, "车损险每次事故绝对免赔额"));//
+        this.orderItemInfos.add(new OrderItemInfo("deductible", false, "(车损险每次事故)?绝对免赔额[:：]?"));//
+
+
+
+
 
         /**
          * 保险费合计

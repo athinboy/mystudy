@@ -47,8 +47,9 @@ public class Seven {
     }
 
     public static void main(String[] args) throws Exception {
-
-        File fileDirectory = new File("D:\\fgq\\temp\\新测试保单-3\\");
+        File fileDirectory;
+        fileDirectory = new File("D:\\fgq\\temp\\新测试保单-3\\");
+        fileDirectory = new File("D:\\fgq\\temp\\新保单");
         File[] files = fileDirectory.listFiles();
         List<R> rs = new ArrayList<>();
         for (int i = 0; i < files.length; i++) {
@@ -97,8 +98,6 @@ public class Seven {
                 return;
 
             }
-
-
 
         }
         String content = JSON.toJSONString(rs, SerializerFeature.PrettyFormat);

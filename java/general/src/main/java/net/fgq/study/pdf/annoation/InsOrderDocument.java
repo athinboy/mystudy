@@ -79,10 +79,10 @@ public class InsOrderDocument extends Document {
         this.orderItemInfos.add(newItem = new OrderItemInfo("expireDate", ContentValueTypeEnum.DateTime, true, true, "保险期间"));//Date
 
         this.orderItemInfos.add(newItem = new OrderItemInfo(1, "insuredName",
-                "^被保险人", "([^从业人员]+|^)(被保险人)?姓名(/名称)?[:：]?"));
+                "^被保险人[:：]?", "([^从业人员]+|^)(被保险人)?姓名(/名称)?[:：]?"));
 
         this.orderItemInfos.add(newItem = new OrderItemInfo(1, "insuredPhone",
-                "联系(电话|方式)[:：]?"));
+                "联系(电话|方式)[:：]?","手机号[:：]?"));
 
         //电话总机
         this.orderItemInfos.add(newItem = new OrderItemInfo(1, "DHZJ", false,
@@ -106,30 +106,30 @@ public class InsOrderDocument extends Document {
         this.orderItemInfos.add(newItem = new OrderItemInfo(1, "insuredContactAddress",
                 "([^公司]|^)(通讯|被保险人){0,1}地址[:：]?", "住所[:：]?"));
 
-        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "platNum", "号牌号码"));
-        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "vin", "vin", "VIN", "车架号([）)])?"));
+        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "platNum", "号牌号码[:：]?"));
+        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "vin", "vin[:：]?", "VIN[:：]?", "车架号([）)])?[:：]?"));
         newItem.getValueRegstr().add("[0-9a-zA-Z]+");
 
         //发动机号
-        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "engineNumber", "发动机号(码)?"));
+        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "engineNumber", "发动机号(码)?[:：]?"));
         //初登日期
-        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "initialRegistration", "初登日期", "(初次){0,1}登记日期"));//String
+        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "initialRegistration", "初登日期[:：]?", "(初次){0,1}登记日期[:：]?"));//String
         //厂牌型号
-        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "factoryPlateModel", "厂牌型号"));
+        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "factoryPlateModel", "厂牌型号[:：]?"));
         newItem.setValueMultiLine(true);
 
         //核定载质量
-        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "approvedLoad", false, "(核定载质量)|(核定载客/载质量)"));
+        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "approvedLoad", false, "(核定载质量[:：]?)|(核定载客/载质量[:：]?)"));
         //核定载客人数
-        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "approvedPassengersCapacity", false, "核定载客"));//
+        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "approvedPassengersCapacity", false, "核定载客[:：]?"));//
         //使用性质
-        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "useCharacter", "使用性质"));//
+        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "useCharacter", "使用性质[:：]?"));//
         //已使用年限
-        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "YSYNX", false, "已使用年限"));//
+        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "YSYNX", false, "已使用年限[:：]?"));//
         //年平均行驶里程
-        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "NPJXSLC", false, "年平均行驶里程"));//
+        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "NPJXSLC", false, "年平均行驶里程[:：]?"));//
         //机动车种类
-        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "vehicleType", "机动车种类"));//
+        this.orderItemInfos.add(newItem = new OrderItemInfo(2, "vehicleType", "机动车种类[:：]?"));//
 
 //        //排量
 //        this.orderItemInfos.add(newItem=new OrderItemInfo("displacement", "排量"));//
@@ -151,14 +151,14 @@ public class InsOrderDocument extends Document {
          * 收费确认时间
          */
         this.orderItemInfos.add(newItem = new OrderItemInfo("chargeConfirmationTime",
-                ContentValueTypeEnum.DateTime, "[收保]费确认时间", "收付确认时间"));//Date
+                ContentValueTypeEnum.DateTime, "[收保]费确认时间[:：]?", "收付确认时间[:：]?"));//Date
         newItem.setMuiltValue(true);
 
         /**
          * 投保确认时间
          */
         this.orderItemInfos.add(newItem = new OrderItemInfo("insuranceConfirmationTime", ContentValueTypeEnum.DateTime,
-                "投保确认时间"));//Date
+                "投保确认时间[:：]?"));//Date
         //"生成(有效)?保单时间", "(有效)?保单生成时间",
         newItem.setMuiltValue(true);
 
@@ -171,7 +171,7 @@ public class InsOrderDocument extends Document {
          * 出单日期
          */
         this.orderItemInfos.add(newItem = new OrderItemInfo("agentDate", ContentValueTypeEnum.Date,
-                "[出签]单日期", "订立合同日期"));//Date
+                "[出签]单日期[:：]?", "订立合同日期[:：]?"));//Date
         newItem.setBackupItem("insuranceConfirmationTime");
 
         this.constructItemGroup(this.addInfoGroup("BBXJDC")

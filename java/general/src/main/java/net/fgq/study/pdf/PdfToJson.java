@@ -116,6 +116,7 @@ public class PdfToJson {
                 pdfResult.setCompulsoryDocument(jsonObject);
 
             }
+            pdfResult.validate();
             return pdfResult;
         } catch (Exception ex) {
             logger.error("识别pdf失败", ex);

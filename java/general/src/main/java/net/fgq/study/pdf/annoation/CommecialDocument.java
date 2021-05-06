@@ -125,26 +125,26 @@ public class CommecialDocument extends InsOrderDocument {
 
         TaiPingYangNewTable table = new TaiPingYangNewTable(2, null);
         addTable(table);
-        table.addColumn(new Column("承保险种", "承保险种", false));
-        table.addColumn(new Column("保险金额", "保险金额")).addSign("责任限额");
-        table.addColumn(new Column("绝对", "免赔率")).addSign("免赔率");
-        table.addColumn(new NumberColumn("保险费", "保险费", TextHorizontalAlignEnum.RIGHT));
-        table.addColumn(new Column("承保险种", "承保险种1", false));
-        table.addColumn(new Column("保险金额", "保险金额1")).addSign("责任限额");
-        table.addColumn(new Column("绝对", "免赔率1")).addSign("免赔率");
-        table.addColumn(new NumberColumn("保险费", "保险费1", TextHorizontalAlignEnum.RIGHT));
+        table.addColumn(new Column("承保险种", "insuranceType", false));
+        table.addColumn(new Column("保险金额", "liability")).addSign("责任限额");
+        table.addColumn(new Column("绝对", "noDeductiblePercent")).addSign("免赔率");
+        table.addColumn(new NumberColumn("保险费", "fee", TextHorizontalAlignEnum.RIGHT));
+        table.addColumn(new Column("承保险种", "insuranceType1", false));
+        table.addColumn(new Column("保险金额", "liability1")).addSign("责任限额");
+        table.addColumn(new Column("绝对", "noDeductiblePercent1")).addSign("免赔率");
+        table.addColumn(new NumberColumn("保险费", "fee1", TextHorizontalAlignEnum.RIGHT));
 
         ////////////////////////////////////////
 
         TableGroup tableGroup = this.addTableGroup(new TableGroup());
         TaiPingYangTable table2 = new TaiPingYangTable(2, null);
         tableGroup.getTables().add(table2);
-        table2.addColumn(new Column("承保险别", "承保险别", false));
-        table2.addColumn(new Column("保险金额", "保险金额").addSign("赔偿限额"));
-        table2.addColumn(new NumberColumn("保险费", "保险费", TextHorizontalAlignEnum.LEFT));
-        table2.addColumn(new Column("承保险别", "承保险别1", false));
-        table2.addColumn(new Column("保险金额", "保险金额1").addSign("赔偿限额"));
-        table2.addColumn(new NumberColumn("保险费", "保险费1", TextHorizontalAlignEnum.LEFT));
+        table2.addColumn(new Column("承保险别", "insuranceType", false));
+        table2.addColumn(new Column("保险金额", "liability").addSign("赔偿限额"));
+        table2.addColumn(new NumberColumn("保险费", "fee", TextHorizontalAlignEnum.LEFT));
+        table2.addColumn(new Column("承保险别", "insuranceType1", false));
+        table2.addColumn(new Column("保险金额", "liability1").addSign("赔偿限额"));
+        table2.addColumn(new NumberColumn("保险费", "fee1", TextHorizontalAlignEnum.LEFT));
 
     }
 
@@ -158,11 +158,11 @@ public class CommecialDocument extends InsOrderDocument {
 
         RenBaoNewTable table = new RenBaoNewTable(0, new Rectangle(39, 294, 530, 8), "除法律法规另有约定外");
         this.addTable(table);
-        table.addColumn(new Column("承保险种", "承保险种", false));
-        table.addColumn(new Column("绝对免赔率", "绝对免赔率"));
+        table.addColumn(new Column("承保险种", "insuranceType", false));
+        table.addColumn(new Column("绝对免赔率", "noDeductiblePercent"));
         table.addColumn(new Column("费率浮动", "费率浮动", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
-        table.addColumn(new Column("保险金额/责任限额", "责任限额", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
-        table.addColumn(new NumberColumn("保险费", "保险费"));
+        table.addColumn(new Column("保险金额/责任限额", "liability", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
+        table.addColumn(new NumberColumn("保险费", "sumFee"));
 
     }
 
@@ -177,11 +177,11 @@ public class CommecialDocument extends InsOrderDocument {
         RenBaoTable table = new RenBaoTable(0, new Rectangle(38, 280, 537 + 30 - 38, 10));
         table.setCellLineSpace(1);
         this.addTable(table);
-        table.addColumn(new Column("承保险种", "承保险种", false));
-        table.addColumn(new Column("不计免赔", "不计免赔"));
+        table.addColumn(new Column("承保险种", "insuranceType", false));
+        table.addColumn(new Column("不计免赔", "noDeductibleFee"));
         table.addColumn(new Column("费率浮动", "费率浮动", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
-        table.addColumn(new Column("保险金额", "保险金额", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
-        table.addColumn(new NumberColumn("保险费", "保险费"));
+        table.addColumn(new Column("保险金额", "liability", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
+        table.addColumn(new NumberColumn("保险费", "sumFee"));
 
     }
 
@@ -196,11 +196,11 @@ public class CommecialDocument extends InsOrderDocument {
         TaiPingTable table = new TaiPingTable(0, null);
         this.addTableGroup(new TableGroup()).getTables().add(table);
         //太平太平商业险.pdf
-        table.addColumn(new Column("承保险种", "承保险种", false));
-        table.addColumn(new Column("保险金额", "保险金额", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
-        table.addColumn(new Column("每次事故绝对免赔额", "绝对免赔额", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
-        table.addColumn(new Column("不计免赔率", "不计免赔率", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
-        table.addColumn(new NumberColumn("保险费", "保险费"));
+        table.addColumn(new Column("承保险种", "insuranceType", false));
+        table.addColumn(new Column("保险金额", "liability", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
+        table.addColumn(new Column("每次事故绝对免赔额", "noDeductibleFee", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
+        table.addColumn(new Column("不计免赔率", "noDeductible", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
+        table.addColumn(new NumberColumn("保险费", "sumFee"));
         table.getFootSigns().add("除法律法规另有约定外，涉及本保险");
         table.getFootSigns().add("保 险 费 合 计");
         table.setLeftReferenceText("被保险人证件号码");
@@ -209,11 +209,11 @@ public class CommecialDocument extends InsOrderDocument {
         TaiPingTable table2 = new TaiPingTable(0, null);
         this.addTableGroup(new TableGroup()).getTables().add(table2);
         //太平胡泊 sy.pdf
-        table2.addColumn(new Column("承保险种", "承保险种", false));
-        table2.addColumn(new Column("保险金额", "保险金额", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
-        table2.addColumn(new Column("绝对免赔额", "绝对免赔额/率", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
+        table2.addColumn(new Column("承保险种", "insuranceType", false));
+        table2.addColumn(new Column("保险金额", "liability", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
+        table2.addColumn(new Column("绝对免赔额", "noDeductiblePercent", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
         table2.addColumn(new Column("费率浮动", "费率浮动", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
-        table2.addColumn(new NumberColumn("保险费", "保险费"));
+        table2.addColumn(new NumberColumn("保险费", "sumFee"));
 
         table2.getFootSigns().add("除法律法规另有约定外，涉及本保险");
         table.getFootSigns().add("保 险 费 合 计");
@@ -232,11 +232,11 @@ public class CommecialDocument extends InsOrderDocument {
 
         Table table = new Table(0, new Rectangle(33, 252, 535 + 30 - 33, 10), "除法律法规另有约定外，投保人拥有保险合同解除权");
         addTable(table);
-        table.addColumn(new Column("承保险种", "承保险种", false));
+        table.addColumn(new Column("承保险种", "insuranceType", false));
         table.addColumn(new Column("费率浮动", "费率浮动"));
-        table.addColumn(new Column("责任限额", "责任限额", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
-        table.addColumn(new Column("绝对免赔率", "绝对免赔率"));
-        table.addColumn(new NumberColumn("保险费", "保险费"));
+        table.addColumn(new Column("责任限额", "liability", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
+        table.addColumn(new Column("绝对免赔率", "noDeductiblePercent"));
+        table.addColumn(new NumberColumn("保险费", "sumFee"));
 
     }
 
@@ -250,12 +250,12 @@ public class CommecialDocument extends InsOrderDocument {
 
         Table table = new Table(0, new Rectangle(33, 329, 530, 10), "保险费合计\\S{0,}人民币大");
         addTable(table);
-        table.addColumn(new Column("承保险种", "承保险种", false));
-        table.addColumn(new Column("不计免赔率", "不计免赔率"));
-        table.addColumn(new Column("每次事故绝对免赔", "每次事故绝对免赔"));
+        table.addColumn(new Column("承保险种", "insuranceType", false));
+        table.addColumn(new Column("不计免赔率", "noDeductiblePercent"));
+        table.addColumn(new Column("每次事故绝对免赔", "noDeductibleFee"));
         table.addColumn(new Column("费率浮动", "费率浮动"));
-        table.addColumn(new Column("保险金额", "保险金额", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
-        table.addColumn(new NumberColumn("保险费", "保险费"));
+        table.addColumn(new Column("保险金额", "liability", TextHorizontalAlignEnum.RIGHT, TextVerticalAlignEnum.TOP));
+        table.addColumn(new NumberColumn("保险费", "sumFee"));
 
     }
 
@@ -269,11 +269,11 @@ public class CommecialDocument extends InsOrderDocument {
 
         Table table = new Table(0, new Rectangle(46, 278, 512, 20), "车损险每次事故绝对免赔");
         this.addTable(table);
-        table.addColumn(new Column("承保险种", "承保险种", false));
-        table.addColumn(new Column("保险金额", "保险金额"));
-        table.addColumn(new Column("保险费$", "保险费"));
-        table.addColumn(new Column("是否投保", "是否投保不计免赔"));
-        table.addColumn(new NumberColumn("保险费小计", "保险费小计"));
+        table.addColumn(new Column("承保险种", "insuranceType", false));
+        table.addColumn(new Column("保险金额", "liability"));
+        table.addColumn(new Column("保险费$", "fee"));
+        table.addColumn(new Column("是否投保", "noDeductible"));
+        table.addColumn(new NumberColumn("保险费小计", "sumFee"));
 
     }
 
@@ -287,11 +287,11 @@ public class CommecialDocument extends InsOrderDocument {
 
         PingAnNewTable table = new PingAnNewTable(0, new Rectangle(48, 278, 520, 20));
         this.addTable(table);
-        table.addColumn(new Column("投保险别", "投保险别", false));
-        table.addColumn(new Column("保险金额", "保险金额"));
-        table.addColumn(new Column("保费小计", "保费小计"));
-        table.addColumn(new Column("绝对免赔率", "绝对免赔率"));
-        table.addColumn(new NumberColumn("保费合计", "保费合计"));
+        table.addColumn(new Column("投保险别", "insuranceType", false));
+        table.addColumn(new Column("保险金额", "liability"));
+        table.addColumn(new NumberColumn("保费小计", "fee"));
+        table.addColumn(new Column("绝对免赔率", "noDeductiblePercent"));
+        table.addColumn(new NumberColumn("保费合计", "sumFee"));
 
     }
 

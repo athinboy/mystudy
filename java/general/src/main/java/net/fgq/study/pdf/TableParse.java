@@ -477,7 +477,10 @@ public class TableParse {
         List<PdfTextPosition> cellTexts = new ArrayList<>();
         for (int i = 0; i < textPositions.size(); i++) {
             textPosition = textPositions.get(i);
-            if (textPosition.getRectangle().y > minY && textPosition.getRectangle().y < maxY) {
+            if (textPosition.getRectangle().y > minY
+                    && textPosition.getRectangle().y < maxY
+                    && textPosition.getRectangle().maxY() < maxY//
+            ) {
                 cellTexts.add(textPosition);
             }
         }

@@ -31,7 +31,7 @@ public class Six {
         //String filepath = "C:\\Users\\fengguoqiang\\Desktop\\temp\\识别失败保单\\运通汇未识别保单\\新建文件夹\\LSYKDAAA5HK056512付裕.pdf";
 
 //        String filepath = "D:\\fgq\\temp\\新测试保单-3\\太平洋交强+商业险-1.pdf";
-       String filepath = "D:\\fgq\\temp\\新保单\\LSGXE8353MD153951 .1.pdf";
+       String filepath = "D:\\fgq\\temp\\新保单\\京A-WJ318.pdf";
 
         //  String filepath = "D:\\fgq\\temp\\新测试保单-3\\于克兰2.pdf";
         try {

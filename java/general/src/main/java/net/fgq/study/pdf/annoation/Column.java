@@ -194,7 +194,7 @@ public class Column {
      * @param text
      * @return
      */
-    public Object parseValue(String text) {
+    public Object parseValue(final String text) {
         if (this.notEmpty && StringUtils.isBlank(text)) {
             throw new IllegalArgumentException("值不可为空:" + this.signs.get(0));
         }
@@ -212,6 +212,8 @@ public class Column {
                 if (vstr.length() > 0) {
                     BigDecimal bgv = new BigDecimal(vstr);
                     return bgv;
+                } else if (text.length() > 0 && vstr.length() == 0) {
+                    return BigDecimal.ZERO;
                 } else {
                     return null;
                 }

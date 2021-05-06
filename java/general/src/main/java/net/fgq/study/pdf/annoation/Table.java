@@ -62,7 +62,7 @@ public class Table {
     /**
      * json key name
      */
-    protected String jsonKey="items";
+    protected String jsonKey="details";
 
     protected int pageIndex;
 

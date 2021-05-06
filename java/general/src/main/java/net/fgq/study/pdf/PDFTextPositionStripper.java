@@ -111,7 +111,6 @@ public class PDFTextPositionStripper extends PDFTextStripper {
     @Override
     protected void showText(byte[] string) throws IOException {
 
-
         showTextContent = "";
         PDGraphicsState state = getGraphicsState();
         PDTextState textState = state.getTextState();
@@ -138,15 +137,12 @@ public class PDFTextPositionStripper extends PDFTextStripper {
         super.showText(string);
         savePosition();
 
-
-
-
     }
 
     protected void processOperator(Operator operator, List<COSBase> operands) throws IOException {
         super.processOperator(operator, operands);
 
-        if (1 == 1
+        if (1 == 0
                 //org.apache.pdfbox.contentstream.operator.text.ShowText
                 && operator.getName().equals(OperatorName.SHOW_TEXT)) {
             for (int i = 0; i < operands.size(); i++) {
@@ -188,7 +184,7 @@ public class PDFTextPositionStripper extends PDFTextStripper {
             throw PdfException.getInstance("");
         }
         if (text.getUnicode().equals("2") || text.getUnicode().equals("浮")) {
-            System.out.println(text.getX());
+            logger.debug(String.valueOf(text.getX()));
         }
         TextPositionEx tex = new TextPositionEx(currentPageIndex, text);
 
@@ -267,7 +263,7 @@ public class PDFTextPositionStripper extends PDFTextStripper {
         startX = 0;
         startY = 0;
         if (ShowSystemOut) {
-            System.out.println(position.toString());
+            logger.debug(position.toString());
         }
     }
 

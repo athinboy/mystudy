@@ -15,9 +15,9 @@ import java.util.List;
  */
 public class TaiPingYangNewTable extends Table {
 
-    public TaiPingYangNewTable(int pageIndex, Rectangle headRect, String jsonKey) {
+    public TaiPingYangNewTable(int pageIndex, Rectangle headRect) {
 
-        super(pageIndex, headRect, "保险费合计（人民币大写）", jsonKey);
+        super(pageIndex, headRect, "保险费合计（人民币大写）");
         this.init();
         this.setLeftReferenceText("保险费合计（人民币大写）");
         this.setTopReferenceText("核定载质量");

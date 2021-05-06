@@ -11,9 +11,9 @@ import java.util.List;
  */
 public class TaiPingTable extends Table {
 
-    public TaiPingTable(int pageIndex, Rectangle headRect,String jsonKey) {
+    public TaiPingTable(int pageIndex, Rectangle headRect) {
 
-        super(pageIndex, headRect, "除法律法规另有约定外，涉及本保险", jsonKey);
+        super(pageIndex, headRect, "除法律法规另有约定外，涉及本保险");
         this.init();
 
     }

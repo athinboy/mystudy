@@ -12,9 +12,9 @@ import java.util.List;
  */
 public class RenBaoTable extends Table {
 
-    public RenBaoTable(int pageIndex, Rectangle headRect,  String jsonKey) {
+    public RenBaoTable(int pageIndex, Rectangle headRect) {
 
-        super(pageIndex, headRect, "提示：除法律法规另有约定外，投保人拥有保险合同解除",  jsonKey);
+        super(pageIndex, headRect, "提示：除法律法规另有约定外，投保人拥有保险合同解除");
         this.init();
         this.setLeftReferenceText("本保单投保人为");
         this.setTopReferenceText("年平均行驶里程");

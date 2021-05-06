@@ -1,10 +1,8 @@
 package net.fgq.study.pdf.annoation;
 
 import net.fgq.study.pdf.Item.OrderItemInfo;
-import net.fgq.study.pdf.PdfTextPosition;
 import org.apache.commons.lang3.ArrayUtils;
-
-import java.util.List;
+import org.apache.pdfbox.pdmodel.PDDocument;
 
 /**
  * Created by fengguoqiang 2020/10/27
@@ -99,7 +97,7 @@ public class CompluseDocument extends InsOrderDocument {
         //代收车船税-开具税务机关
         this.orderItemInfos.add(itemInfo = new OrderItemInfo("vtKJSWJG", false, "开具税务机关"));//
 
-        this.constructItemArea(this.addInfoArea("DSCYS", "代收车船税", "代收车船")
+        this.constructItemArea(this.addInfoArea("DSCCS", "代收车船税", "代收车船")
                 , "vehicleTaxFee"
                 , "vtCurbWeight"
                 , "vtTaxpayerIdentification"
@@ -113,9 +111,9 @@ public class CompluseDocument extends InsOrderDocument {
     }
 
     @Override
-    protected void specialOrder() {
+    protected void specialOrder(PDDocument pdfDocument) throws Exception {
 
-        super.specialOrder();
+        super.specialOrder(pdfDocument);
         switch (this.insCompanyType) {
             case tpyang:
                 this.getOrderItemInfo("platNum").setRequire(false);

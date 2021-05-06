@@ -14,9 +14,9 @@ import java.util.List;
  */
 public class TaiPingYangTable extends Table {
 
-    public TaiPingYangTable(int pageIndex, Rectangle headRect, String jsonKey) {
+    public TaiPingYangTable(int pageIndex, Rectangle headRect) {
 
-        super(pageIndex, headRect, "保险期间：自",  jsonKey);
+        super(pageIndex, headRect, "保险期间：自");
         this.init();
         this.setLeftReferenceText("被保险人地址");
         this.setTopReferenceText("初次登记日期");

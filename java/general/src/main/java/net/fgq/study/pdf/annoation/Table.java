@@ -62,7 +62,7 @@ public class Table {
     /**
      * json key name
      */
-    protected String jsonKey;
+    protected String jsonKey="items";
 
     protected int pageIndex;
 
@@ -81,7 +81,7 @@ public class Table {
      */
     protected Rectangle runtimeParseRectangle = null;
 
-    public Table(int pageIndex, Rectangle headRect, String footSign, String jsonKey) {
+    public Table(int pageIndex, Rectangle headRect, String footSign) {
 
         if (StringUtils.isBlank(jsonKey)
                 || StringUtils.isBlank(footSign)) {
@@ -95,7 +95,7 @@ public class Table {
         this.pageIndex = pageIndex;
     }
 
-    public Table(int pageIndex, Rectangle headRect, String jsonKey) {
+    public Table(int pageIndex, Rectangle headRect) {
         if (StringUtils.isBlank(jsonKey)) {
             throw new IllegalArgumentException();
         }

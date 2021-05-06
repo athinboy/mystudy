@@ -11,9 +11,9 @@ import java.util.List;
  */
 public class PingAnNewTable extends Table {
 
-    public PingAnNewTable(int pageIndex, Rectangle headRect, String jsonKey) {
+    public PingAnNewTable(int pageIndex, Rectangle headRect) {
 
-        super(pageIndex, headRect, "车损险每次事故绝对免赔额", jsonKey);
+        super(pageIndex, headRect, "车损险每次事故绝对免赔额");
         this.init();
         this.getFootSigns().add("保险费合计");
        this.setLeftReferenceText("争议解决方式");

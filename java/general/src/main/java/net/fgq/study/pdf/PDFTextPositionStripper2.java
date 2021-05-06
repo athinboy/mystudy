@@ -7,18 +7,11 @@ import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.state.PDGraphicsState;
-import org.apache.pdfbox.pdmodel.graphics.state.PDTextState;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.TextPosition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -27,7 +20,7 @@ import java.util.List;
 /**
  * Created by fengguoqiang 2020/10/24
  */
-public class PDFTextPositionStripper extends PDFTextStripper {
+public class PDFTextPositionStripper2 extends PDFTextStripper {
 
     /**
      * 字符间距
@@ -36,14 +29,12 @@ public class PDFTextPositionStripper extends PDFTextStripper {
 
     public boolean ShowSystemOut = false;
 
-    Logger logger = LoggerFactory.getLogger(PDFTextPositionStripper.class);
-
     /**
      * Instantiate a new PDFTextStripper object.
      *
      * @throws IOException If there is an error loading the properties.
      */
-    public PDFTextPositionStripper() throws IOException {
+    public PDFTextPositionStripper2() throws IOException {
         super();
     }
 
@@ -101,48 +92,6 @@ public class PDFTextPositionStripper extends PDFTextStripper {
         super.showTextStrings(array);
     }
 
-    private String showTextContent = "";
-
-    @Override
-    public void showTextString(byte[] string) throws IOException {
-        super.showTextString(string);
-    }
-
-    @Override
-    protected void showText(byte[] string) throws IOException {
-
-
-        showTextContent = "";
-        PDGraphicsState state = getGraphicsState();
-        PDTextState textState = state.getTextState();
-        // get the current font
-        PDFont font = textState.getFont();
-        if (font == null) {
-            System.out.println("No current font, will use default");
-            font = PDType1Font.HELVETICA;
-        }
-        // read the stream until it is empty
-        InputStream in = new ByteArrayInputStream(string);
-        while (in.available() > 0) {
-
-            // decode a character
-            int before = in.available();
-            int code = font.readCode(in);
-            int codeLength = before - in.available();
-
-            showTextContent += font.toUnicode(code);
-        }
-        if (showTextContent.equals("13.64")) {
-            logger.debug("13.64");
-        }
-        super.showText(string);
-        savePosition();
-
-
-
-
-    }
-
     protected void processOperator(Operator operator, List<COSBase> operands) throws IOException {
         super.processOperator(operator, operands);
 
@@ -182,15 +131,14 @@ public class PDFTextPositionStripper extends PDFTextStripper {
      */
     @Override
     protected void processTextPosition(TextPosition text) {
-        super.processTextPosition(text);
+        PDGraphicsState pdGraphicsState = this.getGraphicsState();
 
-        if (showTextContent.contains(text.getUnicode()) == false) {
-            throw PdfException.getInstance("");
-        }
+        super.processTextPosition(text);
+        TextPositionEx tex = new TextPositionEx(currentPageIndex, text);
+
         if (text.getUnicode().equals("2") || text.getUnicode().equals("浮")) {
             System.out.println(text.getX());
         }
-        TextPositionEx tex = new TextPositionEx(currentPageIndex, text);
 
 //        if (this.mergeTextPosition(tex)) {
 //            return;
@@ -251,9 +199,7 @@ public class PDFTextPositionStripper extends PDFTextStripper {
     }
 
     private void savePosition() {
-        if (textPositions.size() == 0) {
-            return;
-        }
+
         PdfTextPosition position = new PdfTextPosition(currentPageIndex, lastStr,
                 (new Double(Math.ceil(startX))).intValue(),
                 (new Double(Math.ceil(startY))).intValue(),
@@ -262,10 +208,6 @@ public class PDFTextPositionStripper extends PDFTextStripper {
         position.setTextPositions(textPositions);
 
         this.pdfTextPositions.add(position);
-        textPositions = new ArrayList<>();
-        lastStr = "";
-        startX = 0;
-        startY = 0;
         if (ShowSystemOut) {
             System.out.println(position.toString());
         }

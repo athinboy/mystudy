@@ -12,15 +12,15 @@ import java.util.List;
  */
 public class RenBaoNewTable extends Table {
 
-    public RenBaoNewTable(int pageIndex, Rectangle headRect, String footSign, String jsonKey) {
+    public RenBaoNewTable(int pageIndex, Rectangle headRect, String footSign) {
 
-        super(pageIndex, headRect, footSign, jsonKey);
+        super(pageIndex, headRect, footSign);
         this.init();
 
     }
 
-    public RenBaoNewTable(int pageIndex, Rectangle headRect, List<Column> columns, String jsonKey) {
-        super(pageIndex, headRect, jsonKey);
+    public RenBaoNewTable(int pageIndex, Rectangle headRect, List<Column> columns) {
+        super(pageIndex, headRect);
         this.init();
 
     }

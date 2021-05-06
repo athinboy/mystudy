@@ -226,11 +226,11 @@ public class InsOrderDocument extends Document {
 
     public static String errorSign = "";
 
-    public void parseContent(InsOrderDocument document, PDDocument pdfDocument, final List<PdfTextPosition> pdfTextPositions) {
+    public void parseContent(InsOrderDocument document, PDDocument pdfDocument, final List<PdfTextPosition> pdfTextPositions) throws Exception {
 
         List<PdfTextPosition> textPositions = new ArrayList<>();
         identityCompany(pdfTextPositions);
-        specialOrder();
+        specialOrder(pdfDocument);
 
         if (StringUtils.isNotBlank(this.getPageIndexSign())) {
             for (PdfTextPosition textPosition : textPositions) {
@@ -447,7 +447,7 @@ public class InsOrderDocument extends Document {
                         : Math.min(newText.getRectangle().getPageIndex() * 10000 + newText.getRectangle().y, verticalUpperLimit[itemInfo.getVerticalSort()]);
     }
 
-    protected void specialOrder() {
+    protected void specialOrder(PDDocument pdfDocument) throws Exception {
         this.getCombineLabelSign().add("地址");
         this.getCombineLabelSign().add("SALI");
     }

@@ -350,7 +350,7 @@ public class PdfTextPositionHelper {
         if (o2.getRectangle().x > o1.getRectangle().getMaxX() || o2.getRectangle().getMaxX() < o1.getRectangle().x) {
             return false;
         }
-        if (o2.getRectangle().y <= o2.getRectangle().getMiddleY()) {
+        if (o2.getRectangle().y <= o1.getRectangle().getMiddleY()) {
             return false;
         }
         return true;

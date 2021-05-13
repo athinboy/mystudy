@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import net.fgq.study.pdf.PdfTextPosition;
 import net.fgq.study.pdf.TableParse;
+import net.fgq.study.pdf.annoation.Column;
 import net.fgq.study.pdf.annoation.Table;
 
 import java.awt.*;
@@ -66,7 +67,11 @@ public class TaiPingYangNewTable extends Table {
         Object v;
         JSONObject newJson = null;
 
-        for (String s : Arrays.asList(new String[]{"承保险种1", "保险金额1", "免赔率1", "保险费1"})) {
+        for (String s : Arrays.asList(new String[]{
+                "insuranceType" + Column.dumplicateColSuffix,
+                "liability" + Column.dumplicateColSuffix,
+                "noDeductiblePercent" + Column.dumplicateColSuffix,
+                "fee" + Column.dumplicateColSuffix})) {
             v = jsonitem.get(s);
             if (v != null) {
                 newJson = newJson == null ? new JSONObject() : newJson;

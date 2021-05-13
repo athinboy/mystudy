@@ -166,6 +166,7 @@ public class TextPositionExHelper {
         }
         PdfTextPosition result = new PdfTextPosition(0, str, rectangle);
         result.setLineNumber(lineNumber);
+        result.setTextPositions(tempTexts);
         return result;
 
     }

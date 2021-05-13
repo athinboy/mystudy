@@ -54,6 +54,7 @@ public class TextBlock extends PdfTextPosition {
                 this.getTextPositions().add(ox);
                 this.reGenerate();
                 this.setLineNumber(this.getLineNumber() + 1);
+                return true;
             } else {
                 return false;
             }
@@ -83,7 +84,6 @@ public class TextBlock extends PdfTextPosition {
 
             }
         }
-        return false;
 
     }
 }

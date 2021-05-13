@@ -20,6 +20,8 @@ import java.util.regex.Pattern;
  */
 public class Column {
 
+    public final static String dumplicateColSuffix = "1";
+
     private int index = 0;
 
     /**

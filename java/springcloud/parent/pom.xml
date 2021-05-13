@@ -20,6 +20,8 @@
         <springframework.version>5.1.2.RELEASE</springframework.version>
         <springboot.version>2.2.6.RELEASE</springboot.version>
         <springcloud.version>Hoxton.SR3</springcloud.version>
+        <micrometer.version>1.6.4</micrometer.version>
+        <alibaba-sentinel.version>2.2.5.RELEASE</alibaba-sentinel.version>
     </properties>
     <modelVersion>4.0.0</modelVersion>
 
@@ -41,7 +43,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-actuator</artifactId>
-                <version>2.2.6.RELEASE</version>
+                <version>${springboot.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -63,7 +65,27 @@
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+                <version>${alibaba-sentinel.version}</version>
             </dependency>
+
+            <!-- micrometer start-->
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-registry-prometheus</artifactId>
+                <version>${micrometer.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-registry-appoptics</artifactId>
+                <version>${micrometer.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-registry-atlas</artifactId>
+                <version>${micrometer.version}</version>
+            </dependency>
+            <!--micrometer end-->
+
         </dependencies>
     </dependencyManagement>
 

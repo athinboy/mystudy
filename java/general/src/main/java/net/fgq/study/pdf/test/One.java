@@ -1,7 +1,6 @@
 package net.fgq.study.pdf.test;
 
 import com.spire.pdf.PdfDocument;
-import com.spire.pdf.PdfPageBase;
 import com.spire.pdf.widget.PdfPageCollection;
 
 import java.io.*;

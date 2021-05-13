@@ -30,13 +30,18 @@ public class TaiPingYangTable extends Table {
         this.setCellLineSpace(1);
         this.setDouleColumn(true);
     }
+
     @Override
     protected void adjustJsonItem(JSONArray tableJsonArr, JSONObject jsonitem) {
 
         Object v;
         JSONObject newJson = null;
 
-        for (String s : Arrays.asList(new String[]{"承保险别1", "保险金额1", "保险费1"})) {
+        for (String s : Arrays.asList(new String[]{
+                "insuranceType" + Column.dumplicateColSuffix,
+                "liability" + Column.dumplicateColSuffix,
+                "fee" + Column.dumplicateColSuffix
+        })) {
             v = jsonitem.get(s);
             if (v != null) {
                 newJson = newJson == null ? new JSONObject() : newJson;

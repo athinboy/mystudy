@@ -1,19 +1,13 @@
 package net.fgq.study.pdf.annoation;
 
-import com.alibaba.fastjson.JSONObject;
-import com.spire.pdf.PdfDocument;
 import net.fgq.study.pdf.Item.OrderItemInfo;
-import net.fgq.study.pdf.PDFTextPositionStripper;
 import net.fgq.study.pdf.PdfException;
-import net.fgq.study.pdf.PdfToJson;
 import net.fgq.study.pdf.annoation.special.table.*;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by fengguoqiang 2020/10/27
@@ -129,10 +123,10 @@ public class CommecialDocument extends InsOrderDocument {
         table.addColumn(new Column("保险金额", "liability")).addSign("责任限额");
         table.addColumn(new Column("绝对", "noDeductiblePercent")).addSign("免赔率");
         table.addColumn(new NumberColumn("保险费", "fee", TextHorizontalAlignEnum.RIGHT));
-        table.addColumn(new Column("承保险种", "insuranceType1", false));
-        table.addColumn(new Column("保险金额", "liability1")).addSign("责任限额");
-        table.addColumn(new Column("绝对", "noDeductiblePercent1")).addSign("免赔率");
-        table.addColumn(new NumberColumn("保险费", "fee1", TextHorizontalAlignEnum.RIGHT));
+        table.addColumn(new Column("承保险种", "insuranceType" + Column.dumplicateColSuffix, false));
+        table.addColumn(new Column("保险金额", "liability" + Column.dumplicateColSuffix)).addSign("责任限额");
+        table.addColumn(new Column("绝对", "noDeductiblePercent" + Column.dumplicateColSuffix)).addSign("免赔率");
+        table.addColumn(new NumberColumn("保险费", "fee"+ Column.dumplicateColSuffix, TextHorizontalAlignEnum.RIGHT));
 
         ////////////////////////////////////////
 
@@ -142,9 +136,9 @@ public class CommecialDocument extends InsOrderDocument {
         table2.addColumn(new Column("承保险别", "insuranceType", false));
         table2.addColumn(new Column("保险金额", "liability").addSign("赔偿限额"));
         table2.addColumn(new NumberColumn("保险费", "fee", TextHorizontalAlignEnum.LEFT));
-        table2.addColumn(new Column("承保险别", "insuranceType1", false));
-        table2.addColumn(new Column("保险金额", "liability1").addSign("赔偿限额"));
-        table2.addColumn(new NumberColumn("保险费", "fee1", TextHorizontalAlignEnum.LEFT));
+        table2.addColumn(new Column("承保险别", "insuranceType" + Column.dumplicateColSuffix, false));
+        table2.addColumn(new Column("保险金额", "liability" + Column.dumplicateColSuffix).addSign("赔偿限额"));
+        table2.addColumn(new NumberColumn("保险费", "fee" + Column.dumplicateColSuffix, TextHorizontalAlignEnum.LEFT));
 
     }
 

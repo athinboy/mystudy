@@ -14,7 +14,7 @@ public class Four {
 
         //String filename = "D:\\fgq\\temp\\999.pdf";
 
-        File fileDirectory = new File("D:\\fgq\\temp\\新测试保单-3\\");
+        File fileDirectory = new File("D:\\fgq\\temp\\新保单\\");
 
         File[] files = fileDirectory.listFiles();
         for (int i = 0; i < files.length; i++) {
@@ -47,6 +47,7 @@ public class Four {
                 continue;
             }
 
+            newFile+="-";
             newFile += files[i].getName().replace("平安", "")
                     .replace("平安", "")
                     .replace("人保", "")

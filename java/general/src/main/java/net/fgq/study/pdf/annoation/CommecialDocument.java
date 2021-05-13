@@ -43,7 +43,7 @@ public class CommecialDocument extends InsOrderDocument {
                 break;
             case pingan:
                 this.getOrderItemInfo("insuredName").setKeySigns(ArrayUtils.addAll(
-                        this.getOrderItemInfo("insuredName").getKeySigns(), "正式名称"));
+                        this.getOrderItemInfo("insuredName").getKeySigns(), "正式名称[:：]?"));
                 this.getOrderItemInfo("insuredName").setValueMultiLine(true);
                 break;
             case tpyang:

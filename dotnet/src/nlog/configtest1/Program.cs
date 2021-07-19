@@ -1,6 +1,7 @@
 ﻿using NLog;
 using System;
 using System.Diagnostics;
+using System.Runtime.ExceptionServices;
 
 namespace ConsoleApp1
 {
@@ -20,6 +21,8 @@ namespace ConsoleApp1
             {
                 logger.Error(ex);
 
+                ExceptionDispatchInfo.SetCurrentStackTrace(ex);
+
                 StackTrace stackTrace = new StackTrace(ex);
                 StackFrame[] frames = stackTrace.GetFrames();
                 for (int i = 0; i < frames.Length; i++)
@@ -38,9 +41,12 @@ namespace ConsoleApp1
 
                 if (Debugger.IsAttached)
                 {
-                    Debug.Write(ex);
+                    Debug.WriteLine(ex);
                 }
-                Console.Write(ex);
+                Console.WriteLine(ex);
+
+
+                Console.WriteLine(ex.ToString());
 
             }
 

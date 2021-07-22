@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="DBToClass.SettingWinControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+             Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+             Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             Name="MyToolWindow">
+    <Grid>
+        <TabControl Margin="0">
+            <TabItem Header="TabItem">
+
+                <Button Content="SelDBSource"  x:Name="btnSetDBSource" Margin="0,46,274,287" HorizontalAlignment="Right" Width="120"/>
+
+            </TabItem>
+            <TabItem Header="TabItem">
+                <StackPanel Orientation="Vertical">
+                    <GroupBox  Header="DBType" Margin="11,22,10,0" VerticalAlignment="Top">
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton x:Name="rbtnSqlServer" Content="SqlServer" HorizontalAlignment="Left" Margin="0,0,20,0" VerticalAlignment="Top" />
+                            <RadioButton x:Name="rbtnMySql" Content="MySql" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top"  />
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox>
+                        <GroupItem>
+
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="ip" ></Label>
+                                    <TextBox Width="200"></TextBox>
+                                    <Label Content="port"></Label>
+                                    <TextBox Width="30"></TextBox>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="user"></Label>
+                                    <TextBox Width="200"></TextBox>
+                                    <Label Content="password"></Label>
+                                    <PasswordBox Width="100"></PasswordBox>
+                                </StackPanel>
+                            </StackPanel>
+                        </GroupItem>
+                    </GroupBox>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="save" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                </StackPanel>
+
+            </TabItem>
+
+        </TabControl>
+    </Grid>
+</UserControl>

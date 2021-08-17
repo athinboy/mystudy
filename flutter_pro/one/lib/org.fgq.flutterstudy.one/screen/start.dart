@@ -18,14 +18,28 @@ class StartScreen extends StatelessWidget {
           MaterialPageRoute(builder: (context) => const LogInScreent()));
     });
 
-    Image image = Image(image: AssetImage('asset/img/minibear.jpg'));
+    Image image = Image(
+      image: AssetImage('asset/img/minibear.jpg'),
+      fit: BoxFit.fill,
+    );
 
     Scaffold scaffold = Scaffold(
         body: Stack(
       children: [
+        Center(child: image),
         Center(child: Text("hello2")),
-        BottomAppBar(
-          child: Text("广告"),
+        Row(
+          children: [
+            Column(
+              children: [
+                Container(
+                  width: 400,
+                  height: 670,
+                  child: Text("广告"),
+                )
+              ],
+            )
+          ],
         )
       ],
     ));

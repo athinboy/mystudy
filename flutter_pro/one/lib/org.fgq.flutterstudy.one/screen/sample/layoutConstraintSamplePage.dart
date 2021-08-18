@@ -7,8 +7,10 @@ const big = TextStyle(fontSize: 30);
 
 //////////////////////////////////////////////////
 
-class BigHomePage extends StatelessWidget {
-  const BigHomePage({Key? key}) : super(key: key);
+//深入理解 Flutter 布局约束
+//https://flutter.cn/docs/development/ui/layout/constraints
+class LayoutConstraintSamplePage extends StatelessWidget {
+  const LayoutConstraintSamplePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

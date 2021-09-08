@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:motordecoration/model/logindata.dart';
+import 'package:motordecoration/util/globaldata.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({Key? key}) : super(key: key);
@@ -41,12 +43,33 @@ class SkipWidget extends StatefulWidget {
 class SkipState extends State {
   int _lessSeconds = 10;
   Timer? _time;
+  Login? login = Login();
+
+  skipToNext() {
+    _time?.cancel();
+
+    if (login == null || login!.userId.isEmpty) {
+      Navigator.popAndPushNamed(context, "/login");
+    } else {
+      Navigator.popAndPushNamed(context, "/login");
+    }
+  }
 
   minusTime() {
+    if (!this.mounted) {
+      return;
+    }
     setState(() {
+      print(_lessSeconds);
+      if (_lessSeconds == 10) {
+        GlobalDataUtil.getLoginData().then((value) => login = value);
+      }
+
       _lessSeconds -= 1;
+
       if (_lessSeconds == 0) {
-        Navigator.popAndPushNamed(context, "/login");
+        print(login?.toJson().toString());
+        skipToNext();
       }
     });
   }
@@ -64,7 +87,9 @@ class SkipState extends State {
       height: 50,
       margin: EdgeInsets.fromLTRB(0, 20, 50, 0),
       child: TextButton(
-          onPressed: () => {Navigator.popAndPushNamed(context, "/login")},
+          onPressed: () {
+            skipToNext();
+          },
           child: Text("($_lessSeconds)秒跳过")),
     );
   }

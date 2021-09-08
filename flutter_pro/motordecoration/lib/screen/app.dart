@@ -6,6 +6,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Using MultiProvider is convenient when providing multiple objects.
+
     return MaterialApp(
       title: 'Provider Demo',
       initialRoute: '/',

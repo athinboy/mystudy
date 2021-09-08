@@ -12,11 +12,10 @@ class HttpGetPage extends StatelessWidget {
       child: TextButton(
         child: Text("百度"),
         onPressed: () {
-          Future<http.Response> future =
-              http.get(Uri.parse('http://www.baidu.com'));
+          Future<http.Response> future = http.get(Uri.parse('www.baidu.com'));
           future
               .then((value) => print(value.body))
-              .onError((error, stackTrace) => null);
+              .onError((error, stackTrace) => print(error?.toString()));
         },
       ),
     );

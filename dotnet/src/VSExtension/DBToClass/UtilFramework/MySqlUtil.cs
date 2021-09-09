@@ -173,7 +173,7 @@ order by ta.TABLE_SCHEMA,ta.TABLE_NAME,co.COLUMN_NAME,co.ORDINAL_POSITION
 
         }
 
-        public bool TestConnect(out string errorMsg)
+        public bool ConnectTest(out string errorMsg)
         {
             return TestConnect(GenConnectionStr(this.Server, this.Port, this.UserId, this.Pwd), out errorMsg);
         }

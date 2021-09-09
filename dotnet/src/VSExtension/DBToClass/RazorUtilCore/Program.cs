@@ -1,9 +1,9 @@
-﻿using GenerateUtilCore;
+﻿ 
 using RazorEngineCore;
 using System;
 using System.IO;
 
-namespace RazorUtilCore
+namespace Org.FGQ.CodeGenerate
 {
     class Program
     {

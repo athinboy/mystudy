@@ -14,25 +14,26 @@ namespace UtilFrameworkUnitTest
         private const string Pwd = "123";
 
         [TestMethod]
-        public void TestMethod1()
+        public void TestConnectTest()
         {
 
             MySqlUtil mySqlUtil = MySqlUtil.GetOne(Server, Port, UserId, Pwd);
             string errmsg = "";
             Console.WriteLine(mySqlUtil.ConnectStr);
-            bool condition = mySqlUtil.TestConnect(out errmsg);
+            bool condition = mySqlUtil.ConnectTest(out errmsg);
             Console.WriteLine(errmsg);
             Assert.IsTrue(condition);
         }
 
         [TestMethod]
-        public void TestMethod2()
+        public void TestLoadMeta()
         {
 
             MySqlUtil mySqlUtil = MySqlUtil.GetOne(Server, Port, UserId, Pwd);
 
             List<DB> dbs = mySqlUtil.LoadMeta();
             Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(dbs));
+            Assert.IsTrue(true);
         }
 
 

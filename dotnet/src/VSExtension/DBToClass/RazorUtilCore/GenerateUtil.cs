@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GenerateUtilCore
+﻿namespace Org.FGQ.CodeGenerate
 {
     public class GenerateUtil
     {

@@ -1,22 +1,24 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31424.327
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31612.314
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSToolExtension", "DBToClass\VSToolExtension.csproj", "{A7332A25-EC52-418E-A55D-A092A595337F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UtilFramework", "UtilFramework\UtilFramework.csproj", "{8D0CC2DE-7227-4640-A90C-3957696BC2A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UtilFrameworkUnitTest", "UtilFrameworkUnitTest\UtilFrameworkUnitTest.csproj", "{51D70A5A-FBDF-4EC6-B7F0-860ECAB0CB08}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UtilFrameworkTest", "UtilFrameworkUnitTest\UtilFrameworkTest.csproj", "{51D70A5A-FBDF-4EC6-B7F0-860ECAB0CB08}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A7332A25-EC52-418E-A55D-A092A595337F} = {A7332A25-EC52-418E-A55D-A092A595337F}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenerateUtilCore", "RazorUtilCore\GenerateUtilCore.csproj", "{75B94E9B-4A26-49F6-8247-567031E1322C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenerateUtilCoreUnitTest", "GenerateUtilCoreUnitTest\GenerateUtilCoreUnitTest.csproj", "{76C37A19-AB54-4662-9C79-7041BF842A59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenerateUtilCoreTest", "GenerateUtilCoreUnitTest\GenerateUtilCoreTest.csproj", "{76C37A19-AB54-4662-9C79-7041BF842A59}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFAppFramework", "WPFAppFramework\WPFAppFramework.csproj", "{A9F13388-4881-4B72-AA68-B78CF55D4A3C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTest", "UnitTest", "{0BDA5CD0-15E6-4775-A118-5B10C6A4A1F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{51D70A5A-FBDF-4EC6-B7F0-860ECAB0CB08} = {0BDA5CD0-15E6-4775-A118-5B10C6A4A1F5}
+		{76C37A19-AB54-4662-9C79-7041BF842A59} = {0BDA5CD0-15E6-4775-A118-5B10C6A4A1F5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7A1B4B82-DC81-494F-9971-C9C80288C9D9}

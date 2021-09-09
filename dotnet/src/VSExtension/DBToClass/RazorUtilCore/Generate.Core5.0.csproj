@@ -21,6 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\UtilFramework\Util.FW4.7.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="template\FreeSqlEntity.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace UtilFramework
+namespace Org.FGQ.CodeGenerate.Util.DB
 {
     public class Table
     {

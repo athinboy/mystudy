@@ -1,4 +1,4 @@
-﻿namespace UtilFramework
+﻿namespace Org.FGQ.CodeGenerate.Util
 {
     public enum FieldTypes
     {
@@ -10,6 +10,5 @@
         Double,
         DateTime,
         Bool
-
     }
 }

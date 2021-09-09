@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace UtilFramework
+namespace Org.FGQ.CodeGenerate.Util.DB
 {
     public class MySqlUtil
     {
@@ -33,7 +33,7 @@ namespace UtilFramework
             this.ConnectStr = GenConnectionStr(this.Server, this.Port, this.UserId, this.Pwd);
         }
 
-        private static string meteSql = @"
+        private static string metaSql = @"
 
  select ta.TABLE_SCHEMA, ta.TABLE_NAME,co.COLUMN_NAME,co.DATA_TYPE,co.COLUMN_TYPE ,co.ORDINAL_POSITION,co.COLUMN_KEY,co.IS_NULLABLE
 from TABLES ta
@@ -63,7 +63,7 @@ order by ta.TABLE_SCHEMA,ta.TABLE_NAME,co.COLUMN_NAME,co.ORDINAL_POSITION
 
                 connection.ChangeDatabase("information_schema");
 
-                using (var command = new MySqlCommand(meteSql, connection))
+                using (var command = new MySqlCommand(metaSql, connection))
                 using (var reader = command.ExecuteReader())
                 {
 

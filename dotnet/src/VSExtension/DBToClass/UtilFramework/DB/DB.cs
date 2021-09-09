@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UtilFramework
+namespace Org.FGQ.CodeGenerate.Util.DB
 {
     public class DB
     {

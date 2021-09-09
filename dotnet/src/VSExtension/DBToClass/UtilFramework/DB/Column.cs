@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace UtilFramework
+namespace Org.FGQ.CodeGenerate.Util.DB
 {
     public class Column
     {

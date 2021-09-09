@@ -1,7 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Org.FGQ.CodeGenerate.Util.DB;
 using System;
 using System.Collections.Generic;
-using UtilFramework;
+ 
 
 namespace UtilFrameworkUnitTest
 {
@@ -32,7 +33,7 @@ namespace UtilFrameworkUnitTest
             MySqlUtil mySqlUtil = MySqlUtil.GetOne(Server, Port, UserId, Pwd);
 
             List<DB> dbs = mySqlUtil.LoadMeta();
-            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(dbs));
+            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(dbs,Newtonsoft.Json.Formatting.Indented));
             Assert.IsTrue(true);
         }
 

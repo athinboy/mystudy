@@ -1,4 +1,5 @@
-﻿ 
+﻿
+using Org.FGQ.CodeGenerate.Config;
 using RazorEngineCore;
 using System;
 using System.IO;

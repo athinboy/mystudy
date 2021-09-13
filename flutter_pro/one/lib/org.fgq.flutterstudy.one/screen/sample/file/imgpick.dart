@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ImagePickSamplePage extends StatelessWidget {
   const ImagePickSamplePage({Key? key}) : super(key: key);
@@ -11,8 +11,11 @@ class ImagePickSamplePage extends StatelessWidget {
     return Center(
       child: TextButton(
         child: Text("选择图片"),
-        onPressed:  () async {
-
+        onPressed: () async {
+          ImagePicker _picker = ImagePicker();
+          final XFile? image =
+              await _picker.pickImage(source: ImageSource.gallery);
+          print(image!.path);
         },
       ),
     );

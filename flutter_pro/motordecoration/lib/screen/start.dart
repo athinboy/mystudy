@@ -10,10 +10,7 @@ class StartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Timer.periodic(Duration(seconds: 10), (timer) {
-      timer.cancel();
-      //Navigator.pushReplacementNamed(context, "/login");
-    });
+
 
     Image image = Image(
       image: AssetImage('asset/img/minibear.jpg'),

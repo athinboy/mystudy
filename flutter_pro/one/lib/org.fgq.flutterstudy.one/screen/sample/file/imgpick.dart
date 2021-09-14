@@ -1,23 +1,65 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ImagePickSamplePage extends StatelessWidget {
+class ImagePickSamplePage extends StatefulWidget {
   const ImagePickSamplePage({Key? key}) : super(key: key);
 
   @override
+  State<StatefulWidget> createState() {
+    return ImagePickSampleState();
+  }
+}
+
+class ImagePickSampleState extends State {
+  List<Widget> columnChildren = <Widget>[];
+  XFile? image;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Center(
-      child: TextButton(
-        child: Text("选择图片"),
-        onPressed: () async {
-          ImagePicker _picker = ImagePicker();
-          final XFile? image =
-              await _picker.pickImage(source: ImageSource.gallery);
-          print(image!.path);
-        },
-      ),
+    columnChildren.clear();
+
+    TextButton textButton = TextButton(
+      child: Text("选择图片"),
+      onPressed: () async {
+        image = null;
+        ImagePicker _picker = ImagePicker();
+        image = await _picker.pickImage(source: ImageSource.gallery);
+
+        setState(() {});
+        print(image!.path);
+        didChangeDependencies();
+      },
     );
+    columnChildren.add(Text(
+      "请选择图片",
+      style: TextStyle(),
+    ));
+    columnChildren.add(textButton);
+
+    if (image != null) {
+      columnChildren.add(Image.file(
+        File(image!.path),
+        scale: 0.5,
+        width: 400,
+        height: 300,
+      ));
+      columnChildren.add(Text("图片路径:${image!.path}",
+          style: TextStyle(
+              fontSize: 15, decorationStyle: TextDecorationStyle.solid)));
+    }
+    return Scaffold(
+        body: Center(
+            child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: columnChildren,
+    )));
   }
 }

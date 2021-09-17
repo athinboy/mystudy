@@ -38,11 +38,35 @@ class ImagePickSampleState extends State {
         didChangeDependencies();
       },
     );
+
+
+
     columnChildren.add(Text(
       "请选择图片",
       style: TextStyle(),
     ));
     columnChildren.add(textButton);
+
+    textButton = TextButton(
+      child: Text("拍照"),
+      onPressed: () async {
+        image = null;
+        ImagePicker _picker = ImagePicker();
+        image = await _picker.pickImage(source: ImageSource.camera);
+
+        setState(() {});
+        print(image!.path);
+        didChangeDependencies();
+      },
+    );
+    columnChildren.add(Text(
+      "请拍照",
+      style: TextStyle(),
+    ));
+    columnChildren.add(textButton);
+
+
+
 
     if (image != null) {
       columnChildren.add(Image.file(

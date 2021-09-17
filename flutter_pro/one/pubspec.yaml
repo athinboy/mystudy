@@ -31,6 +31,7 @@ dependencies:
   http: ^0.13.3
   image_picker: ^0.8.4
   file_picker: ^ 4.0.2
+  transparent_image: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -53,6 +54,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - asset/img/
+    - asset/gif/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

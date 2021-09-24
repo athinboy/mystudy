@@ -22,7 +22,7 @@ class HeroSamplePage extends StatelessWidget {
                 placeholder: 'asset/gif/loading.gif',
                 placeholderCacheWidth: 500,
                 image:
-                "https://t7.baidu.com/it/u=2291349828,4144427007&fm=193&f=GIF")),
+                    "https://t7.baidu.com/it/u=2291349828,4144427007&fm=193&f=GIF")),
       ),
     );
   }
@@ -34,7 +34,8 @@ class HeroSamplePage2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GestureDetector(
+      body: Center(
+          child: GestureDetector(
         onTap: () {
           Navigator.pop(context);
         },
@@ -44,9 +45,9 @@ class HeroSamplePage2 extends StatelessWidget {
               child: FadeInImage.memoryNetwork(
                   placeholder: kTransparentImage,
                   image:
-                  "https://t7.baidu.com/it/u=2291349828,4144427007&fm=193&f=GIF")),
+                      "https://t7.baidu.com/it/u=2291349828,4144427007&fm=193&f=GIF")),
         ),
-      ),
+      )),
     );
   }
 }

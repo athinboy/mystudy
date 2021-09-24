@@ -3,7 +3,7 @@
   <PropertyGroup>
     <IsFirstTimeProjectOpen>False</IsFirstTimeProjectOpen>
     <ActiveDebugFramework>net6.0-android</ActiveDebugFramework>
-    <ActiveDebugProfile>Xiaomi MI 8 (Android 10.0 - API 29)</ActiveDebugProfile>
+    <ActiveDebugProfile>Pixel 2 Pie 9.0 - API 28 (Android 9.0 - API 28)</ActiveDebugProfile>
     <SelectedDevice>Xiaomi MI 8</SelectedDevice>
   </PropertyGroup>
   <ItemGroup>

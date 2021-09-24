@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pro/org.fgq.flutterstudy.one/screen/sample/cupertino/index.dart';
 import 'package:flutter_pro/org.fgq.flutterstudy.one/screen/sample/file/index.dart';
+import 'package:flutter_pro/org.fgq.flutterstudy.one/screen/sample/hardware/index.dart';
 import 'package:flutter_pro/org.fgq.flutterstudy.one/screen/sample/internet/index.dart';
 import 'package:flutter_pro/org.fgq.flutterstudy.one/screen/sample/navigation/index.dart';
-
-import 'internet/httpget.dart';
 
 class SampleIndexScreen extends StatelessWidget {
   SampleIndexScreen({Key? key}) : super(key: key);
@@ -12,7 +11,7 @@ class SampleIndexScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 4,
+        length: 5,
         child: Scaffold(
             appBar: AppBar(
               title: const Text("示例"),
@@ -25,7 +24,10 @@ class SampleIndexScreen extends StatelessWidget {
                     text: "导航",
                   ),
                   Tab(text: "文件"),
-                  Tab(text: "Cupertino")
+                  Tab(text: "Cupertino"),
+                  Tab(
+                    text: "硬件",
+                  )
                 ],
                 isScrollable: true,
               ),
@@ -36,7 +38,8 @@ class SampleIndexScreen extends StatelessWidget {
                   InternetSampleIndexScreen(),
                   NavigationSampleIndexScreen(),
                   FileSampleIndexScreen(),
-                  CupertinoSampleIndexScreen()
+                  CupertinoSampleIndexScreen(),
+                  HardwareSampleIndexScreen()
                 ]))));
   }
 }

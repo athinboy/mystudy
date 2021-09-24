@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pro/org.fgq.flutterstudy.one/screen/sample/navigation/hero.dart';
 import 'package:flutter_pro/org.fgq.flutterstudy.one/screen/sample/navigation/passargument.dart';
 import 'package:flutter_pro/org.fgq.flutterstudy.one/screen/sample/sampleitem.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 List<SampleItem> navigationSampleItems = [
   SampleItem("hero", "", "/sample/navigation/hero", HeroSamplePage()),

@@ -1,0 +1,84 @@
+﻿
+@using System.IO
+@using System
+@using System.Collections.Generic
+@using System.Collections
+@using Org.FGQ.CodeGenerate.config
+/*
+Date: @DateTime.Now
+*/
+
+-- Start--------------------------------@Model.DBName"."@Model.TableName------------------
+DROP TABLE "@Model.DBName"."@Model.TableName";
+CREATE TABLE "@Model.DBName"."@Model.TableName" (
+
+ 
+@for (var i = 0; i < @Model.Columns.Count; i++){
+  var col2=@Model.Columns[i];
+
+
+  if( col2.Validate() ){
+
+     WriteColumnDefine(col2);
+     if(i!=@Model.Columns.Count-1){
+       @(",\r\n");
+     }else{
+     @("\r\n");
+     }
+ 
+  }
+ 
+}
+
+ 
+);
+
+
+COMMENT ON TABLE "@Model.DBName"."@Model.TableName" IS '@Model.Desc';
+
+
+@for (var i = 0; i < @Model.Columns.Count; i++){
+  var col2=@Model.Columns[i];
+
+
+  if( col2.Validate() ){
+@:COMMENT ON COLUMN "@Model.DBName"."@Model.TableName"."@col2.Name" IS '@col2.CommentStr()';
+ 
+  }
+ 
+}
+
+
+@{
+
+
+var keys=@Model.getPrimaryKeyNames();
+if(keys.Count>0){
+ @("ALTER TABLE \""+@Model.DBName+"\".\""+@Model.TableName+"\" ADD PRIMARY KEY (")
+ for(var i=0;i<keys.Count;i++){
+   @("\""+ @keys[i]+"\"" + (i<keys.Count-1?",":"") )
+ } @:);
+
+
+}
+
+
+}
+
+ 
+
+-- End--------------------------------@Model.DBName"."@Model.TableName------------------
+
+
+ 
+ @{
+  void WriteColumnDefine(DDLColumn col)
+  {
+    
+       @("   \""+@col.Name+"\" " +@col.SqlType + "   "+@col.NullStr()  +"")   
+    
+
+  
+  }
+}
+ 

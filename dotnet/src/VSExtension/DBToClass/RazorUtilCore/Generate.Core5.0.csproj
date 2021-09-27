@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -17,6 +17,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Mono.TextTemplating" Version="2.2.1" />
+    <PackageReference Include="NLog" Version="4.7.11" />
     <PackageReference Include="RazorEngineCore" Version="2021.7.1" />
   </ItemGroup>
 
@@ -26,6 +28,9 @@
 
   <ItemGroup>
     <None Update="template\FreeSqlEntity.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="template\OracleDDL.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="template\SqlSugarEntity.txt">

@@ -33,9 +33,9 @@ namespace Org.FGQ.CodeGenerate.Util.DB
             this.ConnectStr = GenConnectionStr(this.Server, this.Port, this.UserId, this.Pwd);
         }
 
-        private static string metaSql = @"
+        protected static string metaSql = @"
 
- select ta.TABLE_SCHEMA, ta.TABLE_NAME,co.COLUMN_NAME,co.DATA_TYPE,co.COLUMN_TYPE ,co.ORDINAL_POSITION,co.COLUMN_KEY,co.IS_NULLABLE
+ select ta.TABLE_SCHEMA, ta.TABLE_NAME,co.COLUMN_NAME,co.DATA_TYPE,co.COLUMN_TYPE ,co.ORDINAL_POSITION,co.COLUMN_KEY,co.IS_NULLABLE,ta.TABLE_COMMENT,co.COLUMN_COMMENT
 from TABLES ta
 left join COLUMNS co on co.TABLE_SCHEMA = ta.TABLE_SCHEMA and co.TABLE_NAME=ta.TABLE_NAME
 where ta.TABLE_SCHEMA not in (
@@ -72,6 +72,7 @@ order by ta.TABLE_SCHEMA,ta.TABLE_NAME,co.COLUMN_NAME,co.ORDINAL_POSITION
                     {
                         string dbname = reader.GetString("TABLE_SCHEMA");
                         string tablename = reader.GetString("TABLE_NAME");
+                        string tableComment = reader.GetString("TABLE_COMMENT");
 
                         if (currentDB == null || currentDB.DBName != dbname)
                         {
@@ -81,7 +82,7 @@ order by ta.TABLE_SCHEMA,ta.TABLE_NAME,co.COLUMN_NAME,co.ORDINAL_POSITION
                         }
                         if (currentTable == null || currentTable.TableName != tablename)
                         {
-                            currentDB.Tables.Add(currentTable = new Table(tablename));
+                            currentDB.Tables.Add(currentTable = new Table(tablename, tableComment));
                         }
                         currentTable.Columns.Add(new Column(
                             reader.GetString("COLUMN_NAME")
@@ -90,7 +91,8 @@ order by ta.TABLE_SCHEMA,ta.TABLE_NAME,co.COLUMN_NAME,co.ORDINAL_POSITION
                             , CheckPriKey(reader.GetString("COLUMN_KEY"))
                             , CheckNullable(reader.GetString("IS_NULLABLE"))
                             , reader.GetInt32("ORDINAL_POSITION")
-                            , AnalysisFieldType(reader.GetString("DATA_TYPE"), reader.GetString("COLUMN_KEY"))
+                            , AnalysisFieldType(reader.GetString("DATA_TYPE"), reader.GetString("COLUMN_TYPE"))
+                            ,reader.GetString("COLUMN_COMMENT")
                             ));
 
 

@@ -16,10 +16,12 @@ namespace Org.FGQ.CodeGenerate.Util.DB
         public string ColumnType { get; set; } = string.Empty;
         public string DataType { get; set; } = string.Empty;
 
+        public string Comment { get; set; } = string.Empty;
+
 
         public int Position { get; set; }
 
-        public Column(string colName, string columnType, string dataType, bool isPriKey, bool isNullable, int position, FieldTypes fieldType)
+        public Column(string colName, string columnType, string dataType, bool isPriKey, bool isNullable, int position, FieldTypes fieldType, string comment)
         {
             ColName = colName ?? throw new ArgumentNullException(nameof(colName));
             ColumnType = columnType ?? throw new ArgumentNullException(nameof(columnType));
@@ -28,6 +30,7 @@ namespace Org.FGQ.CodeGenerate.Util.DB
             IsNullable = isNullable;
             Position = position;
             FieldType = fieldType;
+            Comment = comment ?? "";
         }
     }
 }

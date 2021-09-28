@@ -23,11 +23,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UtilFramework\Util.FW4.7.csproj" />
+    <ProjectReference Include="..\Util.Core5.0\Common.Core5.0.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="template\FreeSqlEntity.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="template\DDLToJavaBean.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="template\OracleDDL.txt">

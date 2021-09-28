@@ -5,20 +5,22 @@ VisualStudioVersion = 17.0.31612.314
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSToolExtension", "DBToClass\VSToolExtension.csproj", "{A7332A25-EC52-418E-A55D-A092A595337F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UtilFramework", "UtilFramework\Util.FW4.7.csproj", "{8D0CC2DE-7227-4640-A90C-3957696BC2A6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.FW4.7", "UtilFramework\Common.FW4.7.csproj", "{8D0CC2DE-7227-4640-A90C-3957696BC2A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UtilFrameworkTest", "UtilFrameworkUnitTest\Util.FW4.7Test.csproj", "{51D70A5A-FBDF-4EC6-B7F0-860ECAB0CB08}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Util.FW4.7Test", "UtilFrameworkUnitTest\Util.FW4.7Test.csproj", "{51D70A5A-FBDF-4EC6-B7F0-860ECAB0CB08}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A7332A25-EC52-418E-A55D-A092A595337F} = {A7332A25-EC52-418E-A55D-A092A595337F}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenerateUtilCore", "RazorUtilCore\Generate.Core5.0.csproj", "{75B94E9B-4A26-49F6-8247-567031E1322C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generate.Core5.0", "RazorUtilCore\Generate.Core5.0.csproj", "{75B94E9B-4A26-49F6-8247-567031E1322C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenerateUtilCoreTest", "GenerateUtilCoreUnitTest\Generate.Core5.0Test.csproj", "{76C37A19-AB54-4662-9C79-7041BF842A59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generate.Core5.0Test", "GenerateUtilCoreUnitTest\Generate.Core5.0Test.csproj", "{76C37A19-AB54-4662-9C79-7041BF842A59}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFAppFramework", "WPFAppFramework\WPFAppFramework.csproj", "{A9F13388-4881-4B72-AA68-B78CF55D4A3C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTest", "UnitTest", "{0BDA5CD0-15E6-4775-A118-5B10C6A4A1F5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Core5.0", "Util.Core5.0\Common.Core5.0.csproj", "{6B43317A-9E5C-4B12-B52A-4D031CC4135B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +52,10 @@ Global
 		{A9F13388-4881-4B72-AA68-B78CF55D4A3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9F13388-4881-4B72-AA68-B78CF55D4A3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9F13388-4881-4B72-AA68-B78CF55D4A3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B43317A-9E5C-4B12-B52A-4D031CC4135B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B43317A-9E5C-4B12-B52A-4D031CC4135B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B43317A-9E5C-4B12-B52A-4D031CC4135B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B43317A-9E5C-4B12-B52A-4D031CC4135B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

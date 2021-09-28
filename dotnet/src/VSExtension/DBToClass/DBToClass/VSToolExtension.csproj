@@ -97,9 +97,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UtilFramework\Util.FW4.7.csproj">
+    <ProjectReference Include="..\UtilFramework\Common.FW4.7.csproj">
       <Project>{8d0cc2de-7227-4640-a90c-3957696bc2a6}</Project>
-      <Name>UtilFramework</Name>
+      <Name>Common.FW4.7</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

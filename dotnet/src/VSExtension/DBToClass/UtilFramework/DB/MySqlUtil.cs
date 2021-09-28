@@ -1,4 +1,5 @@
 ﻿using MySqlConnector;
+using Org.FGQ.CodeGenerate.Util.Code;
 using System;
 using System.Collections.Generic;
 
@@ -84,7 +85,7 @@ order by ta.TABLE_SCHEMA,ta.TABLE_NAME,co.COLUMN_NAME,co.ORDINAL_POSITION
                         {
                             currentDB.Tables.Add(currentTable = new Table(tablename, tableComment));
                         }
-                        currentTable.Columns.Add(new Column(
+                        currentTable.Columns.Add(new DBColumn(
                             reader.GetString("COLUMN_NAME")
                             , reader.GetString("COLUMN_TYPE")
                             , reader.GetString("DATA_TYPE")

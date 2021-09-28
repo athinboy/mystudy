@@ -1,0 +1,30 @@
+﻿package @Model.JavaBeanConfig.PackageName;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+
+import lombok.Data;
+import com.alibaba.fastjson.annotation.JSONField;
+
+/**
+ * @Model.DDLTable.Desc
+ * @@TableName @Model.DDLTable.TableName  
+ */
+@@Data
+public class @Model.ClassName implements Serializable {
+
+
+	@for (var i = 0; i < @Model.Fields.Count; i++){
+@:    /**
+@:      * @Model.Fields[i].Desc @Model.Fields[i].Remark
+@:     */
+@:    @@JSONField(name = "@Model.Fields[i].DDLName")
+@:    private @Model.Fields[i].FiledTypeStr @Model.Fields[i].Name; 	 
+	}
+
+    private static final long serialVersionUID = 1L;
+
+}
+
+
+ 

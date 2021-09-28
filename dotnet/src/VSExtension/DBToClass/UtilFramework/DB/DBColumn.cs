@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Org.FGQ.CodeGenerate.Util.Code;
+using System;
 
 namespace Org.FGQ.CodeGenerate.Util.DB
 {
-    public class Column
+    public class DBColumn
     {
 
         public bool IsPriKey { get; set; } = false;
@@ -11,17 +12,16 @@ namespace Org.FGQ.CodeGenerate.Util.DB
 
         public string ColName { get; set; } = string.Empty;
 
-        public FieldTypes FieldType { get; set; } = FieldTypes.String;
-
         public string ColumnType { get; set; } = string.Empty;
         public string DataType { get; set; } = string.Empty;
 
         public string Comment { get; set; } = string.Empty;
 
+        public FieldTypes FieldType { get; set; } = FieldTypes.String;
 
         public int Position { get; set; }
 
-        public Column(string colName, string columnType, string dataType, bool isPriKey, bool isNullable, int position, FieldTypes fieldType, string comment)
+        public DBColumn(string colName, string columnType, string dataType, bool isPriKey, bool isNullable, int position, FieldTypes fieldTypes, string comment)
         {
             ColName = colName ?? throw new ArgumentNullException(nameof(colName));
             ColumnType = columnType ?? throw new ArgumentNullException(nameof(columnType));
@@ -29,8 +29,8 @@ namespace Org.FGQ.CodeGenerate.Util.DB
             IsPriKey = isPriKey;
             IsNullable = isNullable;
             Position = position;
-            FieldType = fieldType;
             Comment = comment ?? "";
+            FieldType = fieldTypes;
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NLog;
 using Oracle.ManagedDataAccess.Client;
+using Org.FGQ.CodeGenerate.Util.Code;
 
 namespace Org.FGQ.CodeGenerate.Util.DB
 {
@@ -89,7 +90,9 @@ namespace Org.FGQ.CodeGenerate.Util.DB
         }
 
         protected static string metaSql = @"
-select c.TNAME,c.COLNO,c.CNAME,c.COLTYPE,c.WIDTH,c.SCALE,c.PRECISION,c.NULLS,CC.comments ,colc.constraint_type,utc.comments as tablecomment
+select NVL (c.TNAME,' ') TNAME ,c.COLNO COLNO,NVL (c.CNAME,' ') CNAME,NVL (c.COLTYPE,' ')COLTYPE,NVL (c.WIDTH,0)WIDTH,NVL (c.SCALE,0)SCALE,
+NVL (c.PRECISION,0)PRECISION,NVL (c.NULLS,' ')NULLS,NVL (CC.comments,' ') comments,NVL (colc.constraint_type,' ')constraint_type,NVL (utc.comments ,' ') tablecomment
+
 from SYS.COL c left join all_col_comments cc on c.CNAME=cc.Column_name and c.TNAME=cc.table_name 
 
 left join (
@@ -138,15 +141,15 @@ order by c.TNAME,c.COLNO asc
                             currentDB.Tables.Add(currentTable = new Table(tablename, tableComment));
                         }
 
-                        currentTable.Columns.Add(new Column(
-                                                   reader.GetString(reader.GetOrdinal("CNAME"))
-                                                   , reader.GetString(reader.GetOrdinal("COLTYPE"))
-                                                   , reader.GetString(reader.GetOrdinal("COLTYPE"))
-                                                   , CheckPriKey(reader.GetString(reader.GetOrdinal("constraint_type")))
-                                                   , CheckNullable(reader.GetString(reader.GetOrdinal("NULLS")))
+                        currentTable.Columns.Add(new DBColumn(
+                                                   reader.GetString(reader.GetOrdinal("CNAME")).Trim()
+                                                   , reader.GetString(reader.GetOrdinal("COLTYPE")).Trim()
+                                                   , reader.GetString(reader.GetOrdinal("COLTYPE")).Trim()
+                                                   , CheckPriKey(reader.GetString(reader.GetOrdinal("constraint_type".ToUpper())).Trim())
+                                                   , CheckNullable(reader.GetString(reader.GetOrdinal("NULLS")).Trim())
                                                    , reader.GetInt32(reader.GetOrdinal("COLNO"))
-                                                   , AnalysisFieldType(reader.GetString(reader.GetOrdinal("COLTYPE")))
-                                                  , reader.GetString(reader.GetOrdinal("comments"))
+                                                   , AnalysisFieldType(reader.GetString(reader.GetOrdinal("COLTYPE")).Trim(), reader.GetInt32(reader.GetOrdinal("WIDTH")), reader.GetInt32(reader.GetOrdinal("SCALE")), reader.GetInt32(reader.GetOrdinal("PRECISION")))
+                                                  , reader.GetString(reader.GetOrdinal("comments".ToUpper())).Trim()
                                                    ));
 
 
@@ -164,9 +167,32 @@ order by c.TNAME,c.COLNO asc
 
         }
 
-        private FieldTypes AnalysisFieldType(string coltype)
+        private FieldTypes AnalysisFieldType(string coltype, int width, int scale, int precision)
         {
-            return FieldTypes.Int32;
+            if (coltype.ToUpper().Contains("VARCHAR"))
+            {
+                return FieldTypes.String;
+            }
+
+            if (coltype.ToUpper().Contains("LONG"))
+            {
+                return FieldTypes.Long;
+            }
+
+            if (coltype.ToUpper().Contains("NUMBER"))
+            {
+                if (scale > 0)
+                {
+                    return FieldTypes.Decimal;
+                }
+                else
+                {
+                    return precision > 10 ? FieldTypes.Long : FieldTypes.Int32;
+
+                }
+            }
+
+            throw new ArgumentException(nameof(coltype));
         }
 
         private bool CheckNullable(string v)

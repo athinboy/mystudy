@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30717.126
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31717.71
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console", "console\console.csproj", "{1B504200-BAD3-4BC0-B3BF-EA92A4738910}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "crlinject", "crlinject\crlinject.csproj", "{F38BE6E7-9727-4762-8E59-BCCD98B50591}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "gitfilelist", "gitfilelist\gitfilelist.csproj", "{70F4ED66-D577-4D86-8BDB-173FC71764CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "t4", "t4\t4.csproj", "{C7076DCF-A9EE-4D43-B915-5F61577ED2DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,18 @@ Global
 		{70F4ED66-D577-4D86-8BDB-173FC71764CF}.Release|x64.Build.0 = Release|Any CPU
 		{70F4ED66-D577-4D86-8BDB-173FC71764CF}.Release|x86.ActiveCfg = Release|Any CPU
 		{70F4ED66-D577-4D86-8BDB-173FC71764CF}.Release|x86.Build.0 = Release|Any CPU
+		{C7076DCF-A9EE-4D43-B915-5F61577ED2DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7076DCF-A9EE-4D43-B915-5F61577ED2DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7076DCF-A9EE-4D43-B915-5F61577ED2DB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C7076DCF-A9EE-4D43-B915-5F61577ED2DB}.Debug|x64.Build.0 = Debug|Any CPU
+		{C7076DCF-A9EE-4D43-B915-5F61577ED2DB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C7076DCF-A9EE-4D43-B915-5F61577ED2DB}.Debug|x86.Build.0 = Debug|Any CPU
+		{C7076DCF-A9EE-4D43-B915-5F61577ED2DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7076DCF-A9EE-4D43-B915-5F61577ED2DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7076DCF-A9EE-4D43-B915-5F61577ED2DB}.Release|x64.ActiveCfg = Release|Any CPU
+		{C7076DCF-A9EE-4D43-B915-5F61577ED2DB}.Release|x64.Build.0 = Release|Any CPU
+		{C7076DCF-A9EE-4D43-B915-5F61577ED2DB}.Release|x86.ActiveCfg = Release|Any CPU
+		{C7076DCF-A9EE-4D43-B915-5F61577ED2DB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

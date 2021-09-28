@@ -1,4 +1,4 @@
-﻿ 
+﻿
 using Org.FGQ.CodeGenerate;
 using Org.FGQ.CodeGenerate.config;
 using NUnit;
@@ -9,25 +9,26 @@ using System;
 namespace Org.FGQ.CodeGenerateTest
 {
 
-  
 
 
-    public class DDLToSQLTest
+
+    public class DDLTest
     {
 
-       
-        DDLConfig config;
+
+        DDLConfig ddlConfig;
+        JavaBeanConfig javaBeanConfig;
 
         [SetUp]
         public void Init()
         {
-            config = new DDLConfig();
-            config.MyDBType = DDLConfig.DBType.Oracle;
+            ddlConfig = new DDLConfig();
+            ddlConfig.MyDBType = DDLConfig.DBType.Oracle;
 
             DDLTable newtable;
 
 
-            config.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_AFS_Booking","预约单"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_AFS_Booking", "预约单"));
             newtable.Columns.Add(new DDLColumn("经销商代码", "owner_code", "varchar(64)", "是", ""));
             newtable.Columns.Add(new DDLColumn("经销商名称", "company_name_cn", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("预约单号", "booking_no", "varchar(64)", "是", ""));
@@ -64,7 +65,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
 
-  
+
 
 
         }
@@ -72,12 +73,33 @@ namespace Org.FGQ.CodeGenerateTest
 
 
         [Test]
-        public void Test1()
+        public void DDLToSQLTest()
         {
 
-            DDLToSQL toSQL= new DDLToSQL();
-            toSQL.GenerateSql(config, @"c:\1\2.txt");
-          
+            DDLToSQL toSQL = new DDLToSQL();
+            toSQL.GenerateSql(ddlConfig, @"c:\1\2.txt");
+
+
+        }
+
+
+        [Test]
+        public void DDLToJavaBeanTest()
+        {
+
+            javaBeanConfig=new JavaBeanConfig();
+            javaBeanConfig.DDLConfig = ddlConfig;
+            javaBeanConfig.PackageName = "com.wintop.third.bmwspark.bean";
+            javaBeanConfig.JavaDiretory = @"D:\fgq\work\code\wintop-third-eas\bean\third-bmwspark-bean\src\main\java";
+            javaBeanConfig.OmmitPrefix = "ODS";
+
+
+
+            DDLToJavaBean toJavaBean = new DDLToJavaBean();
+            toJavaBean.GenerateBean(javaBeanConfig);
+
+       
+
 
         }
 

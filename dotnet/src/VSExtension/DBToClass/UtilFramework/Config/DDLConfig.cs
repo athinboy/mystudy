@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.config
 {
@@ -53,7 +51,7 @@ namespace Org.FGQ.CodeGenerate.config
 
         public string Desc { get; set; } = string.Empty;
 
-        public string Type { get; set; } = string.Empty;
+        public string TypeName { get; set; } = string.Empty;
 
         public string Name { get; set; } = string.Empty;
 
@@ -84,7 +82,7 @@ namespace Org.FGQ.CodeGenerate.config
 
         public bool Validate()
         {
-            return false == (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Type));
+            return false == (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(TypeName));
         }
 
 
@@ -93,7 +91,7 @@ namespace Org.FGQ.CodeGenerate.config
         {
             Desc = desc?.Trim() ?? throw new ArgumentNullException(nameof(desc));
             Name = name?.Trim() ?? throw new ArgumentNullException(nameof(name));
-            Type = type?.Trim() ?? throw new ArgumentNullException(nameof(type));
+            TypeName = type?.Trim() ?? throw new ArgumentNullException(nameof(type));
             KeySign = keySign?.Trim() ?? throw new ArgumentNullException(nameof(keySign));
             Remark = remark?.Trim() ?? throw new ArgumentNullException(nameof(remark));
         }
@@ -110,7 +108,7 @@ namespace Org.FGQ.CodeGenerate.config
 
 
 
-        internal void Prepare()
+        public void Prepare()
         {
 
             foreach (var table in Tables)
@@ -125,7 +123,7 @@ namespace Org.FGQ.CodeGenerate.config
                 }
                 table.Columns.ForEach(x =>
                 {
-                    x.SqlType = getSqlDBType(x.Type, this.MyDBType);
+                    x.SqlType = getSqlDBType(x.TypeName, this.MyDBType);
                 });
             }
 

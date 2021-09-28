@@ -1,4 +1,4 @@
-﻿namespace Org.FGQ.CodeGenerate.Util
+﻿namespace Org.FGQ.CodeGenerate.Util.Code
 {
     public enum FieldTypes
     {

@@ -1,20 +1,15 @@
 ﻿using Org.FGQ.CodeGenerate.config;
 using RazorEngineCore;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using static Org.FGQ.CodeGenerate.config.DDLConfig;
-using Mono.TextTemplating;
 
 namespace Org.FGQ.CodeGenerate
 {
     public class DDLToSQL
     {
 
-        private string templatePath;
+        private static string templateRelatePath = System.IO.Path.DirectorySeparatorChar + "template" + System.IO.Path.DirectorySeparatorChar + "OracleDDL.txt";
 
 
         static NLog.ILogger logger = NLog.LogManager.GetCurrentClassLogger();
@@ -22,20 +17,19 @@ namespace Org.FGQ.CodeGenerate
         public void GenerateSql(DDLConfig dDLConfig, string outputpath)
         {
 
-            string templatePath = Environment.CurrentDirectory + System.IO.Path.DirectorySeparatorChar + "template" + 
-                System.IO.Path.DirectorySeparatorChar + "OracleDDL.txt";
+            string templatePath = Environment.CurrentDirectory + templateRelatePath;
             logger.Info(outputpath);
 
             logger.Info(templatePath);
 
             dDLConfig.Prepare();
 
-           string templateContent=  File.ReadAllText(templatePath);
+            string templateContent = File.ReadAllText(templatePath);
 
 
 
             IRazorEngine razorEngine = new RazorEngine();
-            IRazorEngineCompiledTemplate<RazorEngineTemplateBase<DDLTable>> template 
+            IRazorEngineCompiledTemplate<RazorEngineTemplateBase<DDLTable>> template
                 = razorEngine.Compile<RazorEngineTemplateBase<DDLTable>>(templateContent, builder =>
                 {
                     //builder.AddAssemblyReferenceByName("System.Security"); // by name
@@ -49,15 +43,16 @@ namespace Org.FGQ.CodeGenerate
             string result = String.Empty;
             dDLConfig.Tables.ForEach(t =>
             {
-                result+= template.Run(instance => {
+                result += template.Run(instance =>
+                {
                     instance.Model = t;
                 });
             });
 
-          
+
 
             Console.WriteLine(result);
- 
+
 
             if (File.Exists(outputpath))
             {
@@ -65,7 +60,7 @@ namespace Org.FGQ.CodeGenerate
             }
 
 
-            File.WriteAllText(outputpath, result,Encoding.UTF8);
+            File.WriteAllText(outputpath, result, Encoding.UTF8);
 
 
 

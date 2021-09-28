@@ -16,6 +16,6 @@ namespace Org.FGQ.CodeGenerate.Util.DB
 
         public string Comment { get; set; } = string.Empty;
 
-        public List<Column> Columns { get; set; } = new List<Column>();
+        public List<DBColumn> Columns { get; set; } = new List<DBColumn>();
     }
 }

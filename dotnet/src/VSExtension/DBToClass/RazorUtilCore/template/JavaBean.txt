@@ -2,29 +2,29 @@
 @using System
 @using System.Collections.Generic
 @using System.Collections
-package @Model.JavaBeanConfig.PackageName;
+package @Model.PackageName;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 import lombok.Data;
 import com.alibaba.fastjson.annotation.JSONField;
+@(@Model.JavaBoClass!=null?"import  "+@Model.JavaBoClass.FullName+";":"" )
 
 /**
- * @Model.DDLTable.Desc
- * @@TableName @Model.DDLTable.TableName  
+ * @Model.Desc
+ * @@TableName @(@Model.DDLTable==null?"":@Model.DDLTable.TableName)  
  * Creator:fgq.generator
  * CreTime:@DateTime.Now
  */
 @@Data
-public class @Model.ClassName implements Serializable {
-
+@("public class "+@Model.ClassName+ (@Model.JavaBoClass!=null?" extends "+@Model.JavaBoClass.ClassName:"" )+" implements Serializable {")
 
 	@for (var i = 0; i < @Model.Fields.Count; i++){
 @:    /**
 @:      * @Model.Fields[i].Desc @Model.Fields[i].Remark
 @:     */
-@:    @@JSONField(name = "@Model.Fields[i].DDLName")
+@:    @@JSONField(name = "@Model.Fields[i].DBColName")
 @:    private @Model.Fields[i].FiledTypeStr @Model.Fields[i].Name; 	 
 	}
 

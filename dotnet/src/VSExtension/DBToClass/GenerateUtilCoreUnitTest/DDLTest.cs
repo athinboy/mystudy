@@ -90,12 +90,12 @@ namespace Org.FGQ.CodeGenerateTest
             javaBeanConfig = new JavaBeanConfig();
             javaBeanConfig.DDLConfig = ddlConfig;
             javaBeanConfig.PackageName = "com.wintop.third.bmwspark.bean";
+            javaBeanConfig.VOPackageName = "com.wintop.third.bmwspark.vo";
             javaBeanConfig.JavaDiretory = @"D:\fgq\work\code\wintop-third-eas\bean\third-bmwspark-bean\src\main\java";
             javaBeanConfig.OmmitPrefix = "ODS";
 
             JavaGenerator toJavaBean = new JavaGenerator();
             toJavaBean.GenerateBean(javaBeanConfig);
-
 
         }
 
@@ -106,6 +106,7 @@ namespace Org.FGQ.CodeGenerateTest
             javaBeanConfig = new JavaBeanConfig();
             javaBeanConfig.DDLConfig = ddlConfig;
             javaBeanConfig.PackageName = "com.wintop.third.bmwspark.bean";
+            javaBeanConfig.VOPackageName = "com.wintop.third.bmwspark.vo";
             javaBeanConfig.JavaDiretory = @"D:\fgq\work\code\wintop-third-eas\bean\third-bmwspark-bean\src\main\java";
             javaBeanConfig.OmmitPrefix = "ODS";
 
@@ -117,10 +118,19 @@ namespace Org.FGQ.CodeGenerateTest
             javaDaoConfig.PackageName = "com.wintop.third.bmwspark.mapper";
             javaDaoConfig.JavaDiretory = @"D:\fgq\work\code\wintop-third-eas\dao\third-bmwspark-dao\src\main\java";
 
+
+            JavaMapperConfig javaMapperConfig= new JavaMapperConfig(javaDaoConfig);
+            javaMapperConfig.MapperDirectory = @"D:\fgq\work\code\wintop-third-eas\dao\third-bmwspark-dao\src\main\resources\mybatis\mapper";
+
+
+
+
             ddlConfig.Tables.ForEach(t =>
             {
-                javaGenerator.GenerateDao(javaDaoConfig, t.CreatedJavaBean);
+                javaGenerator.GenerateDao(javaDaoConfig, t.CreatedJavaBean, javaMapperConfig);                 
             });
+
+
 
 
         }

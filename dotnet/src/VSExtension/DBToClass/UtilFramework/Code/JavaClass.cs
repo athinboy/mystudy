@@ -14,16 +14,52 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
         }
 
+        public JavaClass(string packageName, string className) : base(packageName, className)
+        {
+
+        }
+
+
+        public string PackageName
+        {
+            get
+            {
+                return NamespaceName;
+            }
+            private set { }
+        }
+
+        public string FullName
+        {
+            get
+            {
+                return NamespaceName+"."+ClassName;
+            }
+            private set { }
+        }
+
+
+
+        /// <summary>
+        /// Bo类
+        /// </summary>
+        public JavaClass JavaBoClass { get; set; } = null;
+
+        /// <summary>
+        /// Vo类
+        /// </summary>
+        public JavaClass JavaVoClass { get; set; } = null;
+
+
         public JavaClass(string packageName, DDLTable ddLTable, JavaBeanConfig javaBeanConfig) : this(packageName, ddLTable)
         {
             JavaBeanConfig = javaBeanConfig;
         }
 
         public JavaBeanConfig JavaBeanConfig { get; }
-        public string Desc { get; private set; }
 
 
-        public static JavaClass Create(DDLTable table, JavaBeanConfig javaBeanConfig)
+        public static JavaClass CreateBoClass(DDLTable table, JavaBeanConfig javaBeanConfig, bool createVo)
         {
             JavaClass javaClass = new JavaClass(javaBeanConfig.PackageName, table, javaBeanConfig);
 
@@ -46,7 +82,19 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
             javaClass.ClassName = CodeUtil.GetClassName(javaBeanConfig, table.TableName);
 
+            if (createVo)
+            {
+                javaClass.JavaVoClass = JavaClass.CreateVo(javaBeanConfig.VOPackageName, javaClass);
+            }
             return javaClass;
+        }
+
+        public static JavaClass CreateVo(string packageName, JavaClass boClass)
+        {
+            JavaClass javaClass = new JavaClass(packageName, boClass.ClassName + "Vo");
+            javaClass.JavaBoClass = boClass;
+            return javaClass;
+
         }
 
         private static string GetFildTypeStr(FieldBase filedBase)

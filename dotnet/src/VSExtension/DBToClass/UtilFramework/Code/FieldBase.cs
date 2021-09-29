@@ -1,4 +1,5 @@
 ﻿using Org.FGQ.CodeGenerate.Config;
+using Org.FGQ.CodeGenerate.Util.DB;
 using Org.FGQ.CodeGenerate.Util.Util;
 using System;
 using System.Collections.Generic;
@@ -22,12 +23,15 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
         public string Name { get; set; } = string.Empty;
 
+        public string JDBCType { get; set; } = string.Empty;
+
         public string FiledTypeStr { get; internal set; }
-        public string DDLName
+
+        public string DBColName
         {
             get
             {
-                return this.DDLColumn == null ? "" : DDLColumn.Name;
+                return this.DDLColumn == null ? "丢失的列名称" : DDLColumn.Name;
             }
             private set { }
         }
@@ -42,10 +46,11 @@ namespace Org.FGQ.CodeGenerate.Util.Code
             fieldBase.Remark = c.Remark;
             fieldBase.DDLColumn = c;
             fieldBase.FieldType = DDLUtil.AnalysisFieldType(c);
+            fieldBase.JDBCType = DBUtil.AnalysisJDBCType(fieldBase.FieldType);
             fieldBase.IsKeyField = c.IsKeyColumn();
             return fieldBase;
 
         }
-         
+
     }
 }

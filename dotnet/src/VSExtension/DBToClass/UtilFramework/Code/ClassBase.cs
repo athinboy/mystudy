@@ -10,14 +10,25 @@ namespace Org.FGQ.CodeGenerate.Util.Code
     public class ClassBase
     {
 
-        public string PackageName { get; set; }
+        public string NamespaceName { get; set; }
 
 
-        public ClassBase(string packageName, DDLTable dDLTable)
+
+        public string Desc { get; set; }
+
+        public ClassBase(string namespaceName, DDLTable dDLTable)
         {
-            PackageName = packageName ?? throw new ArgumentNullException(nameof(packageName));
+            NamespaceName = namespaceName ?? throw new ArgumentNullException(nameof(namespaceName));
             DDLTable = dDLTable ?? throw new ArgumentNullException(nameof(dDLTable));
         }
+
+        public ClassBase(string namespaceName, string className)
+        {
+            NamespaceName = namespaceName ?? throw new ArgumentNullException(nameof(namespaceName));
+            ClassName = className ?? throw new ArgumentNullException(nameof(className));
+        }
+
+
 
         public List<FieldBase> Fields { get; set; } = new List<FieldBase>();
 

@@ -45,6 +45,8 @@ namespace Org.FGQ.CodeGenerate.Config
             }
         }
 
+
+
         public string DaoName
         {
             get

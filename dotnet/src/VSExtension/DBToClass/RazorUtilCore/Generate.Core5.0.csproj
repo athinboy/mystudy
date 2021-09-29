@@ -33,6 +33,9 @@
     <None Update="template\JavaBean.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="template\JavaMapper.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="template\JavaDao.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

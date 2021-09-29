@@ -74,14 +74,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
             return PrepareJavaRoot(javaDaoConfig.JavaDiretory, javaDaoConfig.DaoPackageName);
         }
 
-
-        public static string PrepareJavaRoot(JavaConfigBase javaConfig)
-        {
-            return PrepareJavaRoot(javaConfig.JavaDiretory, javaConfig.PackageName);
-        }
-
-
-        private static string PrepareJavaRoot(string javaDiretory, string packageName)
+        public static string PrepareJavaRoot(string javaDiretory, string packageName)
         {
             string rootDir = javaDiretory + (javaDiretory.EndsWith(Path.DirectorySeparatorChar.ToString()) ? "" : Path.DirectorySeparatorChar.ToString());
 
@@ -116,6 +109,17 @@ namespace Org.FGQ.CodeGenerate.Util.Code
                 return string.Empty;
             }
             return string.Join(",", javaClass.KeyFileds.ConvertAll<string>(x => x.FiledTypeStr + " " + x.Name));
+
+        }
+
+
+        public static string GetDBColNameJoinStr(JavaClass javaClass)
+        {
+            if (false == javaClass.HasKeyField)
+            {
+                return string.Empty;
+            }
+            return string.Join(",", javaClass.KeyFileds.ConvertAll<string>(x => x.DBColName));
 
         }
 

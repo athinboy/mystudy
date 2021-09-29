@@ -1,4 +1,5 @@
 ﻿using Org.FGQ.CodeGenerate.Config;
+using Org.FGQ.CodeGenerate.RazorTag;
 using Org.FGQ.CodeGenerate.Util.Code;
 using RazorEngineCore;
 using System;
@@ -19,6 +20,9 @@ namespace Org.FGQ.CodeGenerate
 
         private static string javaDaoTemplateRelatePath = Path.DirectorySeparatorChar + "template" +
             Path.DirectorySeparatorChar + "JavaDao.txt";
+
+        private static string javaMapperTemplateRelatePath = Path.DirectorySeparatorChar + "template" +
+            Path.DirectorySeparatorChar + "JavaMapper.txt";
 
 
 
@@ -55,7 +59,9 @@ namespace Org.FGQ.CodeGenerate
 
 
 
-            string rootDir = CodeUtil.PrepareJavaRoot(javaBeanConfig);
+            string beanRootDir = CodeUtil.PrepareJavaRoot(javaBeanConfig.JavaDiretory, javaBeanConfig.PackageName);
+            string voRootDir = CodeUtil.PrepareJavaRoot(javaBeanConfig.JavaDiretory, javaBeanConfig.VOPackageName);
+
 
             string result = String.Empty;
             javaBeanConfig.DDLConfig.Tables.ForEach(t =>
@@ -63,12 +69,25 @@ namespace Org.FGQ.CodeGenerate
                 result = template.Run(instance =>
                 {
                     javaBeanConfig.Table = t;
-                    t.CreatedJavaBean = JavaClass.Create(t, javaBeanConfig);
+                    t.CreatedJavaBean = JavaClass.CreateBoClass(t, javaBeanConfig, true);
                     instance.Model = t.CreatedJavaBean;
                 });
                 Console.WriteLine(result);
-                string filePath = rootDir + Path.DirectorySeparatorChar + CodeUtil.GetClassName(javaBeanConfig, t.TableName) + ".java";
+                string filePath = beanRootDir + Path.DirectorySeparatorChar + t.CreatedJavaBean.ClassName + ".java";
 
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+                File.WriteAllText(filePath, result, Encoding.UTF8);
+
+
+                result = template.Run(instance =>
+                {
+                    instance.Model = t.CreatedJavaBean.JavaVoClass;
+                });
+                Console.WriteLine(result);
+                filePath = voRootDir + Path.DirectorySeparatorChar + t.CreatedJavaBean.JavaVoClass.ClassName + ".java";
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
@@ -83,35 +102,23 @@ namespace Org.FGQ.CodeGenerate
 
         }
 
-        public void GenerateDao(JavaDaoConfig javaDaoConfig, JavaClass javaClass)
+        public void GenerateDao(JavaDaoConfig javaDaoConfig, JavaClass javaClass, JavaMapperConfig javaMapperConfig)
         {
 
             string templatePath = Environment.CurrentDirectory + javaDaoTemplateRelatePath;
-
-
             logger.Info(templatePath);
-
-
-
             string templateContent = File.ReadAllText(templatePath);
 
-
-
-            IRazorEngine razorEngine = new RazorEngine();
+            IRazorEngine razorEngine = new RazorEngine();             
             IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaDaoConfig>> template
                 = razorEngine.Compile<RazorEngineTemplateBase<JavaDaoConfig>>(templateContent, builder =>
                 {
                     builder.AddAssemblyReferenceByName("System.Collections");
                     builder.AddAssemblyReference(typeof(CodeUtil)); // by type
-                });
+                });             
 
-
-            string rootDir  ;
-
-
+            string rootDir;
             string result = String.Empty;
-
-
 
             Action action = () =>
              {
@@ -130,6 +137,8 @@ namespace Org.FGQ.CodeGenerate
                      File.Delete(filePath);
                  }
                  File.WriteAllText(filePath, result, Encoding.UTF8);
+
+                 GenerateMapper(javaMapperConfig, javaClass);
 
              };
 
@@ -155,20 +164,78 @@ namespace Org.FGQ.CodeGenerate
             }
 
 
+        }
+
+        private void GenerateMapper(JavaMapperConfig javaMapperConfig, JavaClass createdJavaBean)
+        {
+            string templatePath = Environment.CurrentDirectory + javaMapperTemplateRelatePath;
+            logger.Info(templatePath);
+            string templateContent = File.ReadAllText(templatePath);
+
+            IRazorEngine razorEngine = new RazorEngine();
+            IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaMapperConfig>> template
+                = razorEngine.Compile<RazorEngineTemplateBase<JavaMapperConfig>>(templateContent, builder =>
+                {
+                    builder.AddAssemblyReferenceByName("System.Collections");
+                    builder.AddAssemblyReference(typeof(CodeUtil)); // by type
+                    builder.AddAssemblyReference(typeof(ReverseStrTagHelper)); // by type
+                });
 
 
+            string rootDir = javaMapperConfig.MapperDirectory;
+            string mapperDir = rootDir;
+            string result = String.Empty;
+
+            Action action = () =>
+            {
+                result = template.Run(instance =>
+                {
+
+                    javaMapperConfig.JavaClass = createdJavaBean;
+                    instance.Model = javaMapperConfig;
+                });
+                Console.WriteLine(result);
 
 
+                string filePath = mapperDir + Path.DirectorySeparatorChar + javaMapperConfig.MapperName + ".xml";
+
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+                File.WriteAllText(filePath, result, Encoding.UTF8);
+
+            };
 
 
+            if (javaMapperConfig.SplitReadWrite)
+            {
+                if (javaMapperConfig.DaoConfig.ForRead)
+                {
+                    mapperDir = rootDir + "\\read";
+                    javaMapperConfig.ForRead = true;
+                    javaMapperConfig.ForWrite = false;
+
+                    action();
+                }
+                if (javaMapperConfig.DaoConfig.ForWrite)
+                {
+
+                    mapperDir = rootDir + "\\write";
+                    javaMapperConfig.ForWrite = true;
+                    javaMapperConfig.ForRead = false;
+                    action();
+                }
+
+
+            }
+            else
+            {
+                action();
+
+            }
 
 
         }
-
-
-
-
-
-
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Config
 {
-    public class JavaBeanConfig: JavaConfigBase
+    public class JavaBeanConfig : JavaConfigBase
     {
 
         public DDLConfig DDLConfig { get; set; }
@@ -15,5 +15,6 @@ namespace Org.FGQ.CodeGenerate.Config
         public string OmmitPrefix { get; set; } = string.Empty;
         public DDLTable Table { get; set; }
         public ClassBase ClassBase { get; set; }
+        public string VOPackageName { get; set; }
     }
 }

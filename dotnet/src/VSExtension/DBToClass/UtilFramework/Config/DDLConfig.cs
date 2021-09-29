@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Org.FGQ.CodeGenerate.Util.Code;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Org.FGQ.CodeGenerate.config
+namespace Org.FGQ.CodeGenerate.Config
 {
 
     public class DDLTable
@@ -15,6 +16,7 @@ namespace Org.FGQ.CodeGenerate.config
         public string Desc { get; set; } = string.Empty;
 
         public List<DDLColumn> Columns { get; set; } = new List<DDLColumn>();
+        public JavaClass CreatedJavaBean { get; set; } = null;
 
         public DDLTable(string dbName, string tableName, string desc)
         {
@@ -100,6 +102,7 @@ namespace Org.FGQ.CodeGenerate.config
 
     public class DDLConfig
     {
+        private bool prepared=false;
 
         public enum DBType
         {
@@ -110,6 +113,10 @@ namespace Org.FGQ.CodeGenerate.config
 
         public void Prepare()
         {
+            if (this.prepared == true)
+            {
+                return;
+            }
 
             foreach (var table in Tables)
             {
@@ -126,6 +133,7 @@ namespace Org.FGQ.CodeGenerate.config
                     x.SqlType = getSqlDBType(x.TypeName, this.MyDBType);
                 });
             }
+            this.prepared = true;
 
 
 

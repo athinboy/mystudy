@@ -1,4 +1,4 @@
-﻿using Org.FGQ.CodeGenerate.config;
+﻿using Org.FGQ.CodeGenerate.Config;
 using Org.FGQ.CodeGenerate.Util.Util;
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
     {
 
         public FieldTypes FieldType { get; set; } = FieldTypes.String;
+        public bool IsKeyField { get; private set; } = false;
 
         public DDLColumn DDLColumn { get; set; }
 
@@ -41,8 +42,10 @@ namespace Org.FGQ.CodeGenerate.Util.Code
             fieldBase.Remark = c.Remark;
             fieldBase.DDLColumn = c;
             fieldBase.FieldType = DDLUtil.AnalysisFieldType(c);
+            fieldBase.IsKeyField = c.IsKeyColumn();
             return fieldBase;
 
         }
+         
     }
 }

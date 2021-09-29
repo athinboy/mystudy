@@ -51,6 +51,8 @@
     <Compile Include="Config\DDLConfig.cs" />
     <Compile Include="Config\GenerateConfig.cs" />
     <Compile Include="Config\JavaBeanConfig.cs" />
+    <Compile Include="Config\JavaConfigBase.cs" />
+    <Compile Include="Config\JavaDaoConfig.cs" />
     <Compile Include="DB\OracleUtil.cs" />
     <Compile Include="Code\FieldTypes.cs" />
     <Compile Include="DB\DBColumn.cs" />

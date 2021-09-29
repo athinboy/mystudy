@@ -1,4 +1,8 @@
-﻿package @Model.JavaBeanConfig.PackageName;
+﻿@using System.IO
+@using System
+@using System.Collections.Generic
+@using System.Collections
+package @Model.JavaBeanConfig.PackageName;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -9,6 +13,8 @@ import com.alibaba.fastjson.annotation.JSONField;
 /**
  * @Model.DDLTable.Desc
  * @@TableName @Model.DDLTable.TableName  
+ * Creator:fgq.generator
+ * CreTime:@DateTime.Now
  */
 @@Data
 public class @Model.ClassName implements Serializable {

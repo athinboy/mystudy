@@ -10,7 +10,7 @@ namespace Org.FGQ.CodeGenerate.Util.Util
     internal class DDLUtil
     {
 
-        internal static FieldTypes AnalysisFieldType(config.DDLColumn c)
+        internal static FieldTypes AnalysisFieldType(Config.DDLColumn c)
         {
 
             if (c.TypeName.ToUpper().Contains("VARCHAR") || c.TypeName.ToUpper().Contains("字符"))

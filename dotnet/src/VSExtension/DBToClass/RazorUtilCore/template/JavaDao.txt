@@ -1,0 +1,36 @@
+﻿@using System.IO
+@using System
+@using System.Collections.Generic
+@using System.Collections
+@using Org.FGQ.CodeGenerate.Util.Code
+package @Model.DaoPackageName;
+
+import @Model.JavaClass.PackageName.@Model.JavaClass.ClassName;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
+
+/**
+ * @@Entity @Model.JavaClass.ClassName
+ * Creator:fgq.generator
+ * CreTime:@DateTime.Now
+ */
+@@Mapper
+@@Repository
+public interface @Model.DaoName {
+
+@if(@Model.ForRead){
+if(@Model.JavaClass.HasKeyField){
+@:    @Model.JavaClass.ClassName selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass));
+}
+}
+@if(@Model.ForWrite){
+
+@:    int deleteByPrimaryKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass));
+@:
+@:    int insertSelective(@Model.JavaClass.ClassName record);
+@:
+@:    int updateByPrimaryKey(@Model.JavaClass.ClassName record);
+@:
+@:    int updateByPrimaryKeySelective(@Model.JavaClass.ClassName record);
+}
+}

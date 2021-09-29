@@ -1,6 +1,7 @@
-﻿using Org.FGQ.CodeGenerate.config;
+﻿using Org.FGQ.CodeGenerate.Config;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -66,5 +67,58 @@ namespace Org.FGQ.CodeGenerate.Util.Code
             return result;
 
         }
+
+        public static string PrepareJavaRoot(JavaDaoConfig javaDaoConfig)
+        {
+
+            return PrepareJavaRoot(javaDaoConfig.JavaDiretory, javaDaoConfig.DaoPackageName);
+        }
+
+
+        public static string PrepareJavaRoot(JavaConfigBase javaConfig)
+        {
+            return PrepareJavaRoot(javaConfig.JavaDiretory, javaConfig.PackageName);
+        }
+
+
+        private static string PrepareJavaRoot(string javaDiretory, string packageName)
+        {
+            string rootDir = javaDiretory + (javaDiretory.EndsWith(Path.DirectorySeparatorChar.ToString()) ? "" : Path.DirectorySeparatorChar.ToString());
+
+            if (false == Directory.Exists(rootDir))
+            {
+                Directory.CreateDirectory(rootDir);
+            }
+            string[] packageParts = packageName.Split('.');
+            for (int i = 0; i < packageParts.Length; i++)
+            {
+                string packagePart = packageParts[i];
+
+                if (string.IsNullOrEmpty(packagePart))
+                {
+                    continue;
+                }
+                rootDir += (packagePart + Path.DirectorySeparatorChar);
+
+                if (false == Directory.Exists(rootDir))
+                {
+                    Directory.CreateDirectory(rootDir);
+                }
+            }
+            return rootDir;
+        }
+
+
+        public static string GetJavaKeyFieldsParaStr(JavaClass javaClass)
+        {
+            if (false == javaClass.HasKeyField)
+            {
+                return string.Empty;
+            }
+            return string.Join(",", javaClass.KeyFileds.ConvertAll<string>(x => x.FiledTypeStr + " " + x.Name));
+
+        }
+
+
     }
 }

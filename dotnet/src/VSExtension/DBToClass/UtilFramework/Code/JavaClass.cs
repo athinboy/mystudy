@@ -1,4 +1,4 @@
-﻿using Org.FGQ.CodeGenerate.config;
+﻿using Org.FGQ.CodeGenerate.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +9,12 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 {
     public class JavaClass : ClassBase
     {
-        public JavaClass(DDLTable dDLTable) : base(dDLTable)
+        public JavaClass(string packageName, DDLTable dDLTable) : base(packageName, dDLTable)
         {
 
         }
 
-        public JavaClass(DDLTable ddLTable, JavaBeanConfig javaBeanConfig) : this(ddLTable)
+        public JavaClass(string packageName, DDLTable ddLTable, JavaBeanConfig javaBeanConfig) : this(packageName, ddLTable)
         {
             JavaBeanConfig = javaBeanConfig;
         }
@@ -25,7 +25,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
         public static JavaClass Create(DDLTable table, JavaBeanConfig javaBeanConfig)
         {
-            JavaClass javaClass = new JavaClass(table, javaBeanConfig);
+            JavaClass javaClass = new JavaClass(javaBeanConfig.PackageName, table, javaBeanConfig);
 
 
 

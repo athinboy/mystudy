@@ -1,8 +1,8 @@
 ﻿
 using Org.FGQ.CodeGenerate;
-using Org.FGQ.CodeGenerate.config;
+using Org.FGQ.CodeGenerate.Config;
 using NUnit;
-using static Org.FGQ.CodeGenerate.config.DDLConfig;
+using static Org.FGQ.CodeGenerate.Config.DDLConfig;
 using NUnit.Framework;
 using System;
 
@@ -87,23 +87,43 @@ namespace Org.FGQ.CodeGenerateTest
         public void DDLToJavaBeanTest()
         {
 
-            javaBeanConfig=new JavaBeanConfig();
+            javaBeanConfig = new JavaBeanConfig();
             javaBeanConfig.DDLConfig = ddlConfig;
             javaBeanConfig.PackageName = "com.wintop.third.bmwspark.bean";
             javaBeanConfig.JavaDiretory = @"D:\fgq\work\code\wintop-third-eas\bean\third-bmwspark-bean\src\main\java";
             javaBeanConfig.OmmitPrefix = "ODS";
 
-
-
-            DDLToJavaBean toJavaBean = new DDLToJavaBean();
+            JavaGenerator toJavaBean = new JavaGenerator();
             toJavaBean.GenerateBean(javaBeanConfig);
-
-       
 
 
         }
 
+        [Test]
+        public void DDLToJavaAll()
+        { 
 
+            javaBeanConfig = new JavaBeanConfig();
+            javaBeanConfig.DDLConfig = ddlConfig;
+            javaBeanConfig.PackageName = "com.wintop.third.bmwspark.bean";
+            javaBeanConfig.JavaDiretory = @"D:\fgq\work\code\wintop-third-eas\bean\third-bmwspark-bean\src\main\java";
+            javaBeanConfig.OmmitPrefix = "ODS";
+
+            JavaGenerator javaGenerator = new JavaGenerator();
+            javaGenerator.GenerateBean(javaBeanConfig);
+
+            JavaDaoConfig javaDaoConfig = new JavaDaoConfig();
+
+            javaDaoConfig.PackageName = "com.wintop.third.bmwspark.mapper";
+            javaDaoConfig.JavaDiretory = @"D:\fgq\work\code\wintop-third-eas\dao\third-bmwspark-dao\src\main\java";
+
+            ddlConfig.Tables.ForEach(t =>
+            {
+                javaGenerator.GenerateDao(javaDaoConfig, t.CreatedJavaBean);
+            });
+
+
+        }
 
 
     }

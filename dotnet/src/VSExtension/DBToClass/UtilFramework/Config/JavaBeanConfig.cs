@@ -5,14 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Org.FGQ.CodeGenerate.config
+namespace Org.FGQ.CodeGenerate.Config
 {
-    public class JavaBeanConfig
+    public class JavaBeanConfig: JavaConfigBase
     {
 
         public DDLConfig DDLConfig { get; set; }
-        public string PackageName { get; set; }
-        public string JavaDiretory { get; set; }
+
         public string OmmitPrefix { get; set; } = string.Empty;
         public DDLTable Table { get; set; }
         public ClassBase ClassBase { get; set; }

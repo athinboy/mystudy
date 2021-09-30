@@ -9,6 +9,14 @@ namespace Org.FGQ.CodeGenerate.Config
 {
     public class JavaDaoConfig : JavaConfigBase
     {
+
+        public JavaDaoConfig(JavaClass javaClass)
+        {
+            this.JavaClass = javaClass;
+
+        }
+
+
         private bool splitReadWrite = true;
 
         public bool SplitReadWrite
@@ -35,13 +43,30 @@ namespace Org.FGQ.CodeGenerate.Config
             {
                 if (SplitReadWrite && ForRead)
                 {
-                    return this.PackageName + ".read";
+                    return ReadDaoPackageName;
                 }
                 if (SplitReadWrite && ForWrite)
                 {
-                    return this.PackageName + ".write";
+                    return WriteDaoPackageName;
                 }
                 return this.PackageName;
+            }
+        }
+
+
+        public string ReadDaoPackageName
+        {
+            get
+            {
+                return this.PackageName + ".read";
+            }
+
+        }
+        public string WriteDaoPackageName
+        {
+            get
+            {
+                return this.PackageName + ".write";
             }
         }
 
@@ -54,17 +79,35 @@ namespace Org.FGQ.CodeGenerate.Config
 
                 if (SplitReadWrite && ForRead)
                 {
-                    return this.JavaClass.ClassName + "ReadDao";
+                    return ReadDaoName;
                 }
                 if (SplitReadWrite && ForWrite)
                 {
-                    return this.JavaClass.ClassName + "WriteDao";
+                    return WriteDaoName;
                 }
                 return this.JavaClass.ClassName + "Dao";
 
             }
 
         }
+
+        public string ReadDaoName
+        {
+            get
+            {
+                return this.JavaClass.ClassName + "ReadDao";
+            }
+
+        }
+        public string WriteDaoName
+        {
+            get
+            {
+                return this.JavaClass.ClassName + "WriteDao";
+            }
+        }
+
+
 
         public string VoClassName
         {
@@ -86,6 +129,14 @@ namespace Org.FGQ.CodeGenerate.Config
             get
             {
                 return this.JavaClass.ClassName;
+            }
+        }
+
+        public string BoClassFullName
+        {
+            get
+            {
+                return this.JavaClass.FullName;
             }
         }
     }

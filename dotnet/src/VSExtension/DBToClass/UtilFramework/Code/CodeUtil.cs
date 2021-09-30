@@ -102,14 +102,21 @@ namespace Org.FGQ.CodeGenerate.Util.Code
         }
 
 
-        public static string GetJavaKeyFieldsParaStr(JavaClass javaClass)
+        public static string GetJavaKeyFieldsParaStr(JavaClass javaClass, bool withType)
         {
             if (false == javaClass.HasKeyField)
             {
                 return string.Empty;
             }
-            return string.Join(",", javaClass.KeyFields.ConvertAll<string>(x => x.FiledTypeStr + " " + x.Name));
+            return string.Join(",", javaClass.KeyFields.ConvertAll<string>(x => (withType ? x.FiledTypeStr + " " : "") + x.Name));
 
+        }
+
+
+        public static string GetJavaParaName(string className)
+        {
+
+            return className.Substring(0, 1).ToLower() + className.Substring(1);
         }
 
 

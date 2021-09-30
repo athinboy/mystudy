@@ -101,7 +101,7 @@ namespace Org.FGQ.CodeGenerateTest
 
         [Test]
         public void DDLToJavaAll()
-        { 
+        {
 
             javaBeanConfig = new JavaBeanConfig();
             javaBeanConfig.DDLConfig = ddlConfig;
@@ -113,21 +113,38 @@ namespace Org.FGQ.CodeGenerateTest
             JavaGenerator javaGenerator = new JavaGenerator();
             javaGenerator.GenerateBean(javaBeanConfig);
 
-            JavaDaoConfig javaDaoConfig = new JavaDaoConfig();
+            JavaDaoConfig javaDaoConfig = new JavaDaoConfig(null);
 
             javaDaoConfig.PackageName = "com.wintop.third.bmwspark.mapper";
             javaDaoConfig.JavaDiretory = @"D:\fgq\work\code\wintop-third-eas\dao\third-bmwspark-dao\src\main\java";
 
 
-            JavaMapperConfig javaMapperConfig= new JavaMapperConfig(javaDaoConfig);
+            JavaMapperConfig javaMapperConfig = new JavaMapperConfig(javaDaoConfig);
             javaMapperConfig.MapperDirectory = @"D:\fgq\work\code\wintop-third-eas\dao\third-bmwspark-dao\src\main\resources\mybatis\mapper";
 
+            JavaCodeConfig javaCodeConfig = new JavaCodeConfig(javaDaoConfig);
+
+            javaCodeConfig.ModelPackageName = "com.wintop.third.bmwspark.model";
+            javaCodeConfig.ModelJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-bmwspark-service-api\src\main\java";
+
+            javaCodeConfig.ServicePackageName = "com.wintop.third.bmwspark.service";
+            javaCodeConfig.ServiceJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-bmwspark-service-api\src\main\java";
+
+            javaCodeConfig.ServiceImplPackageName = "com.wintop.third.bmwspark.service.impl";
+            javaCodeConfig.ServiceImplJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-bmwspark-service-api\src\main\java";
+
+            javaCodeConfig.ControllerPackageName = "com.wintop.third.bmwspark.controller";
+            javaCodeConfig.ControllerJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-bmwspark-service-api\src\main\java";
 
 
 
             ddlConfig.Tables.ForEach(t =>
             {
-                javaGenerator.GenerateDao(javaDaoConfig, t.CreatedJavaBean, javaMapperConfig);                 
+                javaDaoConfig.JavaClass = t.CreatedJavaBean;
+                javaGenerator.GenerateDao(javaDaoConfig, javaMapperConfig);
+
+                javaGenerator.GenerateCode(javaCodeConfig, t.CreatedJavaBean);
+
             });
 
 

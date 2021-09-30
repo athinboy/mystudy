@@ -24,7 +24,8 @@ namespace Org.FGQ.CodeGenerate
         private static string javaMapperTemplateRelatePath = Path.DirectorySeparatorChar + "template" +
             Path.DirectorySeparatorChar + "JavaMapper.txt";
 
-
+        private static string javaCodeTemplateRelatePath = Path.DirectorySeparatorChar + "template" +
+            Path.DirectorySeparatorChar + "JavaCode.txt";
 
         static NLog.ILogger logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -102,20 +103,20 @@ namespace Org.FGQ.CodeGenerate
 
         }
 
-        public void GenerateDao(JavaDaoConfig javaDaoConfig, JavaClass javaClass, JavaMapperConfig javaMapperConfig)
+        public void GenerateDao(JavaDaoConfig javaDaoConfig, JavaMapperConfig javaMapperConfig)
         {
 
             string templatePath = Environment.CurrentDirectory + javaDaoTemplateRelatePath;
             logger.Info(templatePath);
             string templateContent = File.ReadAllText(templatePath);
 
-            IRazorEngine razorEngine = new RazorEngine();             
+            IRazorEngine razorEngine = new RazorEngine();
             IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaDaoConfig>> template
                 = razorEngine.Compile<RazorEngineTemplateBase<JavaDaoConfig>>(templateContent, builder =>
                 {
                     builder.AddAssemblyReferenceByName("System.Collections");
                     builder.AddAssemblyReference(typeof(CodeUtil)); // by type
-                });             
+                });
 
             string rootDir;
             string result = String.Empty;
@@ -124,7 +125,7 @@ namespace Org.FGQ.CodeGenerate
              {
                  result = template.Run(instance =>
                  {
-                     javaDaoConfig.JavaClass = javaClass;
+
                      instance.Model = javaDaoConfig;
                  });
                  Console.WriteLine(result);
@@ -138,7 +139,8 @@ namespace Org.FGQ.CodeGenerate
                  }
                  File.WriteAllText(filePath, result, Encoding.UTF8);
 
-                 GenerateMapper(javaMapperConfig, javaClass);
+                 javaMapperConfig.JavaClass = javaDaoConfig.JavaClass;
+                 GenerateMapper(javaMapperConfig);
 
              };
 
@@ -166,8 +168,10 @@ namespace Org.FGQ.CodeGenerate
 
         }
 
-        private void GenerateMapper(JavaMapperConfig javaMapperConfig, JavaClass createdJavaBean)
+        private void GenerateMapper(JavaMapperConfig javaMapperConfig)
         {
+
+
             string templatePath = Environment.CurrentDirectory + javaMapperTemplateRelatePath;
             logger.Info(templatePath);
             string templateContent = File.ReadAllText(templatePath);
@@ -191,7 +195,7 @@ namespace Org.FGQ.CodeGenerate
                 result = template.Run(instance =>
                 {
 
-                    javaMapperConfig.JavaClass = createdJavaBean;
+
                     instance.Model = javaMapperConfig;
                 });
                 Console.WriteLine(result);
@@ -237,5 +241,80 @@ namespace Org.FGQ.CodeGenerate
 
 
         }
+
+        public void GenerateCode(JavaCodeConfig javaCodeConfig, JavaClass createdJavaBean)
+        {
+            string templatePath = Environment.CurrentDirectory + javaCodeTemplateRelatePath;
+            logger.Info(templatePath);
+            string templateContent = File.ReadAllText(templatePath);
+            javaCodeConfig.JavaClass = createdJavaBean;
+
+
+            IRazorEngine razorEngine = new RazorEngine();
+            IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaCodeConfig>> template
+                = razorEngine.Compile<RazorEngineTemplateBase<JavaCodeConfig>>(templateContent, builder =>
+                {
+                    builder.AddAssemblyReferenceByName("System.Collections");
+                    builder.AddAssemblyReference(typeof(CodeUtil)); // by type
+                    builder.AddAssemblyReference(typeof(ReverseStrTagHelper)); // by type
+                });
+
+
+            string rootDir = String.Empty;
+
+            string result = String.Empty;
+
+            string fileName = string.Empty;
+
+            Action action = () =>
+            {
+                result = template.Run(instance =>
+                {
+                    instance.Model = javaCodeConfig;
+                });
+                Console.WriteLine(result);
+
+
+                string filePath = rootDir + Path.DirectorySeparatorChar + fileName + ".java";
+
+
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+                File.WriteAllText(filePath, result, Encoding.UTF8);
+
+            };
+
+
+            javaCodeConfig.Reset();
+            javaCodeConfig.ForModel = true;
+            rootDir = CodeUtil.PrepareJavaRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ModelPackageName);
+            fileName = javaCodeConfig.ModelName;
+            action();
+
+
+            javaCodeConfig.Reset();
+            javaCodeConfig.ForService = true;
+            rootDir = CodeUtil.PrepareJavaRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ServicePackageName);
+            fileName = javaCodeConfig.ServiceName;
+            action();
+
+            javaCodeConfig.Reset();
+            javaCodeConfig.ForServiceImpl = true;
+            rootDir = CodeUtil.PrepareJavaRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ServiceImplPackageName);
+            fileName = javaCodeConfig.ServiceImplName;
+            action();
+
+
+            javaCodeConfig.Reset();
+            javaCodeConfig.ForController = true;
+            rootDir = CodeUtil.PrepareJavaRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ControllerPackageName);
+            fileName = javaCodeConfig.ControllerName;
+            action();
+
+
+        }
+
     }
 }

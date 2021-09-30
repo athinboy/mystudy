@@ -25,7 +25,7 @@ public interface @Model.DaoName {
 
 @if(@Model.ForRead){
 if(@Model.JavaClass.HasKeyField){
-@:    @Model.VoClassName selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass));
+@:    @Model.VoClassName selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true));
 @:
 }
 @:    Integer queryCountByParaMap(Map paraMap);
@@ -38,7 +38,7 @@ if(@Model.JavaClass.HasKeyField){
 }
 @if(@Model.ForWrite){
 
-@:    int deleteByPrimaryKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass));
+@:    int deleteByPrimaryKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true));
 @:
 @:    int insert(@Model.JavaClass.ClassName record);
 @:

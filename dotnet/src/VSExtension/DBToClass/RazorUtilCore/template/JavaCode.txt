@@ -1,1 +1,227 @@
-﻿
+﻿@using System.IO
+@using System
+@using System.Collections.Generic
+@using System.Collections
+@using Org.FGQ.CodeGenerate.Util.Code
+@(
+//          Model部分
+)
+@if(@Model.ForModel){
+<text>package @Model.ModelPackageName;
+
+import @Model.DaoConfig.BoClassFullName;
+import @Model.DaoConfig.VoClassFullName;
+import @Model.DaoConfig.WriteDaoPackageName.@Model.DaoConfig.WriteDaoName;
+import @Model.DaoConfig.ReadDaoPackageName.@Model.DaoConfig.ReadDaoName;
+import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import java.util.Map;
+
+
+/**
+ * @Model.JavaClass.Desc
+ * @@author: 
+ * cretime: @DateTime.Now
+*/
+@@Repository
+public class @Model.ModelName {
+
+    @@Autowired
+    private @Model.DaoConfig.ReadDaoName readDao;
+
+    @@Autowired
+    private @Model.DaoConfig.WriteDaoName writeDao;
+
+
+    public @Model.DaoConfig.VoClassName selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true)){
+        return readDao.selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,false));   
+    }
+
+    public Integer queryCountByParaMap(Map paraMap){
+        return readDao.queryCountByParaMap(paraMap);    
+    }
+
+    
+    public List<@Model.DaoConfig.VoClassName> queryByParaMap(Map paramMap){
+        return readDao.queryByParaMap(paramMap);
+    }
+    
+    public Integer queryCountByParaBean(@Model.DaoConfig.BoClassName paraBean){
+        return readDao.queryCountByParaBean(paraBean);
+    }
+    
+    public List<@Model.DaoConfig.VoClassName> queryByParaBean(@Model.DaoConfig.BoClassName paramBean){
+        return readDao.queryByParaBean(paramBean);
+    }    
+    
+    
+    public int deleteByPrimaryKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true)){
+        return writeDao.deleteByPrimaryKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,false));
+    }
+    
+    public int insert(@Model.JavaClass.ClassName record){
+        return writeDao.insert(record);
+    }
+    
+    public int insertSelective(@Model.JavaClass.ClassName record){
+        return writeDao.insertSelective(record);
+    }
+    
+    public int updateByPrimaryKey(@Model.JavaClass.ClassName record){
+        return writeDao.updateByPrimaryKey(record);
+    }
+    
+    public int updateByPrimaryKeySelective(@Model.JavaClass.ClassName record){
+        return writeDao.updateByPrimaryKeySelective(record);
+    }
+
+
+
+
+}
+
+</text>
+}
+@(
+
+
+//          Service部分
+)
+@if(@Model.ForService){
+<text>package @Model.ServicePackageName;
+
+import @Model.DaoConfig.BoClassFullName;
+import @Model.DaoConfig.VoClassFullName;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @Model.JavaClass.Desc
+ * @@author: 
+ * cretime: @DateTime.Now
+*/
+public interface @Model.ServiceName {
+
+    @Model.DaoConfig.VoClassName selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true));
+
+    Integer queryCountByParaMap(Map paraMap);
+
+    List<@Model.DaoConfig.VoClassName> queryByParaMap(Map paramMap);
+
+    Integer queryCountByParaBean(@Model.DaoConfig.BoClassName paraBean);
+
+    List<@Model.DaoConfig.VoClassName> queryByParaBean(@Model.DaoConfig.BoClassName paramBean);
+
+    int deleteByPrimaryKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true));
+
+    int insert(@Model.JavaClass.ClassName record);
+
+    int insertSelective(@Model.JavaClass.ClassName record);
+
+    int updateByPrimaryKey(@Model.JavaClass.ClassName record);
+
+    int updateByPrimaryKeySelective(@Model.JavaClass.ClassName record);
+
+}
+
+</text>
+}
+@(
+
+
+
+//          ServiceImpl部分
+)
+@if(@Model.ForServiceImpl){
+<text>package @Model.ServiceImplPackageName;
+
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import @Model.ServicePackageName.@Model.ServiceName;
+import @Model.ModelPackageName.@Model.ModelName;
+import @Model.DaoConfig.BoClassFullName;
+import @Model.DaoConfig.VoClassFullName;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @Model.JavaClass.Desc
+ * @@author: 
+ * cretime: @DateTime.Now
+*/
+@@Service
+public class @Model.ServiceImplName implements @Model.ServiceName  {
+
+    @@Autowired
+    private @Model.ModelName @CodeUtil.GetJavaParaName(@Model.ModelName);
+
+    public @Model.DaoConfig.VoClassName selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true)) {
+        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,false));
+    }
+
+    public Integer queryCountByParaMap(Map paraMap) {
+        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.queryCountByParaMap(paraMap);
+    }
+
+    public List<@Model.DaoConfig.VoClassName> queryByParaMap(Map paramMap) {
+        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.queryByParaMap(paramMap);
+    }
+
+    public Integer queryCountByParaBean(@Model.DaoConfig.BoClassName paraBean) {
+        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.queryCountByParaBean(paraBean);
+    }
+
+    public List<@Model.DaoConfig.VoClassName> queryByParaBean(@Model.DaoConfig.BoClassName paramBean) {
+        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.queryByParaBean(paramBean);
+    }
+
+    public int deleteByPrimaryKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true)) {
+        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.deleteByPrimaryKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,false));
+    }
+
+    public int insert(@Model.JavaClass.ClassName record) {
+        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.insert(record);
+    }
+
+    public int insertSelective(@Model.JavaClass.ClassName record) {
+        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.insertSelective(record);
+    }
+
+    public int updateByPrimaryKey(@Model.JavaClass.ClassName record) {
+        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.updateByPrimaryKey(record);
+    }
+
+    public int updateByPrimaryKeySelective(@Model.JavaClass.ClassName record) {
+        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.updateByPrimaryKeySelective(record);
+    }
+}
+
+</text>
+}
+@(
+
+
+//          Controller部分
+)
+@if(@Model.ForController){
+<text>package @Model.ControllerPackageName;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * @Model.JavaClass.Desc
+ * @@author: 
+ * cretime: @DateTime.Now
+*/
+@@RestController
+@@RequestMapping("/accountapply")
+public class @Model.ControllerName   {
+
+}
+</text>
+}

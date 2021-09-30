@@ -110,6 +110,10 @@ namespace Org.FGQ.CodeGenerate.Config
         }
 
 
+        public DDLTable GetTable(string tableName)
+        {
+            return Tables.Find(x=>x.TableName == tableName);
+        }
 
         public void Prepare()
         {

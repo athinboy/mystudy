@@ -46,7 +46,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
             }
         }
 
-        public List<FieldBase> KeyFileds
+        public List<FieldBase> KeyFields
         {
             get
             {

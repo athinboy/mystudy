@@ -19,23 +19,136 @@ foreach(var field in @Model.ClasssFields ){
 @:    <sql id="Base_Column_List">
 @:       @CodeUtil.GetDBColNameJoinStr(@Model.JavaClass)
 @:    </sql>
-@:    <select id="selectByKey"  resultType="@Model.VoFullName" parameterType="java.lang.Long">
+@:    <select id="selectByKey" resultType="@Model.VoFullName" parameterType="@CodeUtil.GetJavaMapKeyParaType(@Model.JavaClass)">
 @:        select
 @:        <include refid="Base_Column_List"/>
-@:        from @Model.DBTableName
+@:        from @Model.DBTableName t1
+for (var i = 0; i < @Model.JavaClass.KeyFields.Count; i++){
+          if(i==0){@("        where ")} else {@("        and ")}
+@:t1.@Model.JavaClass.KeyFields[i].DBColName = #{@Model.JavaClass.KeyFields[i].Name,jdbcType=@Model.JavaClass.KeyFields[i].JDBCType}
+
+}
 @:    </select>
+
+
+@:	<sql id="Page_Query_Where">
+@:		<where> 
+
+for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){      
+@:			<if test="@Model.JavaClass.Fields[i].Name!=null">
+@("              And t1."+@Model.JavaClass.Fields[i].DBColName+"=#{"+@Model.JavaClass.Fields[i].Name+",jdbcType="+@Model.JavaClass.Fields[i].JDBCType+"}\r\n")
+@:			</if>
+}
+@:		</where>
+@:	</sql>
+@:
+
+@:    <select id="queryCountByParaMap" parameterType="java.util.Map" resultType="java.lang.Integer">
+@:		SELECT COUNT(t.id)
+@:		from @Model.DBTableName t1
+@:		<include refid="Page_Query_Where" />
+@:    </select> 
+@:
+@:    <select id="queryByParaMap" parameterType="java.util.Map" resultType="@Model.VoFullName">
+@:		SELECT <include refid="Base_Column_List"/>
+@:		from @Model.DBTableName t1
+@:		<include refid="Page_Query_Where" />
+@:      <if test="startRowNum != null and endRowNum != null ">
+@:      LIMIT #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+@:      </if>
+@:    </select>
+@:
+@:    <select id="queryCountByParaBean" parameterType="@Model.JavaClass.FullName" resultType="java.lang.Integer">
+@:		SELECT COUNT(t.id)
+@:		from @Model.DBTableName t1
+@:		<include refid="Page_Query_Where" />
+@:    </select>
+@:
+@:    
+@:    <select id="queryByParaBean" parameterType="java.util.Map" resultType="@Model.VoFullName">
+@:		SELECT <include refid="Base_Column_List"/>
+@:		from @Model.DBTableName t1
+@:		<include refid="Page_Query_Where" />
+@:      <if test="startRowNum != null and endRowNum != null ">
+@:      LIMIT #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
+@:      </if>
+@:    </select>
+@:
+
+}
+@{ 
+    // 开始写部分
 }
 @if(@Model.ForWrite){
 @:    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+@:        delete from @Model.DBTableName
+for (var i = 0; i < @Model.JavaClass.KeyFields.Count; i++){
+          if(i==0){@("        where ")} else {@("        and ")}
+@:t1.@Model.JavaClass.KeyFields[i].DBColName = #{@Model.JavaClass.KeyFields[i].Name,jdbcType=@Model.JavaClass.KeyFields[i].JDBCType}
+}
 @:    </delete>
 @:
+
+
+@:    <insert id="insert" parameterType="@Model.JavaClass.FullName">
+@:        INSERT INTO @Model.DBTableName (
+for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){  
+@("            "+@Model.JavaClass.Fields[i].DBColName+(i<@Model.JavaClass.Fields.Count-1?",":"")+"\r\n")
+}
+@:        )VALUES (
+for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){ 
+@("            #{"+@Model.JavaClass.Fields[i].Name+",jdbcType="+@Model.JavaClass.Fields[i].JDBCType+"}"+(i<@Model.JavaClass.Fields.Count-1?",":"")+"\r\n")
+}
+@:        )
+@:    </insert>
+
+
+
 @:    <insert id="insertSelective" parameterType="@Model.JavaClass.FullName">
+@:        INSERT INTO @Model.DBTableName 
+@:        <trim prefix="(" suffix=")" suffixOverrides=",">
+for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){  
+@:            <if test="@Model.JavaClass.Fields[i].Name != null">
+@("            "+@Model.JavaClass.Fields[i].DBColName+(i<@Model.JavaClass.Fields.Count-1?",":"")+"\r\n")
+@:            </if>
+}
+@:        </trim>
+@:        <trim prefix="values (" suffix=")" suffixOverrides=",">
+for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){ 
+@:            <if test="@Model.JavaClass.Fields[i].Name != null">
+@("            #{"+@Model.JavaClass.Fields[i].Name+",jdbcType="+@Model.JavaClass.Fields[i].JDBCType+"}"+(i<@Model.JavaClass.Fields.Count-1?",":"")+"\r\n")
+@:            </if>
+}
+@:        </trim>
+@:        )
 @:    </insert>
 @:
 @:    <update id="updateByPrimaryKey" parameterType="@Model.JavaClass.FullName">
+@:        update @Model.DBTableName  SET
+for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){          
+@("            "+@Model.JavaClass.Fields[i].DBColName+"=#{"+@Model.JavaClass.Fields[i].Name+",jdbcType="+@Model.JavaClass.Fields[i].JDBCType+"}"+(i<@Model.JavaClass.Fields.Count-1?",":"")+"\r\n")
+}
+for (var i = 0; i < @Model.JavaClass.KeyFields.Count; i++){
+          if(i==0){@("        where ")} else {@("        and ")}
+@:t1.@Model.JavaClass.KeyFields[i].DBColName = #{@Model.JavaClass.KeyFields[i].Name,jdbcType=@Model.JavaClass.KeyFields[i].JDBCType}
+}
 @:    </update>
 @:
 @:    <update id="updateByPrimaryKeySelective" parameterType="@Model.JavaClass.FullName">
+@:        update @Model.DBTableName SET
+for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){   
+@:            <if test="@Model.JavaClass.Fields[i].Name != null">
+@("            "+@Model.JavaClass.Fields[i].DBColName+"=#{"+@Model.JavaClass.Fields[i].Name+",jdbcType="+@Model.JavaClass.Fields[i].JDBCType+"}"+(i<@Model.JavaClass.Fields.Count-1?",":"")+"\r\n")
+@:            </if>
+}
+
+for (var i = 0; i < @Model.JavaClass.KeyFields.Count; i++){
+          if(i==0){@("        where ")} else {@("        and ")}
+@:t1.@Model.JavaClass.KeyFields[i].DBColName = #{@Model.JavaClass.KeyFields[i].Name,jdbcType=@Model.JavaClass.KeyFields[i].JDBCType}
+}
 @:    </update>
+}
+@{
+    // 结束写部分
 }
 </mapper>

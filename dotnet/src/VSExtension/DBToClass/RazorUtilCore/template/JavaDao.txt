@@ -9,6 +9,11 @@ import @Model.JavaClass.PackageName.@Model.JavaClass.ClassName;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Map;
+
+import @Model.VoClassFullName;
+
 /**
  * @@Entity @Model.JavaClass.ClassName
  * Creator:fgq.generator
@@ -20,12 +25,22 @@ public interface @Model.DaoName {
 
 @if(@Model.ForRead){
 if(@Model.JavaClass.HasKeyField){
-@:    @Model.JavaClass.ClassName selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass));
+@:    @Model.VoClassName selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass));
+@:
 }
+@:    Integer queryCountByParaMap(Map paraMap);
+@:
+@:    List<@Model.VoClassName> queryByParaMap(Map paramMap);
+@:
+@:    Integer queryCountByParaBean(@Model.BoClassName paraBean);
+@:
+@:    List<@Model.VoClassName> queryByParaBean(@Model.BoClassName paramBean);
 }
 @if(@Model.ForWrite){
 
 @:    int deleteByPrimaryKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass));
+@:
+@:    int insert(@Model.JavaClass.ClassName record);
 @:
 @:    int insertSelective(@Model.JavaClass.ClassName record);
 @:

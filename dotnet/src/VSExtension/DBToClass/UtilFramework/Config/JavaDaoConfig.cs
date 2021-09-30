@@ -65,5 +65,28 @@ namespace Org.FGQ.CodeGenerate.Config
             }
 
         }
+
+        public string VoClassName
+        {
+            get
+            {
+                return this.JavaClass.JavaVoClass.ClassName;
+            }
+        }
+        public string VoClassFullName
+        {
+            get
+            {
+                return this.JavaClass.JavaVoClass.FullName;
+            }
+        }
+
+        public string BoClassName
+        {
+            get
+            {
+                return this.JavaClass.ClassName;
+            }
+        }
     }
 }

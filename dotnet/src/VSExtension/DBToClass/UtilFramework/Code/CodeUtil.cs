@@ -108,7 +108,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
             {
                 return string.Empty;
             }
-            return string.Join(",", javaClass.KeyFileds.ConvertAll<string>(x => x.FiledTypeStr + " " + x.Name));
+            return string.Join(",", javaClass.KeyFields.ConvertAll<string>(x => x.FiledTypeStr + " " + x.Name));
 
         }
 
@@ -119,7 +119,25 @@ namespace Org.FGQ.CodeGenerate.Util.Code
             {
                 return string.Empty;
             }
-            return string.Join(",", javaClass.KeyFileds.ConvertAll<string>(x => x.DBColName));
+            return string.Join(",", javaClass.KeyFields.ConvertAll<string>(x => x.DBColName));
+
+        }
+
+        public static string GetJavaMapKeyParaType(JavaClass javaClass)
+        {
+            if (javaClass.HasKeyField == false)
+            {
+                return "错误，没有主键";
+            }
+            if (javaClass.KeyFields.Count == 1)
+            {
+                return "java.lang." + javaClass.KeyFields[0].FiledTypeStr;
+            }
+            else
+            {
+                return "map";
+            }
+
 
         }
 

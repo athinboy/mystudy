@@ -37,6 +37,15 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
         public string ClassName { get; protected set; }
 
+
+        public bool HasLongIntId
+        {
+            get
+            {
+                return Fields.Any(x => x.Name.ToLower() == "id" && x.FieldType == FieldTypes.Long);
+            }
+        }
+
         public bool HasKeyField
         {
 

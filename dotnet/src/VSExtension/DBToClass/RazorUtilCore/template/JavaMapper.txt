@@ -13,7 +13,7 @@
 @if(@Model.ForRead){
 @:    <resultMap id="BaseResultMap" type="@Model.VoFullName">
 foreach(var field in @Model.ClasssFields ){
-@:        <result column="order_date" property="@field.Name" jdbcType="@field.JDBCType"/>
+@:        <result column="@field.DBColName" property="@field.Name" jdbcType="@field.JDBCType"/>
 }
 @:    </resultMap>
 @:

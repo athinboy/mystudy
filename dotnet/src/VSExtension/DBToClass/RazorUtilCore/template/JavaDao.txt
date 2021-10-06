@@ -27,6 +27,11 @@ public interface @Model.DaoName {
 if(@Model.JavaClass.HasKeyField){
 @:    @Model.VoClassName selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true));
 @:
+@if(@Model.JavaClass.HasNoKeyLongIDField){
+<text>    @Model.VoClassName selectByID(Long id);
+
+</text>    
+}
 }
 @:    Integer queryCountByParaMap(Map paraMap);
 @:

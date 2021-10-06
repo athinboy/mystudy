@@ -16,9 +16,11 @@ foreach(var field in @Model.ClasssFields ){
 @:        <result column="order_date" property="@field.Name" jdbcType="@field.JDBCType"/>
 }
 @:    </resultMap>
+@:
 @:    <sql id="Base_Column_List">
 @:       @CodeUtil.GetDBColNameJoinStr(@Model.JavaClass)
 @:    </sql>
+@:
 @:    <select id="selectByKey" resultType="@Model.VoFullName" parameterType="@CodeUtil.GetJavaMapKeyParaType(@Model.JavaClass)">
 @:        select
 @:        <include refid="Base_Column_List"/>
@@ -29,11 +31,18 @@ for (var i = 0; i < @Model.JavaClass.KeyFields.Count; i++){
 
 }
 @:    </select>
-
-
+@:
+if(@Model.JavaClass.HasNoKeyLongIDField){
+@:    <select id="selectByID" resultType="@Model.VoFullName" parameterType="long">
+@:        select
+@:        <include refid="Base_Column_List"/>
+@:        from @Model.DBTableName t1
+@:        where t1.id = #{id,jdbcType=BIGINT}
+@:    </select>    
+}
+@:
 @:	<sql id="Page_Query_Where">
 @:		<where> 
-
 for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){      
 @:			<if test="@Model.JavaClass.Fields[i].Name!=null">
 @("              And t1."+@Model.JavaClass.Fields[i].DBColName+"=#{"+@Model.JavaClass.Fields[i].Name+",jdbcType="+@Model.JavaClass.Fields[i].JDBCType+"}\r\n")

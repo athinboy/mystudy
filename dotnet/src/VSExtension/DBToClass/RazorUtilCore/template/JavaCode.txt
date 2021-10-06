@@ -37,6 +37,14 @@ public class @Model.ModelName {
     public @Model.DaoConfig.VoClassName selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true)){
         return readDao.selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,false));   
     }
+@if(@Model.JavaClass.HasNoKeyLongIDField){
+        <text>
+    public @Model.DaoConfig.VoClassName selectByID(Long id) {
+        return readDao.selectByID(id);
+    }
+    </text>
+    
+}
 
     public Integer queryCountByParaMap(Map paraMap){
         return readDao.queryCountByParaMap(paraMap);    
@@ -105,7 +113,13 @@ import java.util.Map;
 public interface @Model.ServiceName {
 
     @Model.DaoConfig.VoClassName selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true));
+@if(@Model.JavaClass.HasNoKeyLongIDField){
+    <text>
+    public @Model.DaoConfig.VoClassName selectByID(Long id);
 
+</text>
+    
+}
     Integer queryCountByParaMap(Map paraMap);
 
     List<@Model.DaoConfig.VoClassName> queryByParaMap(Map paramMap);
@@ -162,6 +176,13 @@ public class @Model.ServiceImplName implements @Model.ServiceName  {
     public @Model.DaoConfig.VoClassName selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true)) {
         return @CodeUtil.GetJavaParaName(@Model.ModelName)@.selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,false));
     }
+@if(@Model.JavaClass.HasNoKeyLongIDField){
+        <text>
+    public @Model.DaoConfig.VoClassName selectByID(Long id) {
+        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.selectByID(id);
+    }</text>
+    
+}
 
     public Integer queryCountByParaMap(Map paraMap) {
         return @CodeUtil.GetJavaParaName(@Model.ModelName)@.queryCountByParaMap(paraMap);

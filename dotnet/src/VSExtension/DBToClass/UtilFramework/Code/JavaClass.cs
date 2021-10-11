@@ -33,7 +33,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
         {
             get
             {
-                return NamespaceName+"."+ClassName;
+                return NamespaceName + "." + ClassName;
             }
             private set { }
         }
@@ -80,7 +80,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
             javaClass.Desc = table.Desc;
 
-            javaClass.ClassName = CodeUtil.GetClassName(javaBeanConfig, table.TableName);
+            javaClass.ClassName = table.ClassName.Length == 0 ? CodeUtil.GetClassName(javaBeanConfig, table.TableName) : table.ClassName;
 
             if (createVo)
             {

@@ -11,20 +11,46 @@ namespace Org.FGQ.CodeGenerate.Config
 
         public string TableName { get; set; } = string.Empty;
 
+        public string ClassName { get; set; } = string.Empty;
+
         public string DBName { get; set; } = string.Empty;
+
+        public string DBNameSQL {  get; set; } = string.Empty;
 
         public string Desc { get; set; } = string.Empty;
 
         public List<DDLColumn> Columns { get; set; } = new List<DDLColumn>();
         public JavaClass CreatedJavaBean { get; set; } = null;
 
+
+        private DDLTable()
+        {
+
+
+        }
+
         public DDLTable(string dbName, string tableName, string desc)
         {
             DBName = dbName?.Trim() ?? throw new ArgumentNullException(nameof(dbName));
+            DBNameSQL = DBName;
             TableName = tableName?.Trim() ?? throw new ArgumentNullException(nameof(tableName));
             Desc = desc?.Trim() ?? throw new ArgumentNullException(nameof(desc));
 
         }
+        public DDLTable(string dbName, string tableName, string desc, string classname) : this(dbName, tableName, desc)
+        {
+            ClassName = classname?.Trim() ?? throw new ArgumentNullException(nameof(classname));
+        }
+
+        public DDLTable CreateForCalss(string dbName, string prefix, string classname, string desc, bool supperDBName)
+        {
+            string dbname = prefix + "_" + classname;
+
+
+            return new DDLTable(dbName, supperDBName ? dbname.ToUpper() : dbName, desc, classname);
+
+        }
+
 
         internal bool HasKeyCol()
         {
@@ -41,7 +67,7 @@ namespace Org.FGQ.CodeGenerate.Config
         }
         public List<string> getPrimaryKeyNames()
         {
-            List<string> s = null;             
+            List<string> s = null;
             return this.Columns.FindAll(x => x.IsKeyColumn()).ConvertAll<string>(x => { return x.Name; }).ToList();
         }
 
@@ -76,6 +102,11 @@ namespace Org.FGQ.CodeGenerate.Config
             return IsKeyColumn() ? " not null" : "null";
         }
 
+        /// <summary>
+        /// 是否父对象的外键
+        /// </summary>
+        public bool IsParentKey { get; set; } = false;
+
         public string CommentStr()
         {
 
@@ -87,7 +118,15 @@ namespace Org.FGQ.CodeGenerate.Config
             return false == (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(TypeName));
         }
 
-
+        public DDLColumn(string desc, string name, string type, string keySign, string remark, bool isparentkey)
+        {
+            Desc = desc?.Trim() ?? throw new ArgumentNullException(nameof(desc));
+            Name = name?.Trim() ?? throw new ArgumentNullException(nameof(name));
+            TypeName = type?.Trim() ?? throw new ArgumentNullException(nameof(type));
+            KeySign = keySign?.Trim() ?? throw new ArgumentNullException(nameof(keySign));
+            Remark = remark?.Trim() ?? throw new ArgumentNullException(nameof(remark));
+            IsParentKey = isparentkey;
+        }
 
         public DDLColumn(string desc, string name, string type, string keySign, string remark)
         {
@@ -102,7 +141,7 @@ namespace Org.FGQ.CodeGenerate.Config
 
     public class DDLConfig
     {
-        private bool prepared=false;
+        private bool prepared = false;
 
         public enum DBType
         {
@@ -112,7 +151,7 @@ namespace Org.FGQ.CodeGenerate.Config
 
         public DDLTable GetTable(string tableName)
         {
-            return Tables.Find(x=>x.TableName == tableName);
+            return Tables.Find(x => x.TableName == tableName);
         }
 
         public void Prepare()
@@ -124,6 +163,20 @@ namespace Org.FGQ.CodeGenerate.Config
 
             foreach (var table in Tables)
             {
+
+                if (this.MyDBType == DBType.Oracle)
+                {
+                    table.DBNameSQL = table.DBName.ToUpper();
+
+                    if (table.TableName.Length > 30)
+                    {
+                        throw new Exception(String.Format("表名称：{0}过长", table.TableName));
+                    }
+
+                }
+
+
+
                 if (false == table.HasKeyCol())
                 {
                     table.Columns.Insert(0, new DDLColumn("ID", "id", "bigint(20)", "是", ""));
@@ -147,10 +200,17 @@ namespace Org.FGQ.CodeGenerate.Config
 
         private string getSqlDBType(string type, DBType myDBType)
         {
-            string longstr = "";
+            string longstr = null;
             if (type.Contains("("))
             {
+
+                if (type.IndexOf(")") - type.IndexOf("(") <= 1)
+                {
+                    throw new ArgumentException(nameof(type) + ":" + type);
+                }
+
                 longstr = type.Substring(type.IndexOf("(") + 1, type.IndexOf(")") - type.IndexOf("(") - 1);
+
             }
 
             switch (myDBType)
@@ -160,7 +220,7 @@ namespace Org.FGQ.CodeGenerate.Config
                     if (type.ToLower().Contains("varchar"))
                     {
 
-                        return "varchar2(" + int.Parse(longstr) + " CHAR)";
+                        return "varchar2(" + int.Parse(longstr ?? "10") + " CHAR)";
                     }
                     if (type.ToLower().Contains("bigint"))
                     {
@@ -170,6 +230,16 @@ namespace Org.FGQ.CodeGenerate.Config
                     {
                         return "number(20,0)";
                     }
+                    if (type.ToLower().Contains("bigint") || type.ToLower().Contains("big int"))
+                    {
+                        return "number(20)";
+                    }
+                    if (type.ToLower().Contains("int"))
+                    {
+
+                        return "number(" + (longstr ?? "10") + ")";
+                    }
+
                     return type;
 
 

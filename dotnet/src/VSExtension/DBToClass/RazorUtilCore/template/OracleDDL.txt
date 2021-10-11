@@ -3,13 +3,23 @@
 @using System
 @using System.Collections.Generic
 @using System.Collections
-@using Org.FGQ.CodeGenerate.config
+@using Org.FGQ.CodeGenerate.Config
 /*
 Date: @DateTime.Now
 */
 
 -- Start--------------------------------@Model.DBName"."@Model.TableName------------------
-DROP TABLE "@Model.DBName"."@Model.TableName";
+declare @(@Model.TableName+"tcount") number;   --声明变量存储要查询的表是否存在
+
+begin
+select count(1) into @(@Model.TableName+"tcount")  from user_tables t where t.table_name = upper('@Model.TableName'); --从系统表中查询当表是否存在
+     if @(@Model.TableName+"tcount")  = 1 then 
+         execute immediate 'DROP TABLE "@Model.DBName"."@Model.TableName"';
+     end if;
+
+end;
+/
+
 CREATE TABLE "@Model.DBName"."@Model.TableName" (
 
  

@@ -15,12 +15,12 @@ namespace Org.FGQ.CodeGenerate.Config
 
         public string DBName { get; set; } = string.Empty;
 
-        private string dbnameSql;
+        private string tablenameSql;
 
-        public string DBNameSQL
+        public string TableNameSQL
         {
-            get { return dbnameSql ?? DBName; }
-            set { dbnameSql = value; }
+            get { return tablenameSql ?? DBName; }
+            set { tablenameSql = value; }
         }
 
 
@@ -39,8 +39,8 @@ namespace Org.FGQ.CodeGenerate.Config
         public DDLTable(string dbName, string tableName, string desc)
         {
             DBName = dbName?.Trim() ?? throw new ArgumentNullException(nameof(dbName));
-            DBNameSQL = DBName;
             TableName = tableName?.Trim() ?? throw new ArgumentNullException(nameof(tableName));
+            TableNameSQL = tableName;
             Desc = desc?.Trim() ?? throw new ArgumentNullException(nameof(desc));
 
         }
@@ -122,11 +122,20 @@ namespace Org.FGQ.CodeGenerate.Config
             set { nameSql = value; }
         }
 
+        private string jsonFieldName;
+
+        public string JsonFieldName
+        {
+            get { return jsonFieldName ?? Name; }
+            set { jsonFieldName = value; }
+        }
+
+
 
         public string CommentStr()
         {
 
-            return this.Desc + "   " + this.Remark;
+            return this.Desc + "   " + this.Remark + (string.IsNullOrEmpty(jsonFieldName) ? " " : " json字段:" + jsonFieldName);
         }
 
         public bool Validate()
@@ -181,7 +190,7 @@ namespace Org.FGQ.CodeGenerate.Config
             foreach (var table in Tables)
             {
 
-                if (table.Columns.FindAll(x=>x.Validate()).ConvertAll<string>(x => x.Name).Distinct<string>().Count<string>() 
+                if (table.Columns.FindAll(x => x.Validate()).ConvertAll<string>(x => x.Name).Distinct<string>().Count<string>()
                     != table.Columns.FindAll(x => x.Validate()).Count)
                 {
                     throw new Exception(String.Format("表：{0}存在重复列", table.TableName));
@@ -189,7 +198,7 @@ namespace Org.FGQ.CodeGenerate.Config
 
                 if (this.MyDBType == DBType.Oracle)
                 {
-                    table.DBNameSQL = table.DBName.ToUpper();
+                    table.TableNameSQL = table.TableName.ToUpper();
 
                     if (table.TableName.Length > 30)
                     {
@@ -210,13 +219,17 @@ namespace Org.FGQ.CodeGenerate.Config
                     {
                         table.Columns.Insert(0, new DDLColumn("ID", "id", "bigint(20)", "", ""));
                     }
-                }                 
+                }
                 table.Columns.ForEach(x =>
                 {
                     x.SqlType = getSqlDBType(x.TypeName, this.MyDBType);
                     if (this.MyDBType == DBType.Oracle)
                     {
                         x.NameSql = x.Name.ToUpper();
+                        if (x.NameSql.Length > 30)
+                        {
+                            throw new Exception(String.Format("列名称：{0} {1}过长", table.TableName, x.NameSql));
+                        }
                     }
                 });
             }
@@ -268,6 +281,10 @@ namespace Org.FGQ.CodeGenerate.Config
                     {
 
                         return "number(" + (longstr ?? "10") + ")";
+                    }
+                    if (type.ToLower().TrimEnd() == "text")
+                    {
+                        return "varchar2(2000 CHAR)";
                     }
 
                     return type;

@@ -1445,6 +1445,7 @@ namespace Org.FGQ.CodeGenerateTest
         private void initUC()
         {
             DDLTable newtable;
+            DDLColumn column;
 
             ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_UC_evaluation", "36.UC101010000-同步评估报告"));
             newtable.Columns.Add(new DDLColumn("经销商代码", "owner_code", "varchar(64)", "是", ""));
@@ -1756,7 +1757,8 @@ namespace Org.FGQ.CodeGenerateTest
             ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_UC_Exchange_New_Costomer", "42.UC101010006-同步置换记录新车客户"));
             newtable.Columns.Add(new DDLColumn("exchange_id", "exchange_id", "bigint", "", ""));
             newtable.Columns.Add(new DDLColumn("客户/公司名称", "customer_company_name", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("身份 证/机构 代码号", "id_card_organization_code_number", "varchar(64)", "", ""));
+            newtable.Columns.Add(column = new DDLColumn("身份 证/机构 代码号", "card_organization_number", "varchar(64)", "", ""));
+            column.JsonFieldName = "id_card_organization_code_number";
             newtable.Columns.Add(new DDLColumn("地址", "address", "varchar(255)", "", ""));
 
 
@@ -1781,7 +1783,8 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("车龄月", "vehicle_age_month", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("资源调配接收方", "resource_allocation_receiver", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("客户/公司名称", "customer_company_name", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("身份证/机构代码号", "id_card_organization_code_number", "varchar(64)", "", ""));
+            newtable.Columns.Add(column = new DDLColumn("身份证/机构代码号", "card_organization_number", "varchar(64)", "", ""));
+            column.JsonFieldName = "id_card_organization_code_number";
             newtable.Columns.Add(new DDLColumn("二手车客户电话", "used_car_customer_number", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("置换项目名称", "replacement_project_name", "varchar(64)", "", ""));
 
@@ -1814,7 +1817,8 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("车身颜色", "body_color", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("内饰颜色", "interior_color", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("生产日期", "date_of_manufacture", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("新车首次注册日期", "first_registration_date_of_new_car", "varchar(64)", "", ""));
+            newtable.Columns.Add(column = new DDLColumn("新车首次注册日期", "first_reg_date_of_new_car", "varchar(64)", "", ""));
+            column.JsonFieldName = "first_registration_date_of_new_car";
             newtable.Columns.Add(new DDLColumn("公里数", "km", "varchar(64)", "", ""));
 
 
@@ -1836,7 +1840,8 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("其他（市场费，赠品等）", "others", "decimal(20,4)", "", ""));
             newtable.Columns.Add(new DDLColumn("延保费用", "cost_of_extended_insurance", "decimal(20,4)", "", ""));
             newtable.Columns.Add(new DDLColumn("360 安全检测费", "safety_inspection_fee", "decimal(20,4)", "", ""));
-            newtable.Columns.Add(new DDLColumn("整备维修费", "servicing_and_maintenance_costs", "decimal(20,4)", "", ""));
+            newtable.Columns.Add(column = new DDLColumn("整备维修费", "servicing_maintenance_costs", "decimal(20,4)", "", ""));
+            column.JsonFieldName = "servicing_and_maintenance_costs";
             newtable.Columns.Add(new DDLColumn("美容费", "beauty_fee", "decimal(20,4)", "", ""));
             newtable.Columns.Add(new DDLColumn("采购价格", "purchase_price", "decimal(20,4)", "", ""));
 
@@ -1846,13 +1851,17 @@ namespace Org.FGQ.CodeGenerateTest
             ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_UC_YanBao_Warranty", "43.UC101010007-同步记录延保保修信息"));
             newtable.Columns.Add(new DDLColumn("yanbao_id", "yanbao_id", "bigint", "", ""));
             newtable.Columns.Add(new DDLColumn("二手车销售发票日期", "used_car_sales_invoice_date", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("延保购买状态", "purchase_status_of_extended_warranty", "varchar(64)", "", ""));
+            newtable.Columns.Add(column = new DDLColumn("延保购买状态", "status_of_extended_warranty", "varchar(64)", "", ""));
+            column.JsonFieldName = "purchase_status_of_extended_warranty";
             newtable.Columns.Add(new DDLColumn("新车保修费用", "new_car_warranty_fee", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("新车保修起始日期", "new_vehicle_warranty_start_date", "varchar(64)", "", ""));
+            newtable.Columns.Add(column = new DDLColumn("新车保修起始日期", "new_car_warranty_start_date", "varchar(64)", "", ""));
+            column.JsonFieldName = "new_vehicle_warranty_start_date";
             newtable.Columns.Add(new DDLColumn("保修结束日期", "warranty_end_date", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("保修剩余天数", "remaining_days_of_warranty", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("是否需要购买延保", "do_you_need_to_buy_extended_insurance", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("延保包类型", "type_of_extended_warranty_package", "varchar(64)", "", ""));
+            newtable.Columns.Add(column = new DDLColumn("是否需要购买延保", "need_extended_insurance", "varchar(64)", "", ""));
+            column.JsonFieldName = "do_you_need_to_buy_extended_insurance";
+            newtable.Columns.Add(column=new DDLColumn("延保包类型", "type_extended_warranty_pkg", "varchar(64)", "", ""));
+            column.JsonFieldName = "type_of_extended_warranty_package";
             newtable.Columns.Add(new DDLColumn("延保价格（元）", "extended_insurance_price", "decimal(20,4)", "", ""));
             newtable.Columns.Add(new DDLColumn("延保有效期（月）", "extended_period_of_validity", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("最新密钥数据读取时间", "latest_key_data_read_time", "varchar(64)", "", ""));
@@ -1972,6 +1981,7 @@ namespace Org.FGQ.CodeGenerateTest
         private void initRS()
         {
             DDLTable newtable;
+            DDLColumn column;
             ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_RS_Car_stock", "27.RS104011000-同步整车库存"));
             newtable.Columns.Add(new DDLColumn("经销商代码", "owner_code", "varchar(64)", "是", ""));
             newtable.Columns.Add(new DDLColumn("经销商名称", "company_name_cn", "varchar(64)", "", ""));
@@ -2037,7 +2047,8 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("颜色价格", "color_price", "decimal(20,4)", "", ""));
             newtable.Columns.Add(new DDLColumn("内饰价格", "interior_price", "decimal(20,4)", "", ""));
             newtable.Columns.Add(new DDLColumn("轮毂价格", "hub_price", "decimal(20,4)", "", ""));
-            newtable.Columns.Add(new DDLColumn("内饰条价格", "Interior_decoration_strip_price", "decimal(20,4)", "", ""));
+            newtable.Columns.Add(column = new DDLColumn("内饰条价格", "Inter_decoration_strip_price", "decimal(20,4)", "", ""));
+            column.JsonFieldName = "Interior_decoration_strip_price";
             newtable.Columns.Add(new DDLColumn("客户订单号", "so_no", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("销售类型", "sale_type", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("客户订单状态", "so_status", "varchar(64)", "", ""));

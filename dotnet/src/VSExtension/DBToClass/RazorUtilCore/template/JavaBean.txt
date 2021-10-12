@@ -24,7 +24,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 @:    /**
 @:      * @Model.Fields[i].Desc @Model.Fields[i].Remark
 @:     */
-@:    @@JSONField(name = "@Model.Fields[i].DBColName")
+@:    @@JSONField(name = "@Model.Fields[i].JsonFieldName")
 @:    private @Model.Fields[i].FiledTypeStr @Model.Fields[i].Name; 	 
 	}
 

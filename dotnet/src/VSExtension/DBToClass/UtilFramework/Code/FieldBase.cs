@@ -27,6 +27,15 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
         public string FiledTypeStr { get; internal set; }
 
+
+        public string JsonFieldName
+        {
+            get {
+                return this.DDLColumn == null ? "丢失的JSON名称" : DDLColumn.JsonFieldName;
+            }
+            private set {  }
+        }
+
         public string DBColName
         {
             get

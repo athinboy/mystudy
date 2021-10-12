@@ -42,8 +42,13 @@ public class @Model.ModelName {
     public @Model.DaoConfig.VoClassName selectByID(Long id) {
         return readDao.selectByID(id);
     }
-    </text>
-    
+</text>
+}
+@foreach(var field in @Model.JavaClass.ParentKeyFields ){
+@:    public List<@Model.DaoConfig.VoClassName> queryBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name){
+@:        return readDao.queryBy@(@field.Name.ToUpper())(@field.Name);
+@:    }
+@:
 }
 
     public Integer queryCountByParaMap(Map paraMap){
@@ -61,13 +66,18 @@ public class @Model.ModelName {
     
     public List<@Model.DaoConfig.VoClassName> queryByParaBean(@Model.DaoConfig.BoClassName paramBean){
         return readDao.queryByParaBean(paramBean);
-    }    
-    
+    }
     
     public int deleteByPrimaryKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true)){
         return writeDao.deleteByPrimaryKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,false));
     }
-    
+
+@foreach(var field in @Model.JavaClass.ParentKeyFields ){
+@:    public int deleteBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name){
+@:        return writeDao.deleteBy@(@field.Name.ToUpper())(@field.Name);
+@:    }
+@:
+}    
     public int insert(@Model.JavaClass.ClassName record){
         return writeDao.insert(record);
     }
@@ -113,12 +123,15 @@ import java.util.Map;
 public interface @Model.ServiceName {
 
     @Model.DaoConfig.VoClassName selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true));
-@if(@Model.JavaClass.HasNoKeyLongIDField){
-    <text>
-    public @Model.DaoConfig.VoClassName selectByID(Long id);
 
-</text>
-    
+@foreach(var field in @Model.JavaClass.ParentKeyFields ){
+@:    List<@Model.DaoConfig.VoClassName> queryBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name);
+@:
+}
+@if(@Model.JavaClass.HasNoKeyLongIDField){
+<text>    public @Model.DaoConfig.VoClassName selectByID(Long id);
+
+</text>    
 }
     Integer queryCountByParaMap(Map paraMap);
 
@@ -130,6 +143,10 @@ public interface @Model.ServiceName {
 
     int deleteByPrimaryKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true));
 
+@foreach(var field in @Model.JavaClass.ParentKeyFields ){
+@:  int deleteBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name);
+@:
+}
     int insert(@Model.JavaClass.ClassName record);
 
     int insertSelective(@Model.JavaClass.ClassName record);
@@ -176,9 +193,15 @@ public class @Model.ServiceImplName implements @Model.ServiceName  {
     public @Model.DaoConfig.VoClassName selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true)) {
         return @CodeUtil.GetJavaParaName(@Model.ModelName)@.selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,false));
     }
+
+@foreach(var field in @Model.JavaClass.ParentKeyFields ){
+@:    public List<@Model.DaoConfig.VoClassName> queryBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name){
+@:        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.queryBy@(@field.Name.ToUpper())(@field.Name);
+@:    }
+@:
+}
 @if(@Model.JavaClass.HasNoKeyLongIDField){
-        <text>
-    public @Model.DaoConfig.VoClassName selectByID(Long id) {
+<text>    public @Model.DaoConfig.VoClassName selectByID(Long id) {
         return @CodeUtil.GetJavaParaName(@Model.ModelName)@.selectByID(id);
     }</text>
     
@@ -204,6 +227,12 @@ public class @Model.ServiceImplName implements @Model.ServiceName  {
         return @CodeUtil.GetJavaParaName(@Model.ModelName)@.deleteByPrimaryKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,false));
     }
 
+@foreach(var field in @Model.JavaClass.ParentKeyFields ){
+@:    public int deleteBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name){
+@:        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.deleteBy@(@field.Name.ToUpper())(@field.Name);
+@:    }
+@:
+}
     public int insert(@Model.JavaClass.ClassName record) {
         return @CodeUtil.GetJavaParaName(@Model.ModelName)@.insert(record);
     }

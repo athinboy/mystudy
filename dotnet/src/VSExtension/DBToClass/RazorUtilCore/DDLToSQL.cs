@@ -11,34 +11,52 @@ namespace Org.FGQ.CodeGenerate
 
         private static string templateRelatePath = System.IO.Path.DirectorySeparatorChar + "template" + System.IO.Path.DirectorySeparatorChar + "OracleDDL.txt";
 
-
         static NLog.ILogger logger = NLog.LogManager.GetCurrentClassLogger();
+
+        IRazorEngine razorEngine = null;
+        IRazorEngineCompiledTemplate<RazorEngineTemplateBase<DDLTable>> template = null;
+        void init()
+        {
+            if (razorEngine != null)
+            {
+                return;
+            }
+            lock (this)
+            {
+                if (razorEngine != null)
+                {
+                    return;
+                }
+
+                string templatePath = Environment.CurrentDirectory + templateRelatePath;
+                logger.Info(templatePath);
+                string templateContent = File.ReadAllText(templatePath);
+                razorEngine = new RazorEngine();
+                template = razorEngine.Compile<RazorEngineTemplateBase<DDLTable>>(templateContent, builder =>
+        {
+            //builder.AddAssemblyReferenceByName("System.Security"); // by name
+            //builder.AddAssemblyReference(typeof(System.IO.File)); // by type
+            //builder.AddAssemblyReference(Assembly.Load("source")); // by reference
+            builder.AddAssemblyReferenceByName("System.Collections");
+        });
+
+                //IRazorEngineCompiledTemplate template = razorEngine.Compile(templateContent);// "Hello @Model.Name");
+
+            }
+        }
+
 
         public void GenerateSql(DDLConfig dDLConfig, string outputpath)
         {
 
-            string templatePath = Environment.CurrentDirectory + templateRelatePath;
-            logger.Info(outputpath);
-
-            logger.Info(templatePath);
+            init();
 
             dDLConfig.Prepare();
 
-            string templateContent = File.ReadAllText(templatePath);
 
 
 
-            IRazorEngine razorEngine = new RazorEngine();
-            IRazorEngineCompiledTemplate<RazorEngineTemplateBase<DDLTable>> template
-                = razorEngine.Compile<RazorEngineTemplateBase<DDLTable>>(templateContent, builder =>
-                {
-                    //builder.AddAssemblyReferenceByName("System.Security"); // by name
-                    //builder.AddAssemblyReference(typeof(System.IO.File)); // by type
-                    //builder.AddAssemblyReference(Assembly.Load("source")); // by reference
-                    builder.AddAssemblyReferenceByName("System.Collections");
-                });
 
-            //IRazorEngineCompiledTemplate template = razorEngine.Compile(templateContent);// "Hello @Model.Name");
 
             string result = String.Empty;
             dDLConfig.Tables.ForEach(t =>
@@ -49,8 +67,8 @@ namespace Org.FGQ.CodeGenerate
                 });
             });
 
-           
-      
+
+
 
             Console.WriteLine(result);
 
@@ -61,7 +79,7 @@ namespace Org.FGQ.CodeGenerate
             }
 
 
-            File.WriteAllText(outputpath, result, Encoding.UTF8);
+            File.WriteAllText(outputpath, result, new UTF8Encoding(false));
 
 
 

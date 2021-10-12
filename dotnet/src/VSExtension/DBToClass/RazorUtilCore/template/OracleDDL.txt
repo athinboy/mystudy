@@ -8,25 +8,22 @@
 Date: @DateTime.Now
 */
 
--- Start--------------------------------@Model.DBName"."@Model.TableName------------------
-declare @(@Model.TableName+"tcount") number;   --声明变量存储要查询的表是否存在
+-- Start--------------------------------@Model.DBName"."@Model.DBNameSQL------------------
+declare @(@Model.DBNameSQL+"tcount") number;   --声明变量存储要查询的表是否存在
 
 begin
-select count(1) into @(@Model.TableName+"tcount")  from user_tables t where t.table_name = upper('@Model.TableName'); --从系统表中查询当表是否存在
-     if @(@Model.TableName+"tcount")  = 1 then 
-         execute immediate 'DROP TABLE "@Model.DBName"."@Model.TableName"';
+select count(1) into @(@Model.DBNameSQL+"tcount")  from user_tables t where t.table_name = upper('@Model.DBNameSQL'); --从系统表中查询当表是否存在
+     if @(@Model.DBNameSQL+"tcount")  = 1 then 
+         execute immediate 'DROP TABLE "@Model.DBName"."@Model.DBNameSQL"';
      end if;
 
 end;
 /
 
-CREATE TABLE "@Model.DBName"."@Model.TableName" (
+CREATE TABLE "@Model.DBName"."@Model.DBNameSQL" ( 
 
- 
 @for (var i = 0; i < @Model.Columns.Count; i++){
   var col2=@Model.Columns[i];
-
-
   if( col2.Validate() ){
 
      WriteColumnDefine(col2);
@@ -34,61 +31,34 @@ CREATE TABLE "@Model.DBName"."@Model.TableName" (
        @(",\r\n");
      }else{
      @("\r\n");
-     }
- 
-  }
- 
-}
-
- 
+     } 
+  } 
+} 
 );
 
-
-COMMENT ON TABLE "@Model.DBName"."@Model.TableName" IS '@Model.Desc';
-
+COMMENT ON TABLE "@Model.DBName"."@Model.DBNameSQL" IS '@Model.Desc';
 
 @for (var i = 0; i < @Model.Columns.Count; i++){
   var col2=@Model.Columns[i];
-
-
   if( col2.Validate() ){
-@:COMMENT ON COLUMN "@Model.DBName"."@Model.TableName"."@col2.Name" IS '@col2.CommentStr()';
- 
-  }
- 
+@:COMMENT ON COLUMN "@Model.DBName"."@Model.DBNameSQL"."@col2.NameSql" IS '@col2.CommentStr()'; 
+  } 
 }
 
-
 @{
-
-
 var keys=@Model.getPrimaryKeyNames();
 if(keys.Count>0){
- @("ALTER TABLE \""+@Model.DBName+"\".\""+@Model.TableName+"\" ADD PRIMARY KEY (")
+ @("ALTER TABLE \""+@Model.DBName+"\".\""+@Model.DBNameSQL+"\" ADD PRIMARY KEY (")
  for(var i=0;i<keys.Count;i++){
    @("\""+ @keys[i]+"\"" + (i<keys.Count-1?",":"") )
  } @:);
-
-
+}
 }
 
-
-}
-
- 
-
--- End--------------------------------@Model.DBName"."@Model.TableName------------------
-
-
- 
- @{
+-- End--------------------------------@Model.DBName"."@Model.DBNameSQL------------------ 
+@{
   void WriteColumnDefine(DDLColumn col)
-  {
-    
-       @("   \""+@col.Name+"\" " +@col.SqlType + "   "+@col.NullStr()  +"")   
-    
-
-  
+  {    
+       @("   \""+@col.NameSql+"\" " +@col.SqlType + "   "+@col.NullStr()  +"") 
   }
 }
- 

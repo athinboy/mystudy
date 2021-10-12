@@ -83,7 +83,14 @@ for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){
 @:      </if>
 @:    </select>
 @:
-
+@foreach(var field in @Model.JavaClass.ParentKeyFields ){
+@:    <select id="queryBy@(@field.Name.ToUpper())" parameterType="@field.FiledTypeStr" resultType="@Model.VoFullName">
+@:		SELECT <include refid="Base_Column_List"/>
+@:		from @Model.DBTableName t1
+@:		where t1.@field.DBColName=#{@field.Name,jdbcType=@field.JDBCType}
+@:    </select>
+@:
+}
 }
 @{ 
     // 开始写部分
@@ -97,8 +104,13 @@ for (var i = 0; i < @Model.JavaClass.KeyFields.Count; i++){
 }
 @:    </delete>
 @:
-
-
+@foreach(var field in @Model.JavaClass.ParentKeyFields ){
+@:    <delete id="deleteBy@(@field.Name.ToUpper())" parameterType="@field.FiledTypeStr">
+@:		 delete from @Model.DBTableName
+@:		 where @field.DBColName=#{@field.Name,jdbcType=@field.JDBCType}
+@:    </delete>
+@:
+}
 @:    <insert id="insert" parameterType="@Model.JavaClass.FullName">
 @:        INSERT INTO @Model.DBTableName (
 for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){  

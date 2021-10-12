@@ -14,7 +14,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
         public FieldTypes FieldType { get; set; } = FieldTypes.String;
         public bool IsKeyField { get; private set; } = false;
-
+        public bool IsParentKey { get; private set; } = false;
         public DDLColumn DDLColumn { get; set; }
 
 
@@ -31,7 +31,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
         {
             get
             {
-                return this.DDLColumn == null ? "丢失的列名称" : DDLColumn.Name;
+                return this.DDLColumn == null ? "丢失的列名称" : DDLColumn.NameSql;
             }
             private set { }
         }
@@ -48,6 +48,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
             fieldBase.FieldType = DDLUtil.AnalysisFieldType(c);
             fieldBase.JDBCType = DBUtil.AnalysisJDBCType(fieldBase.FieldType);
             fieldBase.IsKeyField = c.IsKeyColumn();
+            fieldBase.IsParentKey = c.IsParentKey;
             return fieldBase;
 
         }

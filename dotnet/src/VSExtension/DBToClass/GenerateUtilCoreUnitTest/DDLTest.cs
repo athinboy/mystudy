@@ -28,7 +28,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_PURCHASE", "1.PA106011000-同步零件采购"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_Purchase", "1.PA106011000-同步零件采购"));
             newtable.Columns.Add(new DDLColumn("经销商代码", "owner_code", "varchar(36)", "是", ""));
             newtable.Columns.Add(new DDLColumn("经销商名称", "company_name_cn", "varchar(150)", "", ""));
             newtable.Columns.Add(new DDLColumn("采购订单号", "purchase_order_no", "varchar(30)", "是", ""));
@@ -52,7 +52,7 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("修改时间", "updated_at", "varchar(36)", "", ""));
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_PURCHASE_ITEM", "1.PA106011000-同步零件采购明细"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_purchase_item", "1.PA106011000-同步零件采购明细"));
             newtable.Columns.Add(new DDLColumn("part_parchase_id", "part_parchase_id", "long", "", ""));
             newtable.Columns.Add(new DDLColumn("行号", "line_number", "int(8)", "", ""));
             newtable.Columns.Add(new DDLColumn("品牌代码", "brand_code", "varchar(100)", "", ""));
@@ -82,7 +82,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_SALE", "2.PA106011001-同步零件销售"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_Sale", "2.PA106011001-同步零件销售"));
             newtable.Columns.Add(new DDLColumn("经销商代码", "owner_code", "varchar(36)", "是", ""));
             newtable.Columns.Add(new DDLColumn("经销商名称", "company_name_cn", "varchar(36)", "", ""));
             newtable.Columns.Add(new DDLColumn("客户 ID", "customer_id", "varchar(36)", "", ""));
@@ -110,7 +110,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_SALE_ITEM", "2.PA106011001-同步零件销售明细"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_Sale_Item", "2.PA106011001-同步零件销售明细"));
             newtable.Columns.Add(new DDLColumn("parts_sale_id", "parts_ro_id", "long", "", ""));
             newtable.Columns.Add(new DDLColumn("行号", "item_seq", "varchar(36)", "", ""));
             newtable.Columns.Add(new DDLColumn("原行号", "original_item_seq", "varchar(36)", "", ""));
@@ -151,7 +151,7 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("出库仓库", "storage_code", "varchar(36)", "", ""));
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_TRANSFER", "3.PA106011002-同步零件移库"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_Transfer", "3.PA106011002-同步零件移库"));
             newtable.Columns.Add(new DDLColumn("经销商代码", "owner_code", "varchar(36)", "是", ""));
             newtable.Columns.Add(new DDLColumn("经销商名称", "company_name_cn", "varchar(150)", "", ""));
             newtable.Columns.Add(new DDLColumn("移库单号", "transfer_no", "varchar(24)", "是", ""));
@@ -163,15 +163,13 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("修改时间", "updated_at", "varchar(30)", "", ""));
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_TRANSFER_ITEM", "3.PA106011002-同步零件移库明细"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_Transfer_Item", "3.PA106011002-同步零件移库明细"));
             newtable.Columns.Add(new DDLColumn("transfer_id", "transfer_id", "long", "", ""));
             newtable.Columns.Add(new DDLColumn("原仓库代码", "old_storage_code", "varchar(30)", "", ""));
             newtable.Columns.Add(new DDLColumn("新仓库代码", "storage_code", "varchar(30)", "", ""));
             newtable.Columns.Add(new DDLColumn("移库数量", "transfer_qty", "decimal(21,2)", "", ""));
             newtable.Columns.Add(new DDLColumn("品牌代码", "brand_code", "varchar(100)", "", ""));
             newtable.Columns.Add(new DDLColumn("零件号", "part_no", "varchar(30)", "", ""));
-            newtable.Columns.Add(new DDLColumn("", "", "", "", ""));
-            newtable.Columns.Add(new DDLColumn("", "", "", "", ""));
             newtable.Columns.Add(new DDLColumn("零件描述", "part_name", "varchar(120)", "", ""));
             newtable.Columns.Add(new DDLColumn("是否删除", "is_deleted", "int(20)", "", ""));
             newtable.Columns.Add(new DDLColumn("创建时间", "created_at", "varchar(30)", "", ""));
@@ -181,7 +179,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_INVENTORY", "4.PA106011003-同步零件盘点"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_Inventory", "4.PA106011003-同步零件盘点"));
             newtable.Columns.Add(new DDLColumn("经销商代码", "owner_code", "varchar(36)", "是", ""));
             newtable.Columns.Add(new DDLColumn("经销商名称", "company_name_cn", "varchar(150)", "", ""));
             newtable.Columns.Add(new DDLColumn("盘点单号", "inventory_no", "varchar(24)", "是", ""));
@@ -196,7 +194,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_INVENTORY_ITEM", "4.PA106011003-同步零件盘点明细"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_Inventory_Item", "4.PA106011003-同步零件盘点明细"));
             newtable.Columns.Add(new DDLColumn("inventory_no_id", "inventory_no_id", "long", "", ""));
             newtable.Columns.Add(new DDLColumn("仓库代码", "storage_code", "varchar(30)", "", ""));
             newtable.Columns.Add(new DDLColumn("仓库名称", "storage_name", "varchar(30)", "", ""));
@@ -215,7 +213,7 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("修改人", "updated_name", "varchar(36)", "", ""));
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_STOCK", "5.PA106011004-同步零件库存"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_Stock", "5.PA106011004-同步零件库存"));
             newtable.Columns.Add(new DDLColumn("经销商代码", "owner_code", "varchar(36)", "是", ""));
             newtable.Columns.Add(new DDLColumn("经销商名称", "company_name_cn", "varchar(150)", "", ""));
             newtable.Columns.Add(new DDLColumn("品牌代码", "brand_code", "varchar(30)", "", ""));
@@ -275,7 +273,7 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("修改时间", "updated_at", "varchar(30)", "", ""));
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_STOCK_ITEM", "5.PA106011004-同步零件库存明细"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_Stock_Item", "5.PA106011004-同步零件库存明细"));
             newtable.Columns.Add(new DDLColumn("part_stock_id", "part_stock_id", "long", "是", ""));
             newtable.Columns.Add(new DDLColumn("仓库名称", "storage_name", "varchar(36)", "", ""));
             newtable.Columns.Add(new DDLColumn("仓库代码", "storage_code", "varchar(20)", "", ""));
@@ -294,7 +292,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_SCRAP", "6.PA106011005-同步零件报废"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_Scrap", "6.PA106011005-同步零件报废"));
             newtable.Columns.Add(new DDLColumn("经销商代码", "owner_code", "varchar(36)", "", ""));
             newtable.Columns.Add(new DDLColumn("经销商名称", "company_name_cn", "varchar(100)", "", ""));
             newtable.Columns.Add(new DDLColumn("报废单号", "scrap_no", "varchar(36)", "是", ""));
@@ -305,7 +303,7 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("修改人", "updated_name", "varchar(36)", "", ""));
             newtable.Columns.Add(new DDLColumn("修改时间", "updated_at", "varchar(36)", "", ""));
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_SCRAP_ITEM", "6.PA106011005-同步零件报废明细"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_Scrap_Item", "6.PA106011005-同步零件报废明细"));
             newtable.Columns.Add(new DDLColumn("scrap_id", "scrap_id", "long", "", ""));
             newtable.Columns.Add(new DDLColumn("仓库名称", "storage_name", "varchar(100)", "", ""));
             newtable.Columns.Add(new DDLColumn("仓库代码", "storage_code", "varchar(36)", "", ""));
@@ -323,7 +321,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_FLOW", "7.PA106011006-同步零件流动"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_Flow", "7.PA106011006-同步零件流动"));
             newtable.Columns.Add(new DDLColumn("经销商代码", "owner_code", "varchar(36)", "是", ""));
             newtable.Columns.Add(new DDLColumn("经销商名称", "company_name_cn", "varchar(100)", "", ""));
             newtable.Columns.Add(new DDLColumn("零件号", "part_no", "varchar(30)", "是", ""));
@@ -347,7 +345,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_PICK", "8.PA106011007-同步零件领料"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_Pick", "8.PA106011007-同步零件领料"));
             newtable.Columns.Add(new DDLColumn("经销商代码", "owner_code", "varchar(36)", "是", ""));
             newtable.Columns.Add(new DDLColumn("经销商名称", "company_name_cn", "varchar(150)", "", ""));
             newtable.Columns.Add(new DDLColumn("工单号", "ro_no", "varchar(36)", "是", ""));
@@ -358,7 +356,7 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("创建人", "created_name", "varchar(36)", "", ""));
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_PICK_ITEM", "8.PA106011007-同步零件领料明细"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_PARTS_Pick_Item", "8.PA106011007-同步零件领料明细"));
             newtable.Columns.Add(new DDLColumn("pick_id", "pick_id", "long", "", ""));
             newtable.Columns.Add(new DDLColumn("行号", "item_seq", "varchar(36)", "是", ""));
             newtable.Columns.Add(new DDLColumn("是否出库", "dispatch_status", "varchar(100)", "", ""));
@@ -402,7 +400,7 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("创建人", "Creator", "varchar(8)", "", ""));
 
             ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_AC_General_Detail", "9.AC102011000-同步分录明细分录"));
-            newtable.Columns.Add(new DDLColumn("ac_id", "ac_id", "long", "", ""));
+            newtable.Columns.Add(new DDLColumn("ac_id", "ac_id", "long", "", "", true));
             newtable.Columns.Add(new DDLColumn("公司编码", "companyCode", "varchar(20)", "", ""));
             newtable.Columns.Add(new DDLColumn("主体账簿", "accBook", "varchar(30)", "是", ""));
             newtable.Columns.Add(new DDLColumn("会计期间", "period", "varchar(30)", "", ""));
@@ -440,7 +438,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
             ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_AC_FA_Detail", "10.AC102011001-同步固定资产分录"));
-            newtable.Columns.Add(new DDLColumn("ac_id", "ac_id", "long", "", ""));
+            newtable.Columns.Add(new DDLColumn("ac_id", "ac_id", "long", "", "", true));
             newtable.Columns.Add(new DDLColumn("固定资产编号", "FANo", "varchar(20)", "是", ""));
             newtable.Columns.Add(new DDLColumn("描述", "Description", "varchar(30)", "", ""));
             newtable.Columns.Add(new DDLColumn("序列号", "SerialNo", "varchar(30)", "", ""));
@@ -460,7 +458,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
             ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_AC_Cust_Vend_Info", "11.AC102011002-同步客户和供应商信息"));
-            newtable.Columns.Add(new DDLColumn("ac_id", "ac_id", "long", "", ""));
+            newtable.Columns.Add(new DDLColumn("ac_id", "ac_id", "long", "", "", true));
             newtable.Columns.Add(new DDLColumn("类型", "Type", "varchar(20)", "", ""));
             newtable.Columns.Add(new DDLColumn("编号", "No", "varchar(20)", "是", ""));
             newtable.Columns.Add(new DDLColumn("姓名", "Name", "varchar(50)", "", ""));
@@ -500,7 +498,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
             ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_AC_Invoice_Item", "12.AC102011003-同步发票Invoice信息Item"));
-            newtable.Columns.Add(new DDLColumn("invoice_id", "invoice_id", "bigint", "", ""));
+            newtable.Columns.Add(new DDLColumn("invoice_id", "invoice_id", "bigint", "", "", true));
             newtable.Columns.Add(new DDLColumn("行编号", "LineNo", "varchar(50)", "是", ""));
             newtable.Columns.Add(new DDLColumn("空", "DMSItemType", "varchar(50)", "", ""));
             newtable.Columns.Add(new DDLColumn("会计科目", "GLAccount", "varchar(50)", "", ""));
@@ -519,28 +517,28 @@ namespace Org.FGQ.CodeGenerateTest
 
             ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_AC_Invoice_Other_Item", "13.AC102011004-同步发票Other信息Item"));
             newtable.Columns.Add(new DDLColumn("daybook_id", "daybook_id", "bigint", "", ""));
-            newtable.Columns.Add(new DDLColumn("TransactionType", "交易类型", "varchar(50)", "", ""));
-            newtable.Columns.Add(new DDLColumn("LineNo", "行编码", "varchar(50)", "是", ""));
-            newtable.Columns.Add(new DDLColumn("PostingDate", "过账日期", "varchar(50)", "是", ""));
-            newtable.Columns.Add(new DDLColumn("DocumentDate", "文档日期", "varchar(50)", "", ""));
-            newtable.Columns.Add(new DDLColumn("ExtDocumentNo", "外部文档编码", "varchar(50)", "", ""));
-            newtable.Columns.Add(new DDLColumn("AccountType", "针对 DMS，此字段只能为”G/L Account”", "varchar(50)", "", ""));
-            newtable.Columns.Add(new DDLColumn("AccountNo", "会计科目编号", "varchar(50)", "", ""));
-            newtable.Columns.Add(new DDLColumn("Description", "描述 （摘要）", "varchar(50)", "", ""));
-            newtable.Columns.Add(new DDLColumn("DebitValue", "贷方金额", "varchar(50)", "", ""));
-            newtable.Columns.Add(new DDLColumn("CreditValue", "借方金额", "varchar(50)", "", ""));
-            newtable.Columns.Add(new DDLColumn("CostCenterCode", "成本中心代码", "varchar(50)", "", ""));
-            newtable.Columns.Add(new DDLColumn("VehicleSeries", "车系（车型号）", "varchar(50)", "", ""));
-            newtable.Columns.Add(new DDLColumn("VINNo", "VIN 车辆识别号", "varchar(50)", "", ""));
-            newtable.Columns.Add(new DDLColumn("WIPNo", "WIP No. WIP 编码", "varchar(50)", "", ""));
-            newtable.Columns.Add(new DDLColumn("FAPostingType", "固定资产过账类型", "varchar(50)", "", ""));
-            newtable.Columns.Add(new DDLColumn("EntryType", "分录类型", "varchar(50)", "", ""));
-            newtable.Columns.Add(new DDLColumn("FromCompanyCode", "发起公司代码", "varchar(50)", "", ""));
-            newtable.Columns.Add(new DDLColumn("ToCompanyCode", "接收公司代码", "varchar(50)", "", ""));
-            newtable.Columns.Add(new DDLColumn("SourceType", "源类型", "varchar(50)", "", ""));
-            newtable.Columns.Add(new DDLColumn("SourceNo", "源编码", "varchar(50)", "", ""));
-            newtable.Columns.Add(new DDLColumn("Location", "地点", "varchar(50)", "", ""));
-            newtable.Columns.Add(new DDLColumn("MovementType", "变动类型", "varchar(50)", "", ""));
+            newtable.Columns.Add(new DDLColumn("交易类型", "TransactionType", "varchar(50)", "", ""));
+            newtable.Columns.Add(new DDLColumn("行编码", "LineNo", "varchar(50)", "是", ""));
+            newtable.Columns.Add(new DDLColumn("过账日期", "PostingDate", "varchar(50)", "是", ""));
+            newtable.Columns.Add(new DDLColumn("文档日期", "DocumentDate", "varchar(50)", "", ""));
+            newtable.Columns.Add(new DDLColumn("外部文档编码", "ExtDocumentNo", "varchar(50)", "", ""));
+            newtable.Columns.Add(new DDLColumn("针对 DMS，此字段只能为”G/L Account”", "AccountType", "varchar(50)", "", ""));
+            newtable.Columns.Add(new DDLColumn("会计科目编号", "AccountNo", "varchar(50)", "", ""));
+            newtable.Columns.Add(new DDLColumn("描述 （摘要）", "Description", "varchar(50)", "", ""));
+            newtable.Columns.Add(new DDLColumn("贷方金额", "DebitValue", "varchar(50)", "", ""));
+            newtable.Columns.Add(new DDLColumn("借方金额", "CreditValue", "varchar(50)", "", ""));
+            newtable.Columns.Add(new DDLColumn("成本中心代码", "CostCenterCode", "varchar(50)", "", ""));
+            newtable.Columns.Add(new DDLColumn("车系（车型号）", "VehicleSeries", "varchar(50)", "", ""));
+            newtable.Columns.Add(new DDLColumn("VIN 车辆识别号", "VINNo", "varchar(50)", "", ""));
+            newtable.Columns.Add(new DDLColumn("WIP No. WIP 编码", "WIPNo", "varchar(50)", "", ""));
+            newtable.Columns.Add(new DDLColumn("固定资产过账类型", "FAPostingType", "varchar(50)", "", ""));
+            newtable.Columns.Add(new DDLColumn("分录类型", "EntryType", "varchar(50)", "", ""));
+            newtable.Columns.Add(new DDLColumn("发起公司代码", "FromCompanyCode", "varchar(50)", "", ""));
+            newtable.Columns.Add(new DDLColumn("接收公司代码", "ToCompanyCode", "varchar(50)", "", ""));
+            newtable.Columns.Add(new DDLColumn("源类型", "SourceType", "varchar(50)", "", ""));
+            newtable.Columns.Add(new DDLColumn("源编码", "SourceNo", "varchar(50)", "", ""));
+            newtable.Columns.Add(new DDLColumn("地点", "Location", "varchar(50)", "", ""));
+            newtable.Columns.Add(new DDLColumn("变动类型", "MovementType", "varchar(50)", "", ""));
 
 
 
@@ -1251,7 +1249,7 @@ namespace Org.FGQ.CodeGenerateTest
         {
             ddlConfig = new DDLConfig();
             ddlConfig.MyDBType = DDLConfig.DBType.Oracle;
-           
+
             initPart();
             initAC();
             initASF();
@@ -1974,7 +1972,7 @@ namespace Org.FGQ.CodeGenerateTest
         private void initRS()
         {
             DDLTable newtable;
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_RS_CAR_stock", "27.RS104011000-同步整车库存"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_RS_Car_stock", "27.RS104011000-同步整车库存"));
             newtable.Columns.Add(new DDLColumn("经销商代码", "owner_code", "varchar(64)", "是", ""));
             newtable.Columns.Add(new DDLColumn("经销商名称", "company_name_cn", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("底盘号", "vin", "varchar(64)", "", ""));
@@ -2059,7 +2057,7 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("PDI 完成时间", "pdi_date", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("售后召回标识", "is_deleted", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("三包打印时间", "printing_date", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("进口/国产", "vehicle_sources", "varchar(64)", "", ""));
+            newtable.Columns.Add(new DDLColumn("进口/国产", "vehicle_source", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("车辆类型", "vehicle_type", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("车辆库存_id", "vehicle_id", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("创建人", "created_name", "varchar(36)", "", ""));
@@ -2068,18 +2066,18 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("修改时间", "updated_at", "varchar(36)", "", ""));
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_RS_CAR_stock_individual", "27.RS104011000-同步整车库存个性选装列表"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_RS_Car_stock_individual", "27.RS104011000-同步整车库存个性选装列表"));
             newtable.Columns.Add(new DDLColumn("cs_id", "cs_id", "bigint", "是", ""));
             newtable.Columns.Add(new DDLColumn("选装代码", "option_code", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("选装描述", "option_name_zh", "varchar(64)", "", ""));
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_RS_CAR_stock_standard", "27.RS104011000-同步整车库存标配列表"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_RS_Car_stock_standard", "27.RS104011000-同步整车库存标配列表"));
             newtable.Columns.Add(new DDLColumn("cs_id", "cs_id", "bigint", "是", ""));
             newtable.Columns.Add(new DDLColumn("标配代码", "standard_code", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("标配描述", "standard_des", "varchar(64)", "", ""));
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_RS_CAR_so", "28.RS104011001-同步零售订单"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_RS_Car_so", "28.RS104011001-同步零售订单"));
             newtable.Columns.Add(new DDLColumn("经销商代码", "owner_code", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("经销商名称", "company_name_cn", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("订单号", "so_no", "varchar(64)", "是", ""));
@@ -2146,20 +2144,20 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("置换车里程", "replacement_mileage", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("是否新车车主一致", "is_owner", "varchar(64)", "", ""));
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_RS_CAR_so_jptc", "28.RS104011001-同步零售订单精品套餐"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_RS_Car_so_jptc", "28.RS104011001-同步零售订单精品套餐"));
             newtable.Columns.Add(new DDLColumn("so_id", "so_id", "bigint", "", ""));
             newtable.Columns.Add(new DDLColumn("精品套餐编码", "option_code", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("精品套餐名称", "option_name_zh", "varchar(64)", "", ""));
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_RS_CAR_so_jp", "28.RS104011001-同步零售订单精品"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_RS_Car_so_jp", "28.RS104011001-同步零售订单精品"));
             newtable.Columns.Add(new DDLColumn("so_id", "so_id", "bigint", "", ""));
             newtable.Columns.Add(new DDLColumn("精品编码", "option_code", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("精品名称", "option_name_zh", "varchar(64)", "", ""));
 
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_RS_CAR_so_qtfw", "28.RS104011001-同步零售订单其他服务"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_RS_Car_so_qtfw", "28.RS104011001-同步零售订单其他服务"));
             newtable.Columns.Add(new DDLColumn("so_id", "so_id", "bigint", "", ""));
             newtable.Columns.Add(new DDLColumn("项目名称", "service_name", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("是否代收", "is_collecting", "varchar(64)", "", ""));
@@ -2227,7 +2225,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_RS_Car_INOUTRecord", "31.RS104011004-同步车辆出入库记录"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_RS_Car_InOutRecord", "31.RS104011004-同步车辆出入库记录"));
             newtable.Columns.Add(new DDLColumn("经销商代码", "owner_code", "varchar(64)", "是", ""));
             newtable.Columns.Add(new DDLColumn("经销商名称", "company_name_cn", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("出库单号", "in_out_stock_no", "varchar(64)", "", ""));

@@ -15,7 +15,14 @@ namespace Org.FGQ.CodeGenerate.Config
 
         public string DBName { get; set; } = string.Empty;
 
-        public string DBNameSQL {  get; set; } = string.Empty;
+        private string dbnameSql;
+
+        public string DBNameSQL
+        {
+            get { return dbnameSql ?? DBName; }
+            set { dbnameSql = value; }
+        }
+
 
         public string Desc { get; set; } = string.Empty;
 
@@ -68,7 +75,7 @@ namespace Org.FGQ.CodeGenerate.Config
         public List<string> getPrimaryKeyNames()
         {
             List<string> s = null;
-            return this.Columns.FindAll(x => x.IsKeyColumn()).ConvertAll<string>(x => { return x.Name; }).ToList();
+            return this.Columns.FindAll(x => x.IsKeyColumn()).ConvertAll<string>(x => { return x.NameSql; }).ToList();
         }
 
 
@@ -107,6 +114,15 @@ namespace Org.FGQ.CodeGenerate.Config
         /// </summary>
         public bool IsParentKey { get; set; } = false;
 
+        private string nameSql;
+
+        public string NameSql
+        {
+            get { return nameSql ?? Name; }
+            set { nameSql = value; }
+        }
+
+
         public string CommentStr()
         {
 
@@ -126,6 +142,7 @@ namespace Org.FGQ.CodeGenerate.Config
             KeySign = keySign?.Trim() ?? throw new ArgumentNullException(nameof(keySign));
             Remark = remark?.Trim() ?? throw new ArgumentNullException(nameof(remark));
             IsParentKey = isparentkey;
+
         }
 
         public DDLColumn(string desc, string name, string type, string keySign, string remark)
@@ -164,6 +181,12 @@ namespace Org.FGQ.CodeGenerate.Config
             foreach (var table in Tables)
             {
 
+                if (table.Columns.FindAll(x=>x.Validate()).ConvertAll<string>(x => x.Name).Distinct<string>().Count<string>() 
+                    != table.Columns.FindAll(x => x.Validate()).Count)
+                {
+                    throw new Exception(String.Format("表：{0}存在重复列", table.TableName));
+                }
+
                 if (this.MyDBType == DBType.Oracle)
                 {
                     table.DBNameSQL = table.DBName.ToUpper();
@@ -175,19 +198,26 @@ namespace Org.FGQ.CodeGenerate.Config
 
                 }
 
+                bool idexists = table.Columns.Exists(x => x.Name.ToLower() == "id");
 
-
-                if (false == table.HasKeyCol())
+                if (false == idexists)
                 {
-                    table.Columns.Insert(0, new DDLColumn("ID", "id", "bigint(20)", "是", ""));
-                }
-                else
-                {
-                    table.Columns.Insert(0, new DDLColumn("ID", "id", "bigint(20)", "", ""));
-                }
+                    if (false == table.HasKeyCol())
+                    {
+                        table.Columns.Insert(0, new DDLColumn("ID", "id", "bigint(20)", "是", ""));
+                    }
+                    else
+                    {
+                        table.Columns.Insert(0, new DDLColumn("ID", "id", "bigint(20)", "", ""));
+                    }
+                }                 
                 table.Columns.ForEach(x =>
                 {
                     x.SqlType = getSqlDBType(x.TypeName, this.MyDBType);
+                    if (this.MyDBType == DBType.Oracle)
+                    {
+                        x.NameSql = x.Name.ToUpper();
+                    }
                 });
             }
             this.prepared = true;

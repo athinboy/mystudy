@@ -70,6 +70,13 @@ namespace Org.FGQ.CodeGenerate.Util.Code
             }
         }
 
+        public List<FieldBase> ParentKeyFields
+        {
+            get
+            {
+                return Fields.FindAll(x => x.IsParentKey);
+            }
+        }
 
 
 

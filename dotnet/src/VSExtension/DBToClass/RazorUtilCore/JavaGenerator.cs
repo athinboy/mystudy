@@ -30,29 +30,89 @@ namespace Org.FGQ.CodeGenerate
         static NLog.ILogger logger = NLog.LogManager.GetCurrentClassLogger();
 
 
+        private IRazorEngine razorEngine = null;
+        private IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaClass>> beanTemplate = null;
+        private IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaDaoConfig>> daoTemplate = null;
+        private IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaMapperConfig>> mapperTemplate = null;
+        private IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaCodeConfig>> codeTemplate = null;
+        private void init()
+        {
+
+            if (razorEngine != null)
+            {
+                return;
+            }
+
+            lock (this)
+            {
+                if (razorEngine != null)
+                {
+                    return;
+                }
+
+                razorEngine = new RazorEngine();
+
+                string templatePath = Environment.CurrentDirectory + javaBeanTemplateRelatePath;
+                string templateContent = File.ReadAllText(templatePath);
+
+                beanTemplate = razorEngine.Compile<RazorEngineTemplateBase<JavaClass>>(templateContent, builder =>
+{
+    //builder.AddAssemblyReferenceByName("System.Security"); // by name
+    //builder.AddAssemblyReference(typeof(System.IO.File)); // by type
+    //builder.AddAssemblyReference(Assembly.Load("source")); // by reference
+    builder.AddAssemblyReferenceByName("System.Collections");
+});
+
+
+
+                templatePath = Environment.CurrentDirectory + javaDaoTemplateRelatePath;
+                templateContent = File.ReadAllText(templatePath);
+                daoTemplate = razorEngine.Compile<RazorEngineTemplateBase<JavaDaoConfig>>(templateContent, builder =>
+ {
+     builder.AddAssemblyReferenceByName("System.Collections");
+     builder.AddAssemblyReference(typeof(CodeUtil)); // by type
+ });
+
+                templatePath = Environment.CurrentDirectory + javaMapperTemplateRelatePath;
+
+                templateContent = File.ReadAllText(templatePath);
+
+
+                mapperTemplate
+                       = razorEngine.Compile<RazorEngineTemplateBase<JavaMapperConfig>>(templateContent, builder =>
+                       {
+                           builder.AddAssemblyReferenceByName("System.Collections");
+                           builder.AddAssemblyReference(typeof(CodeUtil)); // by type
+                           builder.AddAssemblyReference(typeof(ReverseStrTagHelper)); // by type
+                       });
+
+
+                templatePath = Environment.CurrentDirectory + javaCodeTemplateRelatePath;
+
+                templateContent = File.ReadAllText(templatePath);
+
+
+
+
+                codeTemplate = razorEngine.Compile<RazorEngineTemplateBase<JavaCodeConfig>>(templateContent, builder =>
+{
+    builder.AddAssemblyReferenceByName("System.Collections");
+    builder.AddAssemblyReference(typeof(CodeUtil)); // by type
+    builder.AddAssemblyReference(typeof(ReverseStrTagHelper)); // by type
+});
+
+
+            }
+
+        }
+
+
+
+
         public void GenerateBean(JavaBeanConfig javaBeanConfig)
         {
 
-            string templatePath = Environment.CurrentDirectory + javaBeanTemplateRelatePath;
-
-
-            logger.Info(templatePath);
-
-
-
-            string templateContent = File.ReadAllText(templatePath);
-
-
-
-            IRazorEngine razorEngine = new RazorEngine();
-            IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaClass>> template
-                = razorEngine.Compile<RazorEngineTemplateBase<JavaClass>>(templateContent, builder =>
-                {
-                    //builder.AddAssemblyReferenceByName("System.Security"); // by name
-                    //builder.AddAssemblyReference(typeof(System.IO.File)); // by type
-                    //builder.AddAssemblyReference(Assembly.Load("source")); // by reference
-                    builder.AddAssemblyReferenceByName("System.Collections");
-                });
+            init();
 
             //IRazorEngineCompiledTemplate template = razorEngine.Compile(templateContent);// "Hello @Model.Name");
 
@@ -67,7 +127,7 @@ namespace Org.FGQ.CodeGenerate
             string result = String.Empty;
             javaBeanConfig.DDLConfig.Tables.ForEach(t =>
             {
-                result = template.Run(instance =>
+                result = beanTemplate.Run(instance =>
                 {
                     javaBeanConfig.Table = t;
                     t.CreatedJavaBean = JavaClass.CreateBoClass(t, javaBeanConfig, true);
@@ -80,10 +140,10 @@ namespace Org.FGQ.CodeGenerate
                 {
                     File.Delete(filePath);
                 }
-                File.WriteAllText(filePath, result, Encoding.UTF8);
+                File.WriteAllText(filePath, result, new UTF8Encoding(false));
 
 
-                result = template.Run(instance =>
+                result = beanTemplate.Run(instance =>
                 {
                     instance.Model = t.CreatedJavaBean.JavaVoClass;
                 });
@@ -93,7 +153,7 @@ namespace Org.FGQ.CodeGenerate
                 {
                     File.Delete(filePath);
                 }
-                File.WriteAllText(filePath, result, Encoding.UTF8);
+                File.WriteAllText(filePath, result, new UTF8Encoding(false));
 
 
             });
@@ -105,25 +165,15 @@ namespace Org.FGQ.CodeGenerate
 
         public void GenerateDao(JavaDaoConfig javaDaoConfig, JavaMapperConfig javaMapperConfig)
         {
+            init();
 
-            string templatePath = Environment.CurrentDirectory + javaDaoTemplateRelatePath;
-            logger.Info(templatePath);
-            string templateContent = File.ReadAllText(templatePath);
-
-            IRazorEngine razorEngine = new RazorEngine();
-            IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaDaoConfig>> template
-                = razorEngine.Compile<RazorEngineTemplateBase<JavaDaoConfig>>(templateContent, builder =>
-                {
-                    builder.AddAssemblyReferenceByName("System.Collections");
-                    builder.AddAssemblyReference(typeof(CodeUtil)); // by type
-                });
 
             string rootDir;
             string result = String.Empty;
 
             Action action = () =>
              {
-                 result = template.Run(instance =>
+                 result = daoTemplate.Run(instance =>
                  {
 
                      instance.Model = javaDaoConfig;
@@ -137,7 +187,7 @@ namespace Org.FGQ.CodeGenerate
                  {
                      File.Delete(filePath);
                  }
-                 File.WriteAllText(filePath, result, Encoding.UTF8);
+                 File.WriteAllText(filePath, result, new UTF8Encoding(false));
 
                  javaMapperConfig.JavaClass = javaDaoConfig.JavaClass;
                  GenerateMapper(javaMapperConfig);
@@ -171,28 +221,19 @@ namespace Org.FGQ.CodeGenerate
         private void GenerateMapper(JavaMapperConfig javaMapperConfig)
         {
 
-
-            string templatePath = Environment.CurrentDirectory + javaMapperTemplateRelatePath;
-            logger.Info(templatePath);
-            string templateContent = File.ReadAllText(templatePath);
-
-            IRazorEngine razorEngine = new RazorEngine();
-            IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaMapperConfig>> template
-                = razorEngine.Compile<RazorEngineTemplateBase<JavaMapperConfig>>(templateContent, builder =>
-                {
-                    builder.AddAssemblyReferenceByName("System.Collections");
-                    builder.AddAssemblyReference(typeof(CodeUtil)); // by type
-                    builder.AddAssemblyReference(typeof(ReverseStrTagHelper)); // by type
-                });
-
+            init();
 
             string rootDir = javaMapperConfig.MapperDirectory;
+            if (false == Directory.Exists(rootDir))
+            {
+                Directory.CreateDirectory(rootDir);
+            }
             string mapperDir = rootDir;
             string result = String.Empty;
 
             Action action = () =>
             {
-                result = template.Run(instance =>
+                result = mapperTemplate.Run(instance =>
                 {
 
 
@@ -202,12 +243,15 @@ namespace Org.FGQ.CodeGenerate
 
 
                 string filePath = mapperDir + Path.DirectorySeparatorChar + javaMapperConfig.MapperName + ".xml";
-
+                if (false == Directory.Exists(mapperDir))
+                {
+                    Directory.CreateDirectory(mapperDir);
+                }
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
                 }
-                File.WriteAllText(filePath, result, Encoding.UTF8);
+                File.WriteAllText(filePath, result, new UTF8Encoding(false));
 
             };
 
@@ -244,22 +288,9 @@ namespace Org.FGQ.CodeGenerate
 
         public void GenerateCode(JavaCodeConfig javaCodeConfig, JavaClass createdJavaBean)
         {
-            string templatePath = Environment.CurrentDirectory + javaCodeTemplateRelatePath;
-            logger.Info(templatePath);
-            string templateContent = File.ReadAllText(templatePath);
+            init();
+
             javaCodeConfig.JavaClass = createdJavaBean;
-
-
-            IRazorEngine razorEngine = new RazorEngine();
-            IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaCodeConfig>> template
-                = razorEngine.Compile<RazorEngineTemplateBase<JavaCodeConfig>>(templateContent, builder =>
-                {
-                    builder.AddAssemblyReferenceByName("System.Collections");
-                    builder.AddAssemblyReference(typeof(CodeUtil)); // by type
-                    builder.AddAssemblyReference(typeof(ReverseStrTagHelper)); // by type
-                });
-
-
             string rootDir = String.Empty;
 
             string result = String.Empty;
@@ -268,7 +299,7 @@ namespace Org.FGQ.CodeGenerate
 
             Action action = () =>
             {
-                result = template.Run(instance =>
+                result = codeTemplate.Run(instance =>
                 {
                     instance.Model = javaCodeConfig;
                 });
@@ -282,7 +313,7 @@ namespace Org.FGQ.CodeGenerate
                 {
                     File.Delete(filePath);
                 }
-                File.WriteAllText(filePath, result, Encoding.UTF8);
+                File.WriteAllText(filePath, result, new UTF8Encoding(false));
 
             };
 

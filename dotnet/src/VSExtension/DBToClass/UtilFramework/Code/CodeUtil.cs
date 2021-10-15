@@ -108,15 +108,32 @@ namespace Org.FGQ.CodeGenerate.Util.Code
             {
                 return string.Empty;
             }
-            return string.Join(",", javaClass.KeyFields.ConvertAll<string>(x => (withType ? x.FiledTypeStr + " " : "") + x.Name));
+            return string.Join(", ", javaClass.KeyFields.ConvertAll<string>(x => (withType ? x.FiledTypeStr + " " : "") + x.Name));
 
         }
 
 
         public static string GetJavaParaName(string className)
         {
+            string result = className.Substring(0, 1).ToLower();
+            className = className.Substring(1);
 
-            return className.Substring(0, 1).ToLower() + className.Substring(1);
+            while (className.Length > 1 && char.IsUpper(className.ToCharArray()[1]))
+            {
+                result += className.Substring(0, 1).ToLower();
+                className = className.Substring(1);
+
+            }
+            if (className.Length > 1)
+            {
+                result += className;
+            }
+            else
+            {
+                result += className.Length < 0 ? className.ToLower() : "";
+            }
+
+            return result;
         }
 
 

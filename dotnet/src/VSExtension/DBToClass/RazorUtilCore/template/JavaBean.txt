@@ -22,7 +22,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 	@for (var i = 0; i < @Model.Fields.Count; i++){
 @:    /**
-@:      * @Model.Fields[i].Desc @Model.Fields[i].Remark
+@:     * @Model.Fields[i].Desc @Model.Fields[i].Remark
 @:     */
 @:    @@JSONField(name = "@Model.Fields[i].JsonFieldName")
 @:    private @Model.Fields[i].FiledTypeStr @Model.Fields[i].Name; 	 

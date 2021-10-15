@@ -5,9 +5,7 @@
 @using Org.FGQ.CodeGenerate.Util.Code
 @(
 //          Model部分
-)
-@if(@Model.ForModel){
-<text>package @Model.ModelPackageName;
+)@if(@Model.ForModel){<text>package @Model.ModelPackageName;
 
 import @Model.DaoConfig.BoClassFullName;
 import @Model.DaoConfig.VoClassFullName;
@@ -33,7 +31,6 @@ public class @Model.ModelName {
     @@Autowired
     private @Model.DaoConfig.WriteDaoName writeDao;
 
-
     public @Model.DaoConfig.VoClassName selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true)){
         return readDao.selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,false));   
     }
@@ -54,7 +51,6 @@ public class @Model.ModelName {
     public Integer queryCountByParaMap(Map paraMap){
         return readDao.queryCountByParaMap(paraMap);    
     }
-
     
     public List<@Model.DaoConfig.VoClassName> queryByParaMap(Map paramMap){
         return readDao.queryByParaMap(paramMap);
@@ -105,8 +101,7 @@ public class @Model.ModelName {
 
 
 //          Service部分
-)
-@if(@Model.ForService){
+)@if(@Model.ForService){
 <text>package @Model.ServicePackageName;
 
 import @Model.DaoConfig.BoClassFullName;
@@ -130,9 +125,9 @@ public interface @Model.ServiceName {
 }
 @if(@Model.JavaClass.HasNoKeyLongIDField){
 <text>    public @Model.DaoConfig.VoClassName selectByID(Long id);
-
 </text>    
 }
+
     Integer queryCountByParaMap(Map paraMap);
 
     List<@Model.DaoConfig.VoClassName> queryByParaMap(Map paramMap);
@@ -155,6 +150,8 @@ public interface @Model.ServiceName {
 
     int updateByPrimaryKeySelective(@Model.JavaClass.ClassName record);
 
+    void sync(String serviceNetworkCode);
+
 }
 
 </text>
@@ -164,12 +161,24 @@ public interface @Model.ServiceName {
 
 
 //          ServiceImpl部分
-)
-@if(@Model.ForServiceImpl){
+)@if(@Model.ForServiceImpl){
 <text>package @Model.ServiceImplPackageName;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.wintop.ms.basecore.util.IdWorker;
+import com.wintop.third.bmwspark.bean.AASparkSyncLog;
+import com.wintop.third.bmwspark.service.AASparkSyncDateService;
+import com.wintop.third.bmwspark.service.AASparkSyncLogService;
+import com.wintop.third.bmwspark.util.BMWSparkUtil;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.time.DateUtils;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import @Model.ServicePackageName.@Model.ServiceName;
 import @Model.ModelPackageName.@Model.ModelName;
@@ -178,6 +187,7 @@ import @Model.DaoConfig.VoClassFullName;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
 
 /**
  * @Model.JavaClass.Desc
@@ -190,64 +200,150 @@ public class @Model.ServiceImplName implements @Model.ServiceName  {
     @@Autowired
     private @Model.ModelName @CodeUtil.GetJavaParaName(@Model.ModelName);
 
+    @@Autowired
+    BMWSparkUtil bmwSparkUtil;
+    @@Autowired
+    AASparkSyncLogService aaSparkSyncLogService;
+    @@Autowired
+    AASparkSyncDateService aaSparkSyncDateService;
+
+    static String actionCode = "";
+    
+    @@Override
     public @Model.DaoConfig.VoClassName selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true)) {
         return @CodeUtil.GetJavaParaName(@Model.ModelName)@.selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,false));
     }
 
 @foreach(var field in @Model.JavaClass.ParentKeyFields ){
+@:    
+@:    @@Override
 @:    public List<@Model.DaoConfig.VoClassName> queryBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name){
 @:        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.queryBy@(@field.Name.ToUpper())(@field.Name);
 @:    }
 @:
 }
 @if(@Model.JavaClass.HasNoKeyLongIDField){
-<text>    public @Model.DaoConfig.VoClassName selectByID(Long id) {
+<text>    @@Override
+     public @Model.DaoConfig.VoClassName selectByID(Long id) {
         return @CodeUtil.GetJavaParaName(@Model.ModelName)@.selectByID(id);
     }</text>
     
 }
 
+    @@Override
     public Integer queryCountByParaMap(Map paraMap) {
         return @CodeUtil.GetJavaParaName(@Model.ModelName)@.queryCountByParaMap(paraMap);
     }
 
+    @@Override
     public List<@Model.DaoConfig.VoClassName> queryByParaMap(Map paramMap) {
         return @CodeUtil.GetJavaParaName(@Model.ModelName)@.queryByParaMap(paramMap);
     }
 
+    @@Override
     public Integer queryCountByParaBean(@Model.DaoConfig.BoClassName paraBean) {
         return @CodeUtil.GetJavaParaName(@Model.ModelName)@.queryCountByParaBean(paraBean);
     }
 
+    @@Override
     public List<@Model.DaoConfig.VoClassName> queryByParaBean(@Model.DaoConfig.BoClassName paramBean) {
         return @CodeUtil.GetJavaParaName(@Model.ModelName)@.queryByParaBean(paramBean);
     }
 
+    @@Override
     public int deleteByPrimaryKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true)) {
         return @CodeUtil.GetJavaParaName(@Model.ModelName)@.deleteByPrimaryKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,false));
     }
 
 @foreach(var field in @Model.JavaClass.ParentKeyFields ){
+@:    @@Override
 @:    public int deleteBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name){
 @:        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.deleteBy@(@field.Name.ToUpper())(@field.Name);
 @:    }
 @:
 }
+    @@Override
     public int insert(@Model.JavaClass.ClassName record) {
         return @CodeUtil.GetJavaParaName(@Model.ModelName)@.insert(record);
     }
 
+    @@Override
     public int insertSelective(@Model.JavaClass.ClassName record) {
         return @CodeUtil.GetJavaParaName(@Model.ModelName)@.insertSelective(record);
     }
 
+    @@Override
     public int updateByPrimaryKey(@Model.JavaClass.ClassName record) {
         return @CodeUtil.GetJavaParaName(@Model.ModelName)@.updateByPrimaryKey(record);
     }
 
+    @@Override
     public int updateByPrimaryKeySelective(@Model.JavaClass.ClassName record) {
         return @CodeUtil.GetJavaParaName(@Model.ModelName)@.updateByPrimaryKeySelective(record);
     }
+
+    void sync(JSONObject jsonObject, AASparkSyncLog aaSparkSyncLog) {
+        @Model.JavaClass.ClassName @CodeUtil.GetJavaParaName(@Model.JavaClass.ClassName) = JSON.toJavaObject(jsonObject, @Model.JavaClass.ClassName@.class);
+        @Model.DaoConfig.VoClassName @CodeUtil.GetJavaParaName(@Model.DaoConfig.VoClassName) = selectByKey();
+        if (@CodeUtil.GetJavaParaName(@Model.DaoConfig.VoClassName) != null) {
+            @CodeUtil.GetJavaParaName(@Model.JavaClass.ClassName)@.setId(@CodeUtil.GetJavaParaName(@Model.DaoConfig.VoClassName)@.getId());
+
+            updateByPrimaryKeySelective(@CodeUtil.GetJavaParaName(@Model.JavaClass.ClassName));
+        } else {
+
+            @CodeUtil.GetJavaParaName(@Model.JavaClass.ClassName)@.setId(IdWorker.getInstance().nextId());
+            insertSelective(@CodeUtil.GetJavaParaName(@Model.JavaClass.ClassName));
+
+        }
+    }
+
+    @@Override
+    @@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public void sync(String serviceNetworkCode) {
+        AASparkSyncLog aaSparkSyncLog;
+
+        Date lastSyncDate = aaSparkSyncDateService.getLastSyncDate(serviceNetworkCode, actionCode);
+        Date startDate = null;
+        while (bmwSparkUtil.showRun(lastSyncDate, startDate)) {
+
+            startDate = bmwSparkUtil.getStartDate(lastSyncDate, startDate);
+            aaSparkSyncLog = new AASparkSyncLog();
+            aaSparkSyncLog.setId(IdWorker.getInstance().nextId());
+            aaSparkSyncLogService.insert(aaSparkSyncLog);
+            try {
+
+                JSONObject jsonObject = bmwSparkUtil.httpPost(bmwSparkUtil.getParaStr(serviceNetworkCode, actionCode, startDate), aaSparkSyncLog);
+                if (jsonObject == null) {
+                    bmwSparkUtil.sendWarn(actionCode + "同步宝马失败，返回null");
+                    return;
+                } else {
+                    Object data = jsonObject.get("Data");
+                    if (data == null) {
+                        bmwSparkUtil.sendWarn(actionCode + "  同步宝马失败，data==null");
+                        aaSparkSyncLog.setErrorMess(actionCode + "  data==null");
+                        aaSparkSyncLogService.updateByPrimaryKeySelective(aaSparkSyncLog);
+                        return;
+                    }
+
+                    JSONArray jsonArray = (JSONArray) data;
+                    for (int i = 0; i < jsonArray.size(); i++) {
+                        JSONObject jsondata = (JSONObject) jsonArray.get(i);
+                        sync(jsondata, aaSparkSyncLog);
+                    }
+                }
+            } catch (Exception ex) {
+                aaSparkSyncLog.setErrorMess(ExceptionUtils.getMessage(ex) + "\r\n" + ExceptionUtils.getFullStackTrace(ex));
+                aaSparkSyncLogService.updateByPrimaryKeySelective(aaSparkSyncLog);
+                return;
+            }
+
+        }
+        if (startDate != null) {
+            aaSparkSyncDateService.updateLastSyncDate(serviceNetworkCode, actionCode, DateUtils.addDays(startDate, 1));
+        }
+
+    }
+
 }
 
 </text>

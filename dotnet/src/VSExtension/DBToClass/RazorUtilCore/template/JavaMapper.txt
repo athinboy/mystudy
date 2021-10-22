@@ -151,21 +151,22 @@ for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){
 }
 for (var i = 0; i < @Model.JavaClass.KeyFields.Count; i++){
           if(i==0){@("        where ")} else {@("        and ")}
-@:t1.@Model.JavaClass.KeyFields[i].DBColName = #{@Model.JavaClass.KeyFields[i].Name,jdbcType=@Model.JavaClass.KeyFields[i].JDBCType}
+@:@Model.JavaClass.KeyFields[i].DBColName = #{@Model.JavaClass.KeyFields[i].Name,jdbcType=@Model.JavaClass.KeyFields[i].JDBCType}
 }
 @:    </update>
 @:
 @:    <update id="updateByPrimaryKeySelective" parameterType="@Model.JavaClass.FullName">
-@:        update @Model.DBTableName SET
+@:        update @Model.DBTableName 
+@:        <set>
 for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){   
 @:            <if test="@Model.JavaClass.Fields[i].Name != null">
-@("            "+@Model.JavaClass.Fields[i].DBColName+"=#{"+@Model.JavaClass.Fields[i].Name+",jdbcType="+@Model.JavaClass.Fields[i].JDBCType+"}"+(i<@Model.JavaClass.Fields.Count-1?",":"")+"\r\n")
+@("            "+@Model.JavaClass.Fields[i].DBColName+"=#{"+@Model.JavaClass.Fields[i].Name+",jdbcType="+@Model.JavaClass.Fields[i].JDBCType+"},"+"\r\n")
 @:            </if>
 }
-
+@:        </set>
 for (var i = 0; i < @Model.JavaClass.KeyFields.Count; i++){
           if(i==0){@("        where ")} else {@("        and ")}
-@:t1.@Model.JavaClass.KeyFields[i].DBColName = #{@Model.JavaClass.KeyFields[i].Name,jdbcType=@Model.JavaClass.KeyFields[i].JDBCType}
+@:@Model.JavaClass.KeyFields[i].DBColName = #{@Model.JavaClass.KeyFields[i].Name,jdbcType=@Model.JavaClass.KeyFields[i].JDBCType}
 }
 @:    </update>
 }

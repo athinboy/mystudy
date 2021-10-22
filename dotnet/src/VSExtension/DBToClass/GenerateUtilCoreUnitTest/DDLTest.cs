@@ -482,6 +482,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
             ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_AC_Invoice", "12.AC102011003-同步发票Invoice信息"));
+            newtable.Columns.Add(new DDLColumn("ac_id", "ac_id", "long", "", "", true));
             newtable.Columns.Add(new DDLColumn("发票编码", "InvoiceNo", "varchar(20)", "是", ""));
             newtable.Columns.Add(new DDLColumn("过账日期", "PostingDate", "varchar(20)", "", ""));
             newtable.Columns.Add(new DDLColumn("文档日期", "DocumentDate", "varchar(20)", "", ""));
@@ -685,11 +686,13 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("修改时间", "updated_at", "varchar(30)", "", ""));
 
 
+
+
             ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_AC_maintain_pay", "18.AC102011009-同步维修收款"));
             newtable.Columns.Add(new DDLColumn("经销商代码", "owner_code", "varchar(64)", "是", ""));
             newtable.Columns.Add(new DDLColumn("经销商名称", "company_name_cn", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("结算申请单号", "business_no", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("结算单号", "balance_no", "varchar(64)", "", ""));
+            newtable.Columns.Add(new DDLColumn("结算单号", "balance_no", "varchar(64)", "是", ""));
             newtable.Columns.Add(new DDLColumn("结算时间", "balance_date", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("付款类型代码", "pay_type_code", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("付款类型名称", "pay_type_name", "varchar(64)", "", ""));
@@ -970,7 +973,7 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("状态", "pkg_status", "varchar(64)", "", ""));
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_AFS_RO_Pkg", "22.AS103011001-同步工单项目"));
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_AFS_RO_Item", "22.AS103011001-同步工单项目"));
             newtable.Columns.Add(new DDLColumn("ro_id", "ro_id", "bigint", "", "", true));
             newtable.Columns.Add(new DDLColumn("套餐代码", "pkg_code", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("类型", "item_type", "varchar(64)", "", ""));
@@ -1218,21 +1221,6 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("结算状态", "balance_status", "varchar(64)", "", ""));
 
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_AFS_JSXL", "26.AS103011005-同步技师效率信息"));
-            newtable.Columns.Add(new DDLColumn("经销商代码", "owner_code", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("技师名称", "clock_user_name", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("技师代码", "employee_no", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("技师主技能", "main_skill_code", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("已售工时", "per_lab_count", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("金额", "per_lab_amount", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("实际用时", "per_lab_times", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("工作效率", "work_rate", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("维修时间", "repair_times", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("出勤时长", "attn_length", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("怠工时长", "dg_times", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("生产率", "product_rate", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("利用率", "use_rate", "varchar(64)", "", ""));
-
 
 
 
@@ -1259,9 +1247,9 @@ namespace Org.FGQ.CodeGenerateTest
             initDMO();
 
 
+            DDLTable newtable;
 
-
-
+            DDLColumn column;
 
 
 
@@ -1740,10 +1728,8 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("CKD 编号", "ckd_number", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("置换 id", "id", "long", "是", ""));
             newtable.Columns.Add(new DDLColumn("车辆状态", "vehicle_status", "varchar(64)", "", ""));
-
-
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_UC_Exchange_New_Car", "42.UC101010006-同步置换记录新车"));
-            newtable.Columns.Add(new DDLColumn("exchange_id", "exchange_id", "bigint", "", "", true));
+            //ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_UC_Exchange_New_Car", "42.UC101010006-同步置换记录新车"));
+            //newtable.Columns.Add(new DDLColumn("exchange_id", "exchange_id", "bigint", "", "", true));
             newtable.Columns.Add(new DDLColumn("车架号", "frame_number", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("供应商", "supplier", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("新车车系", "new_car_series", "varchar(64)", "", ""));
@@ -1753,20 +1739,16 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("新车开票日期", "new_vehicle_billing_date", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("销售员姓名", "name_of_salesman", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("DMS 上报日期", "dms_report_date", "varchar(64)", "", ""));
-
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_UC_Exchange_New_Costomer", "42.UC101010006-同步置换记录新车客户"));
-            newtable.Columns.Add(new DDLColumn("exchange_id", "exchange_id", "bigint", "", "", true));
+            //ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_UC_Exchange_New_Costomer", "42.UC101010006-同步置换记录新车客户"));
+            //newtable.Columns.Add(new DDLColumn("exchange_id", "exchange_id", "bigint", "", "", true));
             newtable.Columns.Add(new DDLColumn("客户/公司名称", "customer_company_name", "varchar(64)", "", ""));
             newtable.Columns.Add(column = new DDLColumn("身份 证/机构 代码号", "card_organization_number", "varchar(64)", "", ""));
             column.JsonFieldName = "id_card_organization_code_number";
             newtable.Columns.Add(new DDLColumn("地址", "address", "varchar(255)", "", ""));
-
-
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_UC_Exchange_Old_Car", "42.UC101010006-同步置换记录二手车明细"));
-            newtable.Columns.Add(new DDLColumn("exchange_id", "exchange_id", "bigint", "", "", true));
+            //ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_UC_Exchange_Old_Car", "42.UC101010006-同步置换记录二手车明细"));
+            // newtable.Columns.Add(new DDLColumn("exchange_id", "exchange_id", "bigint", "", "", true));
             newtable.Columns.Add(new DDLColumn("原车主电话", "original_owner_phone_number", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("二手车品牌", "used_car_brand", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("地址", "address", "varchar(255)", "", ""));
             newtable.Columns.Add(new DDLColumn("二手车模型", "used_car_model", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("17 位车架号", "digit_frame_number", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("车牌号码", "license_plate", "varchar(64)", "", ""));
@@ -1782,11 +1764,13 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("资源调配日期", "deployment_date", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("车龄月", "vehicle_age_month", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("资源调配接收方", "resource_allocation_receiver", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("客户/公司名称", "customer_company_name", "varchar(64)", "", ""));
-            newtable.Columns.Add(column = new DDLColumn("身份证/机构代码号", "card_organization_number", "varchar(64)", "", ""));
+            //newtable.Columns.Add(new DDLColumn("客户/公司名称", "customer_company_name", "varchar(64)", "", ""));
+            //newtable.Columns.Add(column = new DDLColumn("身份证/机构代码号", "card_organization_number", "varchar(64)", "", ""));
             column.JsonFieldName = "id_card_organization_code_number";
             newtable.Columns.Add(new DDLColumn("二手车客户电话", "used_car_customer_number", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("置换项目名称", "replacement_project_name", "varchar(64)", "", ""));
+
+
 
             ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_UC_YanBao", "43.UC101010007-同步记录延保"));
             newtable.Columns.Add(new DDLColumn("经销商代码", "owner_code", "varchar(64)", "是", ""));
@@ -1984,6 +1968,7 @@ namespace Org.FGQ.CodeGenerateTest
             DDLColumn column;
             ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_RS_Car_stock", "27.RS104011000-同步整车库存"));
             newtable.Columns.Add(new DDLColumn("经销商代码", "owner_code", "varchar(64)", "是", ""));
+            newtable.Columns.Add(new DDLColumn("vs_stock_id", "vs_stock_id", "bigint", "是", ""));
             newtable.Columns.Add(new DDLColumn("经销商名称", "company_name_cn", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("底盘号", "vin", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("库存状态", "own_stock_status", "varchar(64)", "", ""));
@@ -2322,6 +2307,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
             ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_RS_SJZY", "34.RS104011007-同步试驾和占用记录"));
+            newtable.Columns.Add(new DDLColumn("record_id", "record_id", "bigint", "是", ""));
             newtable.Columns.Add(new DDLColumn("经销商代码", "company_code", "varchar(36)", "", ""));
             newtable.Columns.Add(new DDLColumn("经销商名称", "company_name_cn", "varchar(36)", "", ""));
             newtable.Columns.Add(new DDLColumn("车架号", "vs_stock_id", "varchar(36)", "", ""));
@@ -2368,6 +2354,13 @@ namespace Org.FGQ.CodeGenerateTest
 
         }
 
+
+
+
+
+
+
+
         [Test]
         public void DDLToJavaAll()
         {
@@ -2412,7 +2405,7 @@ namespace Org.FGQ.CodeGenerateTest
                 javaDaoConfig.JavaClass = t.CreatedJavaBean;
                 javaGenerator.GenerateDao(javaDaoConfig, javaMapperConfig);
 
-                javaGenerator.GenerateCode(javaCodeConfig, t.CreatedJavaBean);
+                //javaGenerator.GenerateCode(javaCodeConfig, t.CreatedJavaBean);
 
             });
 

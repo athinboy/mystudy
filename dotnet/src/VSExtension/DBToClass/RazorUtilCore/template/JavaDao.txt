@@ -8,6 +8,7 @@ package @Model.DaoPackageName;
 import @Model.JavaClass.PackageName.@Model.JavaClass.ClassName;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;

@@ -102,15 +102,22 @@ namespace Org.FGQ.CodeGenerate.Util.Code
         }
 
 
-        public static string GetJavaKeyFieldsParaStr(JavaClass javaClass, bool withType)
+        public static string GetJavaKeyFieldsParaStr(JavaClass javaClass, bool withType, bool withParam)
         {
             if (false == javaClass.HasKeyField)
             {
                 return string.Empty;
             }
-            return string.Join(", ", javaClass.KeyFields.ConvertAll<string>(x => (withType ? x.FiledTypeStr + " " : "") + x.Name));
+            return string.Join(", ", javaClass.KeyFields.ConvertAll<string>(x => (withType ? (withParam ? String.Format("@Param(\"{0}\") ", x.Name) : "") + x.FiledTypeStr + " " : "") + x.Name));
 
         }
+
+        public static string GetJavaKeyFieldsParaStr(JavaClass javaClass, bool withType)
+        {
+            return GetJavaKeyFieldsParaStr(javaClass, withType, withType ? true : false);
+
+        }
+
 
 
         public static string GetJavaParaName(string className)
@@ -143,7 +150,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
             {
                 return string.Empty;
             }
-            return string.Join(",", javaClass.KeyFields.ConvertAll<string>(x => x.DBColName));
+            return string.Join(",", javaClass.Fields.ConvertAll<string>(x => x.DBColName));
 
         }
 

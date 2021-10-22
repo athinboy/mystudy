@@ -12,6 +12,19 @@ namespace Org.FGQ.CodeGenerate.Util.Util
 
         internal static FieldTypes AnalysisFieldType(Config.DDLColumn c)
         {
+            string longstr = null;
+            string type = c.TypeName;
+            if (type.Contains("("))
+            {
+
+                if (type.IndexOf(")") - type.IndexOf("(") <= 1)
+                {
+                    throw new ArgumentException(nameof(type) + ":" + type);
+                }
+
+                longstr = type.Substring(type.IndexOf("(") + 1, type.IndexOf(")") - type.IndexOf("(") - 1);
+
+            }
 
             if (c.TypeName.ToUpper().Contains("VARCHAR") || c.TypeName.ToUpper().Contains("字符"))
             {
@@ -26,6 +39,10 @@ namespace Org.FGQ.CodeGenerate.Util.Util
             }
             if (c.TypeName.ToUpper().Contains("INT") || c.TypeName.ToUpper().Contains("整数"))
             {
+                if(longstr!=null && int.Parse(longstr) >= 10)
+                {
+                    return FieldTypes.Long;
+                }
                 return FieldTypes.Int32;
             }
             if (c.TypeName.ToUpper().Contains("NUMBER") || c.TypeName.ToUpper().Contains("数字") || c.TypeName.ToUpper().Contains("数值"))

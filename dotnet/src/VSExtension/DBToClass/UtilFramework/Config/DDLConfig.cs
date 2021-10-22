@@ -193,7 +193,19 @@ namespace Org.FGQ.CodeGenerate.Config
                 if (table.Columns.FindAll(x => x.Validate()).ConvertAll<string>(x => x.Name).Distinct<string>().Count<string>()
                     != table.Columns.FindAll(x => x.Validate()).Count)
                 {
-                    throw new Exception(String.Format("表：{0}存在重复列", table.TableName));
+
+                    for (int i = 0; i < table.Columns.Count; i++)
+                    {
+                        for (int j = i + 1; j < table.Columns.Count; j++)
+                        {
+                            if (table.Columns[i].Name == table.Columns[j].Name)
+                            {
+                                throw new Exception(String.Format("表：{0}存在重复列{1}", table.TableName, table.Columns[i].Name));
+                            }
+                        }
+                    }
+
+
                 }
 
                 if (this.MyDBType == DBType.Oracle)

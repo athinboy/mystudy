@@ -1238,18 +1238,26 @@ namespace Org.FGQ.CodeGenerateTest
             ddlConfig = new DDLConfig();
             ddlConfig.MyDBType = DDLConfig.DBType.Oracle;
 
-            initPart();
-            initAC();
-            initASF();
-            initRS();
-            initWS();
-            initUC();
-            initDMO();
+            //initPart();
+            //initAC();
+            //initASF();
+            //initRS();
+            //initWS();
+            //initUC();
+            //initDMO();
 
 
             DDLTable newtable;
-
             DDLColumn column;
+
+            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_AFS_JSXL_REPORT", "26.AS103011005-同步技师效率信息-报告"));
+            newtable.Columns.Add(new DDLColumn("id", "id", "varchar(64)", "是", "")); 
+            newtable.Columns.Add(new DDLColumn("owner_name", "owner_name", "varchar(255)", "", ""));
+            newtable.Columns.Add(new DDLColumn("create_time", "create_time", "varchar(100)", "", ""));
+            newtable.Columns.Add(new DDLColumn("owner_code", "owner_code", "varchar(100)", "", ""));
+            newtable.Columns.Add(new DDLColumn("begin", "begin", "varchar(100)", "", ""));
+            newtable.Columns.Add(new DDLColumn("end", "end", "varchar(100)", "", ""));
+ 
 
 
 
@@ -2405,7 +2413,7 @@ namespace Org.FGQ.CodeGenerateTest
                 javaDaoConfig.JavaClass = t.CreatedJavaBean;
                 javaGenerator.GenerateDao(javaDaoConfig, javaMapperConfig);
 
-                //javaGenerator.GenerateCode(javaCodeConfig, t.CreatedJavaBean);
+                javaGenerator.GenerateCode(javaCodeConfig, t.CreatedJavaBean);
 
             });
 

@@ -1,8 +1,16 @@
-﻿using Microsoft.VisualStudio.Shell;
+﻿ 
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Task = System.Threading.Tasks.Task;
+
+using Microsoft;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.ComponentModelHost;
+using Microsoft.VisualStudio.LanguageServices;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using System.Globalization;
 
 namespace DBToClass
 {
@@ -50,8 +58,69 @@ namespace DBToClass
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             await RunCommand.InitializeAsync(this);        
             await SettingWinCommand.InitializeAsync(this);
+            await DBToClass.RunFunc.RunFuncCommand.InitializeAsync(this);
+
+            var componentModel = (IComponentModel)await GetServiceAsync(typeof(SComponentModel));
+            Assumes.Present(componentModel);
+
+            this.workspace = componentModel.GetService<VisualStudioWorkspace>();
+            Assumes.Present(workspace);
+
+
         }
 
         #endregion
+
+        VisualStudioWorkspace workspace;
+        public VisualStudioWorkspace Workspace => workspace;
+
+        public EnvDTE80.DTE2 DTE => (EnvDTE80.DTE2)GetGlobalService(typeof(EnvDTE.DTE));
+
+
+        public void ShowMessage(string format, params object[] items)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            ShowMessage(OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST, OLEMSGICON.OLEMSGICON_INFO, format, items);
+        }
+
+        public void ShowMessage(OLEMSGICON icon, string format, params object[] items)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            ShowMessage(OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST, icon, format, items);
+        }
+
+        public int ShowMessage(OLEMSGBUTTON buttons, OLEMSGDEFBUTTON defaultButton, OLEMSGICON icon, string format, params object[] items)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            IVsUIShell uiShell = (IVsUIShell)GetService(typeof(SVsUIShell));
+            if (uiShell == null)
+            {
+                return 0;
+            }
+
+            Guid clsid = Guid.Empty;
+            int result;
+            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(
+                uiShell.ShowMessageBox(
+                    0,
+                    ref clsid,
+                    "ILSpy AddIn",
+                    string.Format(CultureInfo.CurrentCulture, format, items),
+                    string.Empty,
+                    0,
+                    buttons,
+                    defaultButton,
+                    icon,
+                    0,        // false
+                    out result
+                )
+            );
+
+            return result;
+        }
+
     }
 }

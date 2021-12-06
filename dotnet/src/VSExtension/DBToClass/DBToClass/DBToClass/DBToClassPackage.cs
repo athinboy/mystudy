@@ -1,4 +1,4 @@
-﻿ 
+﻿
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -34,7 +34,7 @@ namespace DBToClass
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [Guid(DBToClassPackage.PackageGuidString)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideToolWindow(typeof(SettingWin),Style =VsDockStyle.Float,Orientation =ToolWindowOrientation.none)] 
+    [ProvideToolWindow(typeof(SettingWin), Style = VsDockStyle.Float, Orientation = ToolWindowOrientation.none)]
     public sealed class DBToClassPackage : AsyncPackage
     {
         /// <summary>
@@ -56,7 +56,7 @@ namespace DBToClass
             // When initialized asynchronously, the current thread may be a background thread at this point.
             // Do any initialization that requires the UI thread after switching to the UI thread.
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-            await RunCommand.InitializeAsync(this);        
+            await RunCommand.InitializeAsync(this);
             await SettingWinCommand.InitializeAsync(this);
             await DBToClass.RunFunc.RunFuncCommand.InitializeAsync(this);
 
@@ -68,6 +68,28 @@ namespace DBToClass
 
 
         }
+
+
+        public IVsOutputWindowPane CreateOutputPane(Guid paneGuid, string title, bool visible, bool clearWithSolution)
+        {
+            Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            IVsOutputWindow output = (IVsOutputWindow)GetService(typeof(SVsOutputWindow));
+            IVsOutputWindowPane pane;
+
+            output.CreatePane(
+                ref paneGuid,
+                title,
+                Convert.ToInt32(visible),
+                Convert.ToInt32(clearWithSolution));
+
+            // Retrieve the new pane.
+            output.GetPane(ref paneGuid, out pane);
+
+            pane.OutputString("This is the Created Pane \n");
+            return pane;
+        }
+
+
 
         #endregion
 

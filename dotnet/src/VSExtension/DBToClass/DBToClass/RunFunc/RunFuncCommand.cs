@@ -3,20 +3,21 @@ using System;
 using System.ComponentModel.Design;
 using System.Globalization;
 using Task = System.Threading.Tasks.Task;
-
-
 using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using System.Linq;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Generic;
 using Mono.Cecil;
 using ICSharpCode.ILSpy.AddIn;
 using DTEConstants = EnvDTE.Constants;
+using System.Diagnostics;
+using Microsoft.Build.Evaluation;
+using System.Reflection;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace DBToClass.RunFunc
 {
@@ -57,6 +58,8 @@ namespace DBToClass.RunFunc
             var menuCommandID = new CommandID(CommandSet, CommandId);
             var menuItem = new MenuCommand(this.Execute, menuCommandID);
             commandService.AddCommand(menuItem);
+
+
         }
 
         /// <summary>
@@ -67,6 +70,8 @@ namespace DBToClass.RunFunc
             get;
             private set;
         }
+
+        private IVsOutputWindowPane outputWindowPane;
 
         /// <summary>
         /// Gets the service provider from the owner package.
@@ -92,7 +97,12 @@ namespace DBToClass.RunFunc
 
             OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
             Instance = new RunFuncCommand(package, commandService);
+            Instance.outputWindowPane = (package as DBToClassPackage).CreateOutputPane(new Guid(), "Created Pane", true, false);
         }
+
+
+
+
 
         /// <summary>
         /// This function is the callback used to execute the command when the menu item is clicked.
@@ -107,47 +117,116 @@ namespace DBToClass.RunFunc
             string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
             string title = "RunFuncCommand";
 
-            // Show a message box to prove we were here
-            VsShellUtilities.ShowMessageBox(
-                this.package,
-                message,
-                title,
-                OLEMSGICON.OLEMSGICON_INFO,
-                OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+            //// Show a message box to prove we were here
+            //VsShellUtilities.ShowMessageBox(
+            //    this.package,
+            //    message,
+            //    title,
+            //    OLEMSGICON.OLEMSGICON_INFO,
+            //    OLEMSGBUTTON.OLEMSGBUTTON_OK,
+            //    OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
             OnExecute(sender, e);
         }
-        protected async void OnExecute(object sender, EventArgs e)
+
+
+        protected async void OnExecute(object send, EventArgs e)
+        {
+            try
+            {
+                string result =await RunExecuteAsync(send, e);
+                if (false==string.IsNullOrEmpty(result))
+                {
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    outputWindowPane.Activate();
+                    outputWindowPane.OutputStringThreadSafe(result);
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                outputWindowPane.Activate();
+                outputWindowPane.OutputStringThreadSafe(ex.ToString());
+            }
+        }
+
+        private async Task<string> RunExecuteAsync(object sender, EventArgs e)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
             var textView = Utils.GetCurrentViewHost(owner)?.TextView;
             if (textView == null)
             {
-                return;
+                return "textView == null";
             }
             SnapshotPoint caretPosition = textView.Caret.Position.BufferPosition;
             var roslynDocument = GetRoslynDocument();
             if (roslynDocument == null)
             {
-                owner.ShowMessage("This element is not analyzable in current view.");
-                return;
+                //owner.ShowMessage("This element is not analyzable in current view.");
+                return "roslynDocument == null";
             }
             var ast = await roslynDocument.GetSyntaxRootAsync().ConfigureAwait(false);
             var model = await roslynDocument.GetSemanticModelAsync().ConfigureAwait(false);
             var node = ast.FindNode(new TextSpan(caretPosition.Position, 0), false, true);
             if (node == null)
             {
-                owner.ShowMessage(OLEMSGICON.OLEMSGICON_WARNING, "Can't show ILSpy for this code element!");
-                return;
+                //owner.ShowMessage(OLEMSGICON.OLEMSGICON_WARNING, "Can't show ILSpy for this code element!");
+                return "node == null"  ;
+        
             }
+            bool isstatic = false;
+            bool ispublic = false;
+            if (node is Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax)
+            {
+                Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax mdy = node as Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax;
+
+                foreach (var modifier in mdy.Modifiers)
+                {
+                    Debug.WriteLine(modifier.Text);//public  static
+                    if ("public" == modifier.Text.ToLower())
+                    {
+                        ispublic = true;
+                    }
+                    if ("static" == modifier.Text.ToLower())
+                    {
+                        isstatic = true;
+                    }
+
+                }
+
+            }
+            else
+            {
+                //owner.ShowMessage(OLEMSGICON.OLEMSGICON_WARNING, "只支持c#,请针对方法！");
+                return "只支持c#,请针对方法！";
+            }
+
+            if (false == ispublic)
+            {
+                //owner.ShowMessage(OLEMSGICON.OLEMSGICON_WARNING, "只支持public方法！");
+                return "只支持public方法！";
+            }
+
 
             var symbol = GetSymbolResolvableByILSpy(model, node);
             if (symbol == null)
             {
-                owner.ShowMessage(OLEMSGICON.OLEMSGICON_WARNING, "Can't show ILSpy for this code element!");
-                return;
+                //owner.ShowMessage(OLEMSGICON.OLEMSGICON_WARNING, "Can't show ILSpy for this code element!");
+                return "symbol == null";
             }
+
+            Debug.WriteLine(symbol.MetadataName); //                                 Run
+            Debug.WriteLine(symbol.ContainingAssembly); //                           console, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+            Debug.WriteLine(symbol.ContainingModule);//                              console.dll
+            Debug.WriteLine(symbol.ContainingNamespace); //                          fgq.console
+            Debug.WriteLine(symbol.ContainingSymbol);//                              fgq.console.MemoryLeakDemo1
+            Debug.WriteLine(symbol.ContainingType);//                                fgq.console.MemoryLeakDemo1
+            Debug.WriteLine(symbol.Name);//                                          Run
+
+
+
 
             var roslynProject = roslynDocument.Project;
             var refsmap = GetReferences(roslynProject);
@@ -158,16 +237,81 @@ namespace DBToClass.RunFunc
 
             if (project == null)
             {
-                owner.ShowMessage(OLEMSGICON.OLEMSGICON_WARNING, "Can't show ILSpy for this code element!");
-                return;
+                //owner.ShowMessage(OLEMSGICON.OLEMSGICON_WARNING, "Can't show ILSpy for this code element!");
+                return "project == null";
             }
 
             string assemblyName = roslynDocument.Project.AssemblyName;
             string projectOutputPath = Utils.GetProjectOutputAssembly(project, roslynProject);
-            Console.WriteLine(nameof(assemblyName) + ":" + assemblyName);
-            Console.WriteLine(nameof(projectOutputPath) + ":" + projectOutputPath);
+            //Debug.WriteLine("fgq" + nameof(assemblyName) + ":" + assemblyName);
+            //Debug.WriteLine("fgq" + nameof(projectOutputPath) + ":" + projectOutputPath);
+            //Debug.WriteLine("fgq project.name" + ":" + project.Name);
+            //Debug.WriteLine("fgq project.FileName" + ":" + project.FileName);
+            //Debug.WriteLine("fgq project.FullName" + ":" + project.FullName);
+
+
+            try
+            {
+                using (ProjectCollection projectCollection = new ProjectCollection())
+                {
+                    Microsoft.Build.Definition.ProjectOptions projectOptions = new Microsoft.Build.Definition.ProjectOptions();
+
+                    Microsoft.Build.Evaluation.Project buildproject = projectCollection.LoadProject(project.FullName);
+                    bool buildresult = buildproject.Build();
+                    Debug.WriteLine(buildresult);
+                    Assembly assembly = Assembly.LoadFile(projectOutputPath);
+                    Debug.WriteLine("System.Reflection.Assembly.GetEntryAssembly().FullName:" + Assembly.GetEntryAssembly()?.FullName);
+                    Debug.WriteLine("System.Reflection.Assembly.GetExecutingAssembly().FullName:" + Assembly.GetExecutingAssembly()?.FullName);
+
+                    string cmdPath = GetCmdPath();
+
+                    Debug.WriteLine(cmdPath);
+
+
+                    Type type = assembly.GetType(symbol.ContainingType.ToString(), false, true);
+                    Object o = assembly.CreateInstance(symbol.ContainingType.Name);
+
+                    ProcessStartInfo processStartInfo = new ProcessStartInfo();
+                    processStartInfo.UseShellExecute = false; ;
+                    processStartInfo.RedirectStandardError = true;
+                    processStartInfo.RedirectStandardInput = true;
+                    processStartInfo.RedirectStandardOutput = true;
+                    processStartInfo.Arguments = string.Format("{0} {1} {2} {3}", projectOutputPath, symbol.ContainingType.ToString(), symbol.Name, isstatic.ToString());
+
+                    processStartInfo.FileName = cmdPath;
+                    Process process = Process.Start(processStartInfo);
+
+                    TextReader textReader = process.StandardOutput;
+
+
+                    process.WaitForExit();
+                    string output = textReader.ReadToEnd();
+                    outputWindowPane.Activate();
+                    outputWindowPane.OutputString(output);
+
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                return ex.ToString();
+
+            }
+            return "";
+
+
         }
 
+        private string GetCmdPath()
+        {
+            Assembly executingAssembly = System.Reflection.Assembly.GetExecutingAssembly();
+            Debug.WriteLine(nameof(executingAssembly.Location) + executingAssembly.Location);//Locationc:\users\fengguoqiang\appdata\local\microsoft\visualstudio\17.0_6b6c739bexp\extensions\guoqiang feng\dbtoclass\1.0\DBToClass.dll
+            Debug.WriteLine(nameof(executingAssembly.CodeBase) + executingAssembly.CodeBase);//CodeBasefile:///c:/users/fengguoqiang/appdata/local/microsoft/visualstudio/17.0_6b6c739bexp/extensions/guoqiang feng/dbtoclass/1.0/DBToClass.dll
+
+            return executingAssembly.Location.Substring(0, executingAssembly.Location.LastIndexOf(Path.DirectorySeparatorChar) + 1) + "RunProcess.FW.exe";//RunProcess.Core.exe
+        }
 
         public class DetectedReference
         {

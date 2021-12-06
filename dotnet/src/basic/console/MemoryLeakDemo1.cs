@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace console
+namespace fgq.console
 {
     internal class MemoryLeakDemo1
     {
@@ -50,5 +50,11 @@ namespace console
             Thread.Sleep(10000);
 
         }
+
+        private void SSS()
+        {
+
+        }
+
     }
 }

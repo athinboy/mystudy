@@ -38,6 +38,7 @@ namespace DBToClass
 		public static string GetProjectOutputAssembly(Project project, Microsoft.CodeAnalysis.Project roslynProject)
 		{
 			ThreadHelper.ThrowIfNotOnUIThread();
+		 
 
 			string outputFileName = Path.GetFileName(roslynProject.OutputFilePath);
 

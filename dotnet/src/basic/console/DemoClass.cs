@@ -8,7 +8,7 @@ namespace console
 {
     public class DemoClass
     {
-        public void S()
+        public void SSSSSSSSS()
         {
             Console.WriteLine("hellow fgq");
         }

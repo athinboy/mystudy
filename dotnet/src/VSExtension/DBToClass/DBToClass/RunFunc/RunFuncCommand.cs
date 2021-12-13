@@ -133,12 +133,10 @@ namespace DBToClass.RunFunc
         {
             try
             {
-                string result =await RunExecuteAsync(send, e);
-                if (false==string.IsNullOrEmpty(result))
+                string result = await RunExecuteAsync(send, e);
+                if (false == string.IsNullOrEmpty(result))
                 {
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                    outputWindowPane.Activate();
-                    outputWindowPane.OutputStringThreadSafe(result);
+                    VSOutput(result);
                 }
 
 
@@ -173,8 +171,8 @@ namespace DBToClass.RunFunc
             if (node == null)
             {
                 //owner.ShowMessage(OLEMSGICON.OLEMSGICON_WARNING, "Can't show ILSpy for this code element!");
-                return "node == null"  ;
-        
+                return "node == null";
+
             }
             bool isstatic = false;
             bool ispublic = false;
@@ -256,16 +254,24 @@ namespace DBToClass.RunFunc
                 {
                     Microsoft.Build.Definition.ProjectOptions projectOptions = new Microsoft.Build.Definition.ProjectOptions();
 
+
                     Microsoft.Build.Evaluation.Project buildproject = projectCollection.LoadProject(project.FullName);
+
+                    bool isNetCoreProject = IsNetCoreProject(buildproject);
+
+
                     bool buildresult = buildproject.Build();
                     Debug.WriteLine(buildresult);
                     Assembly assembly = Assembly.LoadFile(projectOutputPath);
                     Debug.WriteLine("System.Reflection.Assembly.GetEntryAssembly().FullName:" + Assembly.GetEntryAssembly()?.FullName);
                     Debug.WriteLine("System.Reflection.Assembly.GetExecutingAssembly().FullName:" + Assembly.GetExecutingAssembly()?.FullName);
 
-                    string cmdPath = GetCmdPath();
+                    string cmdPath = GetCmdPath(isNetCoreProject);
 
                     Debug.WriteLine(cmdPath);
+
+                    VSOutput("----------------------------------------------------------------------");
+                    VSOutput("start invoke");
 
 
                     Type type = assembly.GetType(symbol.ContainingType.ToString(), false, true);
@@ -281,13 +287,21 @@ namespace DBToClass.RunFunc
                     processStartInfo.FileName = cmdPath;
                     Process process = Process.Start(processStartInfo);
 
+
                     TextReader textReader = process.StandardOutput;
 
 
                     process.WaitForExit();
-                    string output = textReader.ReadToEnd();
-                    outputWindowPane.Activate();
-                    outputWindowPane.OutputString(output);
+
+                    //while (false == process.HasExited)
+                    //{
+                    //}
+                    Debug.WriteLine(process.ExitCode);
+
+                    string output = await textReader.ReadToEndAsync();
+
+                    VSOutput(output);
+
 
 
                 }
@@ -298,19 +312,44 @@ namespace DBToClass.RunFunc
                 Debug.WriteLine(ex);
                 return ex.ToString();
 
+
             }
             return "";
 
 
         }
 
-        private string GetCmdPath()
+        private async void VSOutput(string output)
+        {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            outputWindowPane.Activate();
+            outputWindowPane.OutputString(DateTime.Now.ToString() + output+"\r\n");
+        }
+
+        private bool IsNetCoreProject(Microsoft.Build.Evaluation.Project buildproject)
+        {
+            ICollection<ProjectProperty> projectProperties = buildproject.Properties;
+            foreach (var projectProperty in projectProperties)
+            {
+                Debug.WriteLine(projectProperty.Name + ":" + projectProperty.EvaluatedValue);
+                if (projectProperty.Name.ToUpper() == "TargetFramework".ToUpper())
+                {
+                    if (projectProperty.EvaluatedValue.ToUpper().Contains("net5".ToUpper()))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private string GetCmdPath(bool isNetCoreProject)
         {
             Assembly executingAssembly = System.Reflection.Assembly.GetExecutingAssembly();
             Debug.WriteLine(nameof(executingAssembly.Location) + executingAssembly.Location);//Locationc:\users\fengguoqiang\appdata\local\microsoft\visualstudio\17.0_6b6c739bexp\extensions\guoqiang feng\dbtoclass\1.0\DBToClass.dll
             Debug.WriteLine(nameof(executingAssembly.CodeBase) + executingAssembly.CodeBase);//CodeBasefile:///c:/users/fengguoqiang/appdata/local/microsoft/visualstudio/17.0_6b6c739bexp/extensions/guoqiang feng/dbtoclass/1.0/DBToClass.dll
 
-            return executingAssembly.Location.Substring(0, executingAssembly.Location.LastIndexOf(Path.DirectorySeparatorChar) + 1) + "RunProcess.FW.exe";//RunProcess.Core.exe
+            return executingAssembly.Location.Substring(0, executingAssembly.Location.LastIndexOf(Path.DirectorySeparatorChar) + 1) + (isNetCoreProject ? ("RunProcessFile" + Path.DirectorySeparatorChar + "RunProcess.Core.exe") : "RunProcess.FW.exe");//RunProcess.Core.exe
         }
 
         public class DetectedReference

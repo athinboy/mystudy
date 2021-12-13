@@ -2,6 +2,7 @@
 
 using System;
 using System.Reflection;
+using System.Threading;
 
 namespace MyApp
 {
@@ -10,13 +11,14 @@ namespace MyApp
         static void Main(string[] args)
         {
 
-            Console.WriteLine("Hello World!");
+            //Thread.CurrentThread.Join(10 * 1000);
+            //Console.WriteLine("Hello World!");
             if (args != null && args.Length > 0)
             {
                 for (int i = 0; i < args.Length; i++)
                 {
-                    Console.Write("argument" + i.ToString());
-                    Console.WriteLine(args[i]);
+                    //Console.Write("argument" + i.ToString());
+                    //Console.WriteLine(args[i]);
                 }
 
             }
@@ -27,6 +29,9 @@ namespace MyApp
             string typename = args[1];
             string methodname = args[2];
             string isstatic = args[3];
+
+            Console.WriteLine(String.Format("prepare to invoke: {0}.{1} ", typename, methodname));
+
 
             Assembly assembly = null;
             try
@@ -73,8 +78,7 @@ namespace MyApp
             finally
             {
                 if (assembly != null)
-                {
-
+                {                     
                 }
             }
 

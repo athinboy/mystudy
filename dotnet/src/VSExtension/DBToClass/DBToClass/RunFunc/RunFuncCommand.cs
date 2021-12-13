@@ -270,8 +270,8 @@ namespace DBToClass.RunFunc
 
                     Debug.WriteLine(cmdPath);
 
-                    VSOutput("----------------------------------------------------------------------");
-                    VSOutput("start invoke");
+                    VSOutput("--------------------------start invoke--------------------------------------------");
+                
 
 
                     Type type = assembly.GetType(symbol.ContainingType.ToString(), false, true);

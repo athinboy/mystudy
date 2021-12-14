@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "t4", "t4\t4.csproj", "{C707
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLibrary1", "ClassLibrary1\ClassLibrary1.csproj", "{6CCC062A-3731-42A1-90EA-1D6739EC1427}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore6", "AspNetCore6\AspNetCore6.csproj", "{3ADBC295-B916-480B-895F-EE45D5305B9D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,18 @@ Global
 		{6CCC062A-3731-42A1-90EA-1D6739EC1427}.Release|x64.Build.0 = Release|Any CPU
 		{6CCC062A-3731-42A1-90EA-1D6739EC1427}.Release|x86.ActiveCfg = Release|Any CPU
 		{6CCC062A-3731-42A1-90EA-1D6739EC1427}.Release|x86.Build.0 = Release|Any CPU
+		{3ADBC295-B916-480B-895F-EE45D5305B9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3ADBC295-B916-480B-895F-EE45D5305B9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3ADBC295-B916-480B-895F-EE45D5305B9D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3ADBC295-B916-480B-895F-EE45D5305B9D}.Debug|x64.Build.0 = Debug|Any CPU
+		{3ADBC295-B916-480B-895F-EE45D5305B9D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3ADBC295-B916-480B-895F-EE45D5305B9D}.Debug|x86.Build.0 = Debug|Any CPU
+		{3ADBC295-B916-480B-895F-EE45D5305B9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3ADBC295-B916-480B-895F-EE45D5305B9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3ADBC295-B916-480B-895F-EE45D5305B9D}.Release|x64.ActiveCfg = Release|Any CPU
+		{3ADBC295-B916-480B-895F-EE45D5305B9D}.Release|x64.Build.0 = Release|Any CPU
+		{3ADBC295-B916-480B-895F-EE45D5305B9D}.Release|x86.ActiveCfg = Release|Any CPU
+		{3ADBC295-B916-480B-895F-EE45D5305B9D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

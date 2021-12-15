@@ -26,22 +26,18 @@ namespace Org.FGQ.CodeGenerateTest
         public void Init()
         {
             ddlConfig = new DDLConfig();
-            ddlConfig.MyDBType = DDLConfig.DBType.Oracle;
+            ddlConfig.MyDBType = DDLConfig.DBType.MySql;
 
 
 
             DDLTable newtable;
             DDLColumn column;
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_AFS_JSXL_REPORT", "26.AS103011005-同步技师效率信息-报告"));
-            newtable.Columns.Add(new DDLColumn("id", "id", "varchar(64)", "是", "")); 
-            newtable.Columns.Add(new DDLColumn("owner_name", "owner_name", "varchar(255)", "", ""));
-            newtable.Columns.Add(new DDLColumn("create_time", "create_time", "varchar(100)", "", ""));
-            newtable.Columns.Add(new DDLColumn("owner_code", "owner_code", "varchar(100)", "", ""));
-            newtable.Columns.Add(new DDLColumn("begin", "begin", "varchar(100)", "", ""));
-            newtable.Columns.Add(new DDLColumn("end", "end", "varchar(100)", "", ""));
- 
-
+            ddlConfig.Tables.Add(newtable = new DDLTable("WeiXin", "wx_user", "微信用户"));
+            newtable.Columns.Add(new DDLColumn("id", "id", "varchar(64)", "", ""));
+            newtable.Columns.Add(new DDLColumn("unionid", "unionid", "varchar(255)", "Y", ""));
+            newtable.Columns.Add(new DDLColumn("用户昵称", "nickName", "varchar(255)", "", ""));
+            newtable.Columns.Add(new DDLColumn("用户头像图片的 URL", "avatarUrl", "varchar(500)", "", ""));
 
 
 
@@ -61,7 +57,7 @@ namespace Org.FGQ.CodeGenerateTest
         }
 
 
-        [Test]
+        //[Test]
         public void DDLToJavaBeanTest()
         {
 
@@ -77,14 +73,7 @@ namespace Org.FGQ.CodeGenerateTest
 
         }
 
-
-
-
-
-
-
-
-        [Test]
+        //[Test]
         public void DDLToJavaAll()
         {
 

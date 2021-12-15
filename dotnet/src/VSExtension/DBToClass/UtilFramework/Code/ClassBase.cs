@@ -42,7 +42,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
         {
             get
             {
-                return Fields.Any(x => x.Name.ToLower() == "id" && x.FieldType == FieldTypes.Long);
+                return Fields.Any(x => x.IsKeyField==false && x.Name.ToLower() == "id" && x.FieldType == FieldTypes.Long);
             }
         }
 

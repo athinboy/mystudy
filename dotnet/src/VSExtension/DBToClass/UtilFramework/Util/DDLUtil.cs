@@ -1,4 +1,5 @@
-﻿using Org.FGQ.CodeGenerate.Util.Code;
+﻿using Org.FGQ.CodeGenerate.Config;
+using Org.FGQ.CodeGenerate.Util.Code;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Util.Util
 {
-    internal class DDLUtil
+    public class DDLUtil
     {
 
-        internal static FieldTypes AnalysisFieldType(Config.DDLColumn c)
+        public static FieldTypes AnalysisFieldType(Config.DDLColumn c)
         {
             string longstr = null;
             string type = c.TypeName;
@@ -39,7 +40,7 @@ namespace Org.FGQ.CodeGenerate.Util.Util
             }
             if (c.TypeName.ToUpper().Contains("INT") || c.TypeName.ToUpper().Contains("整数"))
             {
-                if(longstr!=null && int.Parse(longstr) >= 10)
+                if (longstr != null && int.Parse(longstr) >= 10)
                 {
                     return FieldTypes.Long;
                 }
@@ -62,6 +63,107 @@ namespace Org.FGQ.CodeGenerate.Util.Util
             }
             return FieldTypes.String;
 
+        }
+
+        private static string ToColPart(string x)
+        {
+            bool allUpper = true;
+            for (int i = 0; i < x.Length; i++)
+            {
+                if (char.IsLower(x[i]))
+                {
+                    allUpper = false;
+                }
+            }
+            return allUpper ? x : x.ToLower();
+        }
+
+
+
+
+        /// <summary>
+        /// User_Name   ->   User_Name
+        /// user_name   ->   user_name
+        /// userName    ->   user_name
+        /// UserName    ->   user_name
+        /// Urlabc      ->   urlabc
+        /// webUrl      ->   web_url
+        /// abcABCName  ->   abc_ABC_name
+        /// abcABC      ->   abc_ABC
+        /// ABC         ->   ABC
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="config"></param>
+        /// <remarks></remarks>
+        /// <returns></returns>
+        public static string InferColName(string name, bool unifyName, string dbColSeparator)
+        {
+
+            if (unifyName)
+            {
+                return name;
+            }
+
+            if (name.Contains(dbColSeparator))
+            {
+                return name;
+            }
+            else
+            {
+                if (name.ToLower() == name)
+                {
+                    return name;
+                }
+                string result = string.Empty;
+                while (name.Length > 0)
+                {
+                    if (name.ToLower() == name)
+                    {
+                        result += ((result.Length > 0 ? dbColSeparator : "") + ToColPart(name));
+                        break;
+                    }
+                    else
+                    {
+                        bool shoudCut = false;
+                        for (int i = 0; i < name.Length; i++)
+                        {
+                            if (i == name.Length - 1)
+                            {
+                                result += ((result.Length > 0 ? dbColSeparator : "") + ToColPart(name));
+                                name = String.Empty;
+                                break;
+                            }
+
+                            shoudCut = false;
+                            if (i > 0 && char.IsUpper(name[i]))
+                            {
+                                if (char.IsLower(name[i - 1]))
+                                {
+                                    shoudCut = true;
+                                }
+                                if (i + 1 < name.Length && char.IsLower(name[i + 1]))
+                                {
+                                    shoudCut = true;
+                                }
+
+                            }
+
+                            if (shoudCut)
+                            {
+                                result += ((result.Length > 0 ? dbColSeparator : "") + ToColPart(name.Substring(0, i)));
+                                name = name.Substring(i);
+                                break;
+                            }
+
+                        }
+                    }
+
+
+                }
+                return result;
+
+
+            }
         }
 
 

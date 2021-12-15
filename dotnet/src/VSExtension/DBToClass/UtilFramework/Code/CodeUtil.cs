@@ -41,10 +41,20 @@ namespace Org.FGQ.CodeGenerate.Util.Code
             return result;
         }
 
+        /// <summary>
+        /// user_name   ->  userName
+        /// userName    ->  userName
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
         internal static string GetFieldName(DDLColumn c)
         {
+            DDLConfig ddlconfig = c.DDLTable.DDLConfig;
+
+            if (ddlconfig.UnifyName) return c.Name;
+
             string columnName = c.Name;
-            string[] parts = columnName.Split('_');
+            string[] parts = columnName.Split(ddlconfig.DBColSeparator[0]);
             string result = "";
             for (int i = 0; i < parts.Length; i++)
             {

@@ -42,6 +42,9 @@
     <None Update="template\JavaDao.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="template\MysqlDDL.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="template\OracleDDL.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -1,4 +1,5 @@
 ﻿using Org.FGQ.CodeGenerate.Util.Code;
+using Org.FGQ.CodeGenerate.Util.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace Org.FGQ.CodeGenerate.Config
 
         public List<DDLColumn> Columns { get; set; } = new List<DDLColumn>();
         public JavaClass CreatedJavaBean { get; set; } = null;
-
+        public DDLConfig DDLConfig { get; internal set; }
 
         private DDLTable()
         {
@@ -98,9 +99,9 @@ namespace Org.FGQ.CodeGenerate.Config
         public bool IsKeyColumn()
         {
 
-            return KeySign.ToLower() == "是"
-                || KeySign.ToLower() == "y"
-                || KeySign.ToLower() == "true";
+            return KeySign.ToLower().Trim() == "是"
+                || KeySign.ToLower().Trim() == "y"
+                || KeySign.ToLower().Trim() == "true";
 
         }
 
@@ -130,7 +131,7 @@ namespace Org.FGQ.CodeGenerate.Config
             set { jsonFieldName = value; }
         }
 
-
+        public DDLTable DDLTable { get; internal set; }
 
         public string CommentStr()
         {
@@ -171,9 +172,8 @@ namespace Org.FGQ.CodeGenerate.Config
 
         public enum DBType
         {
-            Oracle
+            Oracle,MySql
         }
-
 
         public DDLTable GetTable(string tableName)
         {
@@ -189,6 +189,9 @@ namespace Org.FGQ.CodeGenerate.Config
 
             foreach (var table in Tables)
             {
+                table.DDLConfig = this;
+
+                table.Columns.ForEach(x => { x.DDLTable = table; });
 
                 if (table.Columns.FindAll(x => x.Validate()).ConvertAll<string>(x => x.Name).Distinct<string>().Count<string>()
                     != table.Columns.FindAll(x => x.Validate()).Count)
@@ -234,10 +237,13 @@ namespace Org.FGQ.CodeGenerate.Config
                 }
                 table.Columns.ForEach(x =>
                 {
-                    x.SqlType = getSqlDBType(x.TypeName, this.MyDBType);
+                    x.SqlType = GetSqlDBType(x.TypeName, this.MyDBType);
+                    x.NameSql = DDLUtil.InferColName(x.Name, this.UnifyName, this.DBColSeparator);
+
+
                     if (this.MyDBType == DBType.Oracle)
                     {
-                        x.NameSql = x.Name.ToUpper();
+                        x.NameSql = x.NameSql.ToUpper();
                         if (x.NameSql.Length > 30)
                         {
                             throw new Exception(String.Format("列名称：{0} {1}过长", table.TableName, x.NameSql));
@@ -253,7 +259,7 @@ namespace Org.FGQ.CodeGenerate.Config
 
         }
 
-        private string getSqlDBType(string type, DBType myDBType)
+        private string GetSqlDBType(string type, DBType myDBType)
         {
             string longstr = null;
             if (type.Contains("("))
@@ -274,7 +280,6 @@ namespace Org.FGQ.CodeGenerate.Config
 
                     if (type.ToLower().Contains("varchar"))
                     {
-
                         return "varchar2(" + int.Parse(longstr ?? "10") + " CHAR)";
                     }
                     if (type.ToLower().Contains("bigint"))
@@ -300,6 +305,35 @@ namespace Org.FGQ.CodeGenerate.Config
                     }
 
                     return type;
+                case DBType.MySql:
+
+                    if (type.ToLower().Contains("varchar"))
+                    {
+                        return "varchar(" + int.Parse(longstr ?? "10") + " )";
+                    }
+                    if (type.ToLower().Contains("bigint"))
+                    {
+                        return "bigint(20,0)";
+                    }
+                    if (type.ToLower().Contains("long"))
+                    {
+                        return "bigint(20,0)";
+                    }
+                    if (type.ToLower().Contains("bigint") || type.ToLower().Contains("big int"))
+                    {
+                        return "bigint(20)";
+                    }
+                    if (type.ToLower().Contains("int"))
+                    {
+
+                        return "integer(" + (longstr ?? "10") + ")";
+                    }
+                    if (type.ToLower().TrimEnd() == "text")
+                    {
+                        return "varchar(2000 CHAR)";
+                    }
+
+                    return type;
 
 
 
@@ -310,10 +344,14 @@ namespace Org.FGQ.CodeGenerate.Config
 
         public List<DDLTable> Tables { get; set; } = new List<DDLTable>();
 
-
         public DBType MyDBType { get; set; } = DDLConfig.DBType.Oracle;
 
+        public string DBColSeparator { get; set; } = "_";
 
+        /// <summary>
+        /// class field name is same to db column name。
+        /// </summary>
+        public bool UnifyName { get; set; } = true;
 
 
     }

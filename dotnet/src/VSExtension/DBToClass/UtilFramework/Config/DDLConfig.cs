@@ -74,9 +74,13 @@ namespace Org.FGQ.CodeGenerate.Config
 
         }
         public List<string> getPrimaryKeyNames()
-        {
-            List<string> s = null;
-            return this.Columns.FindAll(x => x.IsKeyColumn()).ConvertAll<string>(x => { return x.NameSql; }).ToList();
+        {      
+            return this.Columns.FindAll(x => x.IsPrimaryKeyColumn()).ConvertAll<string>(x => { return x.NameSql; }).ToList();
+        }
+
+        public List<string> getUniqueKeyNames()
+        {    
+            return this.Columns.FindAll(x => x.IsUniqueKeyColumn()).ConvertAll<string>(x => { return x.NameSql; }).ToList();
         }
 
 
@@ -93,15 +97,37 @@ namespace Org.FGQ.CodeGenerate.Config
 
         public string Remark { get; set; } = string.Empty;
 
-        public string KeySign { get; set; } = string.Empty;
+        public string PrimaryKeySign { get; set; } = string.Empty;
+
+
+        public string UniqueKeySign { get; set; } = string.Empty;
+
         public string SqlType { get; internal set; }
+
+
+        public bool IsPrimaryKeyColumn()
+        {
+
+            return PrimaryKeySign.ToLower().Trim() == "是"
+                || PrimaryKeySign.ToLower().Trim() == "y"
+                || PrimaryKeySign.ToLower().Trim() == "true";
+
+        }
+
+        public bool IsUniqueKeyColumn()
+        {
+
+            return UniqueKeySign.ToLower().Trim() == "是"
+                || UniqueKeySign.ToLower().Trim() == "y"
+                || UniqueKeySign.ToLower().Trim() == "true";
+
+        }
+
 
         public bool IsKeyColumn()
         {
 
-            return KeySign.ToLower().Trim() == "是"
-                || KeySign.ToLower().Trim() == "y"
-                || KeySign.ToLower().Trim() == "true";
+            return IsPrimaryKeyColumn() || IsUniqueKeyColumn();
 
         }
 
@@ -109,6 +135,26 @@ namespace Org.FGQ.CodeGenerate.Config
         {
             return IsKeyColumn() ? " not null" : "null";
         }
+
+        public string KeyStr()
+        {
+            if (false == IsKeyColumn())
+            {
+                return String.Empty;
+            }
+            if ( IsPrimaryKeyColumn() && this.DDLTable.DDLConfig.MyDBType == DDLConfig.DBType.MySql)
+            {
+                return "primary key";
+            }
+            if (IsUniqueKeyColumn() && this.DDLTable.DDLConfig.MyDBType == DDLConfig.DBType.MySql)
+            {
+                return "unique key";
+            }
+            throw new Exception("非支持的操作");
+
+        }
+
+
 
         /// <summary>
         /// 是否父对象的外键
@@ -144,23 +190,23 @@ namespace Org.FGQ.CodeGenerate.Config
             return false == (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(TypeName));
         }
 
-        public DDLColumn(string desc, string name, string type, string keySign, string remark, bool isparentkey)
+        public DDLColumn(string desc, string name, string type, string primarykeySign, string remark, bool isparentkey)
         {
             Desc = desc?.Trim() ?? throw new ArgumentNullException(nameof(desc));
             Name = name?.Trim() ?? throw new ArgumentNullException(nameof(name));
             TypeName = type?.Trim() ?? throw new ArgumentNullException(nameof(type));
-            KeySign = keySign?.Trim() ?? throw new ArgumentNullException(nameof(keySign));
+            PrimaryKeySign = primarykeySign?.Trim() ?? throw new ArgumentNullException(nameof(primarykeySign));
             Remark = remark?.Trim() ?? throw new ArgumentNullException(nameof(remark));
             IsParentKey = isparentkey;
 
         }
 
-        public DDLColumn(string desc, string name, string type, string keySign, string remark)
+        public DDLColumn(string desc, string name, string type, string primarykeySign, string remark)
         {
             Desc = desc?.Trim() ?? throw new ArgumentNullException(nameof(desc));
             Name = name?.Trim() ?? throw new ArgumentNullException(nameof(name));
             TypeName = type?.Trim() ?? throw new ArgumentNullException(nameof(type));
-            KeySign = keySign?.Trim() ?? throw new ArgumentNullException(nameof(keySign));
+            PrimaryKeySign = primarykeySign?.Trim() ?? throw new ArgumentNullException(nameof(primarykeySign));
             Remark = remark?.Trim() ?? throw new ArgumentNullException(nameof(remark));
         }
     }
@@ -172,7 +218,7 @@ namespace Org.FGQ.CodeGenerate.Config
 
         public enum DBType
         {
-            Oracle,MySql
+            Oracle, MySql
         }
 
         public DDLTable GetTable(string tableName)

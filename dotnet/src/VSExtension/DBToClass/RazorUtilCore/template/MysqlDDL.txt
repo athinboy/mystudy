@@ -1,5 +1,4 @@
-﻿
-@using System.IO
+﻿@using System.IO
 @using System
 @using System.Collections.Generic
 @using System.Collections
@@ -9,10 +8,10 @@ Date: @DateTime.Now
 */
 
 -- Start--------------------------------@Model.DBName"."@Model.TableNameSQL------------------
-DROP TABLE if EXISTS  "@Model.DBName"."@Model.TableNameSQL"';
+DROP TABLE if EXISTS @Model.DBName.@Model.TableNameSQL;
 
 
-CREATE TABLE "@Model.DBName"."@Model.TableNameSQL" ( 
+CREATE TABLE @Model.DBName.@Model.TableNameSQL ( 
 
 @for (var i = 0; i < @Model.Columns.Count; i++){
   var col2=@Model.Columns[i];
@@ -26,31 +25,18 @@ CREATE TABLE "@Model.DBName"."@Model.TableNameSQL" (
      } 
   } 
 } 
-);
-
-COMMENT ON TABLE "@Model.DBName"."@Model.TableNameSQL" IS '@Model.Desc';
-
-@for (var i = 0; i < @Model.Columns.Count; i++){
-  var col2=@Model.Columns[i];
-  if( col2.Validate() ){
-@:COMMENT ON COLUMN "@Model.DBName"."@Model.TableNameSQL"."@col2.NameSql" IS '@col2.CommentStr()'; 
-  } 
-}
-
-@{
-var keys=@Model.getPrimaryKeyNames();
-if(keys.Count>0){
- @("ALTER TABLE \""+@Model.DBName+"\".\""+@Model.TableNameSQL+"\" ADD PRIMARY KEY (")
- for(var i=0;i<keys.Count;i++){
-   @("\""+ @keys[i]+"\"" + (i<keys.Count-1?",":"") )
- } @:);
-}
-}
+)
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_general_ci
+COMMENT='@Model.Desc'
+;
 
 -- End--------------------------------@Model.DBName"."@Model.TableNameSQL------------------ 
+
 @{
   void WriteColumnDefine(DDLColumn col)
   {    
-       @("   \""+@col.NameSql+"\" " +@col.SqlType + "   "+@col.NullStr()  +"") 
+       @("   "+@col.NameSql+" " +@col.SqlType + " "+@col.NullStr()  +" COMMENT '"+@col.CommentStr()+"' "+@col.KeyStr()) 
   }
 }

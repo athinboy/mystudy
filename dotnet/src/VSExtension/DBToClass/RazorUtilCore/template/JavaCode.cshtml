@@ -1,0 +1,364 @@
+﻿@using System.IO
+@using System
+@using System.Collections.Generic
+@using System.Collections
+@using Org.FGQ.CodeGenerate.Util.Code
+@inherits RazorEngineCore.RazorEngineTemplateBase<Org.FGQ.CodeGenerate.Config.JavaCodeConfig>
+@(
+//          Model部分
+)@if(@Model.ForModel){
+<text>package @Model.ModelPackageName;
+
+import @Model.DaoConfig.BoClassFullName;
+import @Model.DaoConfig.VoClassFullName;
+import @Model.DaoConfig.WriteDaoPackageName.@Model.DaoConfig.WriteDaoName;
+import @Model.DaoConfig.ReadDaoPackageName.@Model.DaoConfig.ReadDaoName;
+import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @Model.JavaClass.Desc
+ * @@author: 
+ * cretime: @DateTime.Now
+*/
+@@Repository
+public class @Model.ModelName {
+
+    @@Autowired
+    private @Model.DaoConfig.ReadDaoName readDao;
+
+    @@Autowired
+    private @Model.DaoConfig.WriteDaoName writeDao;
+
+@if(@Model.JavaClass.HasPrimaryKeyField){
+<text>    public @Model.DaoConfig.VoClassName selectByPrimaryKey(@CodeUtil.GetJavaPrimaryKeyFieldsParaStr(@Model.JavaClass,true,false)) {
+        return readDao.selectByPrimaryKey(@CodeUtil.GetJavaPrimaryKeyFieldsParaStr(@Model.JavaClass,false));   
+    }
+
+</text>
+    }
+@if(@Model.JavaClass.HasUniqueKeyField){
+<text>    public @Model.DaoConfig.VoClassName selectByUniqueKey(@CodeUtil.GetJavaUniqueKeyFieldsParaStr(@Model.JavaClass,true,false)) {
+        return readDao.selectByUniqueKey(@CodeUtil.GetJavaUniqueKeyFieldsParaStr(@Model.JavaClass,false));   
+    }
+</text>
+    }
+@if(@Model.JavaClass.HasNoKeyLongIDField){<text>
+    public @Model.DaoConfig.VoClassName selectByID(Long id) {
+        return readDao.selectByID(id);
+    }
+</text>
+}
+@foreach(var field in @Model.JavaClass.ParentKeyFields ){
+@:    public List<@Model.DaoConfig.VoClassName> queryBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name) {
+@:        return readDao.queryBy@(@field.Name.ToUpper())(@field.Name);
+@:    }
+@:
+}
+    public Integer queryCountByParaMap(Map paraMap) {
+        return readDao.queryCountByParaMap(paraMap);    
+    }
+    
+    public List<@Model.DaoConfig.VoClassName> queryByParaMap(Map paramMap) {
+        return readDao.queryByParaMap(paramMap);
+    }
+    
+    public Integer queryCountByParaBean(@Model.DaoConfig.BoClassName paraBean) {
+        return readDao.queryCountByParaBean(paraBean);
+    }
+    
+    public List<@Model.DaoConfig.VoClassName> queryByParaBean(@Model.DaoConfig.BoClassName paramBean) {
+        return readDao.queryByParaBean(paramBean);
+    }
+    
+    @if(@Model.JavaClass.HasPrimaryKeyField){
+        <text>
+    public int deleteByPrimaryKey(@CodeUtil.GetJavaPrimaryKeyFieldsParaStr(@Model.JavaClass,true,false)) {
+        return writeDao.deleteByPrimaryKey(@CodeUtil.GetJavaPrimaryKeyFieldsParaStr(@Model.JavaClass,false));
+    }
+
+</text>
+    }
+@foreach(var field in @Model.JavaClass.ParentKeyFields ){
+@:    public int deleteBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name) {
+@:        return writeDao.deleteBy@(@field.Name.ToUpper())(@field.Name);
+@:    }
+@:
+}    
+    public int insert(@Model.JavaClass.ClassName record) {
+        return writeDao.insert(record);
+    }
+    
+    public int insertSelective(@Model.JavaClass.ClassName record) {
+        return writeDao.insertSelective(record);
+    }
+    @if(@Model.JavaClass.HasPrimaryKeyField){
+<text>
+    public int updateByPrimaryKey(@Model.JavaClass.ClassName record) {
+        return writeDao.updateByPrimaryKey(record);
+    }
+    
+    public int updateByPrimaryKeySelective(@Model.JavaClass.ClassName record) {
+        return writeDao.updateByPrimaryKeySelective(record);
+    }
+
+</text>
+    }
+
+}
+</text>
+}
+@(
+
+
+//          Service部分
+)@if(@Model.ForService){
+<text>package @Model.ServicePackageName;
+
+import @Model.DaoConfig.BoClassFullName;
+import @Model.DaoConfig.VoClassFullName;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @Model.JavaClass.Desc
+ * @@author: 
+ * cretime: @DateTime.Now
+*/
+public interface @Model.ServiceName {
+
+
+    @Model.DaoConfig.VoClassName selectByPrimaryKey(@CodeUtil.GetJavaPrimaryKeyFieldsParaStr(@Model.JavaClass,true,false));
+
+    @Model.DaoConfig.VoClassName selectByUniqueKey(@CodeUtil.GetJavaUniqueKeyFieldsParaStr(@Model.JavaClass,true,false));
+
+@foreach(var field in @Model.JavaClass.ParentKeyFields ){
+@:    List<@Model.DaoConfig.VoClassName> queryBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name);
+@:
+}
+@if(@Model.JavaClass.HasNoKeyLongIDField){
+<text>    public @Model.DaoConfig.VoClassName selectByID(Long id);
+</text>    
+}
+    Integer queryCountByParaMap(Map paraMap);
+
+    List<@Model.DaoConfig.VoClassName> queryByParaMap(Map paramMap);
+
+    Integer queryCountByParaBean(@Model.DaoConfig.BoClassName paraBean);
+
+    List<@Model.DaoConfig.VoClassName> queryByParaBean(@Model.DaoConfig.BoClassName paramBean);
+
+    int deleteByPrimaryKey(@CodeUtil.GetJavaPrimaryKeyFieldsParaStr(@Model.JavaClass,true,false));
+
+@foreach(var field in @Model.JavaClass.ParentKeyFields ){
+@:  int deleteBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name);
+@:
+}
+    int insert(@Model.JavaClass.ClassName record);
+
+    int insertSelective(@Model.JavaClass.ClassName record);
+
+    int updateByPrimaryKey(@Model.JavaClass.ClassName record);
+
+    int updateByPrimaryKeySelective(@Model.JavaClass.ClassName record);
+
+}
+
+</text>
+}
+@(
+
+
+
+//          ServiceImpl部分
+)@if(@Model.ForServiceImpl){
+<text>package @Model.ServiceImplPackageName;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.wintop.ms.basecore.util.IdWorker;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.time.DateUtils;
+
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import @Model.ServicePackageName.@Model.ServiceName;
+import @Model.ModelPackageName.@Model.ModelName;
+import @Model.DaoConfig.BoClassFullName;
+import @Model.DaoConfig.VoClassFullName;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Date;
+
+/**
+ * @Model.JavaClass.Desc
+ * @@author: 
+ * cretime: @DateTime.Now
+*/
+@@Service
+public class @Model.ServiceImplName implements @Model.ServiceName  {
+
+    @@Autowired
+    private @Model.ModelName @CodeUtil.GetJavaParaName(@Model.ModelName);
+    
+    @@Override
+    public @Model.DaoConfig.VoClassName selectByPrimaryKey(@CodeUtil.GetJavaPrimaryKeyFieldsParaStr(@Model.JavaClass,true,false)) {
+        @if (@Model.JavaClass.HasPrimaryKeyField)
+        {
+            <text>        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.selectByPrimaryKey(@CodeUtil.GetJavaPrimaryKeyFieldsParaStr(@Model.JavaClass,false));</text>
+            
+        }
+        else
+        {
+            <text>        throw new Error("@Model.ModelName not has primary key");</text>            
+        }
+        
+    }
+
+    @@Override
+    public @Model.DaoConfig.VoClassName selectByUniqueKey(@CodeUtil.GetJavaUniqueKeyFieldsParaStr(@Model.JavaClass,true,false)) {
+        @if (@Model.JavaClass.HasUniqueKeyField)
+        {
+            <text>        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.selectByUniqueKey(@CodeUtil.GetJavaUniqueKeyFieldsParaStr(@Model.JavaClass,false));</text>
+            
+        }
+        else
+        {
+     <text>        throw new Error("@Model.ModelName not has unique key");</text>          
+        }
+        
+    }
+
+@foreach(var field in @Model.JavaClass.ParentKeyFields ){
+@:    
+@:    @@Override
+@:    public List<@Model.DaoConfig.VoClassName> queryBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name) {
+@:        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.queryBy@(@field.Name.ToUpper())(@field.Name);
+@:    }
+@:
+}
+@if(@Model.JavaClass.HasNoKeyLongIDField){
+<text>    @@Override
+     public @Model.DaoConfig.VoClassName selectByID(Long id) {
+        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.selectByID(id);
+    }</text>
+    
+}
+
+    @@Override
+    public Integer queryCountByParaMap(Map paraMap) {
+        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.queryCountByParaMap(paraMap);
+    }
+
+    @@Override
+    public List<@Model.DaoConfig.VoClassName> queryByParaMap(Map paramMap) {
+        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.queryByParaMap(paramMap);
+    }
+
+    @@Override
+    public Integer queryCountByParaBean(@Model.DaoConfig.BoClassName paraBean) {
+        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.queryCountByParaBean(paraBean);
+    }
+
+    @@Override
+    public List<@Model.DaoConfig.VoClassName> queryByParaBean(@Model.DaoConfig.BoClassName paramBean) {
+        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.queryByParaBean(paramBean);
+    }
+
+    @@Override
+    public int deleteByPrimaryKey(@CodeUtil.GetJavaPrimaryKeyFieldsParaStr(@Model.JavaClass,true,false)) {
+
+    @if(@Model.JavaClass.HasPrimaryKeyField){
+<text>        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.deleteByPrimaryKey(@CodeUtil.GetJavaPrimaryKeyFieldsParaStr(@Model.JavaClass,false));
+</text>
+                }
+                else
+                {
+<text>        throw new Error("@Model.ModelName not has primary key");
+</text>
+                }
+    }
+
+@foreach(var field in @Model.JavaClass.ParentKeyFields ){
+@:    @@Override
+@:    public int deleteBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name) {
+@:        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.deleteBy@(@field.Name.ToUpper())(@field.Name);
+@:    }
+@:
+}
+    @@Override
+    public int insert(@Model.JavaClass.ClassName record) {
+        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.insert(record);
+    }
+
+    @@Override
+    public int insertSelective(@Model.JavaClass.ClassName record) {
+        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.insertSelective(record);
+    }
+
+    @@Override
+    public int updateByPrimaryKey(@Model.JavaClass.ClassName record) {
+                @if (@Model.JavaClass.HasPrimaryKeyField)
+                {
+<text>        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.updateByPrimaryKey(record);
+</text>
+                }
+                else
+                {
+<text>        throw new Error("@Model.ModelName not has primary key");
+
+</text>   
+                }
+                
+    }
+
+    @@Override
+    public int updateByPrimaryKeySelective(@Model.JavaClass.ClassName record) {
+                @if (@Model.JavaClass.HasPrimaryKeyField)
+                {
+<text>        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.updateByPrimaryKeySelective(record);
+</text>
+                }
+                else
+                {
+<text>        throw new Error("@Model.ModelName not has primary key");
+
+</text>   
+                }    
+    }
+
+}
+
+</text>
+}
+@(
+
+
+//          Controller部分
+)
+@if(@Model.ForController){
+<text>package @Model.ControllerPackageName;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * @Model.JavaClass.Desc
+ * @@author: 
+ * cretime: @DateTime.Now
+*/
+@@RestController
+@@RequestMapping("/accountapply")
+public class @Model.ControllerName   {
+
+}
+</text>
+}

@@ -7,7 +7,7 @@
 Date: @DateTime.Now
 */
 
--- Start--------------------------------@Model.DBName"."@Model.TableNameSQL------------------
+-- Start--------------------------------@Model.DBName.@Model.TableNameSQL------------------
 DROP TABLE if EXISTS @Model.DBName.@Model.TableNameSQL;
 
 
@@ -32,7 +32,7 @@ COLLATE=utf8mb4_general_ci
 COMMENT='@Model.Desc'
 ;
 
--- End--------------------------------@Model.DBName"."@Model.TableNameSQL------------------ 
+-- End--------------------------------@Model.DBName.@Model.TableNameSQL------------------ 
 
 @{
   void WriteColumnDefine(DDLColumn col)

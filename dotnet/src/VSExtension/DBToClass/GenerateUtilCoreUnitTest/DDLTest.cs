@@ -33,9 +33,10 @@ namespace Org.FGQ.CodeGenerateTest
             DDLTable newtable;
             DDLColumn column;
 
-            ddlConfig.Tables.Add(newtable = new DDLTable("WeiXin", "wx_user", "微信用户"));
-            newtable.Columns.Add(new DDLColumn("id", "id", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("unionid", "unionid", "varchar(255)", "Y", ""));
+            ddlConfig.Tables.Add(newtable = new DDLTable("base_info", "wx_user", "微信用户"));
+            newtable.Columns.Add(new DDLColumn("id", "id", "varchar(64)", "Y", ""));
+            newtable.Columns.Add(column=new DDLColumn("unionid", "unionid", "varchar(255)", "", ""));
+            column.UniqueKeySign = "Y";
             newtable.Columns.Add(new DDLColumn("用户昵称", "nickName", "varchar(255)", "", ""));
             newtable.Columns.Add(new DDLColumn("用户头像图片的 URL", "avatarUrl", "varchar(500)", "", ""));
 

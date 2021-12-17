@@ -3,6 +3,7 @@
 @using System.Collections.Generic
 @using System.Collections
 @using Org.FGQ.CodeGenerate.Util.Code
+@inherits RazorEngineCore.RazorEngineTemplateBase<Org.FGQ.CodeGenerate.Config.JavaMapperConfig>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *,Org.FGQ.CodeGenerate
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -20,17 +21,51 @@ foreach(var field in @Model.ClasssFields ){
 @:    <sql id="Base_Column_List">
 @:       @CodeUtil.GetDBColNameJoinStr(@Model.JavaClass)
 @:    </sql>
+        if (@Model.JavaClass.HasPrimaryKeyField)
+        {
 @:
-@:    <select id="selectByKey" resultType="@Model.VoFullName" parameterType="@CodeUtil.GetJavaMapKeyParaType(@Model.JavaClass)">
+@:    <select id="selectByPrimaryKey" resultType="@Model.VoFullName" parameterType="@CodeUtil.GetJavaMapPrimaryKeyParaType(@Model.JavaClass)">
 @:        select
 @:        <include refid="Base_Column_List"/>
 @:        from @Model.DBTableName t1
-for (var i = 0; i < @Model.JavaClass.KeyFields.Count; i++){
-          if(i==0){@("        where ")} else {@("        and ")}
-@:t1.@Model.JavaClass.KeyFields[i].DBColName = #{@Model.JavaClass.KeyFields[i].Name,jdbcType=@Model.JavaClass.KeyFields[i].JDBCType}
+            for (var i = 0; i < @Model.JavaClass.PrimaryKeyFields.Count; i++)
+            {
+                if (i == 0)
+                {
+@("        where ")
+                }
+                else
+                {
+@("        and ")
+                }
+@:t1.@Model.JavaClass.PrimaryKeyFields[i].DBColName = #{@Model.JavaClass.PrimaryKeyFields[i].Name,jdbcType=@Model.JavaClass.PrimaryKeyFields[i].JDBCType}
 
-}
+            }
 @:    </select>
+        }
+@:
+        if (@Model.JavaClass.HasUniqueKeyField)
+        {
+@:
+@:    <select id="selectByUniqueKey" resultType="@Model.VoFullName" parameterType="@CodeUtil.GetJavaMapUniqueKeyParaType(@Model.JavaClass)">
+@:        select
+@:        <include refid="Base_Column_List"/>
+@:        from @Model.DBTableName t1
+            for (var i = 0; i < @Model.JavaClass.UniqueKeyFields.Count; i++)
+            {
+                if (i == 0)
+                {
+@("        where ")
+                }
+                else
+                {
+@("        and ")
+                }
+@:t1.@Model.JavaClass.UniqueKeyFields[i].DBColName = #{@Model.JavaClass.UniqueKeyFields[i].Name,jdbcType=@Model.JavaClass.UniqueKeyFields[i].JDBCType}
+
+            }
+@:    </select>
+        }
 @:
 if(@Model.JavaClass.HasNoKeyLongIDField){
 @:    <select id="selectByID" resultType="@Model.VoFullName" parameterType="long">
@@ -62,9 +97,9 @@ for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){
 @:		SELECT <include refid="Base_Column_List"/>
 @:		from @Model.DBTableName t1
 @:		<include refid="Page_Query_Where" />
-@:      <if test="startRowNum != null and endRowNum != null ">
-@:      LIMIT #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
-@:      </if>
+@:		<if test="startRowNum != null and rowLength != null ">
+@:		LIMIT #{startRowNum,jdbcType=BIGINT},#{rowLength,jdbcType=BIGINT}
+@:		</if>
 @:    </select>
 @:
 @:    <select id="queryCountByParaBean" parameterType="@Model.JavaClass.FullName" resultType="java.lang.Integer">
@@ -78,9 +113,9 @@ for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){
 @:		SELECT <include refid="Base_Column_List"/>
 @:		from @Model.DBTableName t1
 @:		<include refid="Page_Query_Where" />
-@:      <if test="startRowNum != null and endRowNum != null ">
-@:      LIMIT #{startRowNum,jdbcType=BIGINT},#{endRowNum,jdbcType=BIGINT}
-@:      </if>
+@:		<if test="startRowNum != null and rowLength != null ">
+@:		LIMIT #{startRowNum,jdbcType=BIGINT},#{rowLength,jdbcType=BIGINT}
+@:		</if>
 @:    </select>
 @:
 @foreach(var field in @Model.JavaClass.ParentKeyFields ){
@@ -96,14 +131,17 @@ for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){
     // 开始写部分
 }
 @if(@Model.ForWrite){
-@:    <delete id="deleteByPrimaryKey" parameterType="@CodeUtil.GetJavaMapKeyParaType(@Model.JavaClass)">
+        if (@Model.JavaClass.HasPrimaryKeyField)
+        {
+@:    <delete id="deleteByPrimaryKey" parameterType="@CodeUtil.GetJavaMapPrimaryKeyParaType(@Model.JavaClass)">
 @:        delete from @Model.DBTableName
-for (var i = 0; i < @Model.JavaClass.KeyFields.Count; i++){
+for (var i = 0; i < @Model.JavaClass.PrimaryKeyFields.Count; i++){
           if(i==0){@("        where ")} else {@("        and ")}
-@:t1.@Model.JavaClass.KeyFields[i].DBColName = #{@Model.JavaClass.KeyFields[i].Name,jdbcType=@Model.JavaClass.KeyFields[i].JDBCType}
+@:t1.@Model.JavaClass.PrimaryKeyFields[i].DBColName = #{@Model.JavaClass.PrimaryKeyFields[i].Name,jdbcType=@Model.JavaClass.PrimaryKeyFields[i].JDBCType}
 }
 @:    </delete>
 @:
+        }
 @foreach(var field in @Model.JavaClass.ParentKeyFields ){
 @:    <delete id="deleteBy@(@field.Name.ToUpper())" parameterType="@field.FiledTypeStr">
 @:		 delete from @Model.DBTableName
@@ -144,32 +182,53 @@ for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){
 @:        
 @:    </insert>
 @:
+        if (@Model.JavaClass.HasPrimaryKeyField)
+        {
 @:    <update id="updateByPrimaryKey" parameterType="@Model.JavaClass.FullName">
 @:        update @Model.DBTableName  SET
-for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){          
-@("            "+@Model.JavaClass.Fields[i].DBColName+"=#{"+@Model.JavaClass.Fields[i].Name+",jdbcType="+@Model.JavaClass.Fields[i].JDBCType+"}"+(i<@Model.JavaClass.Fields.Count-1?",":"")+"\r\n")
-}
-for (var i = 0; i < @Model.JavaClass.KeyFields.Count; i++){
-          if(i==0){@("        where ")} else {@("        and ")}
-@:@Model.JavaClass.KeyFields[i].DBColName = #{@Model.JavaClass.KeyFields[i].Name,jdbcType=@Model.JavaClass.KeyFields[i].JDBCType}
-}
+            for (var i = 0; i < @Model.JavaClass.Fields.Count; i++)
+            {
+ @("            "+@Model.JavaClass.Fields[i].DBColName+"=#{"+@Model.JavaClass.Fields[i].Name+",jdbcType="+@Model.JavaClass.Fields[i].JDBCType+"}"+(i<@Model.JavaClass.Fields.Count-1?",":"")+"\r\n")
+            }
+            for (var i = 0; i < @Model.JavaClass.PrimaryKeyFields.Count; i++)
+            {
+                if (i == 0)
+                {
+@("        where ")
+                }
+                else
+                {
+@("        and ")
+                }
+@:@Model.JavaClass.PrimaryKeyFields[i].DBColName = #{@Model.JavaClass.PrimaryKeyFields[i].Name,jdbcType=@Model.JavaClass.PrimaryKeyFields[i].JDBCType}
+            }
 @:    </update>
 @:
 @:    <update id="updateByPrimaryKeySelective" parameterType="@Model.JavaClass.FullName">
 @:        update @Model.DBTableName 
 @:        <set>
-for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){   
+            for (var i = 0; i < @Model.JavaClass.Fields.Count; i++)
+            {
 @:            <if test="@Model.JavaClass.Fields[i].Name != null">
 @("            "+@Model.JavaClass.Fields[i].DBColName+"=#{"+@Model.JavaClass.Fields[i].Name+",jdbcType="+@Model.JavaClass.Fields[i].JDBCType+"},"+"\r\n")
 @:            </if>
-}
+            }
 @:        </set>
-for (var i = 0; i < @Model.JavaClass.KeyFields.Count; i++){
-          if(i==0){@("        where ")} else {@("        and ")}
-@:@Model.JavaClass.KeyFields[i].DBColName = #{@Model.JavaClass.KeyFields[i].Name,jdbcType=@Model.JavaClass.KeyFields[i].JDBCType}
-}
+            for (var i = 0; i < @Model.JavaClass.PrimaryKeyFields.Count; i++)
+            {
+                if (i == 0)
+                {
+@("        where ")
+                }
+                else
+                {
+@("        and ")
+                }
+@:@Model.JavaClass.PrimaryKeyFields[i].DBColName = #{@Model.JavaClass.PrimaryKeyFields[i].Name,jdbcType=@Model.JavaClass.PrimaryKeyFields[i].JDBCType}
+            }
 @:    </update>
-}
+        }
+    }
 @{
     // 结束写部分
 }

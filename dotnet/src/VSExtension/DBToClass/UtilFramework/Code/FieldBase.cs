@@ -14,6 +14,8 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
         public FieldTypes FieldType { get; set; } = FieldTypes.String;
         public bool IsKeyField { get; private set; } = false;
+        public bool IsPrimaryKeyColumn { get; private set; } = false;
+        public bool IsUniqueKeyColumn { get; private set; } = false;
         public bool IsParentKey { get; private set; } = false;
         public DDLColumn DDLColumn { get; set; }
 
@@ -57,6 +59,8 @@ namespace Org.FGQ.CodeGenerate.Util.Code
             fieldBase.FieldType = DDLUtil.AnalysisFieldType(c);
             fieldBase.JDBCType = DBUtil.AnalysisJDBCType(fieldBase.FieldType);
             fieldBase.IsKeyField = c.IsKeyColumn();
+            fieldBase.IsPrimaryKeyColumn = c.IsPrimaryKeyColumn();
+            fieldBase.IsUniqueKeyColumn = c.IsUniqueKeyColumn();
             fieldBase.IsParentKey = c.IsParentKey;
             return fieldBase;
 

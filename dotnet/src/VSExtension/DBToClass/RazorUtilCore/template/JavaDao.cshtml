@@ -3,6 +3,7 @@
 @using System.Collections.Generic
 @using System.Collections
 @using Org.FGQ.CodeGenerate.Util.Code
+@inherits RazorEngineCore.RazorEngineTemplateBase<Org.FGQ.CodeGenerate.Config.JavaDaoConfig>
 package @Model.DaoPackageName;
 
 import @Model.JavaClass.PackageName.@Model.JavaClass.ClassName;
@@ -26,15 +27,24 @@ import java.util.Map;
 public interface @Model.DaoName {
 
 @if(@Model.ForRead){
-if(@Model.JavaClass.HasKeyField){
-@:    @Model.VoClassName selectByKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true));
+	if (@Model.JavaClass.HasPrimaryKeyField)
+	{
+@:    @Model.VoClassName selectByPrimaryKey(@CodeUtil.GetJavaPrimaryKeyFieldsParaStr(@Model.JavaClass,true));
 @:
-@if(@Model.JavaClass.HasNoKeyLongIDField){
+	}
+	if (@Model.JavaClass.HasUniqueKeyField)
+	{
+@:    @Model.VoClassName selectByUniqueKey(@CodeUtil.GetJavaUniqueKeyFieldsParaStr(@Model.JavaClass,true));
+@:
+	}
+
+
+	@if(@Model.JavaClass.HasNoKeyLongIDField){
 <text>    @Model.VoClassName selectByID(Long id);
 
 </text>    
 }
-}
+
 @foreach(var field in @Model.JavaClass.ParentKeyFields ){
 @:    List<@Model.VoClassName> queryBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name);
 @:
@@ -48,9 +58,11 @@ if(@Model.JavaClass.HasKeyField){
 @:    List<@Model.VoClassName> queryByParaBean(@Model.BoClassName paramBean);
 }
 @if(@Model.ForWrite){
-
-@:    int deleteByPrimaryKey(@CodeUtil.GetJavaKeyFieldsParaStr(@Model.JavaClass,true));
+	if (@Model.JavaClass.HasPrimaryKeyField)
+	{
+@:    int deleteByPrimaryKey(@CodeUtil.GetJavaPrimaryKeyFieldsParaStr(@Model.JavaClass,true));		
 @:
+	}
 @foreach(var field in @Model.JavaClass.ParentKeyFields ){
 @:    int deleteBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name);
 @:
@@ -59,8 +71,11 @@ if(@Model.JavaClass.HasKeyField){
 @:
 @:    int insertSelective(@Model.JavaClass.ClassName record);
 @:
+	if (@Model.JavaClass.HasPrimaryKeyField)
+	{
 @:    int updateByPrimaryKey(@Model.JavaClass.ClassName record);
-@:
+@:		
 @:    int updateByPrimaryKeySelective(@Model.JavaClass.ClassName record);
+	}
 }
 }

@@ -2,6 +2,7 @@
 @using System
 @using System.Collections.Generic
 @using System.Collections
+@inherits RazorEngineCore.RazorEngineTemplateBase<Org.FGQ.CodeGenerate.Util.Code.JavaClass>
 package @Model.PackageName;
 
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 @(@Model.JavaBoClass!=null?"import  "+@Model.JavaBoClass.FullName+";":"" )
 
 /**
+ *
  * @Model.Desc
  * @@TableName @(@Model.DDLTable==null?"":@Model.DDLTable.TableName)  
  * Creator:fgq.generator

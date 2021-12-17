@@ -40,6 +40,14 @@ namespace Org.FGQ.CodeGenerate.Config
 
         public string ControllerJavaDiretory { get; set; }
 
+        public string ServiceCodeTemplateFile { get; set; } = null;
+
+        public string ServiceImplCodeTemplateFile { get; set; } = null;
+
+        public string ControllerCodeTemplateFile { get; set; } = null;
+
+
+
 
         public void Reset()
         {
@@ -55,8 +63,7 @@ namespace Org.FGQ.CodeGenerate.Config
             {
                 return this.JavaClass.ClassName + "Model";
             }
-        }
-
+        } 
         public string ServiceName
         {
             get

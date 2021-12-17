@@ -74,12 +74,12 @@ namespace Org.FGQ.CodeGenerate.Config
 
         }
         public List<string> getPrimaryKeyNames()
-        {      
+        {
             return this.Columns.FindAll(x => x.IsPrimaryKeyColumn()).ConvertAll<string>(x => { return x.NameSql; }).ToList();
         }
 
         public List<string> getUniqueKeyNames()
-        {    
+        {
             return this.Columns.FindAll(x => x.IsUniqueKeyColumn()).ConvertAll<string>(x => { return x.NameSql; }).ToList();
         }
 
@@ -142,7 +142,7 @@ namespace Org.FGQ.CodeGenerate.Config
             {
                 return String.Empty;
             }
-            if ( IsPrimaryKeyColumn() && this.DDLTable.DDLConfig.MyDBType == DDLConfig.DBType.MySql)
+            if (IsPrimaryKeyColumn() && this.DDLTable.DDLConfig.MyDBType == DDLConfig.DBType.MySql)
             {
                 return "primary key";
             }
@@ -332,20 +332,17 @@ namespace Org.FGQ.CodeGenerate.Config
                     {
                         return "number(20,0)";
                     }
-                    if (type.ToLower().Contains("long"))
+                    if (type.ToLower().Contains("bigint")
+                        || type.ToLower().Contains("big int")
+                        || type.ToLower().Contains("long"))
                     {
                         return "number(20,0)";
                     }
-                    if (type.ToLower().Contains("bigint") || type.ToLower().Contains("big int"))
-                    {
-                        return "number(20)";
-                    }
                     if (type.ToLower().Contains("int"))
                     {
-
                         return "number(" + (longstr ?? "10") + ")";
                     }
-                    if (type.ToLower().TrimEnd() == "text")
+                    if (type.ToLower().Trim() == "text")
                     {
                         return "varchar2(2000 CHAR)";
                     }
@@ -355,17 +352,11 @@ namespace Org.FGQ.CodeGenerate.Config
 
                     if (type.ToLower().Contains("varchar"))
                     {
-                        return "varchar(" + int.Parse(longstr ?? "10") + " )";
+                        return "varchar(" + int.Parse(longstr ?? "10") + ")";
                     }
-                    if (type.ToLower().Contains("bigint"))
-                    {
-                        return "bigint(20,0)";
-                    }
-                    if (type.ToLower().Contains("long"))
-                    {
-                        return "bigint(20,0)";
-                    }
-                    if (type.ToLower().Contains("bigint") || type.ToLower().Contains("big int"))
+                    if (type.ToLower().Contains("bigint")
+                        || type.ToLower().Contains("big int")
+                        || type.ToLower().Contains("long"))
                     {
                         return "bigint(20)";
                     }
@@ -374,10 +365,21 @@ namespace Org.FGQ.CodeGenerate.Config
 
                         return "integer(" + (longstr ?? "10") + ")";
                     }
-                    if (type.ToLower().TrimEnd() == "text")
+                    if (type.ToLower().Trim() == "text")
                     {
-                        return "varchar(2000 CHAR)";
+                        return "text";
                     }
+
+                    if (type.ToLower().Trim() == "mediumtext")
+                    {
+                        return "MEDIUMTEXT";
+                    }
+                    if (type.ToLower().Trim() == "longtext")
+                    {
+                        return "LONGTEXT";
+                    }
+
+
 
                     return type;
 
@@ -395,9 +397,9 @@ namespace Org.FGQ.CodeGenerate.Config
         public string DBColSeparator { get; set; } = "_";
 
         /// <summary>
-        /// class field name is same to db column name。
+        /// names of field and db column are  same to ddl name。
         /// </summary>
-        public bool UnifyName { get; set; } = true;
+        public bool UnifyName { get; set; } = false;
 
 
     }

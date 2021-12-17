@@ -34,6 +34,15 @@ namespace UtilFrameworkUnitTest
             Console.WriteLine(result);
             Assert.IsTrue((result = Org.FGQ.CodeGenerate.Util.Util.DDLUtil.InferColName("ABC", false, "_")) == "ABC");
             Console.WriteLine(result);
+            Assert.IsTrue((result = Org.FGQ.CodeGenerate.Util.Util.DDLUtil.InferColName("Abc", false, "_")) == "abc");
+            Console.WriteLine(result);
+            Assert.IsTrue((result = Org.FGQ.CodeGenerate.Util.Util.DDLUtil.InferColName("Enginno", false, "_")) == "enginno");
+            Console.WriteLine(result);
+
+            Assert.IsTrue((result = Org.FGQ.CodeGenerate.Util.Util.DDLUtil.InferColName("A", false, "_")) == "a");
+            Console.WriteLine(result);
+            Assert.IsTrue((result = Org.FGQ.CodeGenerate.Util.Util.DDLUtil.InferColName("a", false, "_")) == "a");
+            Console.WriteLine(result);
         }
 
 

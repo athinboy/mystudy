@@ -17,6 +17,48 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="template\FreeSqlEntity.cshtml" />
+    <None Remove="template\JavaBean.cshtml" />
+    <None Remove="template\JavaCode.cshtml" />
+    <None Remove="template\JavaCodeBWM.cshtml" />
+    <None Remove="template\JavaDao.cshtml" />
+    <None Remove="template\JavaMapper.cshtml" />
+    <None Remove="template\MysqlDDL.cshtml" />
+    <None Remove="template\OracleDDL.cshtml" />
+    <None Remove="template\SqlSugarEntity.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="template\FreeSqlEntity.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="template\JavaBean.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="template\JavaCodeBWM.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="template\JavaCode.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="template\JavaDao.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="template\JavaMapper.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="template\MysqlDDL.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="template\OracleDDL.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="template\SqlSugarEntity.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Mono.TextTemplating" Version="2.2.1" />
     <PackageReference Include="NLog" Version="4.7.11" />
     <PackageReference Include="RazorEngineCore" Version="2021.7.1" />
@@ -31,9 +73,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="template\JavaBean.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="template\JavaCode.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="template\JavaMapper.txt">

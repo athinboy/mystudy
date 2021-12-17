@@ -82,15 +82,18 @@ namespace Org.FGQ.CodeGenerate.Util.Util
 
 
         /// <summary>
-        /// User_Name   ->   User_Name
-        /// user_name   ->   user_name
-        /// userName    ->   user_name
-        /// UserName    ->   user_name
-        /// Urlabc      ->   urlabc
-        /// webUrl      ->   web_url
-        /// abcABCName  ->   abc_ABC_name
-        /// abcABC      ->   abc_ABC
-        /// ABC         ->   ABC
+        /// User_Name   ->   User_Name      <br/>
+        /// user_name   ->   user_name      <br/>
+        /// userName    ->   user_name      <br/>
+        /// UserName    ->   user_name      <br/>
+        /// Urlabc      ->   urlabc         <br/>
+        /// webUrl      ->   web_url        <br/>
+        /// abcABCName  ->   abc_ABC_name   <br/>
+        /// abcABC      ->   abc_ABC        <br/>
+        /// ABC         ->   ABC            <br/>
+        /// Abc         ->   abc            <br/>
+        /// A           ->   a              <br/>
+        /// a           ->   a              <br/>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="config"></param>
@@ -115,6 +118,9 @@ namespace Org.FGQ.CodeGenerate.Util.Util
                     return name;
                 }
                 string result = string.Empty;
+
+                if(name.Length==1) return name.ToLower();
+
                 while (name.Length > 0)
                 {
                     if (name.ToLower() == name)

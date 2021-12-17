@@ -2405,6 +2405,9 @@ namespace Org.FGQ.CodeGenerateTest
 
             javaCodeConfig.ControllerPackageName = "com.wintop.third.bmwspark.controller";
             javaCodeConfig.ControllerJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-bmwspark-service-api\src\main\java";
+            javaCodeConfig.ServiceCodeTemplateFile = 
+                javaCodeConfig.ServiceImplCodeTemplateFile = javaCodeConfig.ControllerCodeTemplateFile = "JavaCodeBWM.cshtml";
+
 
 
 

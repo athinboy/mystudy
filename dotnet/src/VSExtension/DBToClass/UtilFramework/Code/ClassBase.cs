@@ -42,11 +42,12 @@ namespace Org.FGQ.CodeGenerate.Util.Code
         {
             get
             {
-                return Fields.Any(x => x.IsKeyField==false && x.Name.ToLower() == "id" && x.FieldType == FieldTypes.Long);
+                return Fields.Any(x => x.IsKeyField == false && x.Name.ToLower() == "id" && x.FieldType == FieldTypes.Long);
             }
         }
 
-        public FieldBase LongIntIDField{
+        public FieldBase LongIntIDField
+        {
             get
             {
                 return Fields.Find(x => x.Name.ToLower() == "id" && x.FieldType == FieldTypes.Long);
@@ -61,12 +62,44 @@ namespace Org.FGQ.CodeGenerate.Util.Code
                 return Fields.Any(f => f.IsKeyField);
             }
         }
+        public bool HasPrimaryKeyField
+        {
+
+            get
+            {
+                return Fields.Any(f => f.IsPrimaryKeyColumn);
+            }
+        }
+        public bool HasUniqueKeyField
+        {
+
+            get
+            {
+                return Fields.Any(f => f.IsUniqueKeyColumn);
+            }
+        }
 
         public List<FieldBase> KeyFields
         {
             get
             {
                 return Fields.FindAll(x => x.IsKeyField);
+            }
+        }
+
+        public List<FieldBase> PrimaryKeyFields
+        {
+            get
+            {
+                return Fields.FindAll(x => x.IsPrimaryKeyColumn);
+            }
+        }
+
+        public List<FieldBase> UniqueKeyFields
+        {
+            get
+            {
+                return Fields.FindAll(x => x.IsUniqueKeyColumn);
             }
         }
 

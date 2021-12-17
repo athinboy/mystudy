@@ -3,6 +3,7 @@ using Org.FGQ.CodeGenerate.RazorTag;
 using Org.FGQ.CodeGenerate.Util.Code;
 using RazorEngineCore;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,21 +12,51 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate
 {
+
+    public class Template
+    {
+
+        public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaClass>> beanTemplate = null;
+        public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaDaoConfig>> daoTemplate = null;
+        public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaMapperConfig>> mapperTemplate = null;
+        public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaCodeConfig>> modelTemplate = null;
+        public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaCodeConfig>> serviceTemplate = null;
+        public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaCodeConfig>> serviceImplTemplate = null;
+        public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaCodeConfig>> controllerTemplate = null;
+
+        internal Template Clone()
+        {
+            Template newTemplate = new Template();
+            newTemplate.beanTemplate = beanTemplate;
+            newTemplate.daoTemplate = daoTemplate;
+            newTemplate.mapperTemplate = mapperTemplate;
+            newTemplate.modelTemplate = modelTemplate;
+            newTemplate.serviceTemplate = serviceTemplate;
+            newTemplate.serviceImplTemplate = serviceImplTemplate;
+            newTemplate.controllerTemplate = controllerTemplate;
+            return newTemplate;
+        }
+
+    }
+
+
     public class JavaGenerator
     {
 
-        private static string javaBeanTemplateRelatePath = Path.DirectorySeparatorChar + "template" +
-            Path.DirectorySeparatorChar + "JavaBean.txt";
+        private static string GetTemplateFilePath(string filename)
+        {
+            return Path.DirectorySeparatorChar + "template" + Path.DirectorySeparatorChar + filename;
+        }
 
 
-        private static string javaDaoTemplateRelatePath = Path.DirectorySeparatorChar + "template" +
-            Path.DirectorySeparatorChar + "JavaDao.txt";
 
-        private static string javaMapperTemplateRelatePath = Path.DirectorySeparatorChar + "template" +
-            Path.DirectorySeparatorChar + "JavaMapper.txt";
+        private static string javaBeanTemplateRelatePath = GetTemplateFilePath("JavaBean.cshtml");
 
-        private static string javaCodeTemplateRelatePath = Path.DirectorySeparatorChar + "template" +
-            Path.DirectorySeparatorChar + "JavaCode.txt";
+        private static string javaDaoTemplateRelatePath = GetTemplateFilePath("JavaDao.cshtml");
+
+        private static string javaMapperTemplateRelatePath = GetTemplateFilePath("JavaMapper.cshtml");
+
+        private static string javaCodeTemplateRelatePath = GetTemplateFilePath("JavaCode.cshtml");
 
         static NLog.ILogger logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -34,85 +65,122 @@ namespace Org.FGQ.CodeGenerate
         private IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaClass>> beanTemplate = null;
         private IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaDaoConfig>> daoTemplate = null;
         private IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaMapperConfig>> mapperTemplate = null;
+
         private IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaCodeConfig>> codeTemplate = null;
-        private void init()
+
+
+        private Template defaultTemplate = null;
+        private ConcurrentDictionary<JavaCodeConfig, Template> templateCache = new ConcurrentDictionary<JavaCodeConfig, Template>();
+
+        private Template GetTemplate(JavaCodeConfig javaCodeConfig)
         {
+            initDefault();
 
-            if (razorEngine != null)
+            if (string.IsNullOrEmpty(javaCodeConfig.ServiceCodeTemplateFile)
+                && string.IsNullOrEmpty(javaCodeConfig.ServiceImplCodeTemplateFile)
+                && string.IsNullOrEmpty(javaCodeConfig.ControllerCodeTemplateFile))
             {
-                return;
+                return defaultTemplate;
             }
 
-            lock (this)
+            Template template = templateCache[javaCodeConfig];
+            if (template != null) return template;
+
+            template = defaultTemplate.Clone();
+
+
+            if (false == string.IsNullOrEmpty(javaCodeConfig.ServiceCodeTemplateFile))
             {
-                if (razorEngine != null)
-                {
-                    return;
-                }
-
-                razorEngine = new RazorEngine();
-
-                string templatePath = Environment.CurrentDirectory + javaBeanTemplateRelatePath;
-                string templateContent = File.ReadAllText(templatePath);
-
-                beanTemplate = razorEngine.Compile<RazorEngineTemplateBase<JavaClass>>(templateContent, builder =>
-{
-    //builder.AddAssemblyReferenceByName("System.Security"); // by name
-    //builder.AddAssemblyReference(typeof(System.IO.File)); // by type
-    //builder.AddAssemblyReference(Assembly.Load("source")); // by reference
-    builder.AddAssemblyReferenceByName("System.Collections");
-});
-
-
-
-                templatePath = Environment.CurrentDirectory + javaDaoTemplateRelatePath;
-                templateContent = File.ReadAllText(templatePath);
-                daoTemplate = razorEngine.Compile<RazorEngineTemplateBase<JavaDaoConfig>>(templateContent, builder =>
- {
-     builder.AddAssemblyReferenceByName("System.Collections");
-     builder.AddAssemblyReference(typeof(CodeUtil)); // by type
- });
-
-                templatePath = Environment.CurrentDirectory + javaMapperTemplateRelatePath;
-
-                templateContent = File.ReadAllText(templatePath);
-
-
-                mapperTemplate
-                       = razorEngine.Compile<RazorEngineTemplateBase<JavaMapperConfig>>(templateContent, builder =>
-                       {
-                           builder.AddAssemblyReferenceByName("System.Collections");
-                           builder.AddAssemblyReference(typeof(CodeUtil)); // by type
-                           builder.AddAssemblyReference(typeof(ReverseStrTagHelper)); // by type
-                       });
-
-
-                templatePath = Environment.CurrentDirectory + javaCodeTemplateRelatePath;
-
-                templateContent = File.ReadAllText(templatePath);
-
-
-
-
-                codeTemplate = razorEngine.Compile<RazorEngineTemplateBase<JavaCodeConfig>>(templateContent, builder =>
-{
-    builder.AddAssemblyReferenceByName("System.Collections");
-    builder.AddAssemblyReference(typeof(CodeUtil)); // by type
-    builder.AddAssemblyReference(typeof(ReverseStrTagHelper)); // by type
-});
-
-
+                template.serviceTemplate = GetTemplate<JavaCodeConfig>(GetTemplateFilePath(javaCodeConfig.ServiceCodeTemplateFile));
             }
+            if (false == string.IsNullOrEmpty(javaCodeConfig.ServiceImplCodeTemplateFile))
+            {
+                template.serviceImplTemplate = GetTemplate<JavaCodeConfig>(GetTemplateFilePath(javaCodeConfig.ServiceImplCodeTemplateFile));
+            }
+            if (false == string.IsNullOrEmpty(javaCodeConfig.ControllerCodeTemplateFile))
+            {
+                template.controllerTemplate = GetTemplate<JavaCodeConfig>(GetTemplateFilePath(javaCodeConfig.ControllerCodeTemplateFile));
+            }
+
+
+            return template;
+
+
+        }
+
+        private IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> GetTemplate<T>(string filepath)
+        {
+            razorEngine = new RazorEngine();
+
+            string templatePath = Environment.CurrentDirectory + filepath;
+            string templateContent = File.ReadAllText(templatePath);
+
+            IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> razorTemplate =
+                razorEngine.Compile<RazorEngineTemplateBase<T>>(templateContent, builder =>
+            {
+                //builder.AddAssemblyReferenceByName("System.Security"); // by name
+                //builder.AddAssemblyReference(typeof(System.IO.File)); // by type
+                //builder.AddAssemblyReference(Assembly.Load("source")); // by reference
+
+                builder.AddAssemblyReferenceByName("System.Collections");
+                builder.AddAssemblyReference(typeof(CodeUtil)); // by type         
+                builder.AddAssemblyReference(typeof(ReverseStrTagHelper)); // by type
+
+            });
+
+            return razorTemplate;
+
+
 
         }
 
 
 
 
+        private void initDefault()
+        {
+            if (defaultTemplate != null)
+            {
+                return;
+            }
+
+            lock (this)
+            {
+                if (defaultTemplate == null)
+                {
+                    defaultTemplate = new Template();
+                }
+                else
+                {
+                    return;
+                }
+
+                razorEngine = new RazorEngine();
+
+                beanTemplate = GetTemplate<JavaClass>(javaBeanTemplateRelatePath);
+                daoTemplate = GetTemplate<JavaDaoConfig>(javaDaoTemplateRelatePath);
+                mapperTemplate = GetTemplate<JavaMapperConfig>(javaMapperTemplateRelatePath);
+
+                codeTemplate = GetTemplate<JavaCodeConfig>(javaCodeTemplateRelatePath);
+
+                defaultTemplate.beanTemplate = beanTemplate;
+                defaultTemplate.daoTemplate = daoTemplate;
+                defaultTemplate.mapperTemplate = mapperTemplate;
+                defaultTemplate.serviceTemplate = codeTemplate;
+                defaultTemplate.modelTemplate = codeTemplate;
+                defaultTemplate.serviceImplTemplate = codeTemplate;
+                defaultTemplate.controllerTemplate = codeTemplate;
+
+            }
+
+
+        }
+
+
         public void GenerateBean(JavaBeanConfig javaBeanConfig)
         {
 
-            init();
+            initDefault();
 
             //IRazorEngineCompiledTemplate template = razorEngine.Compile(templateContent);// "Hello @Model.Name");
 
@@ -165,7 +233,7 @@ namespace Org.FGQ.CodeGenerate
 
         public void GenerateDao(JavaDaoConfig javaDaoConfig, JavaMapperConfig javaMapperConfig)
         {
-            init();
+            initDefault();
 
 
             string rootDir;
@@ -221,7 +289,7 @@ namespace Org.FGQ.CodeGenerate
         private void GenerateMapper(JavaMapperConfig javaMapperConfig)
         {
 
-            init();
+            initDefault();
 
             string rootDir = javaMapperConfig.MapperDirectory;
             if (false == Directory.Exists(rootDir))
@@ -288,64 +356,83 @@ namespace Org.FGQ.CodeGenerate
 
         public void GenerateCode(JavaCodeConfig javaCodeConfig, JavaClass createdJavaBean)
         {
-            init();
+            Template template = GetTemplate(javaCodeConfig);
+            IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaCodeConfig>> codeTemplate = null;
 
-            javaCodeConfig.JavaClass = createdJavaBean;
-            string rootDir = String.Empty;
-
-            string result = String.Empty;
-
-            string fileName = string.Empty;
-
-            Action action = () =>
+            lock (this)
             {
-                result = codeTemplate.Run(instance =>
+
+                javaCodeConfig.JavaClass = createdJavaBean;
+
+                string rootDir = String.Empty;
+
+                string result = String.Empty;
+
+                string fileName = string.Empty;
+
+                Action action = () =>
                 {
-                    instance.Model = javaCodeConfig;
-                });
-                Console.WriteLine(result);
+                    codeTemplate = null;
+                    codeTemplate = codeTemplate ?? (javaCodeConfig.ForModel ? template.modelTemplate : null);
+                    codeTemplate = codeTemplate ?? (javaCodeConfig.ForService ? template.serviceTemplate : null);
+                    codeTemplate = codeTemplate ?? (javaCodeConfig.ForServiceImpl ? template.serviceImplTemplate : null);
+                    codeTemplate = codeTemplate ?? (javaCodeConfig.ForController ? template.controllerTemplate : null);
+                    if (codeTemplate == null)
+                    {
+                        Console.WriteLine("");
+                    }
 
 
-                string filePath = rootDir + Path.DirectorySeparatorChar + fileName + ".java";
+
+                    result = codeTemplate.Run(instance =>
+                    {
+                        instance.Model = javaCodeConfig;
+
+                    });
+                    Console.WriteLine(result);
 
 
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-                File.WriteAllText(filePath, result, new UTF8Encoding(false));
-
-            };
+                    string filePath = rootDir + Path.DirectorySeparatorChar + fileName + ".java";
 
 
-            javaCodeConfig.Reset();
-            javaCodeConfig.ForModel = true;
-            rootDir = CodeUtil.PrepareJavaRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ModelPackageName);
-            fileName = javaCodeConfig.ModelName;
-            action();
+                    if (File.Exists(filePath))
+                    {
+                        File.Delete(filePath);
+                    }
+                    File.WriteAllText(filePath, result, new UTF8Encoding(false));
+
+                };
 
 
-            javaCodeConfig.Reset();
-            javaCodeConfig.ForService = true;
-            rootDir = CodeUtil.PrepareJavaRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ServicePackageName);
-            fileName = javaCodeConfig.ServiceName;
-            action();
-
-            javaCodeConfig.Reset();
-            javaCodeConfig.ForServiceImpl = true;
-            rootDir = CodeUtil.PrepareJavaRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ServiceImplPackageName);
-            fileName = javaCodeConfig.ServiceImplName;
-            action();
+                javaCodeConfig.Reset();
+                javaCodeConfig.ForModel = true;
+                rootDir = CodeUtil.PrepareJavaRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ModelPackageName);
+                fileName = javaCodeConfig.ModelName;
+                action();
 
 
-            javaCodeConfig.Reset();
-            javaCodeConfig.ForController = true;
-            rootDir = CodeUtil.PrepareJavaRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ControllerPackageName);
-            fileName = javaCodeConfig.ControllerName;
-            action();
+                javaCodeConfig.Reset();
+                javaCodeConfig.ForService = true;
+                rootDir = CodeUtil.PrepareJavaRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ServicePackageName);
+                fileName = javaCodeConfig.ServiceName;
+                action();
+
+                javaCodeConfig.Reset();
+                javaCodeConfig.ForServiceImpl = true;
+                rootDir = CodeUtil.PrepareJavaRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ServiceImplPackageName);
+                fileName = javaCodeConfig.ServiceImplName;
+                action();
 
 
+                javaCodeConfig.Reset();
+                javaCodeConfig.ForController = true;
+                rootDir = CodeUtil.PrepareJavaRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ControllerPackageName);
+                fileName = javaCodeConfig.ControllerName;
+                action();
+
+            }
         }
+
 
     }
 }

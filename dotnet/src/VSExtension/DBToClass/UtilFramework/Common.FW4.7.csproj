@@ -46,6 +46,7 @@
     <Compile Include="Code\ClassBase.cs" />
     <Compile Include="Code\CodeTypes.cs" />
     <Compile Include="Code\CodeUtil.cs" />
+    <Compile Include="Code\CSharpClass.cs" />
     <Compile Include="Code\FieldBase.cs" />
     <Compile Include="Code\JavaClass.cs" />
     <Compile Include="Config\DDLConfig.cs" />

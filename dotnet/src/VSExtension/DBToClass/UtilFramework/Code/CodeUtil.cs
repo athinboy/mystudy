@@ -53,7 +53,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
             if (ddlconfig.UnifyName) return c.Name;
 
-            string columnName = c.Name;
+            string columnName = c.NameSql;
             string[] parts = columnName.Split(ddlconfig.DBColSeparator[0]);
             string result = "";
             for (int i = 0; i < parts.Length; i++)
@@ -112,19 +112,35 @@ namespace Org.FGQ.CodeGenerate.Util.Code
         }
 
 
-        public static string GetJavaKeyFieldsParaStr(JavaClass javaClass, bool withType, bool withParam)
+        public static string GetJavaPrimaryKeyFieldsParaStr(JavaClass javaClass, bool withType, bool withParam)
         {
-            if (false == javaClass.HasKeyField)
+            if (false == javaClass.HasPrimaryKeyField)
             {
                 return string.Empty;
             }
-            return string.Join(", ", javaClass.KeyFields.ConvertAll<string>(x => (withType ? (withParam ? String.Format("@Param(\"{0}\") ", x.Name) : "") + x.FiledTypeStr + " " : "") + x.Name));
+            return string.Join(", ", javaClass.PrimaryKeyFields.ConvertAll<string>(x => (withType ? (withParam ? String.Format("@Param(\"{0}\") ", x.Name) : "") + x.FiledTypeStr + " " : "") + x.Name));
 
         }
 
-        public static string GetJavaKeyFieldsParaStr(JavaClass javaClass, bool withType)
+        public static string GetJavaPrimaryKeyFieldsParaStr(JavaClass javaClass, bool withType)
         {
-            return GetJavaKeyFieldsParaStr(javaClass, withType, withType ? true : false);
+            return GetJavaPrimaryKeyFieldsParaStr(javaClass, withType, withType ? true : false);
+
+        }
+
+        public static string GetJavaUniqueKeyFieldsParaStr(JavaClass javaClass, bool withType, bool withParam)
+        {
+            if (false == javaClass.HasUniqueKeyField)
+            {
+                return string.Empty;
+            }
+            return string.Join(", ", javaClass.UniqueKeyFields.ConvertAll<string>(x => (withType ? (withParam ? String.Format("@Param(\"{0}\") ", x.Name) : "") + x.FiledTypeStr + " " : "") + x.Name));
+
+        }
+
+        public static string GetJavaUniqueKeyFieldsParaStr(JavaClass javaClass, bool withType)
+        {
+            return GetJavaUniqueKeyFieldsParaStr(javaClass, withType, withType ? true : false);
 
         }
 
@@ -155,24 +171,38 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
 
         public static string GetDBColNameJoinStr(JavaClass javaClass)
-        {
-            if (false == javaClass.HasKeyField)
-            {
-                return string.Empty;
-            }
+        { 
             return string.Join(",", javaClass.Fields.ConvertAll<string>(x => x.DBColName));
 
         }
 
-        public static string GetJavaMapKeyParaType(JavaClass javaClass)
+        public static string GetJavaMapPrimaryKeyParaType(JavaClass javaClass)
         {
             if (javaClass.HasKeyField == false)
             {
                 return "错误，没有主键";
             }
-            if (javaClass.KeyFields.Count == 1)
+            if (javaClass.PrimaryKeyFields.Count == 1)
             {
-                return "java.lang." + javaClass.KeyFields[0].FiledTypeStr;
+                return "java.lang." + javaClass.PrimaryKeyFields[0].FiledTypeStr;
+            }
+            else
+            {
+                return "map";
+            }
+
+
+        }
+
+        public static string GetJavaMapUniqueKeyParaType(JavaClass javaClass)
+        {
+            if (javaClass.HasUniqueKeyField == false)
+            {
+                return "错误，没有唯一主键";
+            }
+            if (javaClass.UniqueKeyFields.Count == 1)
+            {
+                return "java.lang." + javaClass.UniqueKeyFields[0].FiledTypeStr;
             }
             else
             {

@@ -378,6 +378,10 @@ namespace Org.FGQ.CodeGenerate.Config
                     {
                         return "LONGTEXT";
                     }
+                    if (type.ToLower().Trim() == "datetime")
+                    {
+                        return "datetime";
+                    }
 
 
 

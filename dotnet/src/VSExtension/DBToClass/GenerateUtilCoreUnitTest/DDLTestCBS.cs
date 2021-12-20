@@ -63,6 +63,17 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("PC端New报告url", "pc_new_report_url", "varchar(500)", "", ""));
             newtable.Columns.Add(new DDLColumn("json报告", "jsorn_report", "text", "", ""));
             newtable.Columns.Add(new DDLColumn("json报告_invoke_id", "jsorn_report_invoke_id", "bigint", "", ""));
+            newtable.Columns.Add(new DDLColumn("创建人", "cre_person", "bigint", "", ""));
+            newtable.Columns.Add(new DDLColumn("创建人姓名", "cre_person_name", "varchar(20)", "", ""));
+            newtable.Columns.Add(new DDLColumn("创建日期", "cre_time", "datetime", "", ""));
+            newtable.Columns.Add(new DDLColumn("修改日期", "modify_time", "datetime", "", ""));
+            newtable.Columns.Add(new DDLColumn("店铺", "service_network_id", "bigint", "", ""));
+            newtable.Columns.Add(new DDLColumn("店铺姓名", "service_network_name", "varchar(20)", "", ""));
+            newtable.Columns.Add(new DDLColumn("查询状态", "query_status", "varchar(20)", "", ""));
+            newtable.Columns.Add(new DDLColumn("查询状态code", "query_status_code", "varchar(20)", "", ""));
+            newtable.Columns.Add(new DDLColumn("查询状态message", "query_status_msg", "varchar(200)", "", ""));
+
+
 
 
             ddlConfig.Tables.Add(newtable = new DDLTable("wintop_cbs", "cbs_new_report", "综合版报告"));
@@ -79,6 +90,15 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("PC端New报告url", "pc_new_report_url", "varchar(500)", "", ""));
             newtable.Columns.Add(new DDLColumn("json报告", "jsorn_report", "text", "", ""));
             newtable.Columns.Add(new DDLColumn("json报告_invoke_id", "jsorn_report_invoke_id", "bigint", "", ""));
+            newtable.Columns.Add(new DDLColumn("创建人", "cre_person", "bigint", "", ""));
+            newtable.Columns.Add(new DDLColumn("创建人姓名", "cre_person_name", "varchar(20)", "", ""));
+            newtable.Columns.Add(new DDLColumn("创建日期", "cre_time", "datetime", "", ""));
+            newtable.Columns.Add(new DDLColumn("修改日期", "modify_time", "datetime", "", ""));
+            newtable.Columns.Add(new DDLColumn("店铺", "service_network_id", "bigint", "", ""));
+            newtable.Columns.Add(new DDLColumn("店铺姓名", "service_network_name", "varchar(20)", "", ""));
+            newtable.Columns.Add(new DDLColumn("查询状态", "query_status", "varchar(20)", "", ""));
+            newtable.Columns.Add(new DDLColumn("查询状态code", "query_status_code", "varchar(20)", "", ""));
+            newtable.Columns.Add(new DDLColumn("查询状态message", "query_status_msg", "varchar(200)", "", ""));
 
 
 
@@ -96,6 +116,15 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("PC端New报告url", "pc_new_report_url", "varchar(500)", "", ""));
             newtable.Columns.Add(new DDLColumn("json报告", "jsorn_report", "text", "", ""));
             newtable.Columns.Add(new DDLColumn("json报告_invoke_id", "jsorn_report_invoke_id", "bigint", "", ""));
+            newtable.Columns.Add(new DDLColumn("创建人", "cre_person", "bigint", "", ""));
+            newtable.Columns.Add(new DDLColumn("创建人姓名", "cre_person_name", "varchar(20)", "", ""));
+            newtable.Columns.Add(new DDLColumn("创建日期", "cre_time", "datetime", "", ""));
+            newtable.Columns.Add(new DDLColumn("修改日期", "modify_time", "datetime", "", ""));
+            newtable.Columns.Add(new DDLColumn("店铺", "service_network_id", "bigint", "", ""));
+            newtable.Columns.Add(new DDLColumn("店铺姓名", "service_network_name", "varchar(20)", "", ""));
+            newtable.Columns.Add(new DDLColumn("查询状态", "query_status", "varchar(20)", "", ""));
+            newtable.Columns.Add(new DDLColumn("查询状态code", "query_status_code", "varchar(20)", "", ""));
+            newtable.Columns.Add(new DDLColumn("查询状态message", "query_status_msg", "varchar(200)", "", ""));
 
 
 

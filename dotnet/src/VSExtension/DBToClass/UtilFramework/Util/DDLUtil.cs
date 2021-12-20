@@ -51,7 +51,7 @@ namespace Org.FGQ.CodeGenerate.Util.Util
                 return FieldTypes.Decimal;
             }
 
-            if (c.TypeName.ToUpper().Contains("DateTime")
+            if (c.TypeName.ToLower().Contains("datetime")
                 || c.TypeName.ToUpper().Contains("时间")
                 || c.TypeName.ToUpper().Contains("日期"))
             {

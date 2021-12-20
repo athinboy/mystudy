@@ -403,32 +403,41 @@ namespace Org.FGQ.CodeGenerate
 
                 };
 
+                if (javaCodeConfig.GeneralModel)
+                {
+                    javaCodeConfig.Reset();
+                    javaCodeConfig.ForModel = true;
+                    rootDir = CodeUtil.PrepareJavaRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ModelPackageName);
+                    fileName = javaCodeConfig.ModelName;
+                    action();
+                }
 
-                javaCodeConfig.Reset();
-                javaCodeConfig.ForModel = true;
-                rootDir = CodeUtil.PrepareJavaRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ModelPackageName);
-                fileName = javaCodeConfig.ModelName;
-                action();
+                if (javaCodeConfig.GeneralService)
+                {
+                    javaCodeConfig.Reset();
+                    javaCodeConfig.ForService = true;
+                    rootDir = CodeUtil.PrepareJavaRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ServicePackageName);
+                    fileName = javaCodeConfig.ServiceName;
+                    action();
+                }
 
+                if (javaCodeConfig.GeneralServiceImpl)
+                {
+                    javaCodeConfig.Reset();
+                    javaCodeConfig.ForServiceImpl = true;
+                    rootDir = CodeUtil.PrepareJavaRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ServiceImplPackageName);
+                    fileName = javaCodeConfig.ServiceImplName;
+                    action();
+                }
 
-                javaCodeConfig.Reset();
-                javaCodeConfig.ForService = true;
-                rootDir = CodeUtil.PrepareJavaRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ServicePackageName);
-                fileName = javaCodeConfig.ServiceName;
-                action();
-
-                javaCodeConfig.Reset();
-                javaCodeConfig.ForServiceImpl = true;
-                rootDir = CodeUtil.PrepareJavaRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ServiceImplPackageName);
-                fileName = javaCodeConfig.ServiceImplName;
-                action();
-
-
-                javaCodeConfig.Reset();
-                javaCodeConfig.ForController = true;
-                rootDir = CodeUtil.PrepareJavaRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ControllerPackageName);
-                fileName = javaCodeConfig.ControllerName;
-                action();
+                if (javaCodeConfig.GeneralController)
+                {
+                    javaCodeConfig.Reset();
+                    javaCodeConfig.ForController = true;
+                    rootDir = CodeUtil.PrepareJavaRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ControllerPackageName);
+                    fileName = javaCodeConfig.ControllerName;
+                    action();
+                }
 
             }
         }

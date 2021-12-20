@@ -47,7 +47,10 @@ namespace Org.FGQ.CodeGenerate.Config
         public string ControllerCodeTemplateFile { get; set; } = null;
 
 
-
+        public bool GeneralModel { get; set; } = true;
+        public bool GeneralService { get; set; } = true;
+        public bool GeneralServiceImpl { get; set; } = true;
+        public bool GeneralController { get; set; } = true;
 
         public void Reset()
         {

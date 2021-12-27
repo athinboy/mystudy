@@ -32,10 +32,11 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
         public string JsonFieldName
         {
-            get {
+            get
+            {
                 return this.DDLColumn == null ? "丢失的JSON名称" : DDLColumn.JsonFieldName;
             }
-            private set {  }
+            private set { }
         }
 
         public string DBColName
@@ -45,6 +46,11 @@ namespace Org.FGQ.CodeGenerate.Util.Code
                 return this.DDLColumn == null ? "丢失的列名称" : DDLColumn.NameSql;
             }
             private set { }
+        }
+
+        public string GetPropertyName()
+        {
+            return this.Name.Length == 1 ? this.Name.ToUpper() : (this.Name.Substring(0, 1).ToUpper() + this.Name.Substring(1));
         }
 
 

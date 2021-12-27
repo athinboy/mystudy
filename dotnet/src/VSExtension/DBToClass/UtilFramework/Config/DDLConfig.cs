@@ -102,6 +102,12 @@ namespace Org.FGQ.CodeGenerate.Config
 
         public string UniqueKeySign { get; set; } = string.Empty;
 
+        /// <summary>
+        /// 唯一键，但是否在数据表中建立唯一键约束？
+        /// </summary>
+        public bool UniqueForDB { get; set; } = true;
+
+
         public string SqlType { get; internal set; }
 
 
@@ -148,7 +154,16 @@ namespace Org.FGQ.CodeGenerate.Config
             }
             if (IsUniqueKeyColumn() && this.DDLTable.DDLConfig.MyDBType == DDLConfig.DBType.MySql)
             {
-                return "unique key";
+                if (this.UniqueForDB)
+                {
+                    return "unique key";
+                }
+                else
+                {
+                    return String.Empty;
+                }
+
+
             }
             throw new Exception("非支持的操作");
 
@@ -178,6 +193,7 @@ namespace Org.FGQ.CodeGenerate.Config
         }
 
         public DDLTable DDLTable { get; internal set; }
+        public int? Length { get; internal set; }
 
         public string CommentStr()
         {
@@ -201,13 +217,18 @@ namespace Org.FGQ.CodeGenerate.Config
 
         }
 
-        public DDLColumn(string desc, string name, string type, string primarykeySign, string remark)
+        public DDLColumn(string desc, string name, string type, string primarykeySign, string remark) : this(desc, name, type, primarykeySign, remark, false)
         {
-            Desc = desc?.Trim() ?? throw new ArgumentNullException(nameof(desc));
-            Name = name?.Trim() ?? throw new ArgumentNullException(nameof(name));
-            TypeName = type?.Trim() ?? throw new ArgumentNullException(nameof(type));
-            PrimaryKeySign = primarykeySign?.Trim() ?? throw new ArgumentNullException(nameof(primarykeySign));
-            Remark = remark?.Trim() ?? throw new ArgumentNullException(nameof(remark));
+
+        }
+        public DDLColumn(string desc, string name, string type) : this(desc, name, type, "N", "")
+        {
+
+        }
+
+        public DDLColumn(string desc, string name, string type, int length) : this(desc, name, type, "N", "")
+        {
+            Length = length;
         }
     }
 
@@ -283,7 +304,7 @@ namespace Org.FGQ.CodeGenerate.Config
                 }
                 table.Columns.ForEach(x =>
                 {
-                    x.SqlType = GetSqlDBType(x.TypeName, this.MyDBType);
+                    x.SqlType = GetSqlDBType(x.TypeName, this.MyDBType, x.Length);
                     x.NameSql = DDLUtil.InferColName(x.Name, this.UnifyName, this.DBColSeparator);
 
 
@@ -305,9 +326,12 @@ namespace Org.FGQ.CodeGenerate.Config
 
         }
 
-        private string GetSqlDBType(string type, DBType myDBType)
+        private string GetSqlDBType(string type, DBType myDBType, int? length)
         {
             string longstr = null;
+
+            int stringLength = length.HasValue ? length.Value : 100;
+
             if (type.Contains("("))
             {
 
@@ -324,9 +348,11 @@ namespace Org.FGQ.CodeGenerate.Config
             {
                 case DBType.Oracle:
 
-                    if (type.ToLower().Contains("varchar"))
+                    if (type.ToLower().Contains("varchar")
+                        || type.ToLower().Contains("string")
+                        )
                     {
-                        return "varchar2(" + int.Parse(longstr ?? "10") + " CHAR)";
+                        return "varchar2(" + int.Parse(longstr ?? stringLength.ToString()) + " CHAR)";
                     }
                     if (type.ToLower().Contains("bigint"))
                     {
@@ -347,12 +373,14 @@ namespace Org.FGQ.CodeGenerate.Config
                         return "varchar2(2000 CHAR)";
                     }
 
-                    return type;
+                    throw new ArgumentException(type, nameof(type));
+
                 case DBType.MySql:
 
-                    if (type.ToLower().Contains("varchar"))
+                    if (type.ToLower().Contains("varchar")
+                        || type.ToLower().Contains("string"))
                     {
-                        return "varchar(" + int.Parse(longstr ?? "10") + ")";
+                        return "varchar(" + int.Parse(longstr ?? stringLength.ToString()) + ")";
                     }
                     if (type.ToLower().Contains("bigint")
                         || type.ToLower().Contains("big int")
@@ -362,7 +390,6 @@ namespace Org.FGQ.CodeGenerate.Config
                     }
                     if (type.ToLower().Contains("int"))
                     {
-
                         return "integer(" + (longstr ?? "10") + ")";
                     }
                     if (type.ToLower().Trim() == "text")
@@ -382,15 +409,18 @@ namespace Org.FGQ.CodeGenerate.Config
                     {
                         return "datetime";
                     }
+                    if (type.ToLower().Trim() == "decimal" || type.ToLower().Trim().Contains("金额"))
+                    {
+                        return "decimal(10,2)";
+                    }
 
 
-
-                    return type;
+                    throw new ArgumentException(type, nameof(type));
 
 
 
                 default:
-                    throw new ArgumentNullException(nameof(myDBType));
+                    throw new ArgumentException(myDBType.ToString(), nameof(myDBType));
             }
         }
 

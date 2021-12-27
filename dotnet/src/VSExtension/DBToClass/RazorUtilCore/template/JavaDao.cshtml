@@ -46,7 +46,7 @@ public interface @Model.DaoName {
 }
 
 @foreach(var field in @Model.JavaClass.ParentKeyFields ){
-@:    List<@Model.VoClassName> queryBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name);
+@:    List<@Model.VoClassName> queryBy@(@field.GetPropertyName())(@field.FiledTypeStr @field.Name);
 @:
 }
 @:    Integer queryCountByParaMap(Map paraMap);
@@ -64,7 +64,7 @@ public interface @Model.DaoName {
 @:
 	}
 @foreach(var field in @Model.JavaClass.ParentKeyFields ){
-@:    int deleteBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name);
+@:    int deleteBy@(@field.GetPropertyName())(@field.FiledTypeStr @field.Name);
 @:
 }
 @:    int insert(@Model.JavaClass.ClassName record);

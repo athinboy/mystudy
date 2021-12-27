@@ -24,7 +24,7 @@ foreach(var field in @Model.ClasssFields ){
         if (@Model.JavaClass.HasPrimaryKeyField)
         {
 @:
-@:    <select id="selectByPrimaryKey" resultType="@Model.VoFullName" parameterType="@CodeUtil.GetJavaMapPrimaryKeyParaType(@Model.JavaClass)">
+@:    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="@CodeUtil.GetJavaMapPrimaryKeyParaType(@Model.JavaClass)">
 @:        select
 @:        <include refid="Base_Column_List"/>
 @:        from @Model.DBTableName t1
@@ -47,7 +47,7 @@ foreach(var field in @Model.ClasssFields ){
         if (@Model.JavaClass.HasUniqueKeyField)
         {
 @:
-@:    <select id="selectByUniqueKey" resultType="@Model.VoFullName" parameterType="@CodeUtil.GetJavaMapUniqueKeyParaType(@Model.JavaClass)">
+@:    <select id="selectByUniqueKey" resultMap="BaseResultMap" parameterType="@CodeUtil.GetJavaMapUniqueKeyParaType(@Model.JavaClass)">
 @:        select
 @:        <include refid="Base_Column_List"/>
 @:        from @Model.DBTableName t1
@@ -68,7 +68,7 @@ foreach(var field in @Model.ClasssFields ){
         }
 @:
 if(@Model.JavaClass.HasNoKeyLongIDField){
-@:    <select id="selectByID" resultType="@Model.VoFullName" parameterType="long">
+@:    <select id="selectByID" resultMap="BaseResultMap" parameterType="long">
 @:        select
 @:        <include refid="Base_Column_List"/>
 @:        from @Model.DBTableName t1
@@ -93,7 +93,7 @@ for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){
 @:		<include refid="Page_Query_Where" />
 @:    </select> 
 @:
-@:    <select id="queryByParaMap" parameterType="java.util.Map" resultType="@Model.VoFullName">
+@:    <select id="queryByParaMap" parameterType="java.util.Map" resultMap="BaseResultMap">
 @:		SELECT <include refid="Base_Column_List"/>
 @:		from @Model.DBTableName t1
 @:		<include refid="Page_Query_Where" />
@@ -109,7 +109,7 @@ for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){
 @:    </select>
 @:
 @:    
-@:    <select id="queryByParaBean" parameterType="java.util.Map" resultType="@Model.VoFullName">
+@:    <select id="queryByParaBean" parameterType="java.util.Map" resultMap="BaseResultMap">
 @:		SELECT <include refid="Base_Column_List"/>
 @:		from @Model.DBTableName t1
 @:		<include refid="Page_Query_Where" />
@@ -119,7 +119,7 @@ for (var i = 0; i < @Model.JavaClass.Fields.Count; i++){
 @:    </select>
 @:
 @foreach(var field in @Model.JavaClass.ParentKeyFields ){
-@:    <select id="queryBy@(@field.Name.ToUpper())" parameterType="@field.FiledTypeStr" resultType="@Model.VoFullName">
+@:    <select id="queryBy@(@field.GetPropertyName())" parameterType="@field.FiledTypeStr" resultMap="BaseResultMap">
 @:		SELECT <include refid="Base_Column_List"/>
 @:		from @Model.DBTableName t1
 @:		where t1.@field.DBColName=#{@field.Name,jdbcType=@field.JDBCType}
@@ -143,7 +143,7 @@ for (var i = 0; i < @Model.JavaClass.PrimaryKeyFields.Count; i++){
 @:
         }
 @foreach(var field in @Model.JavaClass.ParentKeyFields ){
-@:    <delete id="deleteBy@(@field.Name.ToUpper())" parameterType="@field.FiledTypeStr">
+@:    <delete id="deleteBy@(@field.GetPropertyName())" parameterType="@field.FiledTypeStr">
 @:		 delete from @Model.DBTableName
 @:		 where @field.DBColName=#{@field.Name,jdbcType=@field.JDBCType}
 @:    </delete>

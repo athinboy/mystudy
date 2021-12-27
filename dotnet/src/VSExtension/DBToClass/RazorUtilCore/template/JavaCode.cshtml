@@ -52,8 +52,8 @@ public class @Model.ModelName {
 </text>
 }
 @foreach(var field in @Model.JavaClass.ParentKeyFields ){
-@:    public List<@Model.DaoConfig.VoClassName> queryBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name) {
-@:        return readDao.queryBy@(@field.Name.ToUpper())(@field.Name);
+@:    public List<@Model.DaoConfig.VoClassName> queryBy@(@field.GetPropertyName())(@field.FiledTypeStr @field.Name) {
+@:        return readDao.queryBy@(@field.GetPropertyName())(@field.Name);
 @:    }
 @:
 }
@@ -82,8 +82,8 @@ public class @Model.ModelName {
 </text>
     }
 @foreach(var field in @Model.JavaClass.ParentKeyFields ){
-@:    public int deleteBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name) {
-@:        return writeDao.deleteBy@(@field.Name.ToUpper())(@field.Name);
+@:    public int deleteBy@(@field.GetPropertyName())(@field.FiledTypeStr @field.Name) {
+@:        return writeDao.deleteBy@(@field.GetPropertyName())(@field.Name);
 @:    }
 @:
 }    
@@ -136,7 +136,7 @@ public interface @Model.ServiceName {
     @Model.DaoConfig.VoClassName selectByUniqueKey(@CodeUtil.GetJavaUniqueKeyFieldsParaStr(@Model.JavaClass,true,false));
 
 @foreach(var field in @Model.JavaClass.ParentKeyFields ){
-@:    List<@Model.DaoConfig.VoClassName> queryBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name);
+@:    List<@Model.DaoConfig.VoClassName> queryBy@(@field.GetPropertyName())(@field.FiledTypeStr @field.Name);
 @:
 }
 @if(@Model.JavaClass.HasNoKeyLongIDField){
@@ -154,7 +154,7 @@ public interface @Model.ServiceName {
     int deleteByPrimaryKey(@CodeUtil.GetJavaPrimaryKeyFieldsParaStr(@Model.JavaClass,true,false));
 
 @foreach(var field in @Model.JavaClass.ParentKeyFields ){
-@:  int deleteBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name);
+@:  int deleteBy@(@field.GetPropertyName())(@field.FiledTypeStr @field.Name);
 @:
 }
     int insert(@Model.JavaClass.ClassName record);
@@ -240,8 +240,8 @@ public class @Model.ServiceImplName implements @Model.ServiceName  {
 @foreach(var field in @Model.JavaClass.ParentKeyFields ){
 @:    
 @:    @@Override
-@:    public List<@Model.DaoConfig.VoClassName> queryBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name) {
-@:        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.queryBy@(@field.Name.ToUpper())(@field.Name);
+@:    public List<@Model.DaoConfig.VoClassName> queryBy@(@field.GetPropertyName())(@field.FiledTypeStr @field.Name) {
+@:        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.queryBy@(@field.GetPropertyName())(@field.Name);
 @:    }
 @:
 }
@@ -289,8 +289,8 @@ public class @Model.ServiceImplName implements @Model.ServiceName  {
 
 @foreach(var field in @Model.JavaClass.ParentKeyFields ){
 @:    @@Override
-@:    public int deleteBy@(@field.Name.ToUpper())(@field.FiledTypeStr @field.Name) {
-@:        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.deleteBy@(@field.Name.ToUpper())(@field.Name);
+@:    public int deleteBy@(@field.GetPropertyName())(@field.FiledTypeStr @field.Name) {
+@:        return @CodeUtil.GetJavaParaName(@Model.ModelName)@.deleteBy@(@field.GetPropertyName())(@field.Name);
 @:    }
 @:
 }

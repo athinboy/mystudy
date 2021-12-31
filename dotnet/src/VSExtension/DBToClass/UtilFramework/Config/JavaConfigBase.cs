@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Config
 {
-    public class JavaConfigBase
+    public class JavaConfigBase : BaseConfig
     {
 
         public string PackageName { get; set; }

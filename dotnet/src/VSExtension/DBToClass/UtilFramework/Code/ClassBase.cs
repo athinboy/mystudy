@@ -111,6 +111,10 @@ namespace Org.FGQ.CodeGenerate.Util.Code
             }
         }
 
+        protected static string GetFildTypeStr(FieldBase filedBase)
+        {
+            throw new NotImplementedException();
+        }
 
 
     }

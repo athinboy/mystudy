@@ -97,7 +97,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
         }
 
-        private static string GetFildTypeStr(FieldBase filedBase)
+        protected static new string GetFildTypeStr(FieldBase filedBase)
         {
             switch (filedBase.FieldType)
             {

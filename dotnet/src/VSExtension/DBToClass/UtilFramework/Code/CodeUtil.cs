@@ -11,11 +11,11 @@ namespace Org.FGQ.CodeGenerate.Util.Code
     public class CodeUtil
     {
 
-        public static string GetClassName(JavaBeanConfig javaBeanConfig, string tableName)
+        public static string GetClassName(BaseConfig baseConfig, string tableName)
         {
-            if (javaBeanConfig.OmmitPrefix != null || tableName.StartsWith(javaBeanConfig.OmmitPrefix.Trim()))
+            if (baseConfig.OmmitPrefix != null || tableName.StartsWith(baseConfig.OmmitPrefix.Trim()))
             {
-                tableName = tableName.Substring(javaBeanConfig.OmmitPrefix.Trim().Length);
+                tableName = tableName.Substring(baseConfig.OmmitPrefix.Trim().Length);
             }
             while (tableName.StartsWith("_"))
             {
@@ -81,18 +81,24 @@ namespace Org.FGQ.CodeGenerate.Util.Code
         public static string PrepareJavaRoot(JavaDaoConfig javaDaoConfig)
         {
 
-            return PrepareJavaRoot(javaDaoConfig.JavaDiretory, javaDaoConfig.DaoPackageName);
+            return PrepareCodeRoot(javaDaoConfig.JavaDiretory, javaDaoConfig.DaoPackageName);
         }
 
-        public static string PrepareJavaRoot(string javaDiretory, string packageName)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="codeDiretory"></param>
+        /// <param name="pathName">小数点.分隔的路径</param>
+        /// <returns></returns>
+        public static string PrepareCodeRoot(string codeDiretory, string pathName)
         {
-            string rootDir = javaDiretory + (javaDiretory.EndsWith(Path.DirectorySeparatorChar.ToString()) ? "" : Path.DirectorySeparatorChar.ToString());
+            string rootDir = codeDiretory + (codeDiretory.EndsWith(Path.DirectorySeparatorChar.ToString()) ? "" : Path.DirectorySeparatorChar.ToString());
 
             if (false == Directory.Exists(rootDir))
             {
                 Directory.CreateDirectory(rootDir);
             }
-            string[] packageParts = packageName.Split('.');
+            string[] packageParts = pathName.Split('.');
             for (int i = 0; i < packageParts.Length; i++)
             {
                 string packagePart = packageParts[i];

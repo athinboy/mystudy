@@ -49,6 +49,9 @@
     <Compile Include="Code\CSharpClass.cs" />
     <Compile Include="Code\FieldBase.cs" />
     <Compile Include="Code\JavaClass.cs" />
+    <Compile Include="Config\BaseConfig.cs" />
+    <Compile Include="Config\BeanConfig.cs" />
+    <Compile Include="Config\CSharpBeanConfig.cs" />
     <Compile Include="Config\DDLConfig.cs" />
     <Compile Include="Config\GenerateConfig.cs" />
     <Compile Include="Config\JavaBeanConfig.cs" />

@@ -28,7 +28,7 @@ namespace Org.FGQ.CodeGenerate.Config
         public string Desc { get; set; } = string.Empty;
 
         public List<DDLColumn> Columns { get; set; } = new List<DDLColumn>();
-        public JavaClass CreatedJavaBean { get; set; } = null;
+        public ClassBase CreatedClass { get; set; } = null;
         public DDLConfig DDLConfig { get; internal set; }
 
         private DDLTable()

@@ -392,10 +392,10 @@ namespace Org.FGQ.CodeGenerateTest
 
             ddlConfig.Tables.ForEach(t =>
             {
-                javaDaoConfig.JavaClass = t.CreatedJavaBean;
+                javaDaoConfig.JavaClass = t.CreatedClass;
                 javaGenerator.GenerateDao(javaDaoConfig, javaMapperConfig);
 
-                javaGenerator.GenerateCode(javaCodeConfig, t.CreatedJavaBean);
+                javaGenerator.GenerateCode(javaCodeConfig, t.CreatedClass);
 
             });
 

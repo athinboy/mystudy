@@ -1,4 +1,5 @@
-﻿using Org.FGQ.CodeGenerate.Config;
+﻿using Org.FGQ.CodeGenerate.Code;
+using Org.FGQ.CodeGenerate.Config;
 using Org.FGQ.CodeGenerate.RazorTag;
 using Org.FGQ.CodeGenerate.Util.Code;
 using RazorEngineCore;
@@ -13,10 +14,10 @@ using System.Threading.Tasks;
 namespace Org.FGQ.CodeGenerate
 {
 
-    public class Template
+    public class CSharpTemplate
     {
 
-        public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaClass>> beanTemplate = null;
+        public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<CSharpClass>> beanTemplate = null;
         public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaDaoConfig>> daoTemplate = null;
         public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaMapperConfig>> mapperTemplate = null;
         public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaCodeConfig>> modelTemplate = null;
@@ -24,9 +25,9 @@ namespace Org.FGQ.CodeGenerate
         public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaCodeConfig>> serviceImplTemplate = null;
         public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaCodeConfig>> controllerTemplate = null;
 
-        internal Template Clone()
+        internal CSharpTemplate Clone()
         {
-            Template newTemplate = new Template();
+            CSharpTemplate newTemplate = new CSharpTemplate();
             newTemplate.beanTemplate = beanTemplate;
             newTemplate.daoTemplate = daoTemplate;
             newTemplate.mapperTemplate = mapperTemplate;
@@ -40,7 +41,7 @@ namespace Org.FGQ.CodeGenerate
     }
 
 
-    public class JavaGenerator
+    public class CSharpGenerator
     {
 
         private static string GetTemplateFilePath(string filename)
@@ -62,17 +63,17 @@ namespace Org.FGQ.CodeGenerate
 
 
         private IRazorEngine razorEngine = null;
-        private IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaClass>> beanTemplate = null;
+        private IRazorEngineCompiledTemplate<RazorEngineTemplateBase<CSharpClass>> beanTemplate = null;
         private IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaDaoConfig>> daoTemplate = null;
         private IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaMapperConfig>> mapperTemplate = null;
 
         private IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaCodeConfig>> codeTemplate = null;
 
 
-        private Template defaultTemplate = null;
-        private ConcurrentDictionary<JavaCodeConfig, Template> templateCache = new ConcurrentDictionary<JavaCodeConfig, Template>();
+        private CSharpTemplate defaultTemplate = null;
+        private ConcurrentDictionary<JavaCodeConfig, CSharpTemplate> templateCache = new ConcurrentDictionary<JavaCodeConfig, CSharpTemplate>();
 
-        private Template GetTemplate(JavaCodeConfig javaCodeConfig)
+        private CSharpTemplate GetTemplate(JavaCodeConfig javaCodeConfig)
         {
             initDefault();
 
@@ -83,7 +84,7 @@ namespace Org.FGQ.CodeGenerate
                 return defaultTemplate;
             }
 
-            Template template = templateCache[javaCodeConfig];
+            CSharpTemplate template = templateCache[javaCodeConfig];
             if (template != null) return template;
 
             template = defaultTemplate.Clone();
@@ -148,7 +149,7 @@ namespace Org.FGQ.CodeGenerate
             {
                 if (defaultTemplate == null)
                 {
-                    defaultTemplate = new Template();
+                    defaultTemplate = new CSharpTemplate();
                 }
                 else
                 {
@@ -157,7 +158,7 @@ namespace Org.FGQ.CodeGenerate
 
                 razorEngine = new RazorEngine();
 
-                beanTemplate = GetTemplate<JavaClass>(javaBeanTemplateRelatePath);
+                beanTemplate = GetTemplate<CSharpClass>(javaBeanTemplateRelatePath);
                 daoTemplate = GetTemplate<JavaDaoConfig>(javaDaoTemplateRelatePath);
                 mapperTemplate = GetTemplate<JavaMapperConfig>(javaMapperTemplateRelatePath);
 
@@ -177,29 +178,27 @@ namespace Org.FGQ.CodeGenerate
         }
 
 
-        public void GenerateBean(JavaBeanConfig javaBeanConfig)
+        public void GenerateBean(CSharpBeanConfig beanConfig)
         {
 
             initDefault();
 
             //IRazorEngineCompiledTemplate template = razorEngine.Compile(templateContent);// "Hello @Model.Name");
 
-            javaBeanConfig.DDLConfig.Prepare();
+            beanConfig.DDLConfig.Prepare();
 
 
 
-            string beanRootDir = CodeUtil.PrepareCodeRoot(javaBeanConfig.JavaDiretory, javaBeanConfig.PackageName);
-            string voRootDir = CodeUtil.PrepareCodeRoot(javaBeanConfig.JavaDiretory, javaBeanConfig.VOPackageName);
-
-
+            string beanRootDir = CodeUtil.PrepareCodeRoot(beanConfig.CodeDiretory, beanConfig.NamespacePath);
+        
             string result = String.Empty;
-            javaBeanConfig.DDLConfig.Tables.ForEach(t =>
+            beanConfig.DDLConfig.Tables.ForEach(t =>
             {
                 result = beanTemplate.Run(instance =>
                 {
-                    javaBeanConfig.Table = t;
-                    t.CreatedClass = JavaClass.CreateBoClass(t, javaBeanConfig, true);
-                    instance.Model = t.CreatedClass as JavaClass;
+                    beanConfig.Table = t;
+                    t.CreatedClass = CSharpClass.CreateEntityClass(t, beanConfig, true);
+                    instance.Model = t.CreatedClass as CSharpClass;
                 });
                 Console.WriteLine(result);
                 string filePath = beanRootDir + Path.DirectorySeparatorChar + t.CreatedClass.ClassName + ".java";
@@ -211,17 +210,17 @@ namespace Org.FGQ.CodeGenerate
                 File.WriteAllText(filePath, result, new UTF8Encoding(false));
 
 
-                result = beanTemplate.Run(instance =>
-                {
-                    instance.Model = (t.CreatedClass as JavaClass).JavaVoClass;
-                });
-                Console.WriteLine(result);
-                filePath = voRootDir + Path.DirectorySeparatorChar + (t.CreatedClass as JavaClass).JavaVoClass.ClassName + ".java";
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-                File.WriteAllText(filePath, result, new UTF8Encoding(false));
+                //result = beanTemplate.Run(instance =>
+                //{
+                //    instance.Model = t.CreatedClass.JavaVoClass;
+                //});
+                //Console.WriteLine(result);
+                //filePath = voRootDir + Path.DirectorySeparatorChar + t.CreatedClass.JavaVoClass.ClassName + ".java";
+                //if (File.Exists(filePath))
+                //{
+                //    File.Delete(filePath);
+                //}
+                //File.WriteAllText(filePath, result, new UTF8Encoding(false));
 
 
             });
@@ -356,7 +355,7 @@ namespace Org.FGQ.CodeGenerate
 
         public void GenerateCode(JavaCodeConfig javaCodeConfig, JavaClass createdJavaBean)
         {
-            Template template = GetTemplate(javaCodeConfig);
+            CSharpTemplate template = GetTemplate(javaCodeConfig);
             IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaCodeConfig>> codeTemplate = null;
 
             lock (this)

@@ -12,7 +12,7 @@ namespace Org.FGQ.CodeGenerate.Config
 
         public DDLConfig DDLConfig { get; set; }
 
-        public string OmmitPrefix { get; set; } = string.Empty;
+  
         public DDLTable Table { get; set; }
         public ClassBase ClassBase { get; set; }
         public string VOPackageName { get; set; }

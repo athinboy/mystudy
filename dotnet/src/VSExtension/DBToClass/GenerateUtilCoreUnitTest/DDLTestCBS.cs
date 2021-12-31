@@ -347,62 +347,62 @@ namespace Org.FGQ.CodeGenerateTest
 
 
 
-        [Test]
-        public void DDLToJavaAll()
-        {
+        //[Test]
+        //public void DDLToJavaAll()
+        //{
 
-            javaBeanConfig = new JavaBeanConfig();
-            javaBeanConfig.DDLConfig = ddlConfig;
-            javaBeanConfig.PackageName = "com.wintop.third.cbs.bean";
-            javaBeanConfig.VOPackageName = "com.wintop.third.cbs.vo";
-            javaBeanConfig.JavaDiretory = @"D:\fgq\work\code\wintop-third-eas\bean\third-cbs-bean\src\main\java";
-            javaBeanConfig.OmmitPrefix = "ODS";
+        //    javaBeanConfig = new JavaBeanConfig();
+        //    javaBeanConfig.DDLConfig = ddlConfig;
+        //    javaBeanConfig.PackageName = "com.wintop.third.cbs.bean";
+        //    javaBeanConfig.VOPackageName = "com.wintop.third.cbs.vo";
+        //    javaBeanConfig.JavaDiretory = @"D:\fgq\work\code\wintop-third-eas\bean\third-cbs-bean\src\main\java";
+        //    javaBeanConfig.OmmitPrefix = "ODS";
 
-            JavaGenerator javaGenerator = new JavaGenerator();
-            javaGenerator.GenerateBean(javaBeanConfig);
+        //    JavaGenerator javaGenerator = new JavaGenerator();
+        //    javaGenerator.GenerateBean(javaBeanConfig);
 
-            JavaDaoConfig javaDaoConfig = new JavaDaoConfig(null);
+        //    JavaDaoConfig javaDaoConfig = new JavaDaoConfig(null);
 
-            javaDaoConfig.PackageName = "com.wintop.third.cbs.mapper";
-            javaDaoConfig.JavaDiretory = @"D:\fgq\work\code\wintop-third-eas\dao\third-cbs-dao\src\main\java";
-
-
-            JavaMapperConfig javaMapperConfig = new JavaMapperConfig(javaDaoConfig);
-            javaMapperConfig.MapperDirectory = @"D:\fgq\work\code\wintop-third-eas\dao\third-cbs-dao\src\main\resources\mybatis\mapper";
-
-            JavaCodeConfig javaCodeConfig = new JavaCodeConfig(javaDaoConfig);
-
-            javaCodeConfig.ModelPackageName = "com.wintop.third.cbs.model";
-            javaCodeConfig.ModelJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-cbs-service-api\src\main\java";
-
-            javaCodeConfig.ServicePackageName = "com.wintop.third.cbs.service";
-            javaCodeConfig.ServiceJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-cbs-service-api\src\main\java";
-
-            javaCodeConfig.ServiceImplPackageName = "com.wintop.third.cbs.service.impl";
-            javaCodeConfig.ServiceImplJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-cbs-service-api\src\main\java";
-
-            javaCodeConfig.ControllerPackageName = "com.wintop.third.cbs.controller";
-            javaCodeConfig.ControllerJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-cbs-service-api\src\main\java";
-
-            javaCodeConfig.GeneralController = true;
-            javaCodeConfig.GeneralService = true;
-            javaCodeConfig.GeneralServiceImpl = true;
-            javaCodeConfig.GeneralModel = true;
+        //    javaDaoConfig.PackageName = "com.wintop.third.cbs.mapper";
+        //    javaDaoConfig.JavaDiretory = @"D:\fgq\work\code\wintop-third-eas\dao\third-cbs-dao\src\main\java";
 
 
-            ddlConfig.Tables.ForEach(t =>
-            {
-                javaDaoConfig.JavaClass = t.CreatedClass;
-                javaGenerator.GenerateDao(javaDaoConfig, javaMapperConfig);
+        //    JavaMapperConfig javaMapperConfig = new JavaMapperConfig(javaDaoConfig);
+        //    javaMapperConfig.MapperDirectory = @"D:\fgq\work\code\wintop-third-eas\dao\third-cbs-dao\src\main\resources\mybatis\mapper";
 
-                javaGenerator.GenerateCode(javaCodeConfig, t.CreatedClass);
+        //    JavaCodeConfig javaCodeConfig = new JavaCodeConfig(javaDaoConfig);
 
-            });
+        //    javaCodeConfig.ModelPackageName = "com.wintop.third.cbs.model";
+        //    javaCodeConfig.ModelJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-cbs-service-api\src\main\java";
+
+        //    javaCodeConfig.ServicePackageName = "com.wintop.third.cbs.service";
+        //    javaCodeConfig.ServiceJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-cbs-service-api\src\main\java";
+
+        //    javaCodeConfig.ServiceImplPackageName = "com.wintop.third.cbs.service.impl";
+        //    javaCodeConfig.ServiceImplJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-cbs-service-api\src\main\java";
+
+        //    javaCodeConfig.ControllerPackageName = "com.wintop.third.cbs.controller";
+        //    javaCodeConfig.ControllerJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-cbs-service-api\src\main\java";
+
+        //    javaCodeConfig.GeneralController = true;
+        //    javaCodeConfig.GeneralService = true;
+        //    javaCodeConfig.GeneralServiceImpl = true;
+        //    javaCodeConfig.GeneralModel = true;
+
+
+        //    ddlConfig.Tables.ForEach(t =>
+        //    {
+        //        javaDaoConfig.JavaClass = t.CreatedClass;
+        //        javaGenerator.GenerateDao(javaDaoConfig, javaMapperConfig);
+
+        //        javaGenerator.GenerateCode(javaCodeConfig, t.CreatedClass);
+
+        //    });
 
 
 
 
-        }
+        //}
 
 
     }

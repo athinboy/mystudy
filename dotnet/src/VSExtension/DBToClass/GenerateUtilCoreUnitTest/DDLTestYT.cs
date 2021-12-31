@@ -5,6 +5,7 @@ using NUnit;
 using static Org.FGQ.CodeGenerate.Config.DDLConfig;
 using NUnit.Framework;
 using System;
+using Org.FGQ.CodeGenerate.Util.Code;
 
 namespace Org.FGQ.CodeGenerateTest
 {
@@ -2413,10 +2414,10 @@ namespace Org.FGQ.CodeGenerateTest
 
             ddlConfig.Tables.ForEach(t =>
             {
-                javaDaoConfig.JavaClass = t.CreatedClass;
+                javaDaoConfig.JavaClass = t.CreatedClass as JavaClass;
                 javaGenerator.GenerateDao(javaDaoConfig, javaMapperConfig);
 
-                javaGenerator.GenerateCode(javaCodeConfig, t.CreatedClass);
+                javaGenerator.GenerateCode(javaCodeConfig, t.CreatedClass as JavaClass);
 
             });
 

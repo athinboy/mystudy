@@ -198,11 +198,11 @@ namespace Org.FGQ.CodeGenerate
                 result = beanTemplate.Run(instance =>
                 {
                     javaBeanConfig.Table = t;
-                    t.CreatedClass = JavaClass.CreateBoClass(t, javaBeanConfig, true);
-                    instance.Model = t.CreatedClass as JavaClass;
+                    t.RelatedClsss = JavaClass.CreateBoClass(t, javaBeanConfig, true);
+                    instance.Model = t.RelatedClsss as JavaClass;
                 });
                 Console.WriteLine(result);
-                string filePath = beanRootDir + Path.DirectorySeparatorChar + t.CreatedClass.ClassName + ".java";
+                string filePath = beanRootDir + Path.DirectorySeparatorChar + t.RelatedClsss.ClassName + ".java";
 
                 if (File.Exists(filePath))
                 {
@@ -213,10 +213,10 @@ namespace Org.FGQ.CodeGenerate
 
                 result = beanTemplate.Run(instance =>
                 {
-                    instance.Model = (t.CreatedClass as JavaClass).JavaVoClass;
+                    instance.Model = (t.RelatedClsss as JavaClass).JavaVoClass;
                 });
                 Console.WriteLine(result);
-                filePath = voRootDir + Path.DirectorySeparatorChar + (t.CreatedClass as JavaClass).JavaVoClass.ClassName + ".java";
+                filePath = voRootDir + Path.DirectorySeparatorChar + (t.RelatedClsss as JavaClass).JavaVoClass.ClassName + ".java";
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);

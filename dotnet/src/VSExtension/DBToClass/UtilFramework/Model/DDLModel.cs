@@ -28,8 +28,8 @@ namespace Org.FGQ.CodeGenerate.Config
         public string Desc { get; set; } = string.Empty;
 
         public List<DDLColumn> Columns { get; set; } = new List<DDLColumn>();
-        public ClassBase CreatedClass { get; set; } = null;
-        public DDLConfig DDLConfig { get; internal set; }
+        public ClassBase RelatedClsss { get; set; } = null;
+        public DDLModel DDLConfig { get; internal set; }
 
         private DDLTable()
         {
@@ -148,11 +148,11 @@ namespace Org.FGQ.CodeGenerate.Config
             {
                 return String.Empty;
             }
-            if (IsPrimaryKeyColumn() && this.DDLTable.DDLConfig.MyDBType == DDLConfig.DBType.MySql)
+            if (IsPrimaryKeyColumn() && this.DDLTable.DDLConfig.MyDBType == DDLModel.DBType.MySql)
             {
                 return "primary key";
             }
-            if (IsUniqueKeyColumn() && this.DDLTable.DDLConfig.MyDBType == DDLConfig.DBType.MySql)
+            if (IsUniqueKeyColumn() && this.DDLTable.DDLConfig.MyDBType == DDLModel.DBType.MySql)
             {
                 if (this.UniqueForDB)
                 {
@@ -233,7 +233,7 @@ namespace Org.FGQ.CodeGenerate.Config
     }
 
 
-    public class DDLConfig
+    public class DDLModel
     {
         private bool prepared = false;
 
@@ -426,7 +426,7 @@ namespace Org.FGQ.CodeGenerate.Config
 
         public List<DDLTable> Tables { get; set; } = new List<DDLTable>();
 
-        public DBType MyDBType { get; set; } = DDLConfig.DBType.Oracle;
+        public DBType MyDBType { get; set; } = DDLModel.DBType.Oracle;
 
         public string DBColSeparator { get; set; } = "_";
 

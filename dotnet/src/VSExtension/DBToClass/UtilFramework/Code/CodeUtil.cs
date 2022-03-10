@@ -11,7 +11,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
     public class CodeUtil
     {
 
-        public static string GetClassName(BaseConfig baseConfig, string tableName)
+        public static string GetClassName(BaseModel baseConfig, string tableName)
         {
             if (baseConfig.OmmitPrefix != null || tableName.StartsWith(baseConfig.OmmitPrefix.Trim()))
             {
@@ -49,7 +49,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
         /// <returns></returns>
         internal static string GetFieldName(DDLColumn c)
         {
-            DDLConfig ddlconfig = c.DDLTable.DDLConfig;
+            DDLModel ddlconfig = c.DDLTable.DDLConfig;
 
             if (ddlconfig.UnifyName) return c.Name;
 

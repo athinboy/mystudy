@@ -143,13 +143,13 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RunProcess.FW4.7\RunProcess.FW4.7.csproj">
+    <ProjectReference Include="..\RunProcess.FW4.7\RunProcess.FW.csproj">
       <Project>{f284ab8c-675b-463c-b46f-16a32651ee29}</Project>
-      <Name>RunProcess.FW4.7</Name>
+      <Name>RunProcess.FW</Name>
     </ProjectReference>
-    <ProjectReference Include="..\UtilFramework\Common.FW4.7.csproj">
+    <ProjectReference Include="..\UtilFramework\Common.FW.csproj">
       <Project>{8d0cc2de-7227-4640-a90c-3957696bc2a6}</Project>
-      <Name>Common.FW4.7</Name>
+      <Name>Common.FW</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -197,11 +197,11 @@ namespace Org.FGQ.CodeGenerate
                 result = beanTemplate.Run(instance =>
                 {
                     beanConfig.Table = t;
-                    t.CreatedClass = CSharpClass.CreateEntityClass(t, beanConfig, true);
-                    instance.Model = t.CreatedClass as CSharpClass;
+                    t.RelatedClsss = CSharpClass.CreateEntityClass(t, beanConfig, true);
+                    instance.Model = t.RelatedClsss as CSharpClass;
                 });
                 Console.WriteLine(result);
-                string filePath = beanRootDir + Path.DirectorySeparatorChar + t.CreatedClass.ClassName + ".java";
+                string filePath = beanRootDir + Path.DirectorySeparatorChar + t.RelatedClsss.ClassName + ".java";
 
                 if (File.Exists(filePath))
                 {

@@ -60,12 +60,13 @@
 
   <ItemGroup>
     <PackageReference Include="Mono.TextTemplating" Version="2.2.1" />
-    <PackageReference Include="NLog" Version="4.7.11" />
-    <PackageReference Include="RazorEngineCore" Version="2021.7.1" />
+    <PackageReference Include="NLog" Version="4.7.14" />
+    <PackageReference Include="RazorEngineCore" Version="2022.1.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Util.Core5.0\Common.Core5.0.csproj" />
+    <ProjectReference Include="..\Util.Core\Common.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

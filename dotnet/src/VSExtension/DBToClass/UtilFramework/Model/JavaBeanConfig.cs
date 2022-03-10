@@ -10,7 +10,7 @@ namespace Org.FGQ.CodeGenerate.Config
     public class JavaBeanConfig : JavaConfigBase
     {
 
-        public DDLConfig DDLConfig { get; set; }
+        public DDLModel DDLConfig { get; set; }
 
   
         public DDLTable Table { get; set; }

@@ -2,7 +2,7 @@
 using Org.FGQ.CodeGenerate;
 using Org.FGQ.CodeGenerate.Config;
 using NUnit;
-using static Org.FGQ.CodeGenerate.Config.DDLConfig;
+using static Org.FGQ.CodeGenerate.Config.DDLModel;
 using NUnit.Framework;
 using System;
 using Org.FGQ.CodeGenerate.Util.Code;
@@ -17,7 +17,7 @@ namespace Org.FGQ.CodeGenerateTest
     {
 
 
-        DDLConfig ddlConfig;
+        DDLModel ddlConfig;
         JavaBeanConfig javaBeanConfig;
 
 
@@ -1236,8 +1236,8 @@ namespace Org.FGQ.CodeGenerateTest
         [SetUp]
         public void Init()
         {
-            ddlConfig = new DDLConfig();
-            ddlConfig.MyDBType = DDLConfig.DBType.Oracle;
+            ddlConfig = new DDLModel();
+            ddlConfig.MyDBType = DDLModel.DBType.Oracle;
 
             //initPart();
             //initAC();
@@ -2355,7 +2355,7 @@ namespace Org.FGQ.CodeGenerateTest
             javaBeanConfig.DDLConfig = ddlConfig;
             javaBeanConfig.PackageName = "com.wintop.third.bmwspark.bean";
             javaBeanConfig.VOPackageName = "com.wintop.third.bmwspark.vo";
-            javaBeanConfig.JavaDiretory = @"D:\fgq\work\code\wintop-third-eas\bean\third-bmwspark-bean\src\main\java";
+            javaBeanConfig.JavaDiretory = @"D:\fgq\temp\codegeneratetest\bean\third-bmwspark-bean\src\main\java";
             javaBeanConfig.OmmitPrefix = "ODS";
 
             JavaGenerator toJavaBean = new JavaGenerator();
@@ -2378,7 +2378,7 @@ namespace Org.FGQ.CodeGenerateTest
             javaBeanConfig.DDLConfig = ddlConfig;
             javaBeanConfig.PackageName = "com.wintop.third.bmwspark.bean";
             javaBeanConfig.VOPackageName = "com.wintop.third.bmwspark.vo";
-            javaBeanConfig.JavaDiretory = @"D:\fgq\work\code\wintop-third-eas\bean\third-bmwspark-bean\src\main\java";
+            javaBeanConfig.JavaDiretory = @"D:\fgq\temp\codegeneratetest\bean\third-bmwspark-bean\src\main\java";
             javaBeanConfig.OmmitPrefix = "ODS";
 
             JavaGenerator javaGenerator = new JavaGenerator();
@@ -2387,25 +2387,25 @@ namespace Org.FGQ.CodeGenerateTest
             JavaDaoConfig javaDaoConfig = new JavaDaoConfig(null);
 
             javaDaoConfig.PackageName = "com.wintop.third.bmwspark.mapper";
-            javaDaoConfig.JavaDiretory = @"D:\fgq\work\code\wintop-third-eas\dao\third-bmwspark-dao\src\main\java";
+            javaDaoConfig.JavaDiretory = @"D:\fgq\temp\codegeneratetest\dao\third-bmwspark-dao\src\main\java";
 
 
             JavaMapperConfig javaMapperConfig = new JavaMapperConfig(javaDaoConfig);
-            javaMapperConfig.MapperDirectory = @"D:\fgq\work\code\wintop-third-eas\dao\third-bmwspark-dao\src\main\resources\mybatis\mapper";
+            javaMapperConfig.MapperDirectory = @"D:\fgq\temp\codegeneratetest\dao\third-bmwspark-dao\src\main\resources\mybatis\mapper";
 
             JavaCodeConfig javaCodeConfig = new JavaCodeConfig(javaDaoConfig);
 
             javaCodeConfig.ModelPackageName = "com.wintop.third.bmwspark.model";
-            javaCodeConfig.ModelJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-bmwspark-service-api\src\main\java";
+            javaCodeConfig.ModelJavaDiretory = @"D:\fgq\temp\codegeneratetest\third-bmwspark-service-api\src\main\java";
 
             javaCodeConfig.ServicePackageName = "com.wintop.third.bmwspark.service";
-            javaCodeConfig.ServiceJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-bmwspark-service-api\src\main\java";
+            javaCodeConfig.ServiceJavaDiretory = @"D:\fgq\temp\codegeneratetest\third-bmwspark-service-api\src\main\java";
 
             javaCodeConfig.ServiceImplPackageName = "com.wintop.third.bmwspark.service.impl";
-            javaCodeConfig.ServiceImplJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-bmwspark-service-api\src\main\java";
+            javaCodeConfig.ServiceImplJavaDiretory = @"D:\fgq\temp\codegeneratetest\third-bmwspark-service-api\src\main\java";
 
             javaCodeConfig.ControllerPackageName = "com.wintop.third.bmwspark.controller";
-            javaCodeConfig.ControllerJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-bmwspark-service-api\src\main\java";
+            javaCodeConfig.ControllerJavaDiretory = @"D:\fgq\temp\codegeneratetest\third-bmwspark-service-api\src\main\java";
             javaCodeConfig.ServiceCodeTemplateFile = 
                 javaCodeConfig.ServiceImplCodeTemplateFile = javaCodeConfig.ControllerCodeTemplateFile = "JavaCodeBWM.cshtml";
 
@@ -2414,10 +2414,10 @@ namespace Org.FGQ.CodeGenerateTest
 
             ddlConfig.Tables.ForEach(t =>
             {
-                javaDaoConfig.JavaClass = t.CreatedClass as JavaClass;
+                javaDaoConfig.JavaClass = t.RelatedClsss as JavaClass;
                 javaGenerator.GenerateDao(javaDaoConfig, javaMapperConfig);
 
-                javaGenerator.GenerateCode(javaCodeConfig, t.CreatedClass as JavaClass);
+                javaGenerator.GenerateCode(javaCodeConfig, t.RelatedClsss as JavaClass);
 
             });
 

@@ -51,9 +51,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UtilFramework\Common.FW4.7.csproj">
+    <ProjectReference Include="..\UtilFramework\Common.FW.csproj">
       <Project>{8d0cc2de-7227-4640-a90c-3957696bc2a6}</Project>
-      <Name>Common.FW4.7</Name>
+      <Name>Common.FW</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

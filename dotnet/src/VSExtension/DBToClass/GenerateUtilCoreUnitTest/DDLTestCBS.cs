@@ -2,7 +2,7 @@
 using Org.FGQ.CodeGenerate;
 using Org.FGQ.CodeGenerate.Config;
 using NUnit;
-using static Org.FGQ.CodeGenerate.Config.DDLConfig;
+using static Org.FGQ.CodeGenerate.Config.DDLModel;
 using NUnit.Framework;
 using System;
 
@@ -16,7 +16,7 @@ namespace Org.FGQ.CodeGenerateTest
     {
 
 
-        DDLConfig ddlConfig;
+        DDLModel ddlConfig;
         JavaBeanConfig javaBeanConfig;
 
         public void B()
@@ -291,8 +291,8 @@ namespace Org.FGQ.CodeGenerateTest
         [SetUp]
         public void Init()
         {
-            ddlConfig = new DDLConfig();
-            ddlConfig.MyDBType = DDLConfig.DBType.MySql;
+            ddlConfig = new DDLModel();
+            ddlConfig.MyDBType = DDLModel.DBType.MySql;
 
 
             DDLTable newtable;
@@ -332,7 +332,7 @@ namespace Org.FGQ.CodeGenerateTest
             javaBeanConfig.DDLConfig = ddlConfig;
             javaBeanConfig.PackageName = "com.wintop.third.cbs.bean";
             javaBeanConfig.VOPackageName = "com.wintop.third.cbs.vo";
-            javaBeanConfig.JavaDiretory = @"D:\fgq\work\code\wintop-third-eas\bean\third-cbs-bean\src\main\java";
+            javaBeanConfig.JavaDiretory = @"D:\fgq\temp\codegeneratetest\bean\third-cbs-bean\src\main\java";
             javaBeanConfig.OmmitPrefix = "ODS";
 
             JavaGenerator toJavaBean = new JavaGenerator();
@@ -355,7 +355,7 @@ namespace Org.FGQ.CodeGenerateTest
         //    javaBeanConfig.DDLConfig = ddlConfig;
         //    javaBeanConfig.PackageName = "com.wintop.third.cbs.bean";
         //    javaBeanConfig.VOPackageName = "com.wintop.third.cbs.vo";
-        //    javaBeanConfig.JavaDiretory = @"D:\fgq\work\code\wintop-third-eas\bean\third-cbs-bean\src\main\java";
+        //    javaBeanConfig.JavaDiretory = @"D:\fgq\temp\codegeneratetest\bean\third-cbs-bean\src\main\java";
         //    javaBeanConfig.OmmitPrefix = "ODS";
 
         //    JavaGenerator javaGenerator = new JavaGenerator();
@@ -364,25 +364,25 @@ namespace Org.FGQ.CodeGenerateTest
         //    JavaDaoConfig javaDaoConfig = new JavaDaoConfig(null);
 
         //    javaDaoConfig.PackageName = "com.wintop.third.cbs.mapper";
-        //    javaDaoConfig.JavaDiretory = @"D:\fgq\work\code\wintop-third-eas\dao\third-cbs-dao\src\main\java";
+        //    javaDaoConfig.JavaDiretory = @"D:\fgq\temp\codegeneratetest\dao\third-cbs-dao\src\main\java";
 
 
         //    JavaMapperConfig javaMapperConfig = new JavaMapperConfig(javaDaoConfig);
-        //    javaMapperConfig.MapperDirectory = @"D:\fgq\work\code\wintop-third-eas\dao\third-cbs-dao\src\main\resources\mybatis\mapper";
+        //    javaMapperConfig.MapperDirectory = @"D:\fgq\temp\codegeneratetest\dao\third-cbs-dao\src\main\resources\mybatis\mapper";
 
         //    JavaCodeConfig javaCodeConfig = new JavaCodeConfig(javaDaoConfig);
 
         //    javaCodeConfig.ModelPackageName = "com.wintop.third.cbs.model";
-        //    javaCodeConfig.ModelJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-cbs-service-api\src\main\java";
+        //    javaCodeConfig.ModelJavaDiretory = @"D:\fgq\temp\codegeneratetest\third-cbs-service-api\src\main\java";
 
         //    javaCodeConfig.ServicePackageName = "com.wintop.third.cbs.service";
-        //    javaCodeConfig.ServiceJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-cbs-service-api\src\main\java";
+        //    javaCodeConfig.ServiceJavaDiretory = @"D:\fgq\temp\codegeneratetest\third-cbs-service-api\src\main\java";
 
         //    javaCodeConfig.ServiceImplPackageName = "com.wintop.third.cbs.service.impl";
-        //    javaCodeConfig.ServiceImplJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-cbs-service-api\src\main\java";
+        //    javaCodeConfig.ServiceImplJavaDiretory = @"D:\fgq\temp\codegeneratetest\third-cbs-service-api\src\main\java";
 
         //    javaCodeConfig.ControllerPackageName = "com.wintop.third.cbs.controller";
-        //    javaCodeConfig.ControllerJavaDiretory = @"D:\fgq\work\code\wintop-third-eas\third-cbs-service-api\src\main\java";
+        //    javaCodeConfig.ControllerJavaDiretory = @"D:\fgq\temp\codegeneratetest\third-cbs-service-api\src\main\java";
 
         //    javaCodeConfig.GeneralController = true;
         //    javaCodeConfig.GeneralService = true;

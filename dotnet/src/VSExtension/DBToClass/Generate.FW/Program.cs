@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Org.FGQ.CodeGenerate.Config
+namespace Generate.FW
 {
-    public class BeanConfig : BaseConfig
+    internal class Program
     {
-        public DDLTable Table { get; set; }
+        static void Main(string[] args)
+        {
+        }
     }
 }

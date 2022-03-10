@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Config
 {
-    public class BaseConfig
+    public class EntityModel : BaseModel
     {
-        public string OmmitPrefix { get; set; } = string.Empty;
+        public DDLTable Table { get; set; }
     }
 }

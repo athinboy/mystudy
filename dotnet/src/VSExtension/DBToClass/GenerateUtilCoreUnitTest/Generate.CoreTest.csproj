@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RazorUtilCore\Generate.Core5.0.csproj" />
+    <ProjectReference Include="..\RazorUtilCore\Generate.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

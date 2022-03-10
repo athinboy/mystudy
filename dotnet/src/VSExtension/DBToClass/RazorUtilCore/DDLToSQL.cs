@@ -21,7 +21,7 @@ namespace Org.FGQ.CodeGenerate
 
         ConcurrentDictionary<string, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<DDLTable>>> templates =
             new ConcurrentDictionary<string, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<DDLTable>>>();
-        void init(DDLConfig.DBType myDBType)
+        void init(DDLModel.DBType myDBType)
         {
             if (razorEngines.ContainsKey(myDBType.ToString()))
             {
@@ -37,10 +37,10 @@ namespace Org.FGQ.CodeGenerate
                 string templateRelatePath = string.Empty;
                 switch (myDBType)
                 {
-                    case DDLConfig.DBType.MySql:
+                    case DDLModel.DBType.MySql:
                         templateRelatePath = templateMysqlRelatePath;
                         break;
-                    case DDLConfig.DBType.Oracle:
+                    case DDLModel.DBType.Oracle:
                         templateRelatePath = templateOracleRelatePath;
                         break;
                     default:
@@ -72,7 +72,7 @@ namespace Org.FGQ.CodeGenerate
         }
 
 
-        public void GenerateSql(DDLConfig dDLConfig, string outputpath)
+        public void GenerateSql(DDLModel dDLConfig, string outputpath)
         {
 
             init(dDLConfig.MyDBType);

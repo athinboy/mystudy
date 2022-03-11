@@ -7,6 +7,7 @@ using System.Text;
 
 namespace Org.FGQ.CodeGenerate
 {
+    [Obsolete]
     public class DDLToSQL
     {
 
@@ -52,9 +53,9 @@ namespace Org.FGQ.CodeGenerate
                 logger.Info(templatePath);
                 string templateContent = File.ReadAllText(templatePath);
                 IRazorEngine razorEngine = new RazorEngine();
-                razorEngines[myDBType.ToString()]=razorEngine;
+                razorEngines[myDBType.ToString()] = razorEngine;
 
-                IRazorEngineCompiledTemplate<RazorEngineTemplateBase<DDLTable>> template 
+                IRazorEngineCompiledTemplate<RazorEngineTemplateBase<DDLTable>> template
                     = razorEngine.Compile<RazorEngineTemplateBase<DDLTable>>(templateContent, builder =>
         {
             //builder.AddAssemblyReferenceByName("System.Security"); // by name
@@ -63,7 +64,7 @@ namespace Org.FGQ.CodeGenerate
             builder.AddAssemblyReferenceByName("System.Collections");
         });
 
-                templates[myDBType.ToString()]=template;
+                templates[myDBType.ToString()] = template;
 
 
                 //IRazorEngineCompiledTemplate template = razorEngine.Compile(templateContent);// "Hello @Model.Name");
@@ -72,7 +73,7 @@ namespace Org.FGQ.CodeGenerate
         }
 
 
-        public void GenerateSql(DDLModel dDLConfig, string outputpath)
+        internal void GenerateSql(DDLModel dDLConfig, string outputpath)
         {
 
             init(dDLConfig.MyDBType);
@@ -94,6 +95,10 @@ namespace Org.FGQ.CodeGenerate
             Console.WriteLine(result);
 
 
+
+
+
+
             if (File.Exists(outputpath))
             {
                 File.Delete(outputpath);
@@ -101,10 +106,6 @@ namespace Org.FGQ.CodeGenerate
 
 
             File.WriteAllText(outputpath, result, new UTF8Encoding(false));
-
-
-
-
         }
 
 

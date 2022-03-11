@@ -1,11 +1,12 @@
 ﻿using Org.FGQ.CodeGenerate.Model;
+using RazorEngineCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Org.FGQ.CodeGenerate.Engine
+namespace Org.FGQ.CodeGenerate.Pipe
 {
     public abstract class WorkPipeBase
     {
@@ -22,12 +23,18 @@ namespace Org.FGQ.CodeGenerate.Engine
             RazorTplFilePath = (string.IsNullOrEmpty(templatefilepath) ? null : templatefilepath) ?? throw new ArgumentNullException(nameof(templatefilepath));
         }
 
+        internal abstract void PrePareModel(Work work);
+
         public string OutputPath { get; protected set; }
 
         public string RazorTplFilePath { get; protected set; }
 
         public abstract string getRazorFilePath(Work work);
-        public abstract void Generate(Work work);
+        public abstract void Generate(Work work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<Work>> template);
+        public virtual void AddTemplateReference(IRazorEngineCompilationOptionsBuilder builder)
+        {
+            return;
+        }
     }
 
 

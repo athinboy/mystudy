@@ -5,6 +5,8 @@ using NUnit;
 using static Org.FGQ.CodeGenerate.Config.DDLModel;
 using NUnit.Framework;
 using System;
+using Org.FGQ.CodeGenerate.Engine;
+using Org.FGQ.CodeGenerate.Pipe;
 
 namespace Org.FGQ.CodeGenerateTest
 {
@@ -319,8 +321,9 @@ namespace Org.FGQ.CodeGenerateTest
         public void DDLToSQLTest()
         {
 
-            DDLToSQL toSQL = new DDLToSQL();
-            toSQL.GenerateSql(ddlConfig, @"c:\1\" + DateTime.Now.ToLongDateString() + ".txt");
+ 
+              string outputpath = @"c:\1\" + DateTime.Now.ToLongDateString() + ".txt";
+            GenerateEngine.Do(new CodeGenerate.Model.Work() { ddlModel = ddlConfig }, new SQLWorkPipe(outputpath));
         }
 
 

@@ -17,6 +17,6 @@ namespace Org.FGQ.CodeGenerate.Model
         public bool GenerateDBTableSQL { get; set; }=true;
 
         public DDLModel ddlModel { get; set; }
-
+        public DDLTable CurrentTable { get; set; }
     }
 }

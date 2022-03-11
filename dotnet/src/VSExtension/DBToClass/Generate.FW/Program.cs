@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RazorEngineCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,8 @@ namespace Generate.FW
     {
         static void Main(string[] args)
         {
+            IRazorEngineCompiledTemplate t;
+
         }
     }
 }

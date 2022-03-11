@@ -6,6 +6,8 @@ using static Org.FGQ.CodeGenerate.Config.DDLModel;
 using NUnit.Framework;
 using System;
 using Org.FGQ.CodeGenerate.Util.Code;
+using Org.FGQ.CodeGenerate.Engine;
+using Org.FGQ.CodeGenerate.Pipe;
 
 namespace Org.FGQ.CodeGenerateTest
 {
@@ -279,8 +281,6 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("仓库名称", "storage_name", "varchar(36)", "", ""));
             newtable.Columns.Add(new DDLColumn("仓库代码", "storage_code", "varchar(20)", "", ""));
             newtable.Columns.Add(new DDLColumn("总库存数量", "stock_qty", "numeric(12)", "是", ""));
-            newtable.Columns.Add(new DDLColumn("", "", "", "", ""));
-            newtable.Columns.Add(new DDLColumn("", "", "", "", ""));
             newtable.Columns.Add(new DDLColumn("可用库存数量", "available_qty", "numeric(12)", "", ""));
             newtable.Columns.Add(new DDLColumn("库位备注信息", "storage_position_remark", "varchar(300)", "", ""));
             newtable.Columns.Add(new DDLColumn("库位", "storage_position_code", "varchar(30)", "", ""));
@@ -868,8 +868,6 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("经销商名称", "company_name_cn", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("预约单号", "booking_no", "varchar(64)", "是", ""));
             newtable.Columns.Add(new DDLColumn("车牌号", "license", "varchar(64)", "", ""));
-            newtable.Columns.Add(new DDLColumn("", "", "", "", ""));
-            newtable.Columns.Add(new DDLColumn("", "", "", "", ""));
             newtable.Columns.Add(new DDLColumn("备注", "remark", "varchar(255)", "", ""));
             newtable.Columns.Add(new DDLColumn("预约日期", "booking_date", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("预约时间", "booking_time", "varchar(64)", "", ""));
@@ -1239,26 +1237,26 @@ namespace Org.FGQ.CodeGenerateTest
             ddlConfig = new DDLModel();
             ddlConfig.MyDBType = DDLModel.DBType.Oracle;
 
-            //initPart();
-            //initAC();
-            //initASF();
-            //initRS();
-            //initWS();
-            //initUC();
-            //initDMO();
+            initPart();
+            initAC();
+            initASF();
+            initRS();
+            initWS();
+            initUC();
+            initDMO();
 
 
             DDLTable newtable;
             DDLColumn column;
 
             ddlConfig.Tables.Add(newtable = new DDLTable("ODS_BMW_SPARK", "ODS_AFS_JSXL_REPORT", "26.AS103011005-同步技师效率信息-报告"));
-            newtable.Columns.Add(new DDLColumn("id", "id", "varchar(64)", "是", "")); 
+            newtable.Columns.Add(new DDLColumn("id", "id", "varchar(64)", "是", ""));
             newtable.Columns.Add(new DDLColumn("owner_name", "owner_name", "varchar(255)", "", ""));
             newtable.Columns.Add(new DDLColumn("create_time", "create_time", "varchar(100)", "", ""));
             newtable.Columns.Add(new DDLColumn("owner_code", "owner_code", "varchar(100)", "", ""));
             newtable.Columns.Add(new DDLColumn("begin", "begin", "varchar(100)", "", ""));
             newtable.Columns.Add(new DDLColumn("end", "end", "varchar(100)", "", ""));
- 
+
 
 
 
@@ -2194,7 +2192,7 @@ namespace Org.FGQ.CodeGenerateTest
             newtable.Columns.Add(new DDLColumn("经销商代码", "owner_code", "varchar(64)", "是", ""));
             newtable.Columns.Add(new DDLColumn("经销商名称", "company_name_cn", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("零售订单号", "so_no", "varchar(64)", "是", ""));
-            newtable.Columns.Add(new DDLColumn("零售订单类型", "order_type", "", "", ""));
+            newtable.Columns.Add(new DDLColumn("零售订单类型", "order_type", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("车辆用途", "vehicle_use", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("车辆当前里程", "current_mileage", "varchar(64)", "", ""));
             newtable.Columns.Add(new DDLColumn("车牌号", "license_plate_number", "varchar(64)", "", ""));
@@ -2340,8 +2338,8 @@ namespace Org.FGQ.CodeGenerateTest
         public void DDLToSQLTest()
         {
 
-            DDLToSQL toSQL = new DDLToSQL();
-            toSQL.GenerateSql(ddlConfig, @"c:\1\2.txt");
+            const string outputpath = @"c:\1\2.txt";
+            GenerateEngine.Do(new CodeGenerate.Model.Work() { ddlModel = ddlConfig }, new SQLWorkPipe(outputpath));
 
 
         }
@@ -2406,7 +2404,7 @@ namespace Org.FGQ.CodeGenerateTest
 
             javaCodeConfig.ControllerPackageName = "com.wintop.third.bmwspark.controller";
             javaCodeConfig.ControllerJavaDiretory = @"D:\fgq\temp\codegeneratetest\third-bmwspark-service-api\src\main\java";
-            javaCodeConfig.ServiceCodeTemplateFile = 
+            javaCodeConfig.ServiceCodeTemplateFile =
                 javaCodeConfig.ServiceImplCodeTemplateFile = javaCodeConfig.ControllerCodeTemplateFile = "JavaCodeBWM.cshtml";
 
 

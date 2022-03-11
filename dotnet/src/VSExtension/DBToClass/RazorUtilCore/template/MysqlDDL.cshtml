@@ -3,22 +3,23 @@
 @using System.Collections.Generic
 @using System.Collections
 @using Org.FGQ.CodeGenerate.Config
+@inherits RazorEngineCore.RazorEngineTemplateBase<Org.FGQ.CodeGenerate.Model.Work>
 /*
 Date: @DateTime.Now
 */
 
--- Start--------------------------------@Model.DBName.@Model.TableNameSQL------------------
-DROP TABLE if EXISTS @Model.DBName.@Model.TableNameSQL;
+-- Start--------------------------------@Model.CurrentTable.DBName.@Model.CurrentTable.TableNameSQL------------------
+DROP TABLE if EXISTS @Model.CurrentTable.DBName.@Model.CurrentTable.TableNameSQL;
 
 
-CREATE TABLE @Model.DBName.@Model.TableNameSQL ( 
+CREATE TABLE @Model.CurrentTable.DBName.@Model.CurrentTable.TableNameSQL ( 
 
-@for (var i = 0; i < @Model.Columns.Count; i++){
-  var col2=@Model.Columns[i];
+@for (var i = 0; i < @Model.CurrentTable.Columns.Count; i++){
+  var col2=@Model.CurrentTable.Columns[i];
   if( col2.Validate() ){
 
      WriteColumnDefine(col2);
-     if(i!=@Model.Columns.Count-1){
+     if(i!=@Model.CurrentTable.Columns.Count-1){
        @(",\r\n");
      }else{
      @("\r\n");
@@ -29,10 +30,10 @@ CREATE TABLE @Model.DBName.@Model.TableNameSQL (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8mb4
 COLLATE=utf8mb4_general_ci
-COMMENT='@Model.Desc'
+COMMENT='@Model.CurrentTable.Desc'
 ;
 
--- End--------------------------------@Model.DBName.@Model.TableNameSQL------------------ 
+-- End--------------------------------@Model.CurrentTable.DBName.@Model.CurrentTable.TableNameSQL------------------ 
 
 @{
   void WriteColumnDefine(DDLColumn col)

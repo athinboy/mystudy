@@ -260,6 +260,16 @@ namespace Org.FGQ.CodeGenerate.Config
 
                 table.Columns.ForEach(x => { x.DDLTable = table; });
 
+                for (int i = 0; i < table.Columns.Count; i++)
+                {
+                    if (table.Columns[i].Validate() == false)
+                    {
+                        throw new Exception(String.Format("表：{0} 存在无效列", table.TableName));
+                    }
+                }
+
+
+
                 if (table.Columns.FindAll(x => x.Validate()).ConvertAll<string>(x => x.Name).Distinct<string>().Count<string>()
                     != table.Columns.FindAll(x => x.Validate()).Count)
                 {
@@ -273,6 +283,8 @@ namespace Org.FGQ.CodeGenerate.Config
                                 throw new Exception(String.Format("表：{0}存在重复列{1}", table.TableName, table.Columns[i].Name));
                             }
                         }
+                       
+
                     }
 
 
@@ -364,6 +376,17 @@ namespace Org.FGQ.CodeGenerate.Config
                     {
                         return "number(20,0)";
                     }
+
+                    if (type.ToLower().Contains("decimal"))
+                    {
+                        return "number(20,2)";
+                    }
+                    if (type.ToLower().Contains("numeric"))
+                    {
+                        return "number(20,2)";
+                    }
+
+
                     if (type.ToLower().Contains("int"))
                     {
                         return "number(" + (longstr ?? "10") + ")";

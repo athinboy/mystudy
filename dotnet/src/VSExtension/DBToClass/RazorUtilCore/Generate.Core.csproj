@@ -65,7 +65,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Util.Core5.0\Common.Core5.0.csproj" />
     <ProjectReference Include="..\Util.Core\Common.Core.csproj" />
   </ItemGroup>
 

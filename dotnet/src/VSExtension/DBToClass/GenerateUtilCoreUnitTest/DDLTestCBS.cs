@@ -7,6 +7,7 @@ using NUnit.Framework;
 using System;
 using Org.FGQ.CodeGenerate.Engine;
 using Org.FGQ.CodeGenerate.Pipe;
+using Org.FGQ.CodeGenerate.Util.Code;
 
 namespace Org.FGQ.CodeGenerateTest
 {
@@ -338,8 +339,10 @@ namespace Org.FGQ.CodeGenerateTest
             javaBeanConfig.JavaDiretory = @"D:\fgq\temp\codegeneratetest\bean\third-cbs-bean\src\main\java";
             javaBeanConfig.OmmitPrefix = "ODS";
 
-            JavaGenerator toJavaBean = new JavaGenerator();
-            toJavaBean.GenerateBean(javaBeanConfig);
+            //JavaGenerator toJavaBean = new JavaGenerator();
+            //toJavaBean.GenerateBean(javaBeanConfig);
+
+            GenerateEngine.Do<JavaWorkModel, JavaClass>(new JavaWorkModel() { BeanConfig = javaBeanConfig }, new JavaBeanPipe());
 
         }
 

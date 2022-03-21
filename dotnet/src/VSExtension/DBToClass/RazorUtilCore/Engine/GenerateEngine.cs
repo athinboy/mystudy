@@ -13,11 +13,11 @@ namespace Org.FGQ.CodeGenerate.Engine
 {
     public class GenerateEngine
     {
-        private static ConcurrentDictionary<string, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<Work>>> templates =
-                    new ConcurrentDictionary<string, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<Work>>>();
+        private static ConcurrentDictionary<string, Object> templates =
+                    new ConcurrentDictionary<string, Object>();
 
 
-        public static void Do(Work work, WorkPipeBase pipe)
+        public static void Do<W,T>(W work, WorkPipeBase<W,T> pipe) where W : Work
         {
 
             pipe.PrePareModel(work);
@@ -27,7 +27,7 @@ namespace Org.FGQ.CodeGenerate.Engine
 
               
 
-            IRazorEngineCompiledTemplate<RazorEngineTemplateBase<Work>> template = null;
+            IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> template = null;
 
             if (false == templates.ContainsKey(razorTplPath))
             {
@@ -39,7 +39,7 @@ namespace Org.FGQ.CodeGenerate.Engine
                         string templateContent = File.ReadAllText(razorTplPath);
                         IRazorEngine razorEngine = new RazorEngine();
                         template
-                           = razorEngine.Compile<RazorEngineTemplateBase<Work>>(templateContent, builder =>
+                           = razorEngine.Compile<RazorEngineTemplateBase<T>>(templateContent, builder =>
                            {
                            //builder.AddAssemblyReferenceByName("System.Security"); // by name
                            //builder.AddAssemblyReference(typeof(System.IO.File)); // by type
@@ -50,11 +50,11 @@ namespace Org.FGQ.CodeGenerate.Engine
 
                            });
 
-                        templates[razorTplPath] = template;
+                        templates[razorTplPath] =  template;
                     }
                     else
                     {
-                        template = templates[razorTplPath];
+                        template = (IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>>)templates[razorTplPath];
                     }
 
                   

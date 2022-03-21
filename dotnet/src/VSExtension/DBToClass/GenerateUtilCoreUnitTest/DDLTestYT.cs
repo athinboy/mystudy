@@ -8,6 +8,7 @@ using System;
 using Org.FGQ.CodeGenerate.Util.Code;
 using Org.FGQ.CodeGenerate.Engine;
 using Org.FGQ.CodeGenerate.Pipe;
+using Org.FGQ.CodeGenerate.Model;
 
 namespace Org.FGQ.CodeGenerateTest
 {
@@ -2339,7 +2340,7 @@ namespace Org.FGQ.CodeGenerateTest
         {
 
             const string outputpath = @"c:\1\2.txt";
-            GenerateEngine.Do(new CodeGenerate.Model.Work() { ddlModel = ddlConfig }, new SQLWorkPipe(outputpath));
+            GenerateEngine.Do<Work, Work>(new Work() { ddlModel = ddlConfig }, new SQLWorkPipe(outputpath));
 
 
         }
@@ -2349,6 +2350,7 @@ namespace Org.FGQ.CodeGenerateTest
         public void DDLToJavaBeanTest()
         {
 
+
             javaBeanConfig = new JavaBeanConfig();
             javaBeanConfig.DDLConfig = ddlConfig;
             javaBeanConfig.PackageName = "com.wintop.third.bmwspark.bean";
@@ -2356,13 +2358,13 @@ namespace Org.FGQ.CodeGenerateTest
             javaBeanConfig.JavaDiretory = @"D:\fgq\temp\codegeneratetest\bean\third-bmwspark-bean\src\main\java";
             javaBeanConfig.OmmitPrefix = "ODS";
 
-            JavaGenerator toJavaBean = new JavaGenerator();
-            toJavaBean.GenerateBean(javaBeanConfig);
+            //JavaGenerator toJavaBean = new JavaGenerator();
+            //toJavaBean.GenerateBean(javaBeanConfig);
+
+            GenerateEngine.Do<JavaWorkModel, JavaClass>(new JavaWorkModel() { BeanConfig = javaBeanConfig }, new JavaBeanPipe());
+
 
         }
-
-
-
 
 
 
@@ -2379,8 +2381,10 @@ namespace Org.FGQ.CodeGenerateTest
             javaBeanConfig.JavaDiretory = @"D:\fgq\temp\codegeneratetest\bean\third-bmwspark-bean\src\main\java";
             javaBeanConfig.OmmitPrefix = "ODS";
 
-            JavaGenerator javaGenerator = new JavaGenerator();
-            javaGenerator.GenerateBean(javaBeanConfig);
+            JavaGenerator javaGenerator = new JavaGenerator ();
+            //javaGenerator.GenerateBean(javaBeanConfig);
+
+            GenerateEngine.Do<JavaWorkModel, JavaClass>(new JavaWorkModel() { BeanConfig = javaBeanConfig }, new JavaBeanPipe());
 
             JavaDaoConfig javaDaoConfig = new JavaDaoConfig(null);
 

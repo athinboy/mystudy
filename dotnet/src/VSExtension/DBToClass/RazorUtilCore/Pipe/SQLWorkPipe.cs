@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
-    public class SQLWorkPipe : WorkPipeBase
+    public class SQLWorkPipe: WorkPipeBase<Work, Work> 
     {
 
         private static string templateOracleRelatePath = System.IO.Path.DirectorySeparatorChar + "template" + System.IO.Path.DirectorySeparatorChar + "OracleDDL.cshtml";

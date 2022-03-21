@@ -7,6 +7,7 @@ using NUnit.Framework;
 using System;
 using Org.FGQ.CodeGenerate.Engine;
 using Org.FGQ.CodeGenerate.Pipe;
+using Org.FGQ.CodeGenerate.Model;
 
 namespace Org.FGQ.CodeGenerateTest
 {
@@ -50,7 +51,7 @@ namespace Org.FGQ.CodeGenerateTest
         {             
 
             const string outputpath = @"c:\1\2.txt";
-            GenerateEngine.Do(new CodeGenerate.Model.Work() { ddlModel = ddlModel }, new SQLWorkPipe(outputpath));             
+            GenerateEngine.Do<Work,Work>(new CodeGenerate.Model.Work() { ddlModel = ddlModel }, new SQLWorkPipe(outputpath));             
 
 
         }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
-    public class DefaultPipe : WorkPipeBase
+    public class DefaultPipe : WorkPipeBase<Work, Work>
     {
 
         public DefaultPipe(string templatefilepath, string outputPath) : base(templatefilepath, outputPath)

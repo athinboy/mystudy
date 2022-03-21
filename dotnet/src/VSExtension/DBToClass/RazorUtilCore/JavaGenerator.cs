@@ -43,9 +43,9 @@ namespace Org.FGQ.CodeGenerate
     public class JavaGenerator
     {
 
-        private static string GetTemplateFilePath(string filename)
+        public static string GetTemplateFilePath(string filename)
         {
-            return Path.DirectorySeparatorChar + "template" + Path.DirectorySeparatorChar + filename;
+            return Environment.CurrentDirectory + Path.DirectorySeparatorChar + "template" + Path.DirectorySeparatorChar + filename;
         }
 
 
@@ -177,7 +177,7 @@ namespace Org.FGQ.CodeGenerate
         }
 
 
-        public void GenerateBean(JavaBeanConfig javaBeanConfig)
+        private  void GenerateBean(JavaBeanConfig javaBeanConfig)
         {
 
             initDefault();

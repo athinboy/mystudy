@@ -9,7 +9,7 @@ namespace Org.FGQ.CodeGenerate.Config
 {
     public class JavaConfigBase : BaseModel
     {
-
+        
         public string PackageName { get; set; }
         public string JavaDiretory { get; set; }  
         public JavaClass JavaClass { get; set; }

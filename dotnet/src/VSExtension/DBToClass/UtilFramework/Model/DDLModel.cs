@@ -258,7 +258,6 @@ namespace Org.FGQ.CodeGenerate.Config
             {
                 table.DDLConfig = this;
 
-                table.Columns.ForEach(x => { x.DDLTable = table; });
 
                 for (int i = 0; i < table.Columns.Count; i++)
                 {
@@ -328,7 +327,12 @@ namespace Org.FGQ.CodeGenerate.Config
                             throw new Exception(String.Format("列名称：{0} {1}过长", table.TableName, x.NameSql));
                         }
                     }
+
+                    x.DDLTable = table;
                 });
+
+             
+
             }
             this.prepared = true;
 

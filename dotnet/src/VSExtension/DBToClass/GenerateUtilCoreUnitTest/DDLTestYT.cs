@@ -2381,7 +2381,7 @@ namespace Org.FGQ.CodeGenerateTest
             javaBeanConfig.JavaDiretory = @"D:\fgq\temp\codegeneratetest\bean\third-bmwspark-bean\src\main\java";
             javaBeanConfig.OmmitPrefix = "ODS";
 
-            JavaGenerator javaGenerator = new JavaGenerator ();
+            JavaGenerator javaGenerator = new JavaGenerator();
             //javaGenerator.GenerateBean(javaBeanConfig);
 
             GenerateEngine.Do<JavaWorkModel, JavaClass>(new JavaWorkModel() { BeanConfig = javaBeanConfig }, new JavaBeanPipe());
@@ -2412,15 +2412,20 @@ namespace Org.FGQ.CodeGenerateTest
                 javaCodeConfig.ServiceImplCodeTemplateFile = javaCodeConfig.ControllerCodeTemplateFile = "JavaCodeBWM.cshtml";
 
 
-
-
             ddlConfig.Tables.ForEach(t =>
             {
                 javaDaoConfig.JavaClass = t.RelatedClsss as JavaClass;
                 javaGenerator.GenerateDao(javaDaoConfig, javaMapperConfig);
-
                 javaGenerator.GenerateCode(javaCodeConfig, t.RelatedClsss as JavaClass);
 
+            });
+
+            GenerateEngine.Do(new JavaWorkModel()
+            {
+                BeanConfig = javaBeanConfig,
+                Pipes = {
+                    new JavaBeanPipe()
+                }
             });
 
 

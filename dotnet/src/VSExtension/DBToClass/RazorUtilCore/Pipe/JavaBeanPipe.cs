@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
-    public class JavaBeanPipe : WorkPipeBase<JavaWorkModel, JavaClass>
+    public class JavaBeanPipe : WorkPipeBaseT<JavaWorkModel, JavaClass>
     {
 
 

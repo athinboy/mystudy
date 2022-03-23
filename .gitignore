@@ -11,3 +11,4 @@ bin/
 obj/
 .vs/
 .config/
+/dotnet/src/VSExtension/DBToClass/packages

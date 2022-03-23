@@ -8,20 +8,18 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
-    internal class SimplePipe<T> : WorkPipeBaseT<Work, T>
+    public class SimpleInstancePipe<T> : WorkPipeBaseT<Work, T>
     {
 
         public T MyT { get; set; }
 
 
-
-
-        public SimplePipe(T t, string templatefilepath, string outputPath) : base(templatefilepath, outputPath)
+        public SimpleInstancePipe(T t, string templatefilepath, string outputPath) : base(templatefilepath, outputPath)
         {
             MyT = t;
         }
 
-        public override void Generate(Work work, RazorEngineCore.IRazorEngineCompiledTemplate<RazorEngineCore.RazorEngineTemplateBase<T>> template)
+        public override void Generate(Work work, RazorEngineCore.IRazorEngineCompiledTemplate<RazorEngineCore.RazorEngineTemplateBase<T>> template, T t)
         {
 
             IRazorEngine razorEngine = new RazorEngine();
@@ -39,8 +37,6 @@ namespace Org.FGQ.CodeGenerate.Pipe
                   //builder.AddAssemblyReference(typeof(System.IO.File)); // by type
                   //builder.AddAssemblyReference(Assembly.Load("source")); // by reference
                   builder.AddAssemblyReferenceByName("System.Collections");
-
-
               });
             throw new NotImplementedException();
         }
@@ -50,11 +46,14 @@ namespace Org.FGQ.CodeGenerate.Pipe
             throw new NotImplementedException();
         }
 
-        internal override void PrePareModel(Work work)
+        public override void PrePareModel(Work work, PipeBase pipe)
         {
             throw new NotImplementedException();
         }
 
-       
+        public override IEnumerable<object> GetModels(Work work, PipeBase pipe)
+        {
+            yield return MyT;
+        }
     }
 }

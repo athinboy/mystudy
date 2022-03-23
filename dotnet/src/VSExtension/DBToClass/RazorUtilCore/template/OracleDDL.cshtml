@@ -3,32 +3,32 @@
 @using System.Collections.Generic
 @using System.Collections
 @using Org.FGQ.CodeGenerate.Config
-@inherits RazorEngineCore.RazorEngineTemplateBase<Org.FGQ.CodeGenerate.Model.Work>
+@inherits RazorEngineCore.RazorEngineTemplateBase<Org.FGQ.CodeGenerate.Config.DDLTable>
 
 /*
 Date: @DateTime.Now
 */
 
--- Start--------------------------------@Model.CurrentTable.DBName"."@Model.CurrentTable.TableNameSQL------------------
+-- Start--------------------------------@Model.DBName"."@Model.TableNameSQL------------------
 declare tablecount number;   --声明变量存储要查询的表是否存在
 
 begin
-select count(1) into tablecount  from user_tables t where t.table_name = upper('@Model.CurrentTable.TableNameSQL'); --从系统表中查询当表是否存在
+select count(1) into tablecount  from user_tables t where t.table_name = upper('@Model.TableNameSQL'); --从系统表中查询当表是否存在
      if tablecount  = 1 then 
-         execute immediate 'DROP TABLE "@Model.CurrentTable.DBName"."@Model.CurrentTable.TableNameSQL"';
+         execute immediate 'DROP TABLE "@Model.DBName"."@Model.TableNameSQL"';
      end if;
 
 end;
 /
 
-CREATE TABLE "@Model.CurrentTable.DBName"."@Model.CurrentTable.TableNameSQL" ( 
+CREATE TABLE "@Model.DBName"."@Model.TableNameSQL" ( 
 
-@for (var i = 0; i < @Model.CurrentTable.Columns.Count; i++){
-  var col2=@Model.CurrentTable.Columns[i];
+@for (var i = 0; i < @Model.Columns.Count; i++){
+  var col2=@Model.Columns[i];
   if( col2.Validate() ){
 
      WriteColumnDefine(col2);
-     if(i!=@Model.CurrentTable.Columns.Count-1){
+     if(i!=@Model.Columns.Count-1){
        @(",\r\n");
      }else{
      @("\r\n");
@@ -37,26 +37,26 @@ CREATE TABLE "@Model.CurrentTable.DBName"."@Model.CurrentTable.TableNameSQL" (
 } 
 );
 
-COMMENT ON TABLE "@Model.CurrentTable.DBName"."@Model.CurrentTable.TableNameSQL" IS '@Model.CurrentTable.Desc';
+COMMENT ON TABLE "@Model.DBName"."@Model.TableNameSQL" IS '@Model.Desc';
 
-@for (var i = 0; i < @Model.CurrentTable.Columns.Count; i++){
-  var col2=@Model.CurrentTable.Columns[i];
+@for (var i = 0; i < @Model.Columns.Count; i++){
+  var col2=@Model.Columns[i];
   if( col2.Validate() ){
-@:COMMENT ON COLUMN "@Model.CurrentTable.DBName"."@Model.CurrentTable.TableNameSQL"."@col2.NameSql" IS '@col2.CommentStr()'; 
+@:COMMENT ON COLUMN "@Model.DBName"."@Model.TableNameSQL"."@col2.NameSql" IS '@col2.CommentStr()'; 
   } 
 }
 
 @{
-var keys=@Model.CurrentTable.getPrimaryKeyNames();
+var keys=@Model.getPrimaryKeyNames();
 if(keys.Count>0){
- @("ALTER TABLE \""+@Model.CurrentTable.DBName+"\".\""+@Model.CurrentTable.TableNameSQL+"\" ADD PRIMARY KEY (")
+ @("ALTER TABLE \""+@Model.DBName+"\".\""+@Model.TableNameSQL+"\" ADD PRIMARY KEY (")
  for(var i=0;i<keys.Count;i++){
    @("\""+ @keys[i]+"\"" + (i<keys.Count-1?",":"") )
  } @:);
 }
 }
 
--- End--------------------------------@Model.CurrentTable.DBName"."@Model.CurrentTable.TableNameSQL------------------ 
+-- End--------------------------------@Model.DBName"."@Model.TableNameSQL------------------ 
 @{
   void WriteColumnDefine(DDLColumn col)
   {    

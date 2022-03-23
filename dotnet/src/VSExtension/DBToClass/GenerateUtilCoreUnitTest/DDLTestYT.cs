@@ -9,6 +9,7 @@ using Org.FGQ.CodeGenerate.Util.Code;
 using Org.FGQ.CodeGenerate.Engine;
 using Org.FGQ.CodeGenerate.Pipe;
 using Org.FGQ.CodeGenerate.Model;
+using System.Collections.Generic;
 
 namespace Org.FGQ.CodeGenerateTest
 {
@@ -2340,7 +2341,7 @@ namespace Org.FGQ.CodeGenerateTest
         {
 
             const string outputpath = @"c:\1\2.txt";
-            GenerateEngine.Do<Work, Work>(new Work() { ddlModel = ddlConfig }, new SQLWorkPipe(outputpath));
+            GenerateEngine.Do<Work, DDLTable>(new Work() { ddlModel = ddlConfig }, new SQLWorkPipe(outputpath));
 
 
         }
@@ -2422,11 +2423,31 @@ namespace Org.FGQ.CodeGenerateTest
 
             GenerateEngine.Do(new JavaWorkModel()
             {
+                PrepareAction = (w) => {
+                    (w as JavaWorkModel).ddlModel.Prepare();
+                },
                 BeanConfig = javaBeanConfig,
+                ddlModel = ddlConfig,
+                CodeConfig = javaCodeConfig,
+                MapperConfig = javaMapperConfig,    
                 Pipes = {
-                    new JavaBeanPipe()
+                    new SQLWorkPipe(@"D:\fgq\temp\codegeneratetest\third-bmwspark-service-api\sql.txt"),
+                    new JavaBeanPipe(),
+                    new DefaultPipe<JavaMapperConfig>(){
+                        PrepareVarAction=(w,p)=>{                        
+                            p.RazorTplFilePath=  JavaGenerator.GetTemplateFilePath("JavaMapper.cshtml");                              
+                        },
+                        GetModelsAction=(w,p)=>{
+                           List<JavaClass> models=new List<JavaClass>();
+                            (w as JavaWorkModel).ddlModel.Tables.ForEach((t)=>{
+                                models.Add(t.RelatedClsss as JavaClass);
+                            });
+                            return models;
+
+                        }
+                    }
                 }
-            });
+            }); ;
 
 
 

@@ -82,9 +82,14 @@ namespace Org.FGQ.CodeGenerate
             {
                 return defaultTemplate;
             }
+            Template template;
+            if (templateCache.ContainsKey(javaCodeConfig))
+            {
+                template = templateCache[javaCodeConfig];
+                if (template != null) return template;
+            }
 
-            Template template = templateCache[javaCodeConfig];
-            if (template != null) return template;
+
 
             template = defaultTemplate.Clone();
 
@@ -101,8 +106,7 @@ namespace Org.FGQ.CodeGenerate
             {
                 template.controllerTemplate = GetTemplate<JavaCodeConfig>(GetTemplateFilePath(javaCodeConfig.ControllerCodeTemplateFile));
             }
-
-
+            templateCache[javaCodeConfig]=template;
             return template;
 
 
@@ -112,7 +116,7 @@ namespace Org.FGQ.CodeGenerate
         {
             razorEngine = new RazorEngine();
 
-            string templatePath = Environment.CurrentDirectory + filepath;
+            string templatePath = filepath;
             string templateContent = File.ReadAllText(templatePath);
 
             IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> razorTemplate =
@@ -177,7 +181,7 @@ namespace Org.FGQ.CodeGenerate
         }
 
 
-        private  void GenerateBean(JavaBeanConfig javaBeanConfig)
+        private void GenerateBean(JavaBeanConfig javaBeanConfig)
         {
 
             initDefault();

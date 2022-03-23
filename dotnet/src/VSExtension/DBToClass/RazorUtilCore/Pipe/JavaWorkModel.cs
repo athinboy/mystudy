@@ -15,6 +15,9 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         public JavaBeanConfig BeanConfig { get; set; }
 
+        public JavaCodeConfig CodeConfig { get; set; }
+
+        public JavaMapperConfig MapperConfig { get; set; }
 
 
     }

@@ -18,10 +18,17 @@ namespace Org.FGQ.CodeGenerate.Model
         public bool GenerateDBTableSQL { get; set; } = true;
 
         public DDLModel ddlModel { get; set; }
-        public DDLTable CurrentTable { get; set; }
+
         public List<PipeBase> Pipes { get; set; } = null;
 
+        public WorkAction PrepareAction { get; set; } = null;
 
-
+        internal void Prepare()
+        {
+            if (PrepareAction != null)
+            {
+                PrepareAction(this);
+            }
+        }
     }
 }

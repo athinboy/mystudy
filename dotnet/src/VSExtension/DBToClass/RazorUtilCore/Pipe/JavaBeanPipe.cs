@@ -17,7 +17,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
 
 
-        public override void Generate(JavaWorkModel work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaClass>> template)
+        public override void Generate(JavaWorkModel work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaClass>> template, JavaClass t)
         {
 
             JavaBeanConfig javaBeanConfig = work.BeanConfig;
@@ -25,52 +25,55 @@ namespace Org.FGQ.CodeGenerate.Pipe
             string beanRootDir = CodeUtil.PrepareCodeRoot(javaBeanConfig.JavaDiretory, javaBeanConfig.PackageName);
             string voRootDir = CodeUtil.PrepareCodeRoot(javaBeanConfig.JavaDiretory, javaBeanConfig.VOPackageName);
 
+            JavaClass javaClass = t as JavaClass;
 
             string result = String.Empty;
-            javaBeanConfig.DDLConfig.Tables.ForEach(t =>
+            string filePath;
+            if (javaClass.JavaBoClass == null)
             {
                 result = template.Run(instance =>
                 {
-                    javaBeanConfig.Table = t;
-                    t.RelatedClsss = JavaClass.CreateBoClass(t, javaBeanConfig, true);
-                    instance.Model = t.RelatedClsss as JavaClass;
+                    instance.Model = javaClass;
                 });
                 Console.WriteLine(result);
-                string filePath = beanRootDir + Path.DirectorySeparatorChar + t.RelatedClsss.ClassName + ".java";
+                filePath = beanRootDir + Path.DirectorySeparatorChar + javaClass.ClassName + ".java";
 
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
                 }
                 File.WriteAllText(filePath, result, new UTF8Encoding(false));
+            }
 
+            if (javaClass.JavaVoClass == null)
+            {
 
                 result = template.Run(instance =>
                 {
-                    instance.Model = (t.RelatedClsss as JavaClass).JavaVoClass;
+                    instance.Model = javaClass;
                 });
                 Console.WriteLine(result);
-                filePath = voRootDir + Path.DirectorySeparatorChar + (t.RelatedClsss as JavaClass).JavaVoClass.ClassName + ".java";
+                filePath = voRootDir + Path.DirectorySeparatorChar + javaClass.ClassName + ".java";
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
                 }
                 File.WriteAllText(filePath, result, new UTF8Encoding(false));
 
+            }
 
-            });
 
 
         }
 
-        public override string getRazorFilePath(JavaWorkModel work)
+        public override string getRazorFilePath(Work work)
         {
             return JavaGenerator.GetTemplateFilePath("JavaBean.cshtml");
         }
 
-        internal override void PrePareModel(JavaWorkModel work)
+        public override void PrePareModel(Work work, PipeBase pipe)
         {
-            work.BeanConfig.DDLConfig.Prepare();
+            (work as JavaWorkModel).BeanConfig.DDLConfig.Prepare();
         }
 
         public override void AddTemplateReference(IRazorEngineCompilationOptionsBuilder builder)
@@ -83,5 +86,24 @@ namespace Org.FGQ.CodeGenerate.Pipe
             builder.AddAssemblyReference(typeof(ReverseStrTagHelper)); // by type
         }
 
+        public override IEnumerable<object> GetModels(Work work, PipeBase pipe)
+        {
+            JavaBeanConfig javaBeanConfig = (work as JavaWorkModel).BeanConfig;
+
+            List<ClassBase> models = new List<ClassBase>();
+
+            javaBeanConfig.DDLConfig.Tables.ForEach(t =>
+            {
+                javaBeanConfig.Table = t;
+                t.RelatedClsss = JavaClass.CreateBoClass(t, javaBeanConfig, true);
+                models.Add(t.RelatedClsss as JavaClass);
+                models.Add((t.RelatedClsss as JavaClass).JavaVoClass);
+
+            });
+
+            return models;
+
+
+        }
     }
 }

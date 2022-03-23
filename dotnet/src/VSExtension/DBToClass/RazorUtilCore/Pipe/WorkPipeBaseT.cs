@@ -21,15 +21,41 @@ namespace Org.FGQ.CodeGenerate.Pipe
             RazorTplFilePath = (string.IsNullOrEmpty(templatefilepath) ? null : templatefilepath) ?? throw new ArgumentNullException(nameof(templatefilepath));
         }
 
-        internal abstract void PrePareModel(W work);
 
 
-        public abstract string getRazorFilePath(W work);
-        public abstract void Generate(W work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> template);
+        //public abstract void Generate(W work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> template);
 
-         
+        public abstract void Generate(W work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> template, T t);
 
+        public override void Generate(Work work, object template, object t)
+        {
+            Generate(work, (IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>>)template, (T)t);
+        }
+
+        internal override object PrepareTemplate(IRazorEngine razorEngine, string templateContent)
+        {
+
+
+            IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> template = razorEngine.Compile<RazorEngineTemplateBase<T>>(templateContent, builder =>
+      {
+          //builder.AddAssemblyReferenceByName("System.Security"); // by name
+          //builder.AddAssemblyReference(typeof(System.IO.File)); // by type
+          //builder.AddAssemblyReference(Assembly.Load("source")); // by reference
+          //builder.AddAssemblyReferenceByName("System.Collections");
+          this.AddTemplateReference(builder);
+
+
+      });
+            return template;
+
+
+
+        }
+
+  
     }
+
+
 
 
 }

@@ -51,7 +51,7 @@ namespace Org.FGQ.CodeGenerateTest
         {             
 
             const string outputpath = @"c:\1\2.txt";
-            GenerateEngine.Do<Work,Work>(new CodeGenerate.Model.Work() { ddlModel = ddlModel }, new SQLWorkPipe(outputpath));             
+            GenerateEngine.Do<Work,DDLTable>(new CodeGenerate.Model.Work() { ddlModel = ddlModel }, new SQLWorkPipe(outputpath));             
 
 
         }

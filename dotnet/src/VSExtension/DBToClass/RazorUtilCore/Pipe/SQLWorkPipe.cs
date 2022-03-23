@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
-    public class SQLWorkPipe: WorkPipeBaseT<Work, Work> 
+    public class SQLWorkPipe : WorkPipeBaseT<Work, DDLTable>
     {
 
         private static string templateOracleRelatePath = System.IO.Path.DirectorySeparatorChar + "template" + System.IO.Path.DirectorySeparatorChar + "OracleDDL.cshtml";
@@ -22,30 +22,22 @@ namespace Org.FGQ.CodeGenerate.Pipe
             OutputPath = (string.IsNullOrEmpty(outputPath) ? null : outputPath) ?? throw new ArgumentNullException(nameof(outputPath));
         }
 
+        public override IEnumerable<object> GetModels(Work work, PipeBase pipe)
+        {
+            return work.ddlModel.Tables;
+        }
 
-        public override void Generate(Work work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<Work>> template)
+        public override void Generate(Work work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<DDLTable>> template, DDLTable table)
         {
             string result = "";
-            work.ddlModel.Tables.ForEach(t =>
-            {
 
-                work.CurrentTable = t;
+            result += template.Run(x =>
+               {
+                   x.Model = table;
 
-                result += template.Run(x =>
-                   {
-                       x.Model = work;
+               });
 
-                   });
-
-            });
-
-            if (File.Exists(OutputPath))
-            {
-                File.Delete(OutputPath);
-            }
-
-            File.WriteAllText(OutputPath, result, new UTF8Encoding(false));
-
+            File.AppendAllText(OutputPath, result, new UTF8Encoding(false));
 
         }
 
@@ -70,9 +62,17 @@ namespace Org.FGQ.CodeGenerate.Pipe
             return templatePath;
         }
 
-        internal override void PrePareModel(Work work)
+        public override void PrePareModel(Work work, PipeBase pipe)
         {
             work.ddlModel.Prepare();
+        }
+
+        public override void PrepareVar(Work work, PipeBase pipe)
+        {
+            if (File.Exists(OutputPath))
+            {
+                File.Delete(OutputPath);
+            }
         }
     }
 }

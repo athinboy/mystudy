@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
-    public class DefaultPipe : WorkPipeBaseT<Work, Work>
+    public class DefaultPipe<T> : WorkPipeBaseT<Work, T>
     {
 
         public DefaultPipe(string templatefilepath, string outputPath) : base(templatefilepath, outputPath)
@@ -16,9 +16,12 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         }
 
-        public override void Generate(Work work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<Work>> template)
+        public DefaultPipe() : base("", "")
         {
+        }
 
+        public override void Generate(Work work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> template, T w)
+        {
 
         }
 
@@ -27,9 +30,16 @@ namespace Org.FGQ.CodeGenerate.Pipe
             return RazorTplFilePath;
         }
 
-        internal override void PrePareModel(Work work)
+        public override void PrePareModel(Work work, PipeBase pipe)
         {
-            throw new NotImplementedException();
+            if (PrepareModelAction != null)
+            {
+                PrepareModelAction(work, pipe);
+            }
+        }
+
+        public override void PrepareVar(Work work, PipeBase pipe)
+        {
         }
     }
 }

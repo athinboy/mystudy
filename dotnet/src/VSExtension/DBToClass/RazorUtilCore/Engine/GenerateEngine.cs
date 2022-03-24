@@ -52,12 +52,16 @@ namespace Org.FGQ.CodeGenerate.Engine
                             template = templates[razorTplPath];
                         }
 
-
-
-
                     }
                 }
-
+                else
+                {
+                    template = templates[razorTplPath];
+                }
+                if (template == null)
+                {
+                    throw new CodeGenerateException("template == null");
+                }
 
                 lock (template)
                 {

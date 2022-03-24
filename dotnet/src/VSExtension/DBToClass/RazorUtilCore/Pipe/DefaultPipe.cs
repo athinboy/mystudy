@@ -38,6 +38,10 @@ namespace Org.FGQ.CodeGenerate.Pipe
             });
 
             FileUtil.PrepareDirectory(OutputPath);
+            if (File.Exists(OutputPath))
+            {
+                File.Delete(OutputPath);
+            }
             File.AppendAllText(OutputPath, result, new UTF8Encoding(false));
         }
 

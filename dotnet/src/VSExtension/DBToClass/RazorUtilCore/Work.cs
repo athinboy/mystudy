@@ -19,7 +19,7 @@ namespace Org.FGQ.CodeGenerate.Model
 
         public DDLModel ddlModel { get; set; }
 
-        public List<PipeBase> Pipes { get; set; } = null;
+        public List<PipeBase> Pipes { get; set; } = new List<PipeBase>();
 
         public WorkAction PrepareAction { get; set; } = null;
 

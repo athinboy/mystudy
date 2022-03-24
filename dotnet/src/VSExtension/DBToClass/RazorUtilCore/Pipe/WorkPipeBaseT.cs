@@ -25,11 +25,11 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         //public abstract void Generate(W work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> template);
 
-        public abstract void Generate(W work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> template, T t);
+        public abstract void GenerateT(W work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> template, T t);
 
         public override void Generate(Work work, object template, object t)
         {
-            Generate(work, (IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>>)template, (T)t);
+            GenerateT((W)work, (IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>>)template, (T)t);
         }
 
         internal override object PrepareTemplate(IRazorEngine razorEngine, string templateContent)

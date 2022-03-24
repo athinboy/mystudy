@@ -15,8 +15,6 @@ namespace Org.FGQ.CodeGenerate.Config
             this.JavaClass = javaClass;
         }
 
-
-
         public JavaMapperConfig(JavaDaoConfig javaDaoConfig):base(javaDaoConfig.JavaClass)
         {
             this.DaoConfig = javaDaoConfig;

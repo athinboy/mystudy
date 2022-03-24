@@ -16,8 +16,12 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
     public delegate void CodeGenerateAction3(Work work, PipeBase pipe);
 
+    public delegate void CodeGenerateAction4(Work work, PipeBase pipe,Object model);
+
     public delegate void AddTemplateReferenceAction(IRazorEngineCompilationOptionsBuilder builder);
 
     public delegate void WorkAction(Work work);
+
+
 
 }

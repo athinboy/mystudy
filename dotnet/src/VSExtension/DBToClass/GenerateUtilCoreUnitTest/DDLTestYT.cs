@@ -10,6 +10,7 @@ using Org.FGQ.CodeGenerate.Engine;
 using Org.FGQ.CodeGenerate.Pipe;
 using Org.FGQ.CodeGenerate.Model;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Org.FGQ.CodeGenerateTest
 {
@@ -2379,18 +2380,18 @@ namespace Org.FGQ.CodeGenerateTest
             javaBeanConfig.DDLConfig = ddlConfig;
             javaBeanConfig.PackageName = "com.wintop.third.bmwspark.bean";
             javaBeanConfig.VOPackageName = "com.wintop.third.bmwspark.vo";
-            javaBeanConfig.JavaDiretory = @"D:\fgq\temp\codegeneratetest\bean\third-bmwspark-bean\src\main\java";
+            javaBeanConfig.JavaDiretory = @"D:\fgq\temp\codegeneratetest\third-bmwspark-bean\src\main\java";
             javaBeanConfig.OmmitPrefix = "ODS";
 
             JavaGenerator javaGenerator = new JavaGenerator();
             //javaGenerator.GenerateBean(javaBeanConfig);
 
-            GenerateEngine.Do<JavaWorkModel, JavaClass>(new JavaWorkModel() { BeanConfig = javaBeanConfig }, new JavaBeanPipe());
+            //GenerateEngine.Do<JavaWorkModel, JavaClass>(new JavaWorkModel() { BeanConfig = javaBeanConfig }, new JavaBeanPipe());
 
             JavaDaoConfig javaDaoConfig = new JavaDaoConfig(null);
 
             javaDaoConfig.PackageName = "com.wintop.third.bmwspark.mapper";
-            javaDaoConfig.JavaDiretory = @"D:\fgq\temp\codegeneratetest\dao\third-bmwspark-dao\src\main\java";
+            javaDaoConfig.JavaDiretory = @"D:\fgq\temp\codegeneratetest\third-bmwspark-dao\src\main\java";
 
 
             JavaMapperConfig javaMapperConfig = new JavaMapperConfig(javaDaoConfig);
@@ -2409,45 +2410,80 @@ namespace Org.FGQ.CodeGenerateTest
 
             javaCodeConfig.ControllerPackageName = "com.wintop.third.bmwspark.controller";
             javaCodeConfig.ControllerJavaDiretory = @"D:\fgq\temp\codegeneratetest\third-bmwspark-service-api\src\main\java";
-            javaCodeConfig.ServiceCodeTemplateFile =
-                javaCodeConfig.ServiceImplCodeTemplateFile = javaCodeConfig.ControllerCodeTemplateFile = "JavaCodeBWM.cshtml";
+            //            javaCodeConfig.ServiceCodeTemplateFile =javaCodeConfig.ServiceImplCodeTemplateFile = javaCodeConfig.ControllerCodeTemplateFile = "JavaCodeBWM.cshtml";
 
 
-            ddlConfig.Tables.ForEach(t =>
+            if ("".Length == 20)
             {
-                javaDaoConfig.JavaClass = t.RelatedClsss as JavaClass;
-                javaGenerator.GenerateDao(javaDaoConfig, javaMapperConfig);
-                javaGenerator.GenerateCode(javaCodeConfig, t.RelatedClsss as JavaClass);
 
-            });
+                ddlConfig.Tables.ForEach(t =>
+                {
+                    javaDaoConfig.JavaClass = t.RelatedClsss as JavaClass;
+                    javaGenerator.GenerateDao(javaDaoConfig, javaMapperConfig);
+                    javaGenerator.GenerateCode(javaCodeConfig, t.RelatedClsss as JavaClass);
+
+                });
+            }
 
             GenerateEngine.Do(new JavaWorkModel()
             {
-                PrepareAction = (w) => {
+                PrepareAction = (w) =>
+                {
                     (w as JavaWorkModel).ddlModel.Prepare();
                 },
                 BeanConfig = javaBeanConfig,
                 ddlModel = ddlConfig,
                 CodeConfig = javaCodeConfig,
-                MapperConfig = javaMapperConfig,    
+                MapperConfig = javaMapperConfig,
+                DaoConfig = javaDaoConfig,
                 Pipes = {
                     new SQLWorkPipe(@"D:\fgq\temp\codegeneratetest\third-bmwspark-service-api\sql.txt"),
                     new JavaBeanPipe(),
-                    new DefaultPipe<JavaMapperConfig>(){
-                        PrepareVarAction=(w,p)=>{                        
-                            p.RazorTplFilePath=  JavaGenerator.GetTemplateFilePath("JavaMapper.cshtml");                              
+                    new DefaultPipe<JavaDaoConfig>(){
+                        PrepareVarAction=(w,p)=>{
+                            p.RazorTplFilePath=  JavaGenerator.GetTemplateFilePath("JavaDao.cshtml");
+                        },
+                        BeforeEachModelAction=(w,p,m)=>{
+                            (m as JavaDaoConfig).PackageName=(w as JavaWorkModel).DaoConfig.PackageName;
+                            JavaDaoConfig daoconfig=(w as JavaWorkModel).DaoConfig;
+                            string rootDir = CodeUtil.PrepareJavaRoot(daoconfig.JavaDiretory,(m as JavaDaoConfig).DaoPackageName);
+                            string filePath = rootDir + Path.DirectorySeparatorChar + (m as JavaDaoConfig).DaoName + ".java";
+                            p.OutputPath=filePath;
                         },
                         GetModelsAction=(w,p)=>{
-                           List<JavaClass> models=new List<JavaClass>();
+                           List<JavaDaoConfig> models=new List<JavaDaoConfig>();
                             (w as JavaWorkModel).ddlModel.Tables.ForEach((t)=>{
-                                models.Add(t.RelatedClsss as JavaClass);
+                                models.Add(new JavaDaoConfig(t.RelatedClsss as JavaClass){ SplitReadWrite=true, ForRead=true,ForWrite=false});
+                                models.Add(new JavaDaoConfig(t.RelatedClsss as JavaClass){ SplitReadWrite=true,ForRead=false,ForWrite=true});
+                            });
+                            return models;
+
+                        }
+                    },
+                    new DefaultPipe<JavaMapperConfig>(){
+                        PrepareVarAction=(w,p)=>{
+                            p.RazorTplFilePath=  JavaGenerator.GetTemplateFilePath("JavaMapper.cshtml");
+                        },
+                        BeforeEachModelAction=(w,p,m)=>{
+                            JavaMapperConfig mapperConfig=(w as JavaWorkModel).MapperConfig;
+                            string rootDir = mapperConfig.MapperDirectory+(mapperConfig.DaoConfig.SplitReadWrite?(mapperConfig.DaoConfig.ForRead?"\\read":"\\write"):"");
+                            string filePath = rootDir + Path.DirectorySeparatorChar + (m as JavaMapperConfig).MapperName + ".xml";
+                            p.OutputPath=filePath;
+                        },
+                        GetModelsAction=(w,p)=>{
+                           List<JavaMapperConfig> models=new List<JavaMapperConfig>();
+                            (w as JavaWorkModel).ddlModel.Tables.ForEach((t)=>{
+                                models.Add(new JavaMapperConfig(new JavaDaoConfig(t.RelatedClsss as JavaClass){ SplitReadWrite=true,ForRead=true,ForWrite=false}));
+                                models.Add(new JavaMapperConfig(new JavaDaoConfig(t.RelatedClsss as JavaClass){ SplitReadWrite=true,ForRead=false,ForWrite=true}));
                             });
                             return models;
 
                         }
                     }
                 }
-            }); ;
+            });
+            Console.WriteLine("done");
+            Assert.Pass();
 
 
 

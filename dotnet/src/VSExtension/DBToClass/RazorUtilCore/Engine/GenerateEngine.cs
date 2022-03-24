@@ -1,4 +1,5 @@
-﻿using Org.FGQ.CodeGenerate.Model;
+﻿using Org.FGQ.CodeGenerate.Exceptions;
+using Org.FGQ.CodeGenerate.Model;
 using Org.FGQ.CodeGenerate.Pipe;
 using RazorEngineCore;
 using System;
@@ -27,6 +28,10 @@ namespace Org.FGQ.CodeGenerate.Engine
                 pipe.PrepareVar(work, pipe);
 
                 string razorTplPath = pipe.getRazorFilePath(work);
+                if (string.IsNullOrEmpty(razorTplPath) || false == File.Exists(razorTplPath))
+                {
+                    throw new CodeGenerateException(string.Format("模板路径错误:{0}", razorTplPath));
+                }
 
                 object template = null;
 
@@ -61,6 +66,7 @@ namespace Org.FGQ.CodeGenerate.Engine
 
                     foreach (var model in models)
                     {
+                        pipe.BeforeEachModel(work, model);
                         pipe.Generate(work, template, model);
                     }
 
@@ -121,7 +127,8 @@ namespace Org.FGQ.CodeGenerate.Engine
                 pipe.PrepareVar(work, pipe);
                 foreach (var model in models)
                 {
-                    pipe.Generate(work, template, (T)model);
+                    pipe.BeforeEachModel(work, model);
+                    pipe.GenerateT(work, template, (T)model);
                 }
 
 

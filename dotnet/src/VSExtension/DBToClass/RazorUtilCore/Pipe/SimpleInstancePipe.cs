@@ -19,7 +19,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
             MyT = t;
         }
 
-        public override void Generate(Work work, RazorEngineCore.IRazorEngineCompiledTemplate<RazorEngineCore.RazorEngineTemplateBase<T>> template, T t)
+        public override void GenerateT(Work work, RazorEngineCore.IRazorEngineCompiledTemplate<RazorEngineCore.RazorEngineTemplateBase<T>> template, T t)
         {
 
             IRazorEngine razorEngine = new RazorEngine();

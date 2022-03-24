@@ -83,6 +83,10 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
             return PrepareCodeRoot(javaDaoConfig.JavaDiretory, javaDaoConfig.DaoPackageName);
         }
+        public static string PrepareJavaRoot(string javaDiretory, string DaoPackageName)
+        {
+            return PrepareCodeRoot(javaDiretory, DaoPackageName);
+        }
 
         /// <summary>
         /// 
@@ -177,7 +181,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
 
         public static string GetDBColNameJoinStr(JavaClass javaClass)
-        { 
+        {
             return string.Join(",", javaClass.Fields.ConvertAll<string>(x => x.DBColName));
 
         }

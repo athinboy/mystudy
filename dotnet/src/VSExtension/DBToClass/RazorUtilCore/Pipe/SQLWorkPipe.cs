@@ -1,5 +1,6 @@
 ﻿using Org.FGQ.CodeGenerate.Config;
 using Org.FGQ.CodeGenerate.Model;
+using Org.FGQ.CodeGenerate.Util;
 using RazorEngineCore;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
             return work.ddlModel.Tables;
         }
 
-        public override void Generate(Work work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<DDLTable>> template, DDLTable table)
+        public override void GenerateT(Work work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<DDLTable>> template, DDLTable table)
         {
             string result = "";
 
@@ -37,6 +38,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
                });
 
+            FileUtil.PrepareDirectory(OutputPath);
             File.AppendAllText(OutputPath, result, new UTF8Encoding(false));
 
         }
@@ -69,6 +71,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         public override void PrepareVar(Work work, PipeBase pipe)
         {
+            base.PrepareVar(work, pipe);
             if (File.Exists(OutputPath))
             {
                 File.Delete(OutputPath);

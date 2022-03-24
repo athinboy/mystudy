@@ -17,7 +17,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
 
 
-        public override void Generate(JavaWorkModel work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaClass>> template, JavaClass t)
+        public override void GenerateT(JavaWorkModel work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaClass>> template, JavaClass t)
         {
 
             JavaBeanConfig javaBeanConfig = work.BeanConfig;

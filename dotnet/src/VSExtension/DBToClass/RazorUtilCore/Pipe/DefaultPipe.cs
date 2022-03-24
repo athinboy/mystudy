@@ -1,7 +1,10 @@
-﻿using Org.FGQ.CodeGenerate.Model;
+﻿using Org.FGQ.CodeGenerate.Exceptions;
+using Org.FGQ.CodeGenerate.Model;
+using Org.FGQ.CodeGenerate.Util;
 using RazorEngineCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,13 +19,26 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         }
 
-        public DefaultPipe() : base("", "")
+        public DefaultPipe() : base()
         {
         }
 
-        public override void Generate(Work work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> template, T w)
+        public override void GenerateT(Work work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> template, T w)
         {
+            string result = "";
+            if (string.IsNullOrWhiteSpace(OutputPath))
+            {
+                throw new CodeGenerateException("OutputPath为空！");
+            }
 
+            result += template.Run(x =>
+            {
+                x.Model = w;                
+
+            });
+
+            FileUtil.PrepareDirectory(OutputPath);
+            File.AppendAllText(OutputPath, result, new UTF8Encoding(false));
         }
 
         public override string getRazorFilePath(Work work)
@@ -40,6 +56,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         public override void PrepareVar(Work work, PipeBase pipe)
         {
+            base.PrepareVar(work, pipe);
         }
     }
 }

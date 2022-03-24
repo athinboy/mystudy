@@ -12,6 +12,7 @@
     <Compile Include="..\UtilFramework\Util\**\*.cs" LinkBase="Util" />
     <Compile Include="..\UtilFramework\RazorTag\**\*.cs" LinkBase="RazorTag" />
     <Compile Include="..\UtilFramework\Engine\**\*.cs" LinkBase="Engine" />
+    <Compile Include="..\UtilFramework\Exceptions\**\*.cs" LinkBase="Exceptions" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +20,9 @@
     <PackageReference Include="NLog" Version="4.7.11" />
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.3" />
     <PackageReference Include="Microsoft.AspNetCore.Razor" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
   </ItemGroup>
 
 

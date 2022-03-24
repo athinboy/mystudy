@@ -18,7 +18,6 @@ namespace Org.FGQ.CodeGenerate.Pipe
         public JavaCodeConfig CodeConfig { get; set; }
 
         public JavaMapperConfig MapperConfig { get; set; }
-
-
+        public JavaDaoConfig DaoConfig { get; set; }
     }
 }

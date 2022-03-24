@@ -49,6 +49,7 @@
     <Compile Include="Code\CSharpClass.cs" />
     <Compile Include="Code\FieldBase.cs" />
     <Compile Include="Code\JavaClass.cs" />
+    <Compile Include="Exceptions\CodeGenerateException.cs" />
     <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\EntityModel.cs" />
     <Compile Include="Model\CSharpBeanConfig.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="DB\Table.cs" />
     <Compile Include="RazorTag\ReverseStr.cs" />
     <Compile Include="Util\DDLUtil.cs" />
+    <Compile Include="Util\FileUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

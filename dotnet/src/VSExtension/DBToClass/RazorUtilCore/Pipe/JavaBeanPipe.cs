@@ -68,7 +68,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         public override string getRazorFilePath(Work work)
         {
-            return JavaGenerator.GetTemplateFilePath("JavaBean.cshtml");
+            return GenerateUtil.GetInternalTemplateFilePath("JavaBean.cshtml");
         }
 
         public override void PrePareModel(Work work, PipeBase pipe)

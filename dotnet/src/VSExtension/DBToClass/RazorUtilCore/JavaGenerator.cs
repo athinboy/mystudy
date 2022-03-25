@@ -42,21 +42,14 @@ namespace Org.FGQ.CodeGenerate
 
     public class JavaGenerator
     {
+         
+        private static string javaBeanTemplateRelatePath = GenerateUtil.GetInternalTemplateFilePath("JavaBean.cshtml");
 
-        public static string GetTemplateFilePath(string filename)
-        {
-            return Environment.CurrentDirectory + Path.DirectorySeparatorChar + "template" + Path.DirectorySeparatorChar + filename;
-        }
+        private static string javaDaoTemplateRelatePath = GenerateUtil.GetInternalTemplateFilePath("JavaDao.cshtml");
 
+        private static string javaMapperTemplateRelatePath = GenerateUtil.GetInternalTemplateFilePath("JavaMapper.cshtml");
 
-
-        private static string javaBeanTemplateRelatePath = GetTemplateFilePath("JavaBean.cshtml");
-
-        private static string javaDaoTemplateRelatePath = GetTemplateFilePath("JavaDao.cshtml");
-
-        private static string javaMapperTemplateRelatePath = GetTemplateFilePath("JavaMapper.cshtml");
-
-        private static string javaCodeTemplateRelatePath = GetTemplateFilePath("JavaCode.cshtml");
+        private static string javaCodeTemplateRelatePath = GenerateUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
 
         static NLog.ILogger logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -96,17 +89,17 @@ namespace Org.FGQ.CodeGenerate
 
             if (false == string.IsNullOrEmpty(javaCodeConfig.ServiceCodeTemplateFile))
             {
-                template.serviceTemplate = GetTemplate<JavaCodeConfig>(GetTemplateFilePath(javaCodeConfig.ServiceCodeTemplateFile));
+                template.serviceTemplate = GetTemplate<JavaCodeConfig>(GenerateUtil.GetInternalTemplateFilePath(javaCodeConfig.ServiceCodeTemplateFile));
             }
             if (false == string.IsNullOrEmpty(javaCodeConfig.ServiceImplCodeTemplateFile))
             {
-                template.serviceImplTemplate = GetTemplate<JavaCodeConfig>(GetTemplateFilePath(javaCodeConfig.ServiceImplCodeTemplateFile));
+                template.serviceImplTemplate = GetTemplate<JavaCodeConfig>(GenerateUtil.GetInternalTemplateFilePath(javaCodeConfig.ServiceImplCodeTemplateFile));
             }
             if (false == string.IsNullOrEmpty(javaCodeConfig.ControllerCodeTemplateFile))
             {
-                template.controllerTemplate = GetTemplate<JavaCodeConfig>(GetTemplateFilePath(javaCodeConfig.ControllerCodeTemplateFile));
+                template.controllerTemplate = GetTemplate<JavaCodeConfig>(GenerateUtil.GetInternalTemplateFilePath(javaCodeConfig.ControllerCodeTemplateFile));
             }
-            templateCache[javaCodeConfig]=template;
+            templateCache[javaCodeConfig] = template;
             return template;
 
 
@@ -420,7 +413,7 @@ namespace Org.FGQ.CodeGenerate
                 {
                     javaCodeConfig.Reset();
                     javaCodeConfig.ForService = true;
-                    rootDir = CodeUtil.PrepareCodeRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ServicePackageName);
+                    rootDir = CodeUtil.PrepareCodeRoot(javaCodeConfig.ServiceJavaDiretory, javaCodeConfig.ServicePackageName);
                     fileName = javaCodeConfig.ServiceName;
                     action();
                 }
@@ -429,7 +422,7 @@ namespace Org.FGQ.CodeGenerate
                 {
                     javaCodeConfig.Reset();
                     javaCodeConfig.ForServiceImpl = true;
-                    rootDir = CodeUtil.PrepareCodeRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ServiceImplPackageName);
+                    rootDir = CodeUtil.PrepareCodeRoot(javaCodeConfig.ServiceImplJavaDiretory, javaCodeConfig.ServiceImplPackageName);
                     fileName = javaCodeConfig.ServiceImplName;
                     action();
                 }
@@ -438,7 +431,7 @@ namespace Org.FGQ.CodeGenerate
                 {
                     javaCodeConfig.Reset();
                     javaCodeConfig.ForController = true;
-                    rootDir = CodeUtil.PrepareCodeRoot(javaCodeConfig.ModelJavaDiretory, javaCodeConfig.ControllerPackageName);
+                    rootDir = CodeUtil.PrepareCodeRoot(javaCodeConfig.ControllerJavaDiretory, javaCodeConfig.ControllerPackageName);
                     fileName = javaCodeConfig.ControllerName;
                     action();
                 }

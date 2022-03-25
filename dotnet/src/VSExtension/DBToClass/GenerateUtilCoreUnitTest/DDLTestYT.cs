@@ -2433,120 +2433,166 @@ namespace Org.FGQ.CodeGenerateTest
                 },
                 BeanConfig = javaBeanConfig,
                 ddlModel = ddlConfig,
-                CodeConfig = javaCodeConfig,
-                MapperConfig = javaMapperConfig,
-                DaoConfig = javaDaoConfig,
+
+
+                MapperDirectory = @"D:\fgq\temp\codegeneratetest\third-bmwspark-dao\src\main\resources\mybatis\mapper",
+                
+                DaoPackageName = "com.wintop.third.bmwspark.mapper",
+                DaoJavaDiretory = @"D:\fgq\temp\codegeneratetest\third-bmwspark-dao\src\main\java",
+
+                ServicePackageName = "com.wintop.third.bmwspark.service",
+                ServiceJavaDiretory = @"D:\fgq\temp\codegeneratetest\third-bmwspark-service-api\src\main\java",
+
+                ModelPackageName = "com.wintop.third.bmwspark.model",
+                ModelJavaDiretory = @"D:\fgq\temp\codegeneratetest\third-bmwspark-service-api\src\main\java",
+
+                ServiceImplPackageName = "com.wintop.third.bmwspark.service.impl",
+                ServiceImplJavaDiretory = @"D:\fgq\temp\codegeneratetest\third-bmwspark-service-api\src\main\java",
+
+                ControllerPackageName = "com.wintop.third.bmwspark.controller",
+                ControllerJavaDiretory = @"D:\fgq\temp\codegeneratetest\third-bmwspark-service-api\src\main\java",
+
+
                 Pipes = {
-                    new SQLWorkPipe(@"D:\fgq\temp\codegeneratetest\third-bmwspark-service-api\sql.txt"),
+                new SQLWorkPipe(@"D:\fgq\temp\codegeneratetest\third-bmwspark-service-api\sql.txt"),
                     new JavaBeanPipe(),
-                    new DefaultPipe<JavaDaoConfig>(){
-                        PrepareVarAction=(w,p)=>{
-                            p.RazorTplFilePath=  JavaGenerator.GetTemplateFilePath("JavaDao.cshtml");
+                    new DefaultPipe<JavaDaoConfig>()
+                    {
+                        PrepareVarAction = (w, p) =>
+                        {
+                            p.RazorTplFilePath = GenerateUtil.GetInternalTemplateFilePath("JavaDao.cshtml");
                         },
-                        BeforeEachModelAction=(w,p,m)=>{
-                            (m as JavaDaoConfig).PackageName=(w as JavaWorkModel).DaoConfig.PackageName;
-                            JavaDaoConfig daoconfig=(w as JavaWorkModel).DaoConfig;
-                            string rootDir = CodeUtil.PrepareJavaRoot(daoconfig.JavaDiretory,(m as JavaDaoConfig).DaoPackageName);
+                        BeforeEachModelAction = (w, p, m) =>
+                        {
+                            (m as JavaDaoConfig).PackageName = (w as JavaWorkModel).DaoPackageName;
+                            string rootDir = CodeUtil.PrepareJavaRoot((w as JavaWorkModel).DaoJavaDiretory, (m as JavaDaoConfig).DaoPackageName);
                             string filePath = rootDir + Path.DirectorySeparatorChar + (m as JavaDaoConfig).DaoName + ".java";
-                            p.OutputPath=filePath;
+                            p.OutputPath = filePath;
                         },
-                        GetModelsAction=(w,p)=>{
-                           List<JavaDaoConfig> models=new List<JavaDaoConfig>();
-                            (w as JavaWorkModel).ddlModel.Tables.ForEach((t)=>{
-                                models.Add(new JavaDaoConfig(t.RelatedClsss as JavaClass){ SplitReadWrite=true, ForRead=true,ForWrite=false});
-                                models.Add(new JavaDaoConfig(t.RelatedClsss as JavaClass){ SplitReadWrite=true,ForRead=false,ForWrite=true});
+                        GetModelsAction = (w, p) =>
+                        {
+                            List<JavaDaoConfig> models = new List<JavaDaoConfig>();
+                            (w as JavaWorkModel).ddlModel.Tables.ForEach((t) =>
+                            {
+                                models.Add(new JavaDaoConfig(t.RelatedClsss as JavaClass) { SplitReadWrite = true, ForRead = true, ForWrite = false });
+                                models.Add(new JavaDaoConfig(t.RelatedClsss as JavaClass) { SplitReadWrite = true, ForRead = false, ForWrite = true });
                             });
                             return models;
 
                         }
                     },
-                    new DefaultPipe<JavaMapperConfig>(){
-                        PrepareVarAction=(w,p)=>{
-                            p.RazorTplFilePath=  JavaGenerator.GetTemplateFilePath("JavaMapper.cshtml");
+                    new DefaultPipe<JavaMapperConfig>()
+                    {
+                        PrepareVarAction = (w, p) =>
+                        {
+                            p.RazorTplFilePath = GenerateUtil.GetInternalTemplateFilePath("JavaMapper.cshtml");
                         },
-                        BeforeEachModelAction=(w,p,m)=>{
-                            JavaMapperConfig mapperConfig=(w as JavaWorkModel).MapperConfig;
-                            string rootDir = mapperConfig.MapperDirectory+((m as JavaMapperConfig).SplitReadWrite?((m as JavaMapperConfig).ForRead?"\\read":"\\write"):"");
+                        BeforeEachModelAction = (w, p, m) =>
+                        {
+
+                            string rootDir = (w as JavaWorkModel).MapperDirectory + ((m as JavaMapperConfig).SplitReadWrite ? ((m as JavaMapperConfig).ForRead ? "\\read" : "\\write") : "");
                             string filePath = rootDir + Path.DirectorySeparatorChar + (m as JavaMapperConfig).MapperName + ".xml";
-                            p.OutputPath=filePath;
+                            p.OutputPath = filePath;
                         },
-                        GetModelsAction=(w,p)=>{
-                           List<JavaMapperConfig> models=new List<JavaMapperConfig>();
-                            (w as JavaWorkModel).ddlModel.Tables.ForEach((t)=>{
-                                models.Add(new JavaMapperConfig(new JavaDaoConfig(t.RelatedClsss as JavaClass)){ SplitReadWrite=true,ForRead=true,ForWrite=false});
-                                models.Add(new JavaMapperConfig(new JavaDaoConfig(t.RelatedClsss as JavaClass)){ SplitReadWrite=true,ForRead=false,ForWrite=true});
+                        GetModelsAction = (w, p) =>
+                        {
+                            List<JavaMapperConfig> models = new List<JavaMapperConfig>();
+                            (w as JavaWorkModel).ddlModel.Tables.ForEach((t) =>
+                            {
+                                models.Add(new JavaMapperConfig(new JavaDaoConfig(t.RelatedClsss as JavaClass)) { SplitReadWrite = true, ForRead = true, ForWrite = false });
+                                models.Add(new JavaMapperConfig(new JavaDaoConfig(t.RelatedClsss as JavaClass)) { SplitReadWrite = true, ForRead = false, ForWrite = true });
                             });
                             return models;
 
                         }
                     },
-                    new DefaultPipe<JavaCodeConfig>(){
-                        PrepareVarAction=(w,p)=>{
-                            p.RazorTplFilePath=JavaGenerator.GetTemplateFilePath("JavaCode.cshtml");
+                    new DefaultPipe<JavaCodeConfig>()
+                    {
+                        PrepareVarAction = (w, p) =>
+                        {
+                            p.RazorTplFilePath = GenerateUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
                         },
-                        BeforeEachModelAction=(w,p,m)=>{
-                            (m as JavaCodeConfig).ModelPackageName=(w as JavaWorkModel).CodeConfig.ModelPackageName;
-                            string rootDir = CodeUtil.PrepareCodeRoot((w as JavaWorkModel).CodeConfig.ModelJavaDiretory, (w as JavaWorkModel).CodeConfig.ModelPackageName);
-                            p.OutputPath=rootDir+ Path.DirectorySeparatorChar +  (m as JavaCodeConfig).ModelName + ".java";
+                        BeforeEachModelAction = (w, p, m) =>
+                        {
+                            (m as JavaCodeConfig).ModelPackageName = (w as JavaWorkModel).ModelPackageName;
+                            string rootDir = CodeUtil.PrepareCodeRoot((w as JavaWorkModel).ModelJavaDiretory, (w as JavaWorkModel).ModelPackageName);
+                            p.OutputPath = rootDir + Path.DirectorySeparatorChar + (m as JavaCodeConfig).ModelName + ".java";
                         },
-                        GetModelsAction=(w,p)=>{
-                           List<JavaCodeConfig> models=new List<JavaCodeConfig>();
-                            (w as JavaWorkModel).ddlModel.Tables.ForEach((t)=>{
-                                models.Add(new JavaCodeConfig(new JavaDaoConfig(t.RelatedClsss as JavaClass)){JavaClass=  t.RelatedClsss as JavaClass,ForModel=true });
+                        GetModelsAction = (w, p) =>
+                        {
+                            List<JavaCodeConfig> models = new List<JavaCodeConfig>();
+                            (w as JavaWorkModel).ddlModel.Tables.ForEach((t) =>
+                            {
+                                models.Add(new JavaCodeConfig(new JavaDaoConfig(t.RelatedClsss as JavaClass)) { JavaClass = t.RelatedClsss as JavaClass, ForModel = true });
                             });
                             return models;
 
                         }
                     },
-                    new DefaultPipe<JavaCodeConfig>(){
-                        PrepareVarAction=(w,p)=>{
-                            p.RazorTplFilePath=JavaGenerator.GetTemplateFilePath("JavaCode.cshtml");
+                    new DefaultPipe<JavaCodeConfig>()
+                    {
+                        PrepareVarAction = (w, p) =>
+                        {
+                            p.RazorTplFilePath = GenerateUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
                         },
-                        BeforeEachModelAction=(w,p,m)=>{
-                            (m as JavaCodeConfig).ServicePackageName=(w as JavaWorkModel).CodeConfig.ServicePackageName;
-                            string rootDir = CodeUtil.PrepareCodeRoot((w as JavaWorkModel).CodeConfig.ServiceJavaDiretory, (w as JavaWorkModel).CodeConfig.ServicePackageName);
-                            p.OutputPath=rootDir+ Path.DirectorySeparatorChar +  (m as JavaCodeConfig).ServiceName + ".java";
+                        BeforeEachModelAction = (w, p, m) =>
+                        {
+                            (m as JavaCodeConfig).ServicePackageName = (w as JavaWorkModel).ServicePackageName;
+                            string rootDir = CodeUtil.PrepareCodeRoot((w as JavaWorkModel).ServiceJavaDiretory, (w as JavaWorkModel).ServicePackageName);
+                            p.OutputPath = rootDir + Path.DirectorySeparatorChar + (m as JavaCodeConfig).ServiceName + ".java";
                         },
-                        GetModelsAction=(w,p)=>{
-                           List<JavaCodeConfig> models=new List<JavaCodeConfig>();
-                            (w as JavaWorkModel).ddlModel.Tables.ForEach((t)=>{
-                                models.Add(new JavaCodeConfig(new JavaDaoConfig(t.RelatedClsss as JavaClass)){JavaClass=  t.RelatedClsss as JavaClass,ForService=true });
+                        GetModelsAction = (w, p) =>
+                        {
+                            List<JavaCodeConfig> models = new List<JavaCodeConfig>();
+                            (w as JavaWorkModel).ddlModel.Tables.ForEach((t) =>
+                            {
+                                models.Add(new JavaCodeConfig(new JavaDaoConfig(t.RelatedClsss as JavaClass)) { JavaClass = t.RelatedClsss as JavaClass, ForService = true });
                             });
                             return models;
 
                         }
                     },
-                    new DefaultPipe<JavaCodeConfig>(){
-                        PrepareVarAction=(w,p)=>{
-                            p.RazorTplFilePath=JavaGenerator.GetTemplateFilePath("JavaCode.cshtml");
+                    new DefaultPipe<JavaCodeConfig>()
+                    {
+                        PrepareVarAction = (w, p) =>
+                        {
+                            p.RazorTplFilePath = GenerateUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
                         },
-                        BeforeEachModelAction=(w,p,m)=>{
-                            (m as JavaCodeConfig).ServiceImplPackageName=(w as JavaWorkModel).CodeConfig.ServiceImplPackageName;
-                            string rootDir = CodeUtil.PrepareCodeRoot((w as JavaWorkModel).CodeConfig.ServiceImplJavaDiretory, (w as JavaWorkModel).CodeConfig.ServiceImplPackageName);
-                            p.OutputPath=rootDir+ Path.DirectorySeparatorChar +  (m as JavaCodeConfig).ServiceImplName + ".java";
+                        BeforeEachModelAction = (w, p, m) =>
+                        {
+                            (m as JavaCodeConfig).ServiceImplPackageName = (w as JavaWorkModel).ServiceImplPackageName;
+                            string rootDir = CodeUtil.PrepareCodeRoot((w as JavaWorkModel).ServiceImplJavaDiretory, (w as JavaWorkModel).ServiceImplPackageName);
+                            p.OutputPath = rootDir + Path.DirectorySeparatorChar + (m as JavaCodeConfig).ServiceImplName + ".java";
                         },
-                        GetModelsAction=(w,p)=>{
-                           List<JavaCodeConfig> models=new List<JavaCodeConfig>();
-                            (w as JavaWorkModel).ddlModel.Tables.ForEach((t)=>{
-                                models.Add(new JavaCodeConfig(new JavaDaoConfig(t.RelatedClsss as JavaClass)){JavaClass=  t.RelatedClsss as JavaClass,ForServiceImpl=true });
+                        GetModelsAction = (w, p) =>
+                        {
+                            List<JavaCodeConfig> models = new List<JavaCodeConfig>();
+                            (w as JavaWorkModel).ddlModel.Tables.ForEach((t) =>
+                            {
+                                models.Add(new JavaCodeConfig(new JavaDaoConfig(t.RelatedClsss as JavaClass)) { JavaClass = t.RelatedClsss as JavaClass, ForServiceImpl = true });
                             });
                             return models;
 
                         }
                     },
-                    new DefaultPipe<JavaCodeConfig>(){
-                        PrepareVarAction=(w,p)=>{
-                            p.RazorTplFilePath=JavaGenerator.GetTemplateFilePath("JavaCode.cshtml");
+                    new DefaultPipe<JavaCodeConfig>()
+                    {
+                        PrepareVarAction = (w, p) =>
+                        {
+                            p.RazorTplFilePath = GenerateUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
                         },
-                        BeforeEachModelAction=(w,p,m)=>{
-                            (m as JavaCodeConfig).ControllerPackageName=(w as JavaWorkModel).CodeConfig.ControllerPackageName;
-                            string rootDir = CodeUtil.PrepareCodeRoot((w as JavaWorkModel).CodeConfig.ControllerJavaDiretory, (w as JavaWorkModel).CodeConfig.ControllerPackageName);
-                            p.OutputPath=rootDir+ Path.DirectorySeparatorChar +  (m as JavaCodeConfig).ControllerName + ".java";
+                        BeforeEachModelAction = (w, p, m) =>
+                        {
+                            (m as JavaCodeConfig).ControllerPackageName = (w as JavaWorkModel).ControllerPackageName;
+                            string rootDir = CodeUtil.PrepareCodeRoot((w as JavaWorkModel).ControllerJavaDiretory, (w as JavaWorkModel).ControllerPackageName);
+                            p.OutputPath = rootDir + Path.DirectorySeparatorChar + (m as JavaCodeConfig).ControllerName + ".java";
                         },
-                        GetModelsAction=(w,p)=>{
-                           List<JavaCodeConfig> models=new List<JavaCodeConfig>();
-                            (w as JavaWorkModel).ddlModel.Tables.ForEach((t)=>{
-                                models.Add(new JavaCodeConfig(new JavaDaoConfig(t.RelatedClsss as JavaClass)){JavaClass=  t.RelatedClsss as JavaClass,ForController=true });
+                        GetModelsAction = (w, p) =>
+                        {
+                            List<JavaCodeConfig> models = new List<JavaCodeConfig>();
+                            (w as JavaWorkModel).ddlModel.Tables.ForEach((t) =>
+                            {
+                                models.Add(new JavaCodeConfig(new JavaDaoConfig(t.RelatedClsss as JavaClass)) { JavaClass = t.RelatedClsss as JavaClass, ForController = true });
                             });
                             return models;
 
@@ -2556,7 +2602,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
                 }
-            });
+        });
             Console.WriteLine("done");
             Assert.Pass();
 
@@ -2566,5 +2612,5 @@ namespace Org.FGQ.CodeGenerateTest
         }
 
 
-    }
+}
 }

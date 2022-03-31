@@ -7,22 +7,22 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Config
 {
-    public class JavaMapperConfig : JavaDaoConfig
+    public class JavaMapperModel : JavaDaoModel
     {
 
-        private JavaMapperConfig(JavaClass javaClass):base(javaClass)
+        private JavaMapperModel(JavaClass javaClass):base(javaClass)
         {
             this.JavaClass = javaClass;
         }
 
-        public JavaMapperConfig(JavaDaoConfig javaDaoConfig):base(javaDaoConfig.JavaClass)
+        public JavaMapperModel(JavaDaoModel javaDaoConfig):base(javaDaoConfig.JavaClass)
         {
             this.DaoConfig = javaDaoConfig;
         }
 
         public string MapperDirectory { get; set; }
 
-        public JavaDaoConfig DaoConfig { get; set; }
+        public JavaDaoModel DaoConfig { get; set; }
 
 
         public string MapperName

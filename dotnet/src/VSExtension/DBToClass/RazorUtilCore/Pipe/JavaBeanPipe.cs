@@ -20,7 +20,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
         public override void GenerateT(JavaWorkModel work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaClass>> template, JavaClass t)
         {
 
-            JavaBeanConfig javaBeanConfig = work.BeanConfig;
+            JavaBeanModel javaBeanConfig = work.BeanConfig;
 
             string beanRootDir = CodeUtil.PrepareCodeRoot(javaBeanConfig.JavaDiretory, javaBeanConfig.PackageName);
             string voRootDir = CodeUtil.PrepareCodeRoot(javaBeanConfig.JavaDiretory, javaBeanConfig.VOPackageName);
@@ -88,7 +88,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         public override IEnumerable<object> GetModels(Work work, PipeBase pipe)
         {
-            JavaBeanConfig javaBeanConfig = (work as JavaWorkModel).BeanConfig;
+            JavaBeanModel javaBeanConfig = (work as JavaWorkModel).BeanConfig;
 
             List<ClassBase> models = new List<ClassBase>();
 

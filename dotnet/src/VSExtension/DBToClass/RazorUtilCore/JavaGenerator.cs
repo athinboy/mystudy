@@ -17,8 +17,8 @@ namespace Org.FGQ.CodeGenerate
     {
 
         public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaClass>> beanTemplate = null;
-        public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaDaoConfig>> daoTemplate = null;
-        public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaMapperConfig>> mapperTemplate = null;
+        public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaDaoModel>> daoTemplate = null;
+        public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaMapperModel>> mapperTemplate = null;
         public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaCodeConfig>> modelTemplate = null;
         public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaCodeConfig>> serviceTemplate = null;
         public IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaCodeConfig>> serviceImplTemplate = null;
@@ -56,8 +56,8 @@ namespace Org.FGQ.CodeGenerate
 
         private IRazorEngine razorEngine = null;
         private IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaClass>> beanTemplate = null;
-        private IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaDaoConfig>> daoTemplate = null;
-        private IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaMapperConfig>> mapperTemplate = null;
+        private IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaDaoModel>> daoTemplate = null;
+        private IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaMapperModel>> mapperTemplate = null;
 
         private IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaCodeConfig>> codeTemplate = null;
 
@@ -155,8 +155,8 @@ namespace Org.FGQ.CodeGenerate
                 razorEngine = new RazorEngine();
 
                 beanTemplate = GetTemplate<JavaClass>(javaBeanTemplateRelatePath);
-                daoTemplate = GetTemplate<JavaDaoConfig>(javaDaoTemplateRelatePath);
-                mapperTemplate = GetTemplate<JavaMapperConfig>(javaMapperTemplateRelatePath);
+                daoTemplate = GetTemplate<JavaDaoModel>(javaDaoTemplateRelatePath);
+                mapperTemplate = GetTemplate<JavaMapperModel>(javaMapperTemplateRelatePath);
 
                 codeTemplate = GetTemplate<JavaCodeConfig>(javaCodeTemplateRelatePath);
 
@@ -174,7 +174,7 @@ namespace Org.FGQ.CodeGenerate
         }
 
 
-        private void GenerateBean(JavaBeanConfig javaBeanConfig)
+        private void GenerateBean(JavaBeanModel javaBeanConfig)
         {
 
             initDefault();
@@ -228,7 +228,7 @@ namespace Org.FGQ.CodeGenerate
 
         }
 
-        public void GenerateDao(JavaDaoConfig javaDaoConfig, JavaMapperConfig javaMapperConfig)
+        public void GenerateDao(JavaDaoModel javaDaoConfig, JavaMapperModel javaMapperConfig)
         {
             initDefault();
 
@@ -283,7 +283,7 @@ namespace Org.FGQ.CodeGenerate
 
         }
 
-        private void GenerateMapper(JavaMapperConfig javaMapperConfig)
+        private void GenerateMapper(JavaMapperModel javaMapperConfig)
         {
 
             initDefault();

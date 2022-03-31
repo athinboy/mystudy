@@ -17,6 +17,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="JavaGenerator.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="template\FreeSqlEntity.cshtml" />
     <None Remove="template\JavaBean.cshtml" />
     <None Remove="template\JavaCode.cshtml" />

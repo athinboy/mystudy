@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Config
 {
-    public class JavaBeanConfig : JavaConfigBase
+    public class JavaBeanModel : JavaModel
     {
 
         public DDLModel DDLConfig { get; set; }

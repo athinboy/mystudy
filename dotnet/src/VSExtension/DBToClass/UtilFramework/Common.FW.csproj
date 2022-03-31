@@ -55,11 +55,11 @@
     <Compile Include="Model\CSharpBeanConfig.cs" />
     <Compile Include="Model\DDLModel.cs" />
     <Compile Include="Model\GenerateConfig.cs" />
-    <Compile Include="Model\JavaBeanConfig.cs" />
+    <Compile Include="Model\JavaBeanModel.cs" />
     <Compile Include="Model\JavaCodeConfig.cs" />
-    <Compile Include="Model\JavaConfigBase.cs" />
-    <Compile Include="Model\JavaMapperConfig.cs" />
-    <Compile Include="Model\JavaDaoConfig.cs" />
+    <Compile Include="Model\JavaModel.cs" />
+    <Compile Include="Model\JavaMapperModel.cs" />
+    <Compile Include="Model\JavaDaoModel.cs" />
     <Compile Include="DB\DBUtil.cs" />
     <Compile Include="DB\JDBCTypes.cs" />
     <Compile Include="DB\OracleUtil.cs" />

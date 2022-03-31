@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Config
 {
-    public class JavaCodeConfig : JavaConfigBase
+    public class JavaCodeConfig : JavaModel
     {
-        public JavaCodeConfig(JavaDaoConfig daoConfig)
+        public JavaCodeConfig(JavaDaoModel daoConfig)
         {
             DaoConfig = daoConfig ?? throw new ArgumentNullException(nameof(daoConfig));
             this.JavaClass = daoConfig.JavaClass;
         }
 
-        public JavaDaoConfig DaoConfig { get; set; }
+        public JavaDaoModel DaoConfig { get; set; }
 
         public bool ForModel { get; set; } = false;
 

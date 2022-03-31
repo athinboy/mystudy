@@ -51,15 +51,15 @@ namespace Org.FGQ.CodeGenerate.Util.Code
         public JavaClass JavaVoClass { get; set; } = null;
 
 
-        public JavaClass(string packageName, DDLTable ddLTable, JavaBeanConfig javaBeanConfig) : this(packageName, ddLTable)
+        public JavaClass(string packageName, DDLTable ddLTable, JavaBeanModel javaBeanConfig) : this(packageName, ddLTable)
         {
             JavaBeanConfig = javaBeanConfig;
         }
 
-        public JavaBeanConfig JavaBeanConfig { get; }
+        public JavaBeanModel JavaBeanConfig { get; }
 
 
-        public static JavaClass CreateBoClass(DDLTable table, JavaBeanConfig javaBeanConfig, bool createVo)
+        public static JavaClass CreateBoClass(DDLTable table, JavaBeanModel javaBeanConfig, bool createVo)
         {
             JavaClass javaClass = new JavaClass(javaBeanConfig.PackageName, table, javaBeanConfig);
 

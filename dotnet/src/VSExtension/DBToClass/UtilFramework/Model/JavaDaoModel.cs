@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Config
 {
-    public class JavaDaoConfig : JavaConfigBase
+    public class JavaDaoModel : JavaModel
     {
 
-        public JavaDaoConfig(JavaClass javaClass)
+        public JavaDaoModel(JavaClass javaClass)
         {
             this.JavaClass = javaClass;
 

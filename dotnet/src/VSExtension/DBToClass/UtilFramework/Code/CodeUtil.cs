@@ -78,7 +78,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
         }
 
-        public static string PrepareJavaRoot(JavaDaoConfig javaDaoConfig)
+        public static string PrepareJavaRoot(JavaDaoModel javaDaoConfig)
         {
 
             return PrepareCodeRoot(javaDaoConfig.JavaDiretory, javaDaoConfig.DaoPackageName);

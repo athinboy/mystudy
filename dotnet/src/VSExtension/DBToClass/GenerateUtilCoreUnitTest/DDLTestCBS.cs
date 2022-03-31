@@ -20,7 +20,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
         DDLModel ddlConfig;
-        JavaBeanConfig javaBeanConfig;
+        JavaBeanModel javaBeanConfig;
 
         public void B()
         {
@@ -332,7 +332,7 @@ namespace Org.FGQ.CodeGenerateTest
         public void DDLToJavaBeanTest()
         {
 
-            javaBeanConfig = new JavaBeanConfig();
+            javaBeanConfig = new JavaBeanModel();
             javaBeanConfig.DDLConfig = ddlConfig;
             javaBeanConfig.PackageName = "com.wintop.third.cbs.bean";
             javaBeanConfig.VOPackageName = "com.wintop.third.cbs.vo";

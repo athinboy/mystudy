@@ -38,7 +38,7 @@
         <springboot.version>2.2.6.RELEASE</springboot.version>
         <springcloud.version>Hoxton.RELEASE</springcloud.version>
         <core.version>1.0-SNAPSHOT</core.version>
-        <dubbo.version>2.6.9</dubbo.version>
+        <dubbo.version>2.6.12</dubbo.version>
     </properties>
     <dependencyManagement>
         <dependencies>

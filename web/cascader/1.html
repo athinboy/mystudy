@@ -3,22 +3,26 @@
 
 <head>
     <meta charset="utf-8">
-
+    <title>title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="GravCMS">
-
-
+    <script type="text/javascript" src="jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="cascader.js"></script>
+    <script type="text/javascript" src="etpl.source.js"></script>
     <link rel="stylesheet" href="cascader.css" />
-
-
-
 </head>
 
 <body>
 
-    <div style="position:absolute;top:300px;left:500px;display: flex;flex-direction: column">
+    <div style="position:absolute;top:100px;left:700px;display: flex;flex-direction: column">
 
-        <input id="ttttttt" type="text" />
+        <input title="fe" id="sel_test" type="text" />
+        
+    </div>
+
+    <div style="position:absolute;top:100px;left:100px;display: flex;flex-direction: column">
+
+        <input title="fe" id="ttttttt" type="text" />
         <div class="cascader">
             <div class="cascader_input">
                 <input type="text" readonly="readonly" autocomplete="off" placeholder="Select"
@@ -109,10 +113,10 @@
                         </li>
                     </ul>
                 </div>
-                <div class="cascader_scrollbar_bar is-horizontal">
+                <div class="cascader_scrollbar__bar is-horizontal">
                     <div class="el-scrollbar__thumb" style="transform: translateX(0%);"></div>
                 </div>
-                <div class="el-scrollbar__bar is-vertical">
+                <div class="cascader_scrollbar__bar is-vertical">
                     <div class="el-scrollbar__thumb" style="transform: translateY(0%);"></div>
                 </div>
             </div>
@@ -122,6 +126,23 @@
 
 
     </div>
+
+
+    <script type="text/javascript">
+        (function init(){
+            console.info('hello my cascader!');
+        })();
+        cascader.build(null,null);
+        cascader.build('',null);
+        cascader.build('35435',null);
+        cascader.build('sel_test',null);
+
+        let t1='<input>hello,${name}</input>';
+        let t1render=etpl.compile(t1);
+        let text=t1render({name:'hhahahhah'});
+        console.info(text);
+    </script>
+
 
 </body>
 

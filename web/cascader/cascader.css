@@ -17,14 +17,14 @@
   }
 
 
-.cascader_container {
+.jquery_cascader_panel_container {
     position: absolute;
     top: 164px;
     left: 100px;
     z-index: 2064;
 }
 
-.cascader_panel {
+.jquery_cascader_panel {
     display: flex;
     border-radius: 4px;
     font-size: 14px;
@@ -36,7 +36,7 @@
     box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
 }
 
-.cascader_menu {
+.jquery_cascader_menu {
     min-width: 180px;
     box-sizing: border-box;
     color: #606266;
@@ -45,14 +45,14 @@
     position: relative;
 }
 
-.cascader_menu_wrap {
+.jquery_cascader_menu_wrap {
     height: 204px;
     overflow: scroll;
     margin-bottom: -17px;
     margin-right: -17px;
 }
 
-.cascader_menu_list {
+.jquery_cascader_menu_list {
     position: relative;
     min-height: 100%;
     margin: 0;
@@ -61,7 +61,7 @@
     box-sizing: border-box;
 }
 
-.cascader_menu_node {
+.jquery_cascader_menu_node {
     cursor: pointer;
     position: relative;
     display: flex;
@@ -72,12 +72,12 @@
     outline: none;
 }
 
-.cascader_menu_node:hover{
+.jquery_cascader_menu_node:hover{
     background: #f5f7fa;
 }
 
 
-.cascader_menu_node_label{
+.jquery_cascader_menu_node_label{
     flex: 1;
     padding: 0 10px;
     white-space: nowrap;
@@ -88,22 +88,22 @@
 
 
 
-.cascader_icon-arrow-right {
+.jquery_cascader_icon-arrow-right {
 
 }
 
-.cascader_scrollbar_bar {
+.jquery_cascader_scrollbar_bar {
 
 }
 
-.cascader_input {
+.jquery_cascader_input {
     position: relative;
     font-size: 14px;
     display: inline-block;
     width: 100%;
 }
 
-.cascader {
+.jquery_cascader {
     width: 222px;
     display: inline-block;
     position: relative;
@@ -112,7 +112,7 @@
     border-color: #409eff;
 }
 
-.cascader_input_inputter {
+.jquery_cascader_input_inputter {
     border-color: #409eff;
     text-overflow: ellipsis;
     -webkit-appearance: none;
@@ -134,17 +134,17 @@
 }
 
 
-.cascader-icon-arrow-right:before {
+.jquery_cascader-icon-arrow-right:before {
     content: ""
 }
 
 
-.cascader-icon-arrow-down:before {
+.jquery_cascader-icon-arrow-down:before {
     content: ""
 }
 
 
-.cascader-input__icon :after {
+.jquery_cascader-input__icon :after {
     content: "";
     height: 100%;
     width: 0;
@@ -156,7 +156,7 @@
 
 
 
-.cascader-node-postfix {
+.jquery_cascader-node-postfix {
     position: absolute;
     right: 10px;
     font-family: element-icons!important;
@@ -170,12 +170,12 @@
     display: inline-block;
     -webkit-font-smoothing: antialiased;
 }
-.cascader-icon-arrow-down{
+.jquery_cascader-icon-arrow-down{
     transition: transform 3s;
     font-size: 14px;
  
 }
-.cascader-input__icon {
+.jquery_cascader-input__icon {
     width: 25px;
     line-height: 40px;
     height: 100%;
@@ -189,7 +189,7 @@
     display: inline-block;
     font-weight: 400;
 }
-.cascader-input-suffix{
+.jquery_cascader-input-suffix{
     position: absolute;
     height: 100%;
     right: 5px;
@@ -199,11 +199,11 @@
     transition: all .3s;
     pointer-events: none;
 }
-.cascader-input-suffix-inner{
+.jquery_cascader-input-suffix-inner{
     pointer-events: all;
 }
 
-.cascader_popper_arrow{
+.jquery_cascader_popper_arrow{
     left: 35px;
     border-width: 6px;
     filter: drop-shadow(0 2px 12px rgba(0,0,0,.03));
@@ -219,7 +219,7 @@
     border-style: solid;
 
 }
-.cascader_popper_arrow::after{
+.jquery_cascader_popper_arrow::after{
     content: " ";
     border-width: 6px;
     position: absolute;
@@ -235,7 +235,7 @@
 
 }
 
-.cascader_scrollbar__bar{
+.jquery_cascader_scrollbar__bar{
     position: absolute;
     right: 2px;
     bottom: 2px;
@@ -245,11 +245,46 @@
     transition: opacity .12s ease-out;
 }
 
-.cascader_scrollbar__bar.is-horizontal{
+.jquery_cascader_scrollbar__bar.is-horizontal{
     height: 6px;
     left: 2px;
 }
-.cascader_scrollbar__bar.is-vertical{
+.jquery_cascader_scrollbar__bar.is-vertical{
     width: 6px;
     top: 2px;
+}
+
+.jquery_cascader__tags{
+    position: absolute;
+    left: 0;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-wrap: wrap;
+    line-height: normal;
+    text-align: left;
+    box-sizing: border-box;
+}
+.jquery_cascader_tag{
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    margin: 2px 0 2px 6px;
+    text-overflow: ellipsis;
+    background: #f0f2f5;
+}
+.jquery_cascader_tagel-tag--info{
+    background-color: #f4f4f5;
+    border-color: #e9e9eb;
+    color: #909399;
+    height: 24px;
+    padding: 0 8px;
+    line-height: 22px;
+
+}
+.jquery_cascader_tagel-tag--info span{
+
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

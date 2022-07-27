@@ -10,6 +10,7 @@
     <script type="text/javascript" src="cascader.js"></script>
     <script type="text/javascript" src="etpl.source.js"></script>
     <link rel="stylesheet" href="cascader.css" />
+    <!--            https://element.eleme.cn/#/zh-CN/component/cascader            -->
 </head>
 
 <body>
@@ -17,16 +18,16 @@
     <div style="position:absolute;top:100px;left:700px;display: flex;flex-direction: column">
 
         <input title="fe" id="sel_test" type="text" />
-        
+
     </div>
 
     <div style="position:absolute;top:100px;left:100px;display: flex;flex-direction: column">
 
         <input title="fe" id="ttttttt" type="text" />
         <div class="cascader">
-            <div class="cascader_input">
+            <div class="jquery_cascader_input">
                 <input type="text" readonly="readonly" autocomplete="off" placeholder="Select"
-                    class="cascader_input_inputter" aria-expanded="true" />
+                    class="jquery_cascader_input_inputter" aria-expanded="true" />
                 <span class="cascader-input-suffix">
                     <span class="cascader-input-suffix-inner">
                         <i class="cascader-input__icon cascader-icon-arrow-down"></i>
@@ -34,6 +35,16 @@
                 </span>
 
             </div>
+            <div class="jquery_cascader__tags">
+                <span class="jquery_cascader_tagel-tag--info el-tag--small el-tag--light">
+                    <span>指南 / 设计原则 /一致</span><i class="el-tag__close el-icon-close"></i></span>
+                <span class="jquery_cascader_tagel-tag--info el-tag--info el-tag--small el-tag--light"><span>组件 / Form /
+                        Checkbox 多选框</span><i class="el-tag__close el-icon-close"></i></span>
+                <span class="jquery_cascader_tagel-tag--info el-tag--info el-tag--small el-tag--light"><span>组件 / Others
+                        / Dialog 对话框</span><i class="el-tag__close el-icon-close"></i></span>
+                <input type="text" placeholder="" class="el-jquery_cascader__search-input">
+            </div>
+
         </div>
     </div>
 
@@ -41,26 +52,26 @@
     <br />
 
 
-    <div class="cascader_container">
+    <div class="jquery_cascader_panel_container">
 
-        <div class="cascader_panel">
-            <div class="el-scrollbar cascader_menu" role="menu" id="cascader-menu-2160-0">
-                <div class="cascader_menu_wrap el-scrollbar__wrap" style="">
-                    <ul class="el-scrollbar__view cascader_menu_list">
-                        <li role="menuitem" id="cascader-menu-2160-0-0" class="cascader_menu_node is-disabled"
+        <div class="jquery_cascader_panel">
+            <div class="el-scrollbar jquery_cascader_menu" role="menu" id="cascader-menu-2160-0">
+                <div class="jquery_cascader_menu_wrap el-scrollbar__wrap" style="">
+                    <ul class="el-scrollbar__view jquery_cascader_menu_list">
+                        <li role="menuitem" id="cascader-menu-2160-0-0" class="jquery_cascader_menu_node is-disabled"
                             aria-haspopup="true" aria-owns="cascader-menu-2160-0">
-                            <span class="cascader_menu_node_label">Guide</span><i
+                            <span class="jquery_cascader_menu_node_label">Guide</span><i
                                 class="cascader-input__icon cascader-icon-arrow-right cascader-node-postfix"></i>
                         </li>
-                        <li role="menuitem" id="cascader-menu-2160-0-0" class="cascader_menu_node is-disabled"
+                        <li role="menuitem" id="cascader-menu-2160-0-0" class="jquery_cascader_menu_node is-disabled"
                             aria-haspopup="true" aria-owns="cascader-menu-2160-0">
-                            <span class="cascader_menu_node_label">Guide</span><i
+                            <span class="jquery_cascader_menu_node_label">Guide</span><i
                                 class="cascader-input__icon cascader-icon-arrow-right cascader-node-postfix"></i>
                         </li>
 
                     </ul>
                 </div>
-                <div class="cascader_scrollbar_bar is-horizontal">
+                <div class="jquery_cascader_scrollbar_bar is-horizontal">
                     <div class="el-scrollbar__thumb" style="transform: translateX(0%);"></div>
                 </div>
                 <div class="el-scrollbar__bar is-vertical">
@@ -68,78 +79,82 @@
                 </div>
             </div>
 
-            <div class="el-scrollbar cascader_menu" role="menu" id="cascader-menu-2160-0">
-                <div class="cascader_menu_wrap el-scrollbar__wrap" style="">
-                    <ul class="el-scrollbar__view cascader_menu_list">
-                        <li role="menuitem" id="cascader-menu-2160-0-0" class="cascader_menu_node is-disabled"
+            <div class="el-scrollbar jquery_cascader_menu" role="menu" id="cascader-menu-2160-0">
+                <div class="jquery_cascader_menu_wrap el-scrollbar__wrap" style="">
+                    <ul class="el-scrollbar__view jquery_cascader_menu_list">
+                        <li role="menuitem" id="cascader-menu-2160-0-0" class="jquery_cascader_menu_node is-disabled"
                             aria-haspopup="true" aria-owns="cascader-menu-2160-0">
-                            <span class="cascader_menu_node_label">Guide1</span><i
+                            <span class="jquery_cascader_menu_node_label">Guide1</span><i
                                 class="cascader-input__icon cascader-icon-arrow-right cascader-node-postfix"></i>
                         </li>
-                        <li role="menuitem" id="cascader-menu-2160-0-0" class="cascader_menu_node is-disabled"
+                        <li role="menuitem" id="cascader-menu-2160-0-0" class="jquery_cascader_menu_node is-disabled"
                             aria-haspopup="true" aria-owns="cascader-menu-2160-0">
-                            <span class="cascader_menu_node_label">Guide2</span><i
+                            <span class="jquery_cascader_menu_node_label">Guide2</span><i
                                 class="cascader-input__icon cascader-icon-arrow-right cascader-node-postfix"></i>
                         </li>
-                        <li role="menuitem" id="cascader-menu-2160-0-0" class="cascader_menu_node is-disabled"
+                        <li role="menuitem" id="cascader-menu-2160-0-0" class="jquery_cascader_menu_node is-disabled"
                             aria-haspopup="true" aria-owns="cascader-menu-2160-0">
-                            <span class="cascader_menu_node_label">Guide2</span><i
+                            <span class="jquery_cascader_menu_node_label">Guide2</span><i
                                 class="cascader-input__icon cascader-icon-arrow-right cascader-node-postfix"></i>
                         </li>
-                        <li role="menuitem" id="cascader-menu-2160-0-0" class="cascader_menu_node is-disabled"
+                        <li role="menuitem" id="cascader-menu-2160-0-0" class="jquery_cascader_menu_node is-disabled"
                             aria-haspopup="true" aria-owns="cascader-menu-2160-0">
-                            <span class="cascader_menu_node_label">Guide2</span><i
+                            <span class="jquery_cascader_menu_node_label">Guide2</span><i
                                 class="cascader-input__icon cascader-icon-arrow-right cascader-node-postfix"></i>
                         </li>
-                        <li role="menuitem" id="cascader-menu-2160-0-0" class="cascader_menu_node is-disabled"
+                        <li role="menuitem" id="cascader-menu-2160-0-0" class="jquery_cascader_menu_node is-disabled"
                             aria-haspopup="true" aria-owns="cascader-menu-2160-0">
-                            <span class="cascader_menu_node_label">Guide1</span><i
+                            <span class="jquery_cascader_menu_node_label">Guide1</span><i
                                 class="cascader-input__icon cascader-icon-arrow-right cascader-node-postfix"></i>
                         </li>
-                        <li role="menuitem" id="cascader-menu-2160-0-0" class="cascader_menu_node is-disabled"
+                        <li role="menuitem" id="cascader-menu-2160-0-0" class="jquery_cascader_menu_node is-disabled"
                             aria-haspopup="true" aria-owns="cascader-menu-2160-0">
-                            <span class="cascader_menu_node_label">Guide2</span><i
+                            <span class="jquery_cascader_menu_node_label">Guide2</span><i
                                 class="cascader-input__icon cascader-icon-arrow-right cascader-node-postfix"></i>
                         </li>
-                        <li role="menuitem" id="cascader-menu-2160-0-0" class="cascader_menu_node is-disabled"
+                        <li role="menuitem" id="cascader-menu-2160-0-0" class="jquery_cascader_menu_node is-disabled"
                             aria-haspopup="true" aria-owns="cascader-menu-2160-0">
-                            <span class="cascader_menu_node_label">Guide2</span><i
+                            <span class="jquery_cascader_menu_node_label">Guide2</span><i
                                 class="cascader-input__icon cascader-icon-arrow-right cascader-node-postfix"></i>
                         </li>
-                        <li role="menuitem" id="cascader-menu-2160-0-0" class="cascader_menu_node is-disabled"
+                        <li role="menuitem" id="cascader-menu-2160-0-0" class="jquery_cascader_menu_node is-disabled"
                             aria-haspopup="true" aria-owns="cascader-menu-2160-0">
-                            <span class="cascader_menu_node_label">Guide2</span><i
+                            <span class="jquery_cascader_menu_node_label">Guide2</span><i
                                 class="cascader-input__icon cascader-icon-arrow-right cascader-node-postfix"></i>
                         </li>
                     </ul>
                 </div>
-                <div class="cascader_scrollbar__bar is-horizontal">
+                <div class="jquery_cascader_scrollbar__bar is-horizontal">
                     <div class="el-scrollbar__thumb" style="transform: translateX(0%);"></div>
                 </div>
-                <div class="cascader_scrollbar__bar is-vertical">
+                <div class="jquery_cascader_scrollbar__bar is-vertical">
                     <div class="el-scrollbar__thumb" style="transform: translateY(0%);"></div>
                 </div>
             </div>
 
         </div>
-        <div x-arrow="" class="cascader_popper_arrow" style="left: 35px;"></div>
+        <div x-arrow="" class="jquery_cascader_popper_arrow" style="left: 35px;"></div>
 
 
     </div>
 
 
     <script type="text/javascript">
-        (function init(){
+        (function init() {
             console.info('hello my cascader!');
         })();
-        cascader.build(null,null);
-        cascader.build('',null);
-        cascader.build('35435',null);
-        cascader.build('sel_test',null);
+        cascader.build(null, null);
+        cascader.build('', null);
+        cascader.build('35435', null);
 
-        let t1='<input>hello,${name}</input>';
-        let t1render=etpl.compile(t1);
-        let text=t1render({name:'hhahahhah'});
+
+        cascader.build('sel_test', { data: [{ id: 1, text: "11" }] });
+
+
+
+        let t1 = '<input>hello,${address.city}</input>';
+        let t1render = etpl.compile(t1);
+        let text = t1render({ name: 'hhahahhah', address: { city: "beijing" } });
         console.info(text);
     </script>
 

@@ -148,13 +148,13 @@
         cascader.build('35435', null);
 
 
-        cascader.build('sel_test', { data: [{ id: 1, text: "11" }] });
+        cascader.build('sel_test', {debugging:true, data: [{ id: 1, text: "11" }] });
 
 
 
-        let t1 = '<input>hello,${address.city}</input>';
+        let t1 = '<input>hello,${address.city}  ${getName()}   </input>';
         let t1render = etpl.compile(t1);
-        let text = t1render({ name: 'hhahahhah', address: { city: "beijing" } });
+        let text = t1render({ name: 'hhahahhah', address: { city: "beijing" },getName:function(){return 'nannn';} });
         console.info(text);
     </script>
 

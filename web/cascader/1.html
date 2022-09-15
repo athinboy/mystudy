@@ -148,13 +148,41 @@
         cascader.build('35435', null);
 
 
-        cascader.build('sel_test', {debugging:true, data: [{ id: 1, text: "11" }] });
+        var data = [];
+        for (let i1 = 1; i1 < 5; i1++) {
+
+            var d1 = {};
+            d1.id = i1;
+            d1.text = d1.id.toString();
+            d1.subData = [];
+            for (let i2 = 1; i2 < 5; i2++) {
+
+                var d2 = {};
+                d2.id = i1 * 10 + i2;
+                d2.text = d2.id.toString();
+                d2.subData = [];
+                d1.subData.push(d2);
+                for (let i3 = 1; i3 < 5; i3++) {
+                    var d3 = {};
+                    d3.id = i1 * 100 + i2 * 10 + i3;
+                    d3.text = d3.id.toString();
+                    d2.subData.push(d3);
+                }
+            }
+            data.push(d1);
+        }
+     
+        cascader.build('sel_test'
+            , {
+                debugging: true,
+                data: data
+            });
 
 
 
         let t1 = '<input>hello,${address.city}  ${getName()}   </input>';
         let t1render = etpl.compile(t1);
-        let text = t1render({ name: 'hhahahhah', address: { city: "beijing" },getName:function(){return 'nannn';} });
+        let text = t1render({ name: 'hhahahhah', address: { city: "beijing" }, getName: function () { return 'nannn'; } });
         console.info(text);
     </script>
 

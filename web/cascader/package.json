@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@types/jquery": "^3.5.14",
     "jshint": "^2.13.5"
   }
 }

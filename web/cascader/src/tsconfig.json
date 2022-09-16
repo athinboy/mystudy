@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {     
+        "target": "ES6"    ,
+        "forceConsistentCasingInFileNames": true,
+        "module": "none",
+        "outDir":"js",
+        "esModuleInterop":false
+         
+    },
+    "files": [
+        "ts/cascader.core.ts",
+    ]
+}

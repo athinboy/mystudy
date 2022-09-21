@@ -7,22 +7,32 @@ class CascaderOption {
         this.placeHold = '选吧，你倒是选呀！'; //输入框占位符
         this.multiSelect = false; //多选
         this.targeDom = null; //替代的目标html dom
-        this.cssclassprefix = 'jquery_'; //css类前缀
+        this.cssclassprefix = 'jquery_'; //css类前缀（非公开）。//todo 移除此字段
         this.hoverExpand = false; //鼠标hover时展开子菜单
+        this.domIdPrefix = 'jqcascader_'; //dom id前缀。
         this.data = [];
+    }
+    copy(extendvalue) {
+        extendvalue = extendvalue !== null && extendvalue !== void 0 ? extendvalue : {};
+        return $.extend($.extend(true, {}, this), extendvalue);
+    }
+    validate() {
+        //todo 校验data、targeDom、targetDomId
     }
 }
 exports.CascaderOption = CascaderOption;
 var CascaderHtmlTemplate;
 (function (CascaderHtmlTemplate) {
-    CascaderHtmlTemplate["tagsContainer"] = "<div class=\"${option.cssclassprefix}cascader__tags\"></div>";
-    CascaderHtmlTemplate["CascaderInstance"] = "<div class=\"${option.cssclassprefix}cascader\"></div>";
-    CascaderHtmlTemplate["cascaderInput"] = "<div class=\"${option.cssclassprefix}cascader_input\"> <input type=\"text\" readonly=\"readonly\" autocomplete=\"off\" placeholder=\"${option.placeHold}\"  class=\"${option.cssclassprefix}cascader_input_inputter\" aria-expanded=\"true\" />        <span class=\"${option.cssclassprefix}cascader-input-suffix\">            <span class=\"cascader-input-suffix-inner\">                <i class=\"${option.cssclassprefix}cascader-input__icon ${option.cssclassprefix}cascader-icon-arrow-down\"></i>           </span>        </span>    </div>";
-    CascaderHtmlTemplate["cascaderPanelContainer"] = "<div class=\"${option.cssclassprefix}cascader_panel_container\"></div>";
-    CascaderHtmlTemplate["cascaderPanel"] = "<div class=\"${option.cssclassprefix}cascader_panel\"></div>";
-    CascaderHtmlTemplate["menu"] = "<div class=\"${option.cssclassprefix}cascader_menu\"></div>";
-    CascaderHtmlTemplate["menu_wrap"] = "<div class=\"${option.cssclassprefix}cascader_menu_wrap\"></div>";
-    CascaderHtmlTemplate["menuItem"] = "<li role=\"menuitem\" class=\"${option.cssclassprefix}cascader_menu_node is-disabled\" >         <span class=\"${option.cssclassprefix}cascader_menu_node_label\">${data.text}</span><i                 class=\"${option.cssclassprefix}cascader-input__icon ${option.cssclassprefix}cascader-icon-arrow-right ${option.cssclassprefix}cascader-node-postfix\"></i>         </li>   ";
+    CascaderHtmlTemplate["tagsContainer"] = "<div id=\"${option.domid}\" class=\"jqcascader__tags\"></div>";
+    CascaderHtmlTemplate["CascaderInstance"] = "<div id=\"${option.domid}\" class=\"jqcascader_cascader\"></div>";
+    CascaderHtmlTemplate["cascaderInput"] = "<div id=\"${option.domid}\" class=\"jqcascader_input\"> <input type=\"text\" readonly=\"readonly\" autocomplete=\"off\" placeholder=\"${option.placeHold}\"  class=\"jqcascader_input_inputter\" aria-expanded=\"true\" />        <span class=\"jqcascader_cascader-input-suffix\">            <span class=\"cascader-input-suffix-inner\">                <i class=\"jqcascader_cascader-input__icon jqcascader_cascader-icon-arrow-down\"></i>           </span>        </span>    </div>";
+    CascaderHtmlTemplate["cascaderPanelContainer"] = "<div id=\"${option.domid}\" class=\"jqcascader_panel_container\">  <div x-arrow=\"\" class=\"popper__arrow jqcascader_popper_arrow\" style=\"left: 35px;\"></div> </div>";
+    CascaderHtmlTemplate["cascaderPanel"] = "<div id=\"${option.domid}\" class=\"jqcascader_panel\"></div>";
+    CascaderHtmlTemplate["menu"] = "<div id=\"${option.domid}\" class=\"jqcascader_menu\"></div>";
+    CascaderHtmlTemplate["menu_wrap"] = "<div id=\"${option.domid}\" class=\"jqcascader_menu_wrap\"></div>";
+    CascaderHtmlTemplate["menuItem"] = "<li id=\"${option.domid}\" role=\"menuitem\" class=\"jqcascader_menu_node is-disabled\" >         <span class=\"jqcascader_menu_node_label\">${data.text}</span>     </li>   ";
+    CascaderHtmlTemplate["rightArrow"] = "<i class=\"el-icon-arrow-right jqcascader-icon-arrow-right jqcascader-node-postfix  el-cascader-node__postfix \"></i>";
+    CascaderHtmlTemplate["checkBox"] = "<label class=\"el-checkbox\"><span class=\"el-checkbox__input\"><span class=\"el-checkbox__inner\"></span><input type=\"checkbox\" aria-hidden=\"false\" class=\"el-checkbox__original\" value=\"\"></span></label>";
 })(CascaderHtmlTemplate = exports.CascaderHtmlTemplate || (exports.CascaderHtmlTemplate = {}));
 class CascaderCore {
     constructor() {
@@ -40,8 +50,7 @@ class CascaderCore {
             this.showError('dom id 为空！');
             return;
         }
-        _domId = '#' + _domId;
-        let _targeDom = $(_domId);
+        let _targeDom = $('#' + _domId);
         if (_targeDom.length == 0) {
             this.showError(_domId + '不存在！');
             return;
@@ -51,9 +60,11 @@ class CascaderCore {
         _option = _tempoption;
         _option.targeDom = _targeDom;
         _option.data = _option.data || [];
+        _option.targetDomId = _domId;
         if (_option.debugging && window.console && window.console.debug) {
             window.console.debug(_option);
         }
+        _option.validate();
         let instance = new CascaderInstance(this, _option);
         instance.render();
     }
@@ -66,16 +77,19 @@ class CascaderCore {
 exports.CascaderCore = CascaderCore;
 //输入控件
 class CascaderInputContainer {
-    constructor(_cascadercore, _option) {
+    constructor(_cascaderInstance, _option) {
         this.option = null;
         this.dom = null;
         this.cascadercore = null;
+        this.domId = '';
         this.option = _option;
         this.dom = null;
-        this.cascadercore = _cascadercore;
+        this.cascadercore = _cascaderInstance.cascadercore;
+        this.cascaderInstance = _cascaderInstance;
+        this.domId = this.cascaderInstance.domIdPrefix + 'input';
     }
     render(_cascaderDom) {
-        let _dom = this.cascadercore.createDOM('cascaderInput', { "option": this.option });
+        let _dom = this.cascadercore.createDOM('cascaderInput', { "option": this.option.copy({ "domid": this.domId }) });
         this.dom = _dom;
         if (this.option.debugging && window.console && window.console.debug) {
             window.console.debug(_dom.find('.' + this.option.cssclassprefix + 'cascader-input-suffix').length);
@@ -88,43 +102,66 @@ class CascaderInputContainer {
 }
 //选项项目
 class CascaderMenuItem {
-    constructor(_cascadercore, _menu, _data, _option) {
+    constructor(_menu, _data, _option) {
         this.itemDom = null;
-        this.subMenu = null;
-        this.itemIndex = 1;
+        this.subMenu = null; //对应子菜单
+        this.domid = '';
+        this.arrowDom = null; //指向右的箭头图标Dom
+        this.checkBoxDom = null; //复选框Dom
         //debugger;
         console.assert(_menu != null, '_menu ==null');
         console.assert(_data != null, '_data ==null');
         console.assert(_option != null, '_option ==null');
-        console.assert(_cascadercore != null, '_cascadercore ==null');
         this.data = _data;
         this.option = _option;
         this.itemMenu = _menu;
         this.itemDom = null;
         this.subMenu = null;
-        this.itemIndex = 1;
-        this.cascadercore = _cascadercore;
+        this.cascadercore = _menu.cascadercore;
+        if (this.itemMenu.parentMenuItem) {
+            this.domid = this.itemMenu.parentMenuItem.domid + '_' + this.itemMenu.nextIndex();
+        }
+        else {
+            this.domid = this.itemMenu.cascaderInstance.domIdPrefix + '' + this.itemMenu.nextIndex();
+        }
+    }
+    hideChildMenu() {
+        if (this.subMenu) {
+            this.subMenu.hideSubMenu();
+            this.subMenu.hide();
+        }
     }
     //显示子菜单
     showChildMenu() {
+        this.itemMenu.hideSubMenu();
+        if (this.subMenu != null) {
+            this.subMenu.show();
+            return;
+        }
         let _itemData = this.data;
         if (this.subMenu == null && _itemData.subData != null && _itemData.subData.length > 0) {
-            let newMenu = new CascaderMenu(this.cascadercore, this.itemMenu.menuPanelDom, _itemData.subData, this.option, this);
+            let newMenu = new CascaderMenu(this.itemMenu.menuPanel, _itemData.subData, this.option, this);
             this.subMenu = newMenu;
-        }
-        if (this.subMenu != null) {
             this.subMenu.render();
         }
     }
     render() {
-        let _dom = this.cascadercore.createDOM('menuItem', { "data": this.data, "option": this.option });
+        let _dom = this.cascadercore.createDOM('menuItem', { "data": this.data, "option": this.option.copy({ "domid": this.domid }) });
         this.itemDom = _dom;
         this.itemDom[0].cascaderMenuItem = this;
+        if (this.option.multiSelect) {
+            let _checkboxdom = this.cascadercore.createDOM('checkBox', {});
+            _checkboxdom.menuItem = this;
+            this.itemDom.prepend(_checkboxdom);
+            //todo 处理复选框的选取/取消事件
+        }
+        if (this.data.subData != null && this.data.subData.length > 0) {
+            //todo 添加右向箭头图标
+        }
         _dom.mouseleave(function () {
             window.console.debug('mouse leave');
         });
         _dom.mouseenter(function () {
-            window.console.debug('mouse enter');
             let _cascaderMenuItem = this.cascaderMenuItem;
             if (_cascaderMenuItem.option.hoverExpand) {
                 _cascaderMenuItem.showChildMenu();
@@ -141,53 +178,87 @@ class CascaderMenuItem {
 ;
 //选项菜单列表
 class CascaderMenu {
-    constructor(_cascadercore, _menuPanelDom, _data, _option, _parentMenu) {
+    constructor(_menuPanel, _data, _option, _parentMenuItem) {
         this.menuItems = [];
-        console.assert(_menuPanelDom != null, '_menuPanelDom ==null');
+        this.domid = '';
         console.assert(_data != null, '_data ==null');
         console.assert(_option != null, '_option ==null');
-        console.assert(_cascadercore != null, '_cascadercore ==null');
+        console.assert(_menuPanel != null, '_menuPanel ==null');
         this.data = _data;
         this.option = _option;
         this.menuItems = [];
         this.menuDom = null;
-        this.menuPanelDom = _menuPanelDom;
+        this.menuPanelDom = _menuPanel.panelDom;
         this.itemIndex = 1;
-        this.parentMenu = _parentMenu;
-        this.cascadercore = _cascadercore;
+        this.parentMenuItem = _parentMenuItem;
+        this.cascadercore = _menuPanel.cascadercore;
+        this.menuPanel = _menuPanel;
+        this.cascaderInstance = _menuPanel.cascaderInstance;
+        if (_parentMenuItem) {
+            this.domid = _parentMenuItem.domid + '-menu';
+        }
+        else {
+            this.domid = this.cascaderInstance.domIdPrefix + '-menu';
+        }
+    }
+    show() {
+        if (this.menuDom) {
+            this.menuDom.show();
+        }
+    }
+    hide() {
+        if (this.menuDom) {
+            this.menuDom.hide();
+        }
+    }
+    hideSubMenu() {
+        for (let index = 0; index < this.menuItems.length; index++) {
+            const element = this.menuItems[index];
+            element.hideChildMenu();
+        }
+    }
+    nextIndex() {
+        return this.itemIndex++;
     }
     render() {
-        let _dom = this.cascadercore.createDOM('menu', { "option": this.option });
-        this.menuDom = _dom;
-        this.menuDom.cascaderMenu = this;
-        this.menuPanelDom.append(_dom);
-        let _muneItems = this.menuItems;
-        let _menuDom = this.menuDom;
-        let _option = this.option;
-        let _itemMenu = this;
-        let _cascadercore = this.cascadercore;
-        $.each(this.data, function (_index, _value) {
-            let _newitem = new CascaderMenuItem(_cascadercore, _itemMenu, _value, _option);
-            _muneItems.push(_newitem);
-            _newitem.render();
-        });
+        if (this.menuDom == null) {
+            let _dom = this.cascadercore.createDOM('menu', { "option": this.option.copy({ "domid": this.domid }) });
+            this.menuDom = _dom;
+            this.menuDom.cascaderMenu = this;
+            this.menuPanelDom.append(_dom);
+            let _muneItems = this.menuItems;
+            let _menuDom = this.menuDom;
+            let _option = this.option;
+            let _itemMenu = this;
+            let _cascadercore = this.cascadercore;
+            $.each(this.data, function (_index, _value) {
+                let _newitem = new CascaderMenuItem(_itemMenu, _value, _option);
+                _muneItems.push(_newitem);
+                _newitem.render();
+            });
+        }
+        else {
+        }
     }
 }
 ;
 //选项面板
 class CascaderMenuPanel {
-    constructor(_cascadercore, _option) {
+    constructor(_cascaderInstance, _option) {
         this.itemMenus = [];
         this.option = _option;
         this.containerDom = null;
         this.panelDom = null;
         this.itemMenus = [];
-        this.cascadercore = _cascadercore;
+        this.cascadercore = _cascaderInstance.cascadercore;
+        this.cascaderInstance = _cascaderInstance;
     }
     render(_inputContainer) {
-        let _dom = this.cascadercore.createDOM('cascaderPanelContainer', { "option": this.option });
+        const _containerSuffix = this.cascaderInstance.domIdPrefix + 'menupanelcontainer';
+        const _panelSuffix = this.cascaderInstance.domIdPrefix + 'menupanel';
+        let _dom = this.cascadercore.createDOM('cascaderPanelContainer', { "option": this.option.copy({ "domid": _containerSuffix }) });
         this.containerDom = _dom;
-        _dom = this.cascadercore.createDOM('cascaderPanel', { "option": this.option });
+        _dom = this.cascadercore.createDOM('cascaderPanel', { "option": this.option.copy({ "domid": _panelSuffix }) });
         this.panelDom = _dom;
         this.panelDom[0].cascaderPanel = this;
         console.info(this.containerDom);
@@ -196,16 +267,19 @@ class CascaderMenuPanel {
         if (window.console && window.console.info) {
             window.console.info(_inputContainer.dom.offset());
         }
-        this.containerDom.css("left", _inputContainer.dom.offset().left + 'px');
-        this.containerDom.css("top", (_inputContainer.dom.offset().top + _inputContainer.dom.height) + 'px');
     }
     addMenu(_data, _option) {
         //debugger;
-        let newMenu = new CascaderMenu(this.cascadercore, this.panelDom, _data, _option, null);
+        let newMenu = new CascaderMenu(this, _data, _option, null);
         newMenu.render();
         this.itemMenus.push(newMenu);
     }
     show() {
+        let inputoffset = this.cascaderInstance.inputContainer.dom.offset();
+        let inputheight = this.cascaderInstance.inputContainer.dom.outerHeight();
+        this.containerDom.css("position", 'absolute');
+        this.containerDom.css("left", inputoffset.left + 'px');
+        this.containerDom.css("top", (inputoffset.top + inputheight) + 'px');
         $(this.containerDom).show();
     }
 }
@@ -213,12 +287,14 @@ class CascaderMenuPanel {
 //cascader实例
 class CascaderInstance {
     constructor(_cascadercore, _option) {
+        this.domIdPrefix = '';
         this.cascadercore = _cascadercore;
         this.option = _option;
-        this.inputContainer = new CascaderInputContainer(this.cascadercore, _option);
-        this.candidatePanel = new CascaderMenuPanel(this.cascadercore, _option);
         this.etpl = null;
         this.dom = null;
+        this.domIdPrefix = _option.domIdPrefix + _option.targetDomId + '_';
+        this.inputContainer = new CascaderInputContainer(this, _option);
+        this.candidatePanel = new CascaderMenuPanel(this, _option);
     }
     render() {
         let _dom = this.cascadercore.createDOM('CascaderInstance', { "option": this.option });

@@ -1,10 +1,15 @@
+# 测试说明
+
 - 编译ts
+  
 ``` cmd
 cd src
 tsc
 browserify ./js/cascader.js -o ../dist/cascader.js
 ```
+
 - dom id层级结构
+
 ``` sql
 jqcascader_iname_menu
         |

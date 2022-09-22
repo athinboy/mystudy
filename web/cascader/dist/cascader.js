@@ -10,7 +10,7 @@ class CascaderOption {
         this.cssclassprefix = 'jquery_'; //css类前缀（非公开）。//todo 移除此字段
         this.hoverExpand = false; //鼠标hover时展开子菜单
         this.domIdPrefix = 'jqcascader_'; //dom id前缀。
-        this.data = [];
+        this.data = null;
     }
     copy(extendvalue) {
         extendvalue = extendvalue !== null && extendvalue !== void 0 ? extendvalue : {};
@@ -36,7 +36,13 @@ var CascaderHtmlTemplate;
 })(CascaderHtmlTemplate = exports.CascaderHtmlTemplate || (exports.CascaderHtmlTemplate = {}));
 class CascaderCore {
     constructor() {
-        this.defaultOption = new CascaderOption();
+        this.instances = []; //页面实例
+        $('body').bind('mousedown', function (event) {
+            //https://developer.mozilla.org/en-US/docs/Web/API/Element/mousedown_event
+            //window.console.info(event);
+            let core = window.cascaderCore;
+            core.instances.forEach(ci => { ci.dealMouseDown(); });
+        });
     }
     createDOM(templateid, para) {
         let _htmltemplate = CascaderHtmlTemplate[templateid];
@@ -55,16 +61,16 @@ class CascaderCore {
             this.showError(_domId + '不存在！');
             return;
         }
-        let _tempoption = this.defaultOption;
+        let _tempoption = new CascaderOption();
         $.extend(_tempoption, _option || {});
         _option = _tempoption;
+        _option.validate();
         _option.targeDom = _targeDom;
         _option.data = _option.data || [];
         _option.targetDomId = _domId;
         if (_option.debugging && window.console && window.console.debug) {
             window.console.debug(_option);
         }
-        _option.validate();
         let instance = new CascaderInstance(this, _option);
         instance.render();
     }
@@ -108,6 +114,7 @@ class CascaderMenuItem {
         this.domid = '';
         this.arrowDom = null; //指向右的箭头图标Dom
         this.checkBoxDom = null; //复选框Dom
+        this.seleted = false; //是否选中
         //debugger;
         console.assert(_menu != null, '_menu ==null');
         console.assert(_data != null, '_data ==null');
@@ -130,6 +137,20 @@ class CascaderMenuItem {
             this.subMenu.hideSubMenu();
             this.subMenu.hide();
         }
+    }
+    isLeaf() {
+        let _itemData = this.data;
+        if (_itemData.subData != null && _itemData.subData.length > 0) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    //添加右向箭头
+    addRightArrow() {
+        let _rightDom = this.cascadercore.createDOM('rightArrow', {});
+        this.itemDom.append(_rightDom);
     }
     //显示子菜单
     showChildMenu() {
@@ -157,6 +178,7 @@ class CascaderMenuItem {
         }
         if (this.data.subData != null && this.data.subData.length > 0) {
             //todo 添加右向箭头图标
+            this.addRightArrow();
         }
         _dom.mouseleave(function () {
             window.console.debug('mouse leave');
@@ -169,10 +191,29 @@ class CascaderMenuItem {
         });
         _dom.click(function () {
             let _cascaderMenuItem = this.cascaderMenuItem;
-            _cascaderMenuItem.showChildMenu();
+            //debugger;
+            if (_cascaderMenuItem.isLeaf()) {
+                _cascaderMenuItem.doChangeSelect();
+            }
+            else {
+                _cascaderMenuItem.showChildMenu();
+            }
         });
         //debugger;
         this.itemMenu.menuDom.append(_dom);
+    }
+    //处理--选择变化
+    doChangeSelect() {
+        if (this.seleted) {
+            this.seleted = false;
+            this.itemMenu.cascaderInstance.removeSelectedMenuItem(this);
+            this.itemDom.removeClass('is-checked');
+        }
+        else {
+            this.seleted = true;
+            this.itemMenu.cascaderInstance.addSelectedMenuItem(this);
+            this.itemDom.addClass('is-checked');
+        }
     }
 }
 ;
@@ -246,6 +287,8 @@ class CascaderMenu {
 class CascaderMenuPanel {
     constructor(_cascaderInstance, _option) {
         this.itemMenus = [];
+        this.mouseLeave = false;
+        this.mouseEnter = false;
         this.option = _option;
         this.containerDom = null;
         this.panelDom = null;
@@ -260,13 +303,21 @@ class CascaderMenuPanel {
         this.containerDom = _dom;
         _dom = this.cascadercore.createDOM('cascaderPanel', { "option": this.option.copy({ "domid": _panelSuffix }) });
         this.panelDom = _dom;
+        _dom.cascaderMenuPanel = this;
         this.panelDom[0].cascaderPanel = this;
         console.info(this.containerDom);
         this.containerDom.append(this.panelDom);
         $('body').append(this.containerDom);
-        if (window.console && window.console.info) {
-            window.console.info(_inputContainer.dom.offset());
-        }
+        _dom.mouseleave(function () {
+            let _menuPanel = _dom.cascaderMenuPanel;
+            _menuPanel.mouseLeave = true;
+            _menuPanel.mouseEnter = false;
+        });
+        _dom.mouseenter(function () {
+            let _menuPanel = _dom.cascaderMenuPanel;
+            _menuPanel.mouseLeave = false;
+            _menuPanel.mouseEnter = true;
+        });
     }
     addMenu(_data, _option) {
         //debugger;
@@ -282,12 +333,17 @@ class CascaderMenuPanel {
         this.containerDom.css("top", (inputoffset.top + inputheight) + 'px');
         $(this.containerDom).show();
     }
+    hide() {
+        $(this.containerDom).hide();
+    }
 }
 ;
 //cascader实例
 class CascaderInstance {
     constructor(_cascadercore, _option) {
         this.domIdPrefix = '';
+        this.selectedMenuItems = []; //选择的菜单项目
+        this.values = []; //值
         this.cascadercore = _cascadercore;
         this.option = _option;
         this.etpl = null;
@@ -295,6 +351,16 @@ class CascaderInstance {
         this.domIdPrefix = _option.domIdPrefix + _option.targetDomId + '_';
         this.inputContainer = new CascaderInputContainer(this, _option);
         this.candidatePanel = new CascaderMenuPanel(this, _option);
+    }
+    addSelectedMenuItem(_item) {
+        if (null == this.selectedMenuItems.find(smi => smi.domid == _item.domid)) {
+            this.selectedMenuItems.push(_item);
+            this.values = this.selectedMenuItems.map(x => x.data.id);
+        }
+    }
+    removeSelectedMenuItem(_item) {
+        this.selectedMenuItems = this.selectedMenuItems.filter(smi => smi.domid != _item.domid);
+        this.values = this.selectedMenuItems.map(x => x.data.id);
     }
     render() {
         let _dom = this.cascadercore.createDOM('CascaderInstance', { "option": this.option });
@@ -311,9 +377,15 @@ class CascaderInstance {
         if (this.option.data && this.option.data.length > 0) {
             this.candidatePanel.addMenu(this.option.data, this.option);
         }
+        this.cascadercore.instances.push(this);
     }
     showCandidate() {
         this.candidatePanel.show();
+    }
+    dealMouseDown() {
+        if (this.candidatePanel.mouseLeave) {
+            this.candidatePanel.hide();
+        }
     }
 }
 exports.CascaderInstance = CascaderInstance;
@@ -336,6 +408,7 @@ const { CascaderCore } = require("./cascader.core");
                 if(this.cascaderCore==null){
                     this.cascaderCore=new CascaderCore();
                 }
+                window.cascaderCore=this.cascaderCore;
                 this.cascaderCore.build(_domId,_option);
             }
 

@@ -14,6 +14,7 @@ const { CascaderCore } = require("./cascader.core");
                 if(this.cascaderCore==null){
                     this.cascaderCore=new CascaderCore();
                 }
+                window.cascaderCore=this.cascaderCore;
                 this.cascaderCore.build(_domId,_option);
             }
 

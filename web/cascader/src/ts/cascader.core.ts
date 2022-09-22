@@ -1,6 +1,7 @@
 // import $ from 'jquery' 
 declare var etpl: any;
 declare var $: any;
+declare var window: any;
 
 export class CascaderOption {
 
@@ -13,7 +14,7 @@ export class CascaderOption {
     hoverExpand: boolean = false;//鼠标hover时展开子菜单
     onlyLeaf: true;//仅叶节点可选
     domIdPrefix: string = 'jqcascader_';//dom id前缀。
-    data: Array<object> = [];
+    data: Array<object> = null;
     copy(extendvalue: any) {
         extendvalue = extendvalue ?? {};
         return $.extend($.extend(true, {}, this), extendvalue)
@@ -23,6 +24,7 @@ export class CascaderOption {
         //todo 校验data、targeDom、targetDomId
 
     }
+
 
 }
 
@@ -42,15 +44,26 @@ export enum CascaderHtmlTemplate {
     '    <span class="jqcascader_menu_node_label">${data.text}</span> ' +
     '    </li>   ',
     'rightArrow' = '<i class="el-icon-arrow-right jqcascader-icon-arrow-right jqcascader-node-postfix  el-cascader-node__postfix "></i>',
-    'checkBox' = '<label class="el-checkbox"><span class="el-checkbox__input"><span class="el-checkbox__inner"></span><input type="checkbox" aria-hidden="false" class="el-checkbox__original" value=""></span></label>'
+    'checkBox' = '<label class="el-checkbox"><span class="el-checkbox__input"><span class="el-checkbox__inner"></span><input type="checkbox" aria-hidden="false" class="el-checkbox__original" value=""></span></label>',
+    'selectedTagContainer'=''
 
 }
 
 export class CascaderCore {
 
 
-    etpl: any;//etpl对象，https://github.com/ecomfe/etpl
-    defaultOption: CascaderOption = new CascaderOption();
+    etpl: any;//etpl对象，https://github.com/ecomfe/etpl 
+    instances: Array<CascaderInstance> = [];//页面实例
+
+    constructor() {
+
+        $('body').bind('mousedown', function (event) {
+            //https://developer.mozilla.org/en-US/docs/Web/API/Element/mousedown_event
+            //window.console.info(event);
+            let core: CascaderCore = window.cascaderCore;
+            core.instances.forEach(ci => { ci.dealMouseDown() });
+        });
+    }
 
     createDOM(templateid: string, para: object) {
 
@@ -73,9 +86,11 @@ export class CascaderCore {
             return;
         }
 
-        let _tempoption = this.defaultOption;
+        let _tempoption = new CascaderOption();
+
         $.extend(_tempoption, _option || {});
         _option = _tempoption;
+        _option.validate();
         _option.targeDom = _targeDom;
         _option.data = _option.data || [];
         _option.targetDomId = _domId;
@@ -83,7 +98,7 @@ export class CascaderCore {
         if (_option.debugging && window.console && window.console.debug) {
             window.console.debug(_option);
         }
-        _option.validate();
+
 
 
         let instance = new CascaderInstance(this, _option);
@@ -99,7 +114,16 @@ export class CascaderCore {
         }
     }
 }
+class SeledTag {
+    tagDom:any=null;    
+    menuItem:CascaderMenuItem=null;//对应的菜单项目
 
+    constructor(_menuitem:CascaderMenuItem) {
+
+    }
+
+
+}
 
 //输入控件
 class CascaderInputContainer {
@@ -185,8 +209,12 @@ class CascaderMenuItem {
             return true;
         }
     }
+    //添加右向箭头
+    addRightArrow() {
+        let _rightDom = this.cascadercore.createDOM('rightArrow', {});
+        this.itemDom.append(_rightDom);
 
-
+    }
     //显示子菜单
     showChildMenu() {
 
@@ -225,6 +253,7 @@ class CascaderMenuItem {
 
         if (this.data.subData != null && this.data.subData.length > 0) {
             //todo 添加右向箭头图标
+            this.addRightArrow();
         }
 
 
@@ -240,7 +269,8 @@ class CascaderMenuItem {
         });
         _dom.click(function () {
             let _cascaderMenuItem: CascaderMenuItem = this.cascaderMenuItem;
-            if (_cascaderMenuItem.isLeaf) {
+            //debugger;
+            if (_cascaderMenuItem.isLeaf()) {
                 _cascaderMenuItem.doChangeSelect();
             } else {
                 _cascaderMenuItem.showChildMenu();
@@ -256,9 +286,11 @@ class CascaderMenuItem {
         if (this.seleted) {
             this.seleted = false;
             this.itemMenu.cascaderInstance.removeSelectedMenuItem(this);
+            this.itemDom.removeClass('is-checked');
         } else {
             this.seleted = true;
             this.itemMenu.cascaderInstance.addSelectedMenuItem(this);
+            this.itemDom.addClass('is-checked');
         }
 
     }
@@ -359,8 +391,9 @@ class CascaderMenuPanel {
     containerDom: any;
     panelDom: any;
     itemMenus: Array<CascaderMenu> = [];
-    cascaderInstance: CascaderInstance
-
+    cascaderInstance: CascaderInstance;
+    mouseLeave: boolean = false;
+    mouseEnter: boolean = false;
     constructor(_cascaderInstance: CascaderInstance, _option: CascaderOption) {
         this.option = _option;
         this.containerDom = null;
@@ -379,14 +412,22 @@ class CascaderMenuPanel {
         this.containerDom = _dom;
         _dom = this.cascadercore.createDOM('cascaderPanel', { "option": this.option.copy({ "domid": _panelSuffix }) });
         this.panelDom = _dom;
+        _dom.cascaderMenuPanel = this;
         this.panelDom[0].cascaderPanel = this;
         console.info(this.containerDom);
         this.containerDom.append(this.panelDom);
         $('body').append(this.containerDom);
-        if (window.console && window.console.info) {
-            window.console.info(_inputContainer.dom.offset());
-        }
 
+        _dom.mouseleave(function () {
+            let _menuPanel: CascaderMenuPanel = _dom.cascaderMenuPanel;
+            _menuPanel.mouseLeave = true;
+            _menuPanel.mouseEnter = false;
+        });
+        _dom.mouseenter(function () {
+            let _menuPanel: CascaderMenuPanel = _dom.cascaderMenuPanel;
+            _menuPanel.mouseLeave = false;
+            _menuPanel.mouseEnter = true;
+        });
 
 
     }
@@ -395,8 +436,6 @@ class CascaderMenuPanel {
         let newMenu = new CascaderMenu(this, _data, _option, null);
         newMenu.render();
         this.itemMenus.push(newMenu);
-
-
     }
     show() {
         let inputoffset = this.cascaderInstance.inputContainer.dom.offset();
@@ -407,12 +446,14 @@ class CascaderMenuPanel {
 
         $(this.containerDom).show();
     }
+    hide() {
+        $(this.containerDom).hide();
+    }
 
 };
 
 //cascader实例
 export class CascaderInstance {
-
 
     option: CascaderOption;
     inputContainer: CascaderInputContainer;
@@ -437,19 +478,16 @@ export class CascaderInstance {
     }
 
     addSelectedMenuItem(_item: CascaderMenuItem) {
-        this.selectedMenuItems.push(_item);
-        this.values = this.selectedMenuItems.map(x => x.data.id);
+        if (null == this.selectedMenuItems.find(smi => smi.domid == _item.domid)) {
+            this.selectedMenuItems.push(_item);
+            this.values = this.selectedMenuItems.map(x => x.data.id);
+        }
+
     }
 
     removeSelectedMenuItem(_item: CascaderMenuItem) {
-        for (let index = 0; index < this.selectedMenuItems.length; index++) {
-            const element = this.selectedMenuItems[index];
 
-            if (element.domid == _item.domid) {
-                this.selectedMenuItems = this.selectedMenuItems.splice(index, 1);
-                index--;
-            }
-        }
+        this.selectedMenuItems = this.selectedMenuItems.filter(smi => smi.domid != _item.domid);
         this.values = this.selectedMenuItems.map(x => x.data.id);
 
     }
@@ -476,9 +514,18 @@ export class CascaderInstance {
             this.candidatePanel.addMenu(this.option.data, this.option);
         }
 
+        this.cascadercore.instances.push(this);
+
+
     }
     showCandidate() {
         this.candidatePanel.show();
+    }
+    dealMouseDown() {
+        if (this.candidatePanel.mouseLeave) {
+            this.candidatePanel.hide();
+        }
+
     }
 
 

@@ -25,8 +25,8 @@
     #sample_drapdown {
         z-index: 2051;
         position: absolute;
-        top: 87px;
-        left: 856px;
+        top: 59px;
+        left: 0px;
     }
 </style>
 
@@ -36,7 +36,7 @@
         <div class="itemdiv">
 
 
-            <div class="cascader">
+            <div class="jqcascader_cascader">
                 <div class="jqcascader_input">
                     <input type="text" readonly="readonly" autocomplete="off" placeholder="Select"
                         class="jqcascader_input_inputter" aria-expanded="true" />
@@ -46,6 +46,13 @@
                         </span>
                     </span>
 
+                </div>
+                <div class="el-cascader__tags jqcascader_selectedtagcontainer">
+                    <span class="el-tag el-tag--info el-tag--small el-tag--light jqcascader_selectedtag"><span>东南 / 上海 / 徐汇</span><i
+                            class="el-tag__close el-icon-close jqcascader_icon-close"></i></span>
+                    <span class="el-tag el-tag--info el-tag--small el-tag--light jqcascader_selectedtag"><span>西北 / 新疆维吾尔族自治区 / 克拉玛依</span><i
+                            class="el-tag__close el-icon-close jqcascader_icon-close"></i></span>
+                     
                 </div>
                 <div class="el-popper el-cascader__dropdown jqcascader_panel_container" style="display: block;" id="sample_drapdown"
                     x-placement="bottom-start">
@@ -152,18 +159,24 @@
                                 <div class="el-scrollbar__thumb" style="transform: translateY(0%);"></div>
                             </div>
                         </div>
-                    </div>
-                    <!---->
+                    </div>                     
                     <div x-arrow="" class="popper__arrow jqcascader_popper_arrow" style="left: 35px;"></div>
                 </div>
             </div>
         </div>
 
         <div class="itemdiv">
-            <input title="fe" id="sel_test" type="text" />
+            <div>基础用法</div>
+            <div>默认 click 触发子菜单</div>
+            <input title="fe" id="sel_test1" type="text" />
         </div>
         <div class="itemdiv"></div>
-
+        <div class="itemdiv">
+            <div>基础用法</div>
+            <div>hover 触发子菜单</div>
+            <input title="fe" id="sel_test2" type="text" />
+        </div>
+        <div class="itemdiv"></div>
 
 
     </div>
@@ -172,11 +185,7 @@
         (function init() {
             console.info('hello my cascader!');
         })();
-        cascader.build(null, null);
-        cascader.build('', null);
-        cascader.build('35435', null);
-
-
+ 
         var data = [];
         for (let i1 = 1; i1 < 5; i1++) {
 
@@ -201,13 +210,19 @@
             data.push(d1);
         }
 
-        cascader.build('sel_test'
+        cascader.build('sel_test1'
             , {
                 debugging: true,
                 multiSelect:true,
+                hoverExpand: false,
                 data: data
             });
-
+            cascader.build('sel_test2'
+            , {
+                hoverExpand: true,
+                multiSelect:true,
+                data: data
+            });
 
 
         let t1 = '<input>hello,${address.city}  ${getName()}   </input>';

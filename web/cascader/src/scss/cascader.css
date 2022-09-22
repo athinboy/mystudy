@@ -1,3 +1,6 @@
+/* 
+//todo 清理所有文件中的element项目中的css类
+*/
 @font-face {
     font-family: element-icons;
     src: url(../font/element-icons.535877f.woff) format("woff"), url(../font/element-icons.732389d.ttf) format("truetype");
@@ -20,8 +23,18 @@
 }
 
 
+.jqcascader_cascader {
+    width: 222px;
+    display: inline-block;
+    position: relative;
+    font-size: 14px;
+    line-height: 40px;
+    border-color: #409eff;
+}
+
+
 .jqcascader_panel_container {
-    
+
     z-index: 2064;
     display: none;
 }
@@ -76,6 +89,12 @@
     outline: none;
 }
 
+.jqcascader_menu_node.is-checked {
+    color: #409eff;
+    font-weight: 700;
+}
+
+
 .jqcascader_menu_node:hover {
     background: #f5f7fa;
 }
@@ -94,7 +113,38 @@ jqcascader_menu_node .is-enable {
     text-overflow: ellipsis;
 }
 
+.jqcascader_icon-close {
 
+    border-radius: 50%;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    font-size: 12px;
+    height: 16px;
+    width: 16px;
+    line-height: 16px;
+    vertical-align: middle;
+    top: -1px;
+    right: -5px;
+    transform: scale(.8);
+    font-family: element-icons !important;
+    speak: none;
+    font-style: normal;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    display: inline-block;
+    -webkit-font-smoothing: antialiased;
+
+}
+
+.jqcascader_icon-close:before {
+    display: block;
+}
+
+.jqcascader_icon-close:before {
+    content: "";
+}
 
 
 .jqcascader_icon-arrow-right {}
@@ -108,14 +158,6 @@ jqcascader_menu_node .is-enable {
     width: 100%;
 }
 
-.jqcascader_cascader {
-    width: 222px;
-    display: inline-block;
-    position: relative;
-    font-size: 14px;
-    line-height: 40px;
-    border-color: #409eff;
-}
 
 .jqcascader_input_inputter {
     border-color: #409eff;
@@ -319,8 +361,9 @@ jqcascader_menu_node .is-enable {
     height: 14px;
     background-color: #fff;
     z-index: 1;
-    transition: border-color .25s cubic-bezier(.71,-.46,.29,1.46),background-color .25s cubic-bezier(.71,-.46,.29,1.46);
+    transition: border-color .25s cubic-bezier(.71, -.46, .29, 1.46), background-color .25s cubic-bezier(.71, -.46, .29, 1.46);
 }
+
 .jqcascader_checkbox__inner:after {
     box-sizing: content-box;
     content: "";
@@ -341,6 +384,7 @@ jqcascader_menu_node .is-enable {
     background-color: #409eff;
     border-color: #409eff;
 }
+
 .jqcascader_checkbox__input.is-checked .jqcascader_checkbox__inner:after {
     transform: rotate(45deg) scaleY(1);
 }
@@ -353,3 +397,42 @@ jqcascader_menu_node .is-enable {
     width: 0;
     height: 0;
     z-index: -1;
+}
+
+
+.jqcascader_selectedtagcontainer {
+    position: absolute;
+    left: 0;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-wrap: wrap;
+    line-height: normal;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+
+.jqcascader_selectedtag {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    margin: 2px 0 2px 6px;
+    text-overflow: ellipsis;
+    background: #f0f2f5;
+}
+
+.jqcascader_selectedtag>span {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.jqcascader_selectedtag .jqcascader_icon-close {
+
+    flex: none;
+    background-color: #c0c4cc;
+    color: #fff;
+}

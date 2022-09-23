@@ -2,10 +2,11 @@
 
 - 编译ts
   
-``` cmd
+``` sql
 cd src
 tsc
-browserify ./js/cascader.js -o ../dist/cascader.js
+browserify ./js/cascader.js -o ../dist/cascader.js // win cmd: tsc &&  browserify ./js/cascader.js -o ../dist/cascader.js
+
 ```
 
 - dom id层级结构

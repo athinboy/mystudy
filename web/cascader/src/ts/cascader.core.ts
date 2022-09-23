@@ -45,7 +45,7 @@ export enum CascaderHtmlTemplate {
     '    </li>   ',
     'rightArrow' = '<i class="el-icon-arrow-right jqcascader-icon-arrow-right jqcascader-node-postfix  el-cascader-node__postfix "></i>',
     'checkBox' = '<label class="el-checkbox"><span class="el-checkbox__input"><span class="el-checkbox__inner"></span><input type="checkbox" aria-hidden="false" class="el-checkbox__original" value=""></span></label>',
-    'selectedTagContainer'=''
+    'selectedTagContainer' = '<div class="el-cascader__tags jqcascader_selectedtagcontainer"></div>'
 
 }
 
@@ -114,14 +114,16 @@ export class CascaderCore {
         }
     }
 }
-class SeledTag {
-    tagDom:any=null;    
-    menuItem:CascaderMenuItem=null;//对应的菜单项目
+class SelectedTag {
+    tagDom: any = null;
+    menuItem: CascaderMenuItem = null;//对应的菜单项目
 
-    constructor(_menuitem:CascaderMenuItem) {
+    constructor(_menuitem: CascaderMenuItem) {
 
     }
-
+    render() {
+                
+    }
 
 }
 
@@ -133,6 +135,7 @@ class CascaderInputContainer {
     cascadercore: CascaderCore = null;
     cascaderInstance: CascaderInstance;
     domId: string = '';
+    selectedTagContainerDom: any = null;
 
     constructor(_cascaderInstance: CascaderInstance, _option: CascaderOption) {
         this.option = _option;
@@ -155,6 +158,11 @@ class CascaderInputContainer {
 
             window.console.debug(111111111);
         });
+
+
+        let _selectedTagContainerdom = this.cascadercore.createDOM('selectedTagContainer', {});
+        this.dom.append(_selectedTagContainerdom);
+        this.selectedTagContainerDom = _selectedTagContainerdom;
 
 
     }

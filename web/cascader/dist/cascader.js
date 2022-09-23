@@ -33,6 +33,7 @@ var CascaderHtmlTemplate;
     CascaderHtmlTemplate["menuItem"] = "<li id=\"${option.domid}\" role=\"menuitem\" class=\"jqcascader_menu_node is-disabled\" >         <span class=\"jqcascader_menu_node_label\">${data.text}</span>     </li>   ";
     CascaderHtmlTemplate["rightArrow"] = "<i class=\"el-icon-arrow-right jqcascader-icon-arrow-right jqcascader-node-postfix  el-cascader-node__postfix \"></i>";
     CascaderHtmlTemplate["checkBox"] = "<label class=\"el-checkbox\"><span class=\"el-checkbox__input\"><span class=\"el-checkbox__inner\"></span><input type=\"checkbox\" aria-hidden=\"false\" class=\"el-checkbox__original\" value=\"\"></span></label>";
+    CascaderHtmlTemplate["selectedTagContainer"] = "<div class=\"el-cascader__tags jqcascader_selectedtagcontainer\"></div>";
 })(CascaderHtmlTemplate = exports.CascaderHtmlTemplate || (exports.CascaderHtmlTemplate = {}));
 class CascaderCore {
     constructor() {
@@ -81,6 +82,12 @@ class CascaderCore {
     }
 }
 exports.CascaderCore = CascaderCore;
+class SeledTag {
+    constructor(_menuitem) {
+        this.tagDom = null;
+        this.menuItem = null; //对应的菜单项目
+    }
+}
 //输入控件
 class CascaderInputContainer {
     constructor(_cascaderInstance, _option) {
@@ -104,6 +111,8 @@ class CascaderInputContainer {
         _dom.find('.' + this.option.cssclassprefix + 'cascader-input-suffix').on('click', function () {
             window.console.debug(111111111);
         });
+        let _selectedTagContainerdom = this.cascadercore.createDOM('selectedTagContainer', {});
+        this.dom.append(_selectedTagContainerdom);
     }
 }
 //选项项目

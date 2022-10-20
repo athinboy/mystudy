@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="GravCMS">
+    <!-- <script type="text/javascript" src="https://requirejs.org/docs/release/2.3.6/comments/require.js" ></script> -->
+    <script type="text/javascript" src="jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="../dist/cascader.js"></script>
+    <script type="text/javascript" src="etpl.source.js"></script>
+    <link rel="stylesheet" href="../src/scss/cascader.css" />
+    <!--            https://element.eleme.cn/#/zh-CN/component/cascader            -->
+</head>
+<style>
+    .itemdiv {
+        border: 1px solid;
+        border-color: darkgray;
+        width: 40%;
+        margin: 20px;
+        padding: 10px;
+    }
+
+    #sample_drapdown {
+        z-index: 2051;
+        position: absolute;
+        top: 59px;
+        left: 0px;
+    }
+</style>
+
+<body>
+    <div style="display: flex;flex-direction: row;flex-wrap: wrap;">
+        <div class="itemdiv">
+            <div>调用</div>
+            <input title="fe" id="sel_Sample" type="text" />
+            <div>
+                <p>选项：</p>                
+                <textarea id="txt_SampleOption"></textarea>
+                <p>值：</p>
+                <textarea id="txt_SampleValue"></textarea>
+            </div>
+            <div>
+                <input type="button" value="仅叶节点"></input>
+                <input type="button" value="重置"></input>
+            </div>
+        </div>
+         
+
+
+    </div>
+    <br />
+    <script type="text/javascript">
+        (function init() {
+            console.info('hello my cascader!');
+        })();
+
+        var data = [];
+        for (let i1 = 1; i1 < 5; i1++) {
+
+            var d1 = {};
+            d1.id = i1;
+            d1.text = d1.id.toString();
+            d1.subData = [];
+            for (let i2 = 1; i2 < 5; i2++) {
+
+                var d2 = {};
+                d2.id = i1 * 10 + i2;
+                d2.text = d2.id.toString();
+                d2.subData = [];
+                d1.subData.push(d2);
+                for (let i3 = 1; i3 < 5; i3++) {
+                    var d3 = {};
+                    d3.id = i1 * 100 + i2 * 10 + i3;
+                    d3.text = d3.id.toString();
+                    d2.subData.push(d3);
+                }
+            }
+            data.push(d1);
+        }
+
+        cascader.build('sel_Sample'
+            , {
+                debugging: true,
+                multiSelect: true,
+                hoverExpand: false,
+                data: data
+            });
+ 
+
+      
+    </script>
+
+
+</body>
+
+</html>

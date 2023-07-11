@@ -122,7 +122,7 @@ class SelectedTag {
 
     }
     render() {
-                
+
     }
 
 }
@@ -300,6 +300,21 @@ class CascaderMenuItem {
             this.itemMenu.cascaderInstance.addSelectedMenuItem(this);
             this.itemDom.addClass('is-checked');
         }
+        if (this.itemMenu.parentMenuItem != null) {
+            this.itemMenu.parentMenuItem.doChildChangeSelected(this);
+        }
+
+    }
+    doChildChangeSelected(child: CascaderMenuItem) {
+        let selectedCount: number = this.itemMenu.menuItems.filter(x => x.seleted).length;
+        if (selectedCount == 0) {
+
+        }
+        if (selectedCount == this.itemMenu.menuItems.length) {
+
+        }
+
+
 
     }
 

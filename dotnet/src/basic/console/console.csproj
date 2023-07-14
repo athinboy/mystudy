@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
+  <StartupObject>console.DynamicClass</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,4 +11,5 @@
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="5.0.0" />
   </ItemGroup>
 
+ 
 </Project>

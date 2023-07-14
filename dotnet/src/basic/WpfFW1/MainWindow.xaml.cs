@@ -24,5 +24,26 @@ namespace WpfFW1
         {
             InitializeComponent();
         }
+
+        private void btn_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            switch (button.Name)
+            {
+                case "btnOpenCommand":
+                    CommandWindow commandWindow = new CommandWindow();
+                    commandWindow.Owner = this;
+                    commandWindow.Show();
+                    break;
+                case "btnOpenCacheModel":
+                    CacheModeWindow001 cacheModeWindow001 = new CacheModeWindow001();
+                    cacheModeWindow001.Owner = this;
+                    cacheModeWindow001.Show();
+                    break;
+                default:
+                    break;
+            }
+
+        }
     }
 }

@@ -9,6 +9,7 @@ target/
 .factorypath
 bin/
 obj/
+packages/
 .vs/
 .config/
 /dotnet/src/VSExtension/DBToClass/packages

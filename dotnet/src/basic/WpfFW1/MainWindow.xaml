@@ -7,6 +7,19 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Orientation="Horizontal">
+            <GroupBox Header="performance" Height="314" Width="306" VerticalAlignment="Top">
+                <WrapPanel>
+                    <Button x:Name="btnOpenCacheModel" Content="缓存模式" Margin="10,20,10,20" Click="btn_Click"/>
+                </WrapPanel>
+            </GroupBox>
+            <GroupBox Header="command" Height="224" Width="332" VerticalAlignment="Top">
+                <WrapPanel>
+                    <Button x:Name="btnOpenCommand" Content="命令窗口" Margin="10,20,10,20" Click="btn_Click"/>
+                </WrapPanel>
+            </GroupBox>
+        </StackPanel>
+
+
     </Grid>
 </Window>

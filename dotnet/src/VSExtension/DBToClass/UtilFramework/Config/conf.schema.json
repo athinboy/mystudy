@@ -1,6 +1,11 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/athinboy/mystudy/codegerate-2.0/dotnet/src/VSExtension/DBToClass/UtilFramework/Config/conf.schema.json",
   "title": "Code Generate Config Schema",
-  "type": "object"
+  "type": "object",
+  "definitions": {
+
+  }
+
 
 }

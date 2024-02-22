@@ -12,6 +12,6 @@ namespace Org.FGQ.CodeGenerate.Config
         /// 
         /// </summary>
         public string NamespaceName { get; set; } = "";
-
+ 
     }
 }

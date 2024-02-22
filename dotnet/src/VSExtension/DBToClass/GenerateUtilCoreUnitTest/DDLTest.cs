@@ -76,6 +76,13 @@ namespace Org.FGQ.CodeGenerateTest
         [Test]
         public void DBToCSharpAll()
         {
+            GenerateConfig generateConfig = new GenerateConfig();
+            generateConfig.NamespaceName = "Org.Fgq.Code";            
+            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(generateConfig, Newtonsoft.Json.Formatting.Indented));
+
+            Assert.IsTrue(true);
+
+
 
         }
 

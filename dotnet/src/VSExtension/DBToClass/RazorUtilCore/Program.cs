@@ -10,6 +10,11 @@ namespace Org.FGQ.CodeGenerate
     {
         static void Main(string[] args)
         {
+            if(args==null || args.Length == 0)
+            {
+                Console.Error.WriteLine("need config!");
+                return;
+            }
             IRazorEngine razorEngine = new RazorEngine();
             IRazorEngineCompiledTemplate template = razorEngine.Compile("Hello @Model.Name");
 

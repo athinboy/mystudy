@@ -4,6 +4,9 @@
              xmlns:local="clr-namespace:WpfFW1"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+
+        <Style x:Key="GridStyle1" TargetType="{x:Type Grid}">            
+        </Style>
+        <Style x:Key="GridStyle2" TargetType="{x:Type Grid}"/>
     </Application.Resources>
 </Application>

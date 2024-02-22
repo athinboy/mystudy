@@ -24,5 +24,10 @@ namespace WpfFW1
         {
             InitializeComponent();
         }
+
+        private void Setter_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

@@ -1,12 +1,36 @@
-﻿<Window x:Class="WpfFW1.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfFW1"
+        xmlns:Properties="clr-namespace:WpfFW1.Properties" x:Class="WpfFW1.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="MainWindow" Height="450" Width="800"   WindowStartupLocation="CenterScreen" WindowState="Maximized"   >
+    <Window.Resources>
+        <Style x:Key="GridStyle3" TargetType="{x:Type Grid}">
+            <Setter Property="Background" Value="Green"></Setter>
+            <Setter Property="AllowDrop" Value="False"></Setter>
+        </Style>
+    </Window.Resources>
+    <Window.DataContext>
+        <local:MyData x:Uid="mydata" ></local:MyData>
+    </Window.DataContext>
+
+    <Grid Style="{DynamicResource GridStyle3}" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="38*"></RowDefinition>
+            <RowDefinition Height="20*"></RowDefinition>
+            <RowDefinition Height="29*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="347*"/>
+            <ColumnDefinition Width="53*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel HorizontalAlignment="Left" Margin="148,0,0,0" Orientation="Vertical" VerticalAlignment="Center" Width="470">
+            <Button x:Name="button"   Content="Button" Height="81" Width="349" FontFamily="Verdana" FontSize="36"/>
+
+        </StackPanel>
+
     </Grid>
 </Window>

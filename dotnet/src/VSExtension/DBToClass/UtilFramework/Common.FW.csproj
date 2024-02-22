@@ -49,12 +49,12 @@
     <Compile Include="Code\CSharpClass.cs" />
     <Compile Include="Code\FieldBase.cs" />
     <Compile Include="Code\JavaClass.cs" />
+    <Compile Include="Config\GenerateConfig.cs" />
     <Compile Include="Exceptions\CodeGenerateException.cs" />
     <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\EntityModel.cs" />
     <Compile Include="Model\CSharpBeanConfig.cs" />
     <Compile Include="Model\DDLModel.cs" />
-    <Compile Include="Model\GenerateConfig.cs" />
     <Compile Include="Model\JavaBeanModel.cs" />
     <Compile Include="Model\JavaCodeConfig.cs" />
     <Compile Include="Model\JavaModel.cs" />
@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Config\conf.schema.json" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Razor">

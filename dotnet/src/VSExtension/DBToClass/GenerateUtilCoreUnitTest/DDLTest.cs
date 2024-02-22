@@ -36,7 +36,7 @@ namespace Org.FGQ.CodeGenerateTest
 
             ddlModel.Tables.Add(newtable = new DDLTable("base_info", "wx_user", "微信用户"));
             newtable.Columns.Add(new DDLColumn("id", "id", "varchar(64)", "Y", ""));
-            newtable.Columns.Add(column=new DDLColumn("unionid", "unionid", "varchar(255)", "", ""));
+            newtable.Columns.Add(column = new DDLColumn("unionid", "unionid", "varchar(255)", "", ""));
             column.UniqueKeySign = "Y";
             newtable.Columns.Add(new DDLColumn("用户昵称", "nickName", "varchar(255)", "", ""));
             newtable.Columns.Add(new DDLColumn("用户头像图片的 URL", "avatarUrl", "varchar(500)", "", ""));
@@ -48,10 +48,10 @@ namespace Org.FGQ.CodeGenerateTest
 
         [Test]
         public void DDLToSQLTest()
-        {             
+        {
 
             const string outputpath = @"c:\1\2.txt";
-            GenerateEngine.Do<Work,DDLTable>(new CodeGenerate.Model.Work() { ddlModel = ddlModel }, new SQLWorkPipe(outputpath));             
+            GenerateEngine.Do<Work, DDLTable>(new CodeGenerate.Model.Work() { ddlModel = ddlModel }, new SQLWorkPipe(outputpath));
 
 
         }
@@ -70,13 +70,14 @@ namespace Org.FGQ.CodeGenerateTest
 
             CSharpGenerator cSharpGenerator = new CSharpGenerator();
             cSharpGenerator.GenerateBean(beanConfig);
-             
-
-
 
 
         }
+        [Test]
+        public void DBToCSharpAll()
+        {
 
+        }
 
     }
 }

@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
+    /// <summary>
+    ///  the pipe to  generate sql .
+    /// </summary>
     public class SQLWorkPipe : WorkPipeBaseT<Work, DDLTable>
     {
 

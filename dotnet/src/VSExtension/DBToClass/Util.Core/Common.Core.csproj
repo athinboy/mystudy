@@ -13,6 +13,7 @@
     <Compile Include="..\UtilFramework\RazorTag\**\*.cs" LinkBase="RazorTag" />
     <Compile Include="..\UtilFramework\Engine\**\*.cs" LinkBase="Engine" />
     <Compile Include="..\UtilFramework\Exceptions\**\*.cs" LinkBase="Exceptions" />
+    <Compile Include="..\UtilFramework\Config\**\*.cs" LinkBase="Config" />
   </ItemGroup>
 
   <ItemGroup>

@@ -5,6 +5,10 @@ VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "socketexperience", "socketexperience\socketexperience.csproj", "{78983D35-CEC3-46D5-976F-16EFEABF9BE9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfFW1", "WpfFW1\WpfFW1.csproj", "{F2D59721-F83A-4EEE-9D05-610150F72020}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WiFormsFW1", "WiFormsFW1\WiFormsFW1.csproj", "{7956D4AD-9026-4E1B-8C26-517CAA953864}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{78983D35-CEC3-46D5-976F-16EFEABF9BE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78983D35-CEC3-46D5-976F-16EFEABF9BE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78983D35-CEC3-46D5-976F-16EFEABF9BE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2D59721-F83A-4EEE-9D05-610150F72020}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2D59721-F83A-4EEE-9D05-610150F72020}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2D59721-F83A-4EEE-9D05-610150F72020}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2D59721-F83A-4EEE-9D05-610150F72020}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7956D4AD-9026-4E1B-8C26-517CAA953864}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7956D4AD-9026-4E1B-8C26-517CAA953864}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7956D4AD-9026-4E1B-8C26-517CAA953864}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7956D4AD-9026-4E1B-8C26-517CAA953864}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -14,7 +14,12 @@ namespace MyApp // Note: actual namespace depends on the project name.
            
             System.Console.WriteLine(task.Result);
             Console.WriteLine("Hello TaskPro!");
-            Console.ReadKey(); 
+            Console.ReadKey();
+
+            string searchContent = Console.ReadLine();
+
+            // ¹¹ÔìBingËÑË÷µÄURL  
+            string searchUrl = $"https://www.bing.com/search?q={Uri.EscapeDataString(searchContent)}";
 
 
         }

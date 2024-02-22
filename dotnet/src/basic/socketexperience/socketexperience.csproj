@@ -5,7 +5,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <StartupObject>MyApp.Network.SocketServer</StartupObject>
+    <StartupObject>MyApp.MarshallPro</StartupObject>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <RootNamespace>MyApp</RootNamespace>
   </PropertyGroup>

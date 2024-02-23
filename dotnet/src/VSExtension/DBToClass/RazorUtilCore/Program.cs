@@ -10,10 +10,34 @@ namespace Org.FGQ.CodeGenerate
     {
         static void Main(string[] args)
         {
-            if(args==null || args.Length == 0)
+            if (args == null || args.Length == 0)
             {
                 Console.Error.WriteLine("need config!");
-                return;
+
+            }
+            else
+            {
+                for (int i = 0; i < args.Length; i++)
+                {
+                    string arg = args[i];
+                    string v;
+                    switch (arg)
+                    {
+                        case "-c":
+                            if (i == args.Length - 1)
+                            {
+                                Console.Error.WriteLine("error");
+                                break;
+                            }
+                            i++;
+                            v = args[i];
+
+                            break;
+                        default:
+                            Console.Error.WriteLine("error");
+                            break;
+                    }
+                }
             }
             IRazorEngine razorEngine = new RazorEngine();
             IRazorEngineCompiledTemplate template = razorEngine.Compile("Hello @Model.Name");
@@ -34,8 +58,8 @@ namespace Org.FGQ.CodeGenerate
             string content = File.ReadAllText(path);
             template = razorEngine.Compile(content);
             Console.WriteLine(template.Run(new GenerateConfig()));
-       
 
+            Console.Read();
 
 
         }

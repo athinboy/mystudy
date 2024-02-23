@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Org.FGQ.CodeGenerate.Pipe
+namespace Org.FGQ.CodeGenerate.Pipe.Java
 {
     public class JavaBeanPipe : WorkPipeBaseT<JavaWorkModel, JavaClass>
     {
@@ -27,7 +27,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
             JavaClass javaClass = t as JavaClass;
 
-            string result = String.Empty;
+            string result = string.Empty;
             string filePath;
             if (javaClass.JavaBoClass == null)
             {
@@ -68,7 +68,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         public override string getRazorFilePath(Work work)
         {
-            return GenerateUtil.GetInternalTemplateFilePath("JavaBean.cshtml");
+            return FileUtil.GetInternalTemplateFilePath("JavaBean.cshtml");
         }
 
         public override void PrePareModel(Work work, PipeBase pipe)

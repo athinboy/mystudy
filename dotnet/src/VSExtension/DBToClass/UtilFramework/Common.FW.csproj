@@ -50,10 +50,12 @@
     <Compile Include="Code\FieldBase.cs" />
     <Compile Include="Code\JavaClass.cs" />
     <Compile Include="Config\GenerateConfig.cs" />
+    <Compile Include="Config\GenerateMode.cs" />
+    <Compile Include="Config\MySqlDBConfig.cs" />
     <Compile Include="Exceptions\CodeGenerateException.cs" />
     <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\EntityModel.cs" />
-    <Compile Include="Model\CSharpBeanConfig.cs" />
+    <Compile Include="Model\CSharpBeanModel.cs" />
     <Compile Include="Model\DDLModel.cs" />
     <Compile Include="Model\JavaBeanModel.cs" />
     <Compile Include="Model\JavaCodeConfig.cs" />

@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="template\CSharpBean.cshtml" />
     <None Remove="template\FreeSqlEntity.cshtml" />
     <None Remove="template\JavaBean.cshtml" />
     <None Remove="template\JavaCode.cshtml" />
@@ -34,6 +35,9 @@
 
   <ItemGroup>
     <Content Include="template\FreeSqlEntity.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="template\CSharpBean.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="template\JavaBean.cshtml">

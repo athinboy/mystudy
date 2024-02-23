@@ -342,7 +342,7 @@ namespace Org.FGQ.CodeGenerateTest
             //JavaGenerator toJavaBean = new JavaGenerator();
             //toJavaBean.GenerateBean(javaBeanConfig);
 
-            GenerateEngine.Do<JavaWorkModel, JavaClass>(new JavaWorkModel() { BeanConfig = javaBeanConfig }, new JavaBeanPipe());
+            GenerateEngine.Do<JavaWorkModel, JavaClass>(new JavaWorkModel() { BeanConfig = javaBeanConfig }, new CodeGenerate.Pipe.Java.JavaBeanPipe());
 
         }
 

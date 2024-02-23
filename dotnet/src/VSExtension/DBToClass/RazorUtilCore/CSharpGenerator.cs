@@ -5,11 +5,8 @@ using Org.FGQ.CodeGenerate.Util.Code;
 using RazorEngineCore;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate
 {
@@ -178,7 +175,7 @@ namespace Org.FGQ.CodeGenerate
         }
 
 
-        public void GenerateBean(CSharpBeanConfig beanConfig)
+        public void GenerateBean(CSharpBeanModel beanConfig)
         {
 
             initDefault();

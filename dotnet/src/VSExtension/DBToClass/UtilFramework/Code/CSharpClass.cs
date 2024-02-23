@@ -10,14 +10,14 @@ namespace Org.FGQ.CodeGenerate.Code
 {
     public class CSharpClass : ClassBase
     {
-        private CSharpBeanConfig beanConfig;
+        private CSharpBeanModel beanConfig;
 
         public CSharpClass(string namespaceName, DDLTable dDLTable) : base(namespaceName, dDLTable)
         {
 
         }
 
-        public CSharpClass(string namespaceName, DDLTable dDLTable, CSharpBeanConfig beanConfig) : this(namespaceName, dDLTable)
+        public CSharpClass(string namespaceName, DDLTable dDLTable, CSharpBeanModel beanConfig) : this(namespaceName, dDLTable)
         {
             this.beanConfig = beanConfig;
         }
@@ -47,7 +47,7 @@ namespace Org.FGQ.CodeGenerate.Code
             }
         }
 
-        public static ClassBase CreateEntityClass(DDLTable table, CSharpBeanConfig beanConfig, bool createVo)
+        public static ClassBase CreateEntityClass(DDLTable table, CSharpBeanModel beanConfig, bool createVo)
         {
             CSharpClass cSharpClass = new CSharpClass(beanConfig.NamespaceName, table, beanConfig);
 

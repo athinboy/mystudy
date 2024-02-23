@@ -37,7 +37,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
             });
 
-            FileUtil.PrepareDirectory(OutputPath);
+            Util.FileUtil.PrepareDirectory(OutputPath);
             if (File.Exists(OutputPath))
             {
                 File.Delete(OutputPath);

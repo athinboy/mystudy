@@ -8,6 +8,7 @@ using System;
 using Org.FGQ.CodeGenerate.Engine;
 using Org.FGQ.CodeGenerate.Pipe;
 using Org.FGQ.CodeGenerate.Model;
+using RazorEngineCore;
 
 namespace Org.FGQ.CodeGenerateTest
 {
@@ -20,7 +21,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
         DDLModel ddlModel;
-        CSharpBeanConfig beanConfig;
+        CSharpBeanModel beanConfig;
 
 
         [SetUp]
@@ -61,10 +62,10 @@ namespace Org.FGQ.CodeGenerateTest
         public void DDLToCSharpAll()
         {
 
-            beanConfig = new CSharpBeanConfig();
+            beanConfig = new CSharpBeanModel();
             beanConfig.DDLConfig = ddlModel;
             beanConfig.NamespaceName = "com.wintop.third.bmwspark.bean";
-            beanConfig.NamespacePath = "";
+
             beanConfig.CodeDiretory = @"D:\fgq\temp\codegeneratetest\bean\third-bmwspark-bean\src\main\java";
             beanConfig.OmmitPrefix = "ODS";
 
@@ -77,7 +78,21 @@ namespace Org.FGQ.CodeGenerateTest
         public void DBToCSharpAll()
         {
             GenerateConfig generateConfig = new GenerateConfig();
-            generateConfig.NamespaceName = "Org.Fgq.Code";            
+            generateConfig.codeConfig.NamespaceName = "Org.Fgq.Code";
+            generateConfig.codeConfig.CSharpConfig = new CSharpConfig
+            {
+                NamespacePathLowerCase = true,
+                NamespacePathOmmit = ""
+            };
+
+            generateConfig.dbConfig.MySqlDBConfig = new MySqlDBConfig
+            {
+                Port = 3306,
+                Pwd = "123",
+                UserId = "root",
+                Server = "localhost"
+            };
+
             Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(generateConfig, Newtonsoft.Json.Formatting.Indented));
 
             Assert.IsTrue(true);

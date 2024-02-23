@@ -41,7 +41,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
                });
 
-            FileUtil.PrepareDirectory(OutputPath);
+            Util.FileUtil.PrepareDirectory(OutputPath);
             File.AppendAllText(OutputPath, result, new UTF8Encoding(false));
 
         }

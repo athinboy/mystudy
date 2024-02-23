@@ -11,6 +11,7 @@ using Org.FGQ.CodeGenerate.Pipe;
 using Org.FGQ.CodeGenerate.Model;
 using System.Collections.Generic;
 using System.IO;
+using Org.FGQ.CodeGenerate.Pipe.Java;
 
 namespace Org.FGQ.CodeGenerateTest
 {
@@ -2460,7 +2461,7 @@ namespace Org.FGQ.CodeGenerateTest
                     {
                         PrepareVarAction = (w, p) =>
                         {
-                            p.RazorTplFilePath = GenerateUtil.GetInternalTemplateFilePath("JavaDao.cshtml");
+                            p.RazorTplFilePath = FileUtil.GetInternalTemplateFilePath("JavaDao.cshtml");
                         },
                         BeforeEachModelAction = (w, p, m) =>
                         {
@@ -2485,7 +2486,7 @@ namespace Org.FGQ.CodeGenerateTest
                     {
                         PrepareVarAction = (w, p) =>
                         {
-                            p.RazorTplFilePath = GenerateUtil.GetInternalTemplateFilePath("JavaMapper.cshtml");
+                            p.RazorTplFilePath = FileUtil.GetInternalTemplateFilePath("JavaMapper.cshtml");
                         },
                         BeforeEachModelAction = (w, p, m) =>
                         {
@@ -2510,7 +2511,7 @@ namespace Org.FGQ.CodeGenerateTest
                     {
                         PrepareVarAction = (w, p) =>
                         {
-                            p.RazorTplFilePath = GenerateUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
+                            p.RazorTplFilePath = FileUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
                         },
                         BeforeEachModelAction = (w, p, m) =>
                         {
@@ -2533,7 +2534,7 @@ namespace Org.FGQ.CodeGenerateTest
                     {
                         PrepareVarAction = (w, p) =>
                         {
-                            p.RazorTplFilePath = GenerateUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
+                            p.RazorTplFilePath = FileUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
                         },
                         BeforeEachModelAction = (w, p, m) =>
                         {
@@ -2556,7 +2557,7 @@ namespace Org.FGQ.CodeGenerateTest
                     {
                         PrepareVarAction = (w, p) =>
                         {
-                            p.RazorTplFilePath = GenerateUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
+                            p.RazorTplFilePath = FileUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
                         },
                         BeforeEachModelAction = (w, p, m) =>
                         {
@@ -2579,7 +2580,7 @@ namespace Org.FGQ.CodeGenerateTest
                     {
                         PrepareVarAction = (w, p) =>
                         {
-                            p.RazorTplFilePath = GenerateUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
+                            p.RazorTplFilePath = FileUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
                         },
                         BeforeEachModelAction = (w, p, m) =>
                         {

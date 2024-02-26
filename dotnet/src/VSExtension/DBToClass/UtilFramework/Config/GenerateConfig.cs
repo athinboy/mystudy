@@ -23,7 +23,9 @@ namespace Org.FGQ.CodeGenerate.Config
 
         public GenerateMode Mode { get; set; } = GenerateMode.DBToCode;
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class DBConfig
     {
 
@@ -32,6 +34,9 @@ namespace Org.FGQ.CodeGenerate.Config
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class CodeConfig
     {
         /// <summary>
@@ -45,11 +50,17 @@ namespace Org.FGQ.CodeGenerate.Config
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class JavaConfig
     {
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class CSharpConfig
     {
         /// <summary>

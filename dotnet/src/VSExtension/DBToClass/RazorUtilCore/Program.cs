@@ -1,5 +1,6 @@
 ﻿
 using Org.FGQ.CodeGenerate.Config;
+using Org.FGQ.CodeGenerate.Dispatch;
 using RazorEngineCore;
 using System;
 using System.IO;
@@ -39,15 +40,8 @@ namespace Org.FGQ.CodeGenerate
                                 Console.Error.WriteLine("error");
                                 break;
                             }
-
-
-                            if (generateConfig.codeConfig.CSharpConfig != null)
-                            {
-                                CSharpGenerator cSharpGenerator = new CSharpGenerator();
-                                cSharpGenerator.
-                            }
-
-                         
+                            DefaultDispatch defaultDispatch = new DefaultDispatch();
+                            defaultDispatch.Dispatch(generateConfig);
                             break;
                         default:
                             Console.Error.WriteLine("error");

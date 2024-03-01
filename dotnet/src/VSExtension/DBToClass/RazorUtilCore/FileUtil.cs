@@ -10,6 +10,11 @@ namespace Org.FGQ.CodeGenerate
             return Environment.CurrentDirectory + Path.DirectorySeparatorChar + "template" + Path.DirectorySeparatorChar + filename;
         }
 
+        internal static string GetAbsoluteFilePath(string rootPath, string relatePath)
+        {
+            return Path.GetFullPath(relatePath, rootPath);
+
+        }
     }
 
 }

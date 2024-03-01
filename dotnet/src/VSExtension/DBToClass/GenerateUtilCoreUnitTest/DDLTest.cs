@@ -78,7 +78,7 @@ namespace Org.FGQ.CodeGenerateTest
         public void DBToCSharpAll()
         {
             GenerateConfig generateConfig = new GenerateConfig();
-            generateConfig.codeConfig.NamespaceName = "Org.Fgq.Code";
+        
             generateConfig.codeConfig.CSharpConfig = new CSharpConfig
             {
                 NamespacePathLowerCase = true,
@@ -92,6 +92,13 @@ namespace Org.FGQ.CodeGenerateTest
                 UserId = "root",
                 Server = "localhost"
             };
+
+            generateConfig.codeConfig = new CodeConfig();
+            CSharpConfig cSharpConfig = (generateConfig.codeConfig.CSharpConfig = new CSharpConfig());
+            cSharpConfig.NamespacePathLowerCase = true;
+            cSharpConfig.NamespaceName = "Org.Fgq.Code";
+
+
 
             Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(generateConfig, Newtonsoft.Json.Formatting.Indented));
 

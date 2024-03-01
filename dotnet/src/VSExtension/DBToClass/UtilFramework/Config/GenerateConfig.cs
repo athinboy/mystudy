@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Org.FGQ.CodeGenerate.Config
+﻿namespace Org.FGQ.CodeGenerate.Config
 {
     public class GenerateConfig
     {
@@ -39,10 +33,7 @@ namespace Org.FGQ.CodeGenerate.Config
     /// </summary>
     public class CodeConfig
     {
-        /// <summary>
-        /// namespace(c++,c#) or packagename(java)
-        /// </summary>
-        public string NamespaceName { get; set; } = "";
+
 
         public CSharpConfig CSharpConfig { get; set; } = null;
 
@@ -55,7 +46,10 @@ namespace Org.FGQ.CodeGenerate.Config
     /// </summary>
     public class JavaConfig
     {
-
+        /// <summary>
+        ///  packagename
+        /// </summary>
+        public string PackageName { get; set; } = "";
     }
 
     /// <summary>
@@ -63,6 +57,11 @@ namespace Org.FGQ.CodeGenerate.Config
     /// </summary>
     public class CSharpConfig
     {
+        /// <summary>
+        /// namespace(c++,c#) 
+        /// </summary>
+        public string NamespaceName { get; set; } = "";
+
         /// <summary>
         /// NamespaceName:System.Xml.Serialize;
         /// NamespacePathOmmit: System;

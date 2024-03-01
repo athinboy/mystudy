@@ -26,12 +26,28 @@ namespace Org.FGQ.CodeGenerate
                         case "-c":
                             if (i == args.Length - 1)
                             {
-                                Console.Error.WriteLine("error");
+                                Console.Error.WriteLine("need config file");
                                 break;
                             }
                             i++;
                             v = args[i];
+                            string configFilePath = v;
+                            configFilePath = FileUtil.GetAbsoluteFilePath(System.Environment.CurrentDirectory, configFilePath);
+                            GenerateConfig? generateConfig = Newtonsoft.Json.JsonConvert.DeserializeObject<GenerateConfig>(File.ReadAllText(configFilePath));
+                            if (generateConfig == null)
+                            {
+                                Console.Error.WriteLine("error");
+                                break;
+                            }
 
+
+                            if (generateConfig.codeConfig.CSharpConfig != null)
+                            {
+                                CSharpGenerator cSharpGenerator = new CSharpGenerator();
+                                cSharpGenerator.
+                            }
+
+                         
                             break;
                         default:
                             Console.Error.WriteLine("error");

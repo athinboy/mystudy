@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Dispatch
 {
-    internal interface DispatchBase
+    public interface DispatchBase
     {
-        void Dispatch(GenerateConfig generateConfig);
+         void Dispatch(GenerateConfig generateConfig);
     }
 }

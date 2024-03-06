@@ -1,17 +1,12 @@
 ﻿using Org.FGQ.CodeGenerate.Exceptions;
-using Org.FGQ.CodeGenerate.Model;
-using Org.FGQ.CodeGenerate.Util;
+using Org.FGQ.CodeGenerate.Work;
 using RazorEngineCore;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
-    public class DefaultPipe<T> : WorkPipeBaseT<Work, T>
+    public class DefaultPipe<T> : WorkPipeBaseT<Work.Work, T>
     {
 
         public DefaultPipe(string templatefilepath, string outputPath) : base(templatefilepath, outputPath)
@@ -23,7 +18,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
         {
         }
 
-        public override void GenerateT(Work work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> template, T w)
+        public override void GenerateT(Work.Work work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> template, T w)
         {
             string result = "";
             if (string.IsNullOrWhiteSpace(OutputPath))
@@ -45,12 +40,12 @@ namespace Org.FGQ.CodeGenerate.Pipe
             File.AppendAllText(OutputPath, result, new UTF8Encoding(false));
         }
 
-        public override string getRazorFilePath(Work work)
+        public override string getRazorFilePath(Work.Work work)
         {
             return RazorTplFilePath;
         }
 
-        public override void PrePareModel(Work work, PipeBase pipe)
+        public override void PrePareModel(Work.Work work, PipeBase pipe)
         {
             if (PrepareModelAction != null)
             {
@@ -58,7 +53,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
             }
         }
 
-        public override void PrepareVar(Work work, PipeBase pipe)
+        public override void PrepareVar(Work.Work work, PipeBase pipe)
         {
             base.PrepareVar(work, pipe);
         }

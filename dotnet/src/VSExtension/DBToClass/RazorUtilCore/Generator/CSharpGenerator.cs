@@ -1,5 +1,6 @@
 ﻿using Org.FGQ.CodeGenerate.Code;
 using Org.FGQ.CodeGenerate.Config;
+using Org.FGQ.CodeGenerate.Pipe;
 using Org.FGQ.CodeGenerate.RazorTag;
 using Org.FGQ.CodeGenerate.Util.Code;
 using RazorEngineCore;
@@ -8,7 +9,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Text;
 
-namespace Org.FGQ.CodeGenerate
+namespace Org.FGQ.CodeGenerate.Generator
 {
 
     public class CSharpTemplate
@@ -38,7 +39,7 @@ namespace Org.FGQ.CodeGenerate
     }
 
 
-    public class CSharpGenerator
+    public class CSharpGenerator : GeneratorBase
     {
 
         private static string GetTemplateFilePath(string filename)
@@ -187,8 +188,8 @@ namespace Org.FGQ.CodeGenerate
 
 
             string beanRootDir = CodeUtil.PrepareCodeRoot(beanConfig.CodeDiretory, beanConfig.NamespacePath);
-        
-            string result = String.Empty;
+
+            string result = string.Empty;
             beanConfig.DDLConfig.Tables.ForEach(t =>
             {
                 result = beanTemplate.Run(instance =>
@@ -233,7 +234,7 @@ namespace Org.FGQ.CodeGenerate
 
 
             string rootDir;
-            string result = String.Empty;
+            string result = string.Empty;
 
             Action action = () =>
              {
@@ -293,7 +294,7 @@ namespace Org.FGQ.CodeGenerate
                 Directory.CreateDirectory(rootDir);
             }
             string mapperDir = rootDir;
-            string result = String.Empty;
+            string result = string.Empty;
 
             Action action = () =>
             {
@@ -350,8 +351,18 @@ namespace Org.FGQ.CodeGenerate
 
         }
 
-  
+        internal void Generate(GenerateConfig generateConfig)
+        {
+            DBToDDLPipe dBToDDLPipe = new DBToDDLPipe();
 
 
+
+
+        }
+
+        public override bool ValidateConfig()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

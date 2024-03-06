@@ -1,14 +1,9 @@
-﻿
-using Org.FGQ.CodeGenerate;
-using Org.FGQ.CodeGenerate.Config;
-using NUnit;
-using static Org.FGQ.CodeGenerate.Config.DDLModel;
+﻿using Org.FGQ.CodeGenerate.Config;
 using NUnit.Framework;
 using System;
-using Org.FGQ.CodeGenerate.Engine;
 using Org.FGQ.CodeGenerate.Pipe;
-using Org.FGQ.CodeGenerate.Model;
-using RazorEngineCore;
+using Org.FGQ.CodeGenerate.Work;
+using Org.FGQ.CodeGenerate.Generator;
 
 namespace Org.FGQ.CodeGenerateTest
 {
@@ -52,7 +47,7 @@ namespace Org.FGQ.CodeGenerateTest
         {
 
             const string outputpath = @"c:\1\2.txt";
-            GenerateEngine.Do<Work, DDLTable>(new CodeGenerate.Model.Work() { ddlModel = ddlModel }, new SQLWorkPipe(outputpath));
+            GenerateGenerator.Do<Work, DDLTable>(new CodeGenerate.Work.Work() { ddlModel = ddlModel }, new SQLWorkPipe(outputpath));
 
 
         }

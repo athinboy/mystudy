@@ -1,6 +1,6 @@
 ﻿using Org.FGQ.CodeGenerate.Code;
 using Org.FGQ.CodeGenerate.Config;
-using Org.FGQ.CodeGenerate.Model;
+using Org.FGQ.CodeGenerate.Work;
 using Org.FGQ.CodeGenerate.RazorTag;
 using Org.FGQ.CodeGenerate.Util.Code;
 using RazorEngineCore;
@@ -11,12 +11,12 @@ using System.Text;
 
 namespace Org.FGQ.CodeGenerate.Pipe.CSharp
 {
-    public class CSharpBeanPipe : WorkPipeBaseT<CSharpWorkModel, CSharpClass>
+    public class CSharpBeanPipe : WorkPipeBaseT<CSharpWork, CSharpClass>
     {
 
         private const string fileSuffix = ".cs";
 
-        public override void GenerateT(CSharpWorkModel work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<CSharpClass>> template, CSharpClass t)
+        public override void GenerateT(CSharpWork work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<CSharpClass>> template, CSharpClass t)
         {
 
             CSharpBeanModel cSharpBeanModel = work.BeanConfig;
@@ -46,12 +46,12 @@ namespace Org.FGQ.CodeGenerate.Pipe.CSharp
 
         }
 
-        public override string getRazorFilePath(Work work)
+        public override string getRazorFilePath(Work.Work work)
         {
             return FileUtil.GetInternalTemplateFilePath("CSharpBean.cshtml");
         }
 
-        public override void PrePareModel(Work work, PipeBase pipe)
+        public override void PrePareModel(Work.Work work, PipeBase pipe)
         {
             (work as JavaWorkModel).BeanConfig.DDLConfig.Prepare();
         }
@@ -66,7 +66,7 @@ namespace Org.FGQ.CodeGenerate.Pipe.CSharp
             builder.AddAssemblyReference(typeof(ReverseStrTagHelper)); // by type
         }
 
-        public override IEnumerable<object> GetModels(Work work, PipeBase pipe)
+        public override IEnumerable<object> GetModels(Work.Work work, PipeBase pipe)
         {
             JavaBeanModel javaBeanConfig = (work as JavaWorkModel).BeanConfig;
 

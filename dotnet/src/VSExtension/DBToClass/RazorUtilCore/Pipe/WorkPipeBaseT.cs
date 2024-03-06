@@ -1,4 +1,4 @@
-﻿using Org.FGQ.CodeGenerate.Model;
+﻿using Org.FGQ.CodeGenerate.Work;
 using RazorEngineCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
-    public abstract class WorkPipeBaseT<W, T> : PipeBase where W : Work
+    public abstract class WorkPipeBaseT<W, T> : OutputPipe where W : Work.Work
     {
 
         protected WorkPipeBaseT() : base()
@@ -27,7 +27,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         public abstract void GenerateT(W work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> template, T t);
 
-        public override void Generate(Work work, object template, object t)
+        public override void Generate(Work.Work work, object template, object t)
         {
             GenerateT((W)work, (IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>>)template, (T)t);
         }

@@ -1,23 +1,20 @@
-﻿
-using Org.FGQ.CodeGenerate.Config;
-using Org.FGQ.CodeGenerate.Model;
-using Org.FGQ.CodeGenerate.Pipe;
+﻿using Org.FGQ.CodeGenerate.Config;
+using Org.FGQ.CodeGenerate.Work;
 using Org.FGQ.CodeGenerate.Util.DB;
+using RazorEngineCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
+using Org.FGQ.CodeGenerate.Pipe;
 
 
-namespace Org.FGQ.CodeGenerate.Engine
+namespace Org.FGQ.CodeGenerate.Generator
 {
-    internal class DBToDDLEngine : EngineBase
+    internal class DBToSQLGenerator : GeneratorBase
     {
         private GenerateConfig generateConfig;
 
-        DBToDDLEngine(GenerateConfig generateConfig)
+        internal DBToSQLGenerator(GenerateConfig generateConfig)
         {
             this.generateConfig = generateConfig ?? throw new ArgumentNullException(nameof(generateConfig));
         }
@@ -46,7 +43,7 @@ namespace Org.FGQ.CodeGenerate.Engine
                 }
             }
 
-            GenerateEngine.Do<Work, DDLTable>(new CodeGenerate.Model.Work() { ddlModel = ddlModel }, new SQLWorkPipe(""));
+            GenerateGenerator.Do(new Work.Work() { ddlModel = ddlModel }, new SQLWorkPipe(""));
 
 
 
@@ -70,6 +67,8 @@ namespace Org.FGQ.CodeGenerate.Engine
             List<DB> dbs = mySqlUtil.LoadMeta();
             return dbs.Find(x => x.DBName == generateConfig.dbConfig.DataBaseName);
         }
+
+
 
         public override bool ValidateConfig()
         {

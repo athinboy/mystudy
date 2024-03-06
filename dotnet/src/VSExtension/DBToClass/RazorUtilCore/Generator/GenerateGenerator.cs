@@ -1,5 +1,5 @@
 ﻿using Org.FGQ.CodeGenerate.Exceptions;
-using Org.FGQ.CodeGenerate.Model;
+using Org.FGQ.CodeGenerate.Work;
 using Org.FGQ.CodeGenerate.Pipe;
 using RazorEngineCore;
 using System;
@@ -10,14 +10,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Org.FGQ.CodeGenerate.Engine
+namespace Org.FGQ.CodeGenerate.Generator
 {
-    public class GenerateEngine
+    public class GenerateGenerator : GeneratorBase
     {
         private static ConcurrentDictionary<string, Object> templates =
                     new ConcurrentDictionary<string, Object>();
 
-        public static void Do<W>(W work) where W : Work
+        public static void Do<W>(W work) where W : Work.Work
         {
 
             work.Prepare();
@@ -38,7 +38,7 @@ namespace Org.FGQ.CodeGenerate.Engine
                 if (false == templates.ContainsKey(razorTplPath))
                 {
 
-                    lock (typeof(GenerateEngine))
+                    lock (typeof(GenerateGenerator))
                     {
                         if (false == templates.ContainsKey(razorTplPath))
                         {
@@ -80,7 +80,7 @@ namespace Org.FGQ.CodeGenerate.Engine
         }
 
 
-        public static void Do<W, T>(W work, WorkPipeBaseT<W, T> pipe) where W : Work
+        public static void Do<W, T>(W work, WorkPipeBaseT<W, T> pipe) where W : Work.Work
         {
             work.Prepare();
             pipe.PrePareModel(work, pipe);
@@ -93,7 +93,7 @@ namespace Org.FGQ.CodeGenerate.Engine
             if (false == templates.ContainsKey(razorTplPath))
             {
 
-                lock (typeof(GenerateEngine))
+                lock (typeof(GenerateGenerator))
                 {
                     if (false == templates.ContainsKey(razorTplPath))
                     {
@@ -141,7 +141,9 @@ namespace Org.FGQ.CodeGenerate.Engine
 
         }
 
-
-
+        public override bool ValidateConfig()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

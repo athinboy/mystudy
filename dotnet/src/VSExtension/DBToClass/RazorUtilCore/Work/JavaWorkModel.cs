@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Org.FGQ.CodeGenerate.Config;
-using Org.FGQ.CodeGenerate.Model;
+using Org.FGQ.CodeGenerate.Work;
 
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
-    public class JavaWorkModel : Work
+    public class JavaWorkModel : Work.Work
     {
 
 

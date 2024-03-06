@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Org.FGQ.CodeGenerate.Util.Code;
 using Org.FGQ.CodeGenerate.Pipe;
 
-namespace Org.FGQ.CodeGenerate.Model
+namespace Org.FGQ.CodeGenerate.Work
 {
     public class Work
     {

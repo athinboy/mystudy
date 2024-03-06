@@ -1,5 +1,5 @@
 ﻿using Org.FGQ.CodeGenerate.Config;
-using Org.FGQ.CodeGenerate.Model;
+using Org.FGQ.CodeGenerate.Work;
 using Org.FGQ.CodeGenerate.Util;
 using RazorEngineCore;
 using System;
@@ -14,7 +14,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
     /// <summary>
     ///  the pipe to  generate sql .
     /// </summary>
-    public class SQLWorkPipe : WorkPipeBaseT<Work, DDLTable>
+    public class SQLWorkPipe : WorkPipeBaseT<Work.Work, DDLTable>
     {
 
         private static string templateOracleRelatePath = System.IO.Path.DirectorySeparatorChar + "template" + System.IO.Path.DirectorySeparatorChar + "OracleDDL.cshtml";
@@ -26,12 +26,12 @@ namespace Org.FGQ.CodeGenerate.Pipe
             OutputPath = (string.IsNullOrEmpty(outputPath) ? null : outputPath) ?? throw new ArgumentNullException(nameof(outputPath));
         }
 
-        public override IEnumerable<object> GetModels(Work work, PipeBase pipe)
+        public override IEnumerable<object> GetModels(Work.Work work, PipeBase pipe)
         {
             return work.ddlModel.Tables;
         }
 
-        public override void GenerateT(Work work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<DDLTable>> template, DDLTable table)
+        public override void GenerateT(Work.Work work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<DDLTable>> template, DDLTable table)
         {
             string result = "";
 
@@ -47,7 +47,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
         }
 
 
-        public override string getRazorFilePath(Work work)
+        public override string getRazorFilePath(Work.Work work)
         {
             string templateRelatePath = string.Empty;
             switch (work.ddlModel.MyDBType)
@@ -67,12 +67,12 @@ namespace Org.FGQ.CodeGenerate.Pipe
             return templatePath;
         }
 
-        public override void PrePareModel(Work work, PipeBase pipe)
+        public override void PrePareModel(Work.Work work, PipeBase pipe)
         {
             work.ddlModel.Prepare();
         }
 
-        public override void PrepareVar(Work work, PipeBase pipe)
+        public override void PrepareVar(Work.Work work, PipeBase pipe)
         {
             base.PrepareVar(work, pipe);
             if (File.Exists(OutputPath))

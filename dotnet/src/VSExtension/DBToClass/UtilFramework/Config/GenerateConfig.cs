@@ -24,7 +24,7 @@
     {
 
         public string DataBaseName { get; set; }
-        public MySqlDBConfig MySqlDBConfig { get; set; }
+        public MySqlDBConfig MySqlDBConfig { get; set; } = null;
 
     }
 

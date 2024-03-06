@@ -40,7 +40,8 @@ namespace Org.FGQ.CodeGenerate
                                 Console.Error.WriteLine("error");
                                 break;
                             }
-                            DefaultDispatch defaultDispatch = new DefaultDispatch();
+                             DispatchBase defaultDispatch = new DefaultDispatch();
+                             
                             defaultDispatch.Dispatch(generateConfig);
                             break;
                         default:

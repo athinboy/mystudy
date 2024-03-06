@@ -1,5 +1,5 @@
 ﻿using Org.FGQ.CodeGenerate.Config;
-using Org.FGQ.CodeGenerate.Model;
+using Org.FGQ.CodeGenerate.Work;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +10,15 @@ namespace Org.FGQ.CodeGenerate
 {
     public class WorkCreator
     {
-        public Work Create(GenerateConfig generateConfig)
+        public Work.Work Create(GenerateConfig generateConfig)
         {
-            Work work=null;
+            Work.Work work=null;
             switch (generateConfig.Mode)
             {
                 case GenerateMode.DBToCode:
                     if (generateConfig.codeConfig.CSharpConfig != null)
                     {
-                        work = new CSharpWorkModel();
+                        work = new CSharpWork();
                     }
                     break;
             }

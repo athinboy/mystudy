@@ -324,7 +324,7 @@ namespace Org.FGQ.CodeGenerateTest
 
  
               string outputpath = @"c:\1\" + DateTime.Now.ToLongDateString() + ".txt";
-            GenerateEngine.Do(new CodeGenerate.Model.Work() { ddlModel = ddlConfig }, new SQLWorkPipe(outputpath));
+            GenerateEngine.Do(new CodeGenerate.Work.Work() { ddlModel = ddlConfig }, new SQLWorkPipe(outputpath));
         }
 
 

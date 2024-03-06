@@ -8,7 +8,7 @@ using System;
 using Org.FGQ.CodeGenerate.Util.Code;
 using Org.FGQ.CodeGenerate.Engine;
 using Org.FGQ.CodeGenerate.Pipe;
-using Org.FGQ.CodeGenerate.Model;
+using Org.FGQ.CodeGenerate.Work;
 using System.Collections.Generic;
 using System.IO;
 using Org.FGQ.CodeGenerate.Pipe.Java;

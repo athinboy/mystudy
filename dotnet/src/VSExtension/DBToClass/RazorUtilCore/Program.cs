@@ -7,13 +7,14 @@ using System.IO;
 
 namespace Org.FGQ.CodeGenerate
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             if (args == null || args.Length == 0)
             {
                 Console.Error.WriteLine("need config!");
+                return;
 
             }
             else
@@ -40,8 +41,8 @@ namespace Org.FGQ.CodeGenerate
                                 Console.Error.WriteLine("error");
                                 break;
                             }
-                             DispatchBase defaultDispatch = new DefaultDispatch();
-                             
+                            DispatchBase defaultDispatch = new DefaultDispatch();
+
                             defaultDispatch.Dispatch(generateConfig);
                             break;
                         default:
@@ -50,25 +51,26 @@ namespace Org.FGQ.CodeGenerate
                     }
                 }
             }
-            IRazorEngine razorEngine = new RazorEngine();
-            IRazorEngineCompiledTemplate template = razorEngine.Compile("Hello @Model.Name");
 
-            string result = template.Run(new
-            {
-                Name = "Alexander"
-            });
+            //IRazorEngine razorEngine = new RazorEngine();
+            //IRazorEngineCompiledTemplate template = razorEngine.Compile("Hello @Model.Name");
 
-            Console.WriteLine(result);
+            //string result = template.Run(new
+            //{
+            //    Name = "Alexander"
+            //});
 
-            string curDir = System.Environment.CurrentDirectory;
-            string path = string.Format("{0}{1}{2}{1}{3}"
-                , curDir
-                , System.IO.Path.DirectorySeparatorChar
-                , "template"
-                , "SqlSugarEntity.txt");
-            string content = File.ReadAllText(path);
-            template = razorEngine.Compile(content);
-            Console.WriteLine(template.Run(new GenerateConfig()));
+            //Console.WriteLine(result);
+
+            //string curDir = System.Environment.CurrentDirectory;
+            //string path = string.Format("{0}{1}{2}{1}{3}"
+            //    , curDir
+            //    , System.IO.Path.DirectorySeparatorChar
+            //    , "template"
+            //    , "SqlSugarEntity.txt");
+            //string content = File.ReadAllText(path);
+            //template = razorEngine.Compile(content);
+            //Console.WriteLine(template.Run(new GenerateConfig()));
 
             Console.Read();
 

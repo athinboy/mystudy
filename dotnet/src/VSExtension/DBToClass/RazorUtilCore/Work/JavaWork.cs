@@ -9,7 +9,7 @@ using Org.FGQ.CodeGenerate.Work;
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
-    public class JavaWorkModel : Work.Work
+    public class JavaWork : Work.Work
     {
 
 

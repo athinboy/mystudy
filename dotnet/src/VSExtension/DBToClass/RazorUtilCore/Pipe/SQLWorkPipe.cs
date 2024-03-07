@@ -26,7 +26,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
             OutputPath = (string.IsNullOrEmpty(outputPath) ? null : outputPath) ?? throw new ArgumentNullException(nameof(outputPath));
         }
 
-        public override IEnumerable<object> GetModels(Work.Work work, PipeBase pipe)
+        public override IEnumerable<object> GetModels(Work.Work work)
         {
             return work.ddlModel.Tables;
         }
@@ -72,9 +72,9 @@ namespace Org.FGQ.CodeGenerate.Pipe
             work.ddlModel.Prepare();
         }
 
-        public override void PrepareVar(Work.Work work, PipeBase pipe)
+        public override void PrepareVar(Work.Work work)
         {
-            base.PrepareVar(work, pipe);
+            base.PrepareVar(work);
             if (File.Exists(OutputPath))
             {
                 File.Delete(OutputPath);

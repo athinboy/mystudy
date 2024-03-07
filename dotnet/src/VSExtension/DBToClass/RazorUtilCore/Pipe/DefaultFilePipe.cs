@@ -6,15 +6,15 @@ using System.Text;
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
-    public class DefaultPipe<T> : WorkPipeBaseT<Work.Work, T>
+    public class DefaultFilePipe<T> : WorkPipeBaseT<Work.Work, T>
     {
 
-        public DefaultPipe(string templatefilepath, string outputPath) : base(templatefilepath, outputPath)
+        public DefaultFilePipe(string templatefilepath, string outputPath) : base(templatefilepath, outputPath)
         {
 
         }
 
-        public DefaultPipe() : base()
+        public DefaultFilePipe() : base()
         {
         }
 
@@ -53,9 +53,9 @@ namespace Org.FGQ.CodeGenerate.Pipe
             }
         }
 
-        public override void PrepareVar(Work.Work work, PipeBase pipe)
+        public override void PrepareVar(Work.Work work)
         {
-            base.PrepareVar(work, pipe);
+            base.PrepareVar(work);
         }
     }
 }

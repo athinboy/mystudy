@@ -1,11 +1,12 @@
-﻿using Org.FGQ.CodeGenerate.Work;
+﻿using Org.FGQ.CodeGenerate.Pipe.Delegate;
+using Org.FGQ.CodeGenerate.Work;
 using RazorEngineCore;
 using System.Collections.Generic;
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
 
-    public abstract class OutputPipe:PipeBase
+    public abstract class OutputPipe : PipeBase
     {
 
         protected OutputPipe()
@@ -17,17 +18,17 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         public string RazorTplFilePath { get; set; }
 
-        public CodeGenerateAction2 GetModelsAction { get; set; } = null;
-        public CodeGenerateAction3 PrepareModelAction { get; set; } = null;
+        public Action2 GetModelsAction { get; set; } = null;
+        public Action3 PrepareModelAction { get; set; } = null;
 
-        public CodeGenerateAction3 PrepareVarAction { get; set; } = null;
-        public CodeGenerateAction4 BeforeEachModelAction { get; set; } = null;
+
+        public Action4 BeforeEachModelAction { get; set; } = null;
 
         public AddTemplateReferenceAction AddTemplateReferenceFunc { get; set; } = null;
 
         public abstract string getRazorFilePath(Work.Work work);
 
-        public CodeGenerateAction PickCurrent { get; set; }
+        public Action PickCurrent { get; set; }
 
         public virtual void AddTemplateReference(IRazorEngineCompilationOptionsBuilder builder)
         {
@@ -41,11 +42,11 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         public abstract void PrePareModel(Work.Work work, PipeBase pipe);
 
-        public virtual IEnumerable<object> GetModels(Work.Work work, PipeBase pipe)
+        public virtual IEnumerable<object> GetModels(Work.Work work)
         {
             if (GetModelsAction != null)
             {
-                return GetModelsAction(work, pipe);
+                return GetModelsAction(work, this);
             }
             else
             {
@@ -64,23 +65,11 @@ namespace Org.FGQ.CodeGenerate.Pipe
             }
         }
 
-   
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="work"></param>
-        /// <param name="pipe"></param>
-        /// <remarks>子类都需要调用基类的此方法。</remarks>
-        public virtual void PrepareVar(Work.Work work, PipeBase pipe)
-        {
-            if (PrepareVarAction != null)
-            {
-                PrepareVarAction(work, pipe);
-            }
-        }
 
- 
+
+
+
 
     }
 }

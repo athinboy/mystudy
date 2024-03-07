@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Pipe.Java
 {
-    public class JavaBeanPipe : WorkPipeBaseT<JavaWorkModel, JavaClass>
+    public class JavaBeanPipe : WorkPipeBaseT<JavaWork, JavaClass>
     {
 
 
 
-        public override void GenerateT(JavaWorkModel work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaClass>> template, JavaClass t)
+        public override void GenerateT(JavaWork work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<JavaClass>> template, JavaClass t)
         {
 
             JavaBeanModel javaBeanConfig = work.BeanConfig;
@@ -73,7 +73,7 @@ namespace Org.FGQ.CodeGenerate.Pipe.Java
 
         public override void PrePareModel(Work.Work work, PipeBase pipe)
         {
-            (work as JavaWorkModel).BeanConfig.DDLConfig.Prepare();
+            (work as JavaWork).BeanConfig.DDLConfig.Prepare();
         }
 
         public override void AddTemplateReference(IRazorEngineCompilationOptionsBuilder builder)
@@ -86,9 +86,9 @@ namespace Org.FGQ.CodeGenerate.Pipe.Java
             builder.AddAssemblyReference(typeof(ReverseStrTagHelper)); // by type
         }
 
-        public override IEnumerable<object> GetModels(Work.Work work, PipeBase pipe)
+        public override IEnumerable<object> GetModels(Work.Work work)
         {
-            JavaBeanModel javaBeanConfig = (work as JavaWorkModel).BeanConfig;
+            JavaBeanModel javaBeanConfig = (work as JavaWork).BeanConfig;
 
             List<ClassBase> models = new List<ClassBase>();
 

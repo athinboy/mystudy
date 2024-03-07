@@ -1,13 +1,9 @@
-﻿
-using Org.FGQ.CodeGenerate;
+﻿using NUnit.Framework;
 using Org.FGQ.CodeGenerate.Config;
-using NUnit;
-using static Org.FGQ.CodeGenerate.Config.DDLModel;
-using NUnit.Framework;
-using System;
-using Org.FGQ.CodeGenerate.Engine;
+using Org.FGQ.CodeGenerate.Dispatch;
 using Org.FGQ.CodeGenerate.Pipe;
 using Org.FGQ.CodeGenerate.Util.Code;
+using System;
 
 namespace Org.FGQ.CodeGenerateTest
 {
@@ -322,9 +318,9 @@ namespace Org.FGQ.CodeGenerateTest
         public void DDLToSQLTest()
         {
 
- 
-              string outputpath = @"c:\1\" + DateTime.Now.ToLongDateString() + ".txt";
-            GenerateEngine.Do(new CodeGenerate.Work.Work() { ddlModel = ddlConfig }, new SQLWorkPipe(outputpath));
+
+            string outputpath = @"c:\1\" + DateTime.Now.ToLongDateString() + ".txt";
+            DefaultDispatch.DispathWork(new CodeGenerate.Work.Work() { ddlModel = ddlConfig, Pipes = { new SQLWorkPipe(outputpath) } });
         }
 
 
@@ -342,7 +338,7 @@ namespace Org.FGQ.CodeGenerateTest
             //JavaGenerator toJavaBean = new JavaGenerator();
             //toJavaBean.GenerateBean(javaBeanConfig);
 
-            GenerateEngine.Do<JavaWorkModel, JavaClass>(new JavaWorkModel() { BeanConfig = javaBeanConfig }, new CodeGenerate.Pipe.Java.JavaBeanPipe());
+            DefaultDispatch.DispathWork(new JavaWork() { BeanConfig = javaBeanConfig, Pipes = { new CodeGenerate.Pipe.Java.JavaBeanPipe() } });
 
         }
 

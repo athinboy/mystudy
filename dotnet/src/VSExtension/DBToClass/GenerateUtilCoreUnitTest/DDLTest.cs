@@ -4,6 +4,7 @@ using System;
 using Org.FGQ.CodeGenerate.Pipe;
 using Org.FGQ.CodeGenerate.Work;
 using Org.FGQ.CodeGenerate.Generator;
+using Org.FGQ.CodeGenerate.Dispatch;
 
 namespace Org.FGQ.CodeGenerateTest
 {
@@ -47,7 +48,11 @@ namespace Org.FGQ.CodeGenerateTest
         {
 
             const string outputpath = @"c:\1\2.txt";
-            GenerateGenerator.Do<Work, DDLTable>(new CodeGenerate.Work.Work() { ddlModel = ddlModel }, new SQLWorkPipe(outputpath));
+            DefaultDispatch.DispathWork(new CodeGenerate.Work.Work()
+            {
+                ddlModel = ddlModel,
+                Pipes = { new SQLWorkPipe(outputpath) }
+            });
 
 
         }
@@ -73,7 +78,7 @@ namespace Org.FGQ.CodeGenerateTest
         public void DBToCSharpAll()
         {
             GenerateConfig generateConfig = new GenerateConfig();
-        
+
             generateConfig.codeConfig.CSharpConfig = new CSharpConfig
             {
                 NamespacePathLowerCase = true,

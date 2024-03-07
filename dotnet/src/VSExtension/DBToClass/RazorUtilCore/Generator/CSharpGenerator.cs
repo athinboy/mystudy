@@ -3,6 +3,7 @@ using Org.FGQ.CodeGenerate.Config;
 using Org.FGQ.CodeGenerate.Pipe;
 using Org.FGQ.CodeGenerate.RazorTag;
 using Org.FGQ.CodeGenerate.Util.Code;
+using Org.FGQ.CodeGenerate.Work;
 using RazorEngineCore;
 using System;
 using System.Collections.Concurrent;
@@ -351,13 +352,13 @@ namespace Org.FGQ.CodeGenerate.Generator
 
         }
 
-        internal void Generate(GenerateConfig generateConfig)
+        public override Work.Work CreateWork(GenerateConfig generateConfig)
         {
             DBToDDLPipe dBToDDLPipe = new DBToDDLPipe();
+            CSharpWork cSharpWork=new CSharpWork();
+            cSharpWork.Pipes.Add(dBToDDLPipe);
 
-
-
-
+            return cSharpWork;
         }
 
         public override bool ValidateConfig()

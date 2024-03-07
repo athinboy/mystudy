@@ -11,7 +11,7 @@ using System.Text;
 
 namespace Org.FGQ.CodeGenerate.Pipe.CSharp
 {
-    public class CSharpBeanPipe : WorkPipeBaseT<CSharpWork, CSharpClass>
+    public class CSharpBeanPipe : WorkPipeBaseT<CSharpWork, CSharpClass>   
     {
 
         private const string fileSuffix = ".cs";
@@ -53,7 +53,7 @@ namespace Org.FGQ.CodeGenerate.Pipe.CSharp
 
         public override void PrePareModel(Work.Work work, PipeBase pipe)
         {
-            (work as JavaWorkModel).BeanConfig.DDLConfig.Prepare();
+            (work as JavaWork).BeanConfig.DDLConfig.Prepare();
         }
 
         public override void AddTemplateReference(IRazorEngineCompilationOptionsBuilder builder)
@@ -66,9 +66,9 @@ namespace Org.FGQ.CodeGenerate.Pipe.CSharp
             builder.AddAssemblyReference(typeof(ReverseStrTagHelper)); // by type
         }
 
-        public override IEnumerable<object> GetModels(Work.Work work, PipeBase pipe)
+        public override IEnumerable<object> GetModels(Work.Work work)
         {
-            JavaBeanModel javaBeanConfig = (work as JavaWorkModel).BeanConfig;
+            JavaBeanModel javaBeanConfig = (work as JavaWork).BeanConfig;
 
             List<ClassBase> models = new List<ClassBase>();
 

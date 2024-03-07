@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Org.FGQ.CodeGenerate.Pipe;
+using Org.FGQ.CodeGenerate.Dispatch;
 
 
 namespace Org.FGQ.CodeGenerate.Generator
@@ -43,7 +44,7 @@ namespace Org.FGQ.CodeGenerate.Generator
                 }
             }
 
-            GenerateGenerator.Do(new Work.Work() { ddlModel = ddlModel }, new SQLWorkPipe(""));
+            DefaultDispatch.DispathWork(new Work.Work() { ddlModel = ddlModel, Pipes = { new SQLWorkPipe("") } });
 
 
 
@@ -79,6 +80,11 @@ namespace Org.FGQ.CodeGenerate.Generator
             }
 
             return true;
+        }
+
+        public override Work.Work CreateWork(GenerateConfig generateConfig)
+        {
+            throw new NotImplementedException();
         }
     }
 }

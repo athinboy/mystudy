@@ -51,7 +51,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
             throw new NotImplementedException();
         }
 
-        public override IEnumerable<object> GetModels(Work.Work work, PipeBase pipe)
+        public override IEnumerable<object> GetModels(Work.Work work)
         {
             yield return MyT;
         }

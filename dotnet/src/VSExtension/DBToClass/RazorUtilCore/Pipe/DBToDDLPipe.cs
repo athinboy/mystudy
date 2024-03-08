@@ -22,9 +22,5 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         }
 
-        public override void Generate(Work.Work work, object template, object t)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

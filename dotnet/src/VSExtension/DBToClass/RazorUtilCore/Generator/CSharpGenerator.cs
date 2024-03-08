@@ -1,6 +1,7 @@
 ﻿using Org.FGQ.CodeGenerate.Code;
 using Org.FGQ.CodeGenerate.Config;
 using Org.FGQ.CodeGenerate.Pipe;
+using Org.FGQ.CodeGenerate.Pipe.CSharp;
 using Org.FGQ.CodeGenerate.RazorTag;
 using Org.FGQ.CodeGenerate.Util.Code;
 using Org.FGQ.CodeGenerate.Work;
@@ -349,14 +350,18 @@ namespace Org.FGQ.CodeGenerate.Generator
 
             }
 
-
         }
 
         public override Work.Work CreateWork(GenerateConfig generateConfig)
         {
-            DBToDDLPipe dBToDDLPipe = new DBToDDLPipe();
+            
             CSharpWork cSharpWork=new CSharpWork();
-            cSharpWork.Pipes.Add(dBToDDLPipe);
+
+            DBToDDLPipe dBToDDLPipe = new DBToDDLPipe();
+            cSharpWork.InPipes.Add(dBToDDLPipe);
+
+            CSharpBeanPipe cSharpBeanPipe = new CSharpBeanPipe();
+            cSharpWork.OutPipes.Add(cSharpBeanPipe);
 
             return cSharpWork;
         }

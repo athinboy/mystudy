@@ -44,7 +44,7 @@ namespace Org.FGQ.CodeGenerate.Generator
                 }
             }
 
-            DefaultDispatch.DispathWork(new Work.Work() { ddlModel = ddlModel, Pipes = { new SQLWorkPipe("") } });
+            DefaultDispatch.DispathWork(new Work.Work() { ddlModel = ddlModel, OutPipes = { new SQLWorkPipe("") } });
 
 
 

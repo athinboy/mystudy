@@ -8,13 +8,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Org.FGQ.CodeGenerate.Model;
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
     /// <summary>
     ///  the pipe to  generate sql .
     /// </summary>
-    public class SQLWorkPipe : WorkPipeBaseT<Work.Work, DDLTable>
+    public class SQLWorkPipe : TemplatePipeBaseT<Work.Work, DDLTableModel>
     {
 
         private static string templateOracleRelatePath = System.IO.Path.DirectorySeparatorChar + "template" + System.IO.Path.DirectorySeparatorChar + "OracleDDL.cshtml";
@@ -26,29 +27,14 @@ namespace Org.FGQ.CodeGenerate.Pipe
             OutputPath = (string.IsNullOrEmpty(outputPath) ? null : outputPath) ?? throw new ArgumentNullException(nameof(outputPath));
         }
 
-        public override IEnumerable<object> GetModels(Work.Work work)
+        protected override string GetInternalTplFileName()
         {
-            return work.ddlModel.Tables;
+            return null;
         }
 
-        public override void GenerateT(Work.Work work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<DDLTable>> template, DDLTable table)
+        internal override void Init(Work.Work work)
         {
-            string result = "";
-
-            result += template.Run(x =>
-               {
-                   x.Model = table;
-
-               });
-
-            Util.FileUtil.PrepareDirectory(OutputPath);
-            File.AppendAllText(OutputPath, result, new UTF8Encoding(false));
-
-        }
-
-
-        public override string getRazorFilePath(Work.Work work)
-        {
+            base.Init(work);
             string templateRelatePath = string.Empty;
             switch (work.ddlModel.MyDBType)
             {
@@ -64,21 +50,42 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
 
             string templatePath = Environment.CurrentDirectory + templateRelatePath;
-            return templatePath;
+            RazorTplFilePath = templatePath;
+
         }
 
-        public override void PrePareModel(Work.Work work, PipeBase pipe)
+        public override void GenerateT(Work.Work work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<DDLTableModel>> template, DDLTableModel model)
+        {
+            string result = "";
+
+            result += template.Run(x =>
+               {
+                   x.Model = model;
+
+               });
+
+            Util.FileUtil.PrepareDirectory(OutputPath);
+            File.AppendAllText(OutputPath, result, new UTF8Encoding(false));
+
+        }
+
+
+
+
+        public override BaseModel PrepareModel(Work.Work work, BaseModel model)
         {
             work.ddlModel.Prepare();
+            return model;
         }
 
-        public override void PrepareVar(Work.Work work)
+        internal override BaseModel PrepareVar(Work.Work work, BaseModel model)
         {
-            base.PrepareVar(work);
+            base.PrepareVar(work, model);
             if (File.Exists(OutputPath))
             {
                 File.Delete(OutputPath);
             }
+            return model;
         }
     }
 }

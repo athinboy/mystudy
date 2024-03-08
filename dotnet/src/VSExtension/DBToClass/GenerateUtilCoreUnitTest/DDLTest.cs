@@ -51,7 +51,7 @@ namespace Org.FGQ.CodeGenerateTest
             DefaultDispatch.DispathWork(new CodeGenerate.Work.Work()
             {
                 ddlModel = ddlModel,
-                Pipes = { new SQLWorkPipe(outputpath) }
+                OutPipes = { new SQLWorkPipe(outputpath) }
             });
 
 

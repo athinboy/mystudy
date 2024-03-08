@@ -1,4 +1,5 @@
-﻿using Org.FGQ.CodeGenerate.Work;
+﻿using Org.FGQ.CodeGenerate.Config;
+using Org.FGQ.CodeGenerate.Work;
 using RazorEngineCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
-    public class SimpleInstancePipe<T> : WorkPipeBaseT<Work.Work, T>
+    public class SimpleInstancePipe<T> : TemplatePipeBaseT<Work.Work, T> where T:BaseModel
     {
 
         public T MyT { get; set; }
@@ -41,19 +42,8 @@ namespace Org.FGQ.CodeGenerate.Pipe
             throw new NotImplementedException();
         }
 
-        public override string getRazorFilePath(Work.Work work)
-        {
-            throw new NotImplementedException();
-        }
+ 
 
-        public override void PrePareModel(Work.Work work, PipeBase pipe)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override IEnumerable<object> GetModels(Work.Work work)
-        {
-            yield return MyT;
-        }
+       
     }
 }

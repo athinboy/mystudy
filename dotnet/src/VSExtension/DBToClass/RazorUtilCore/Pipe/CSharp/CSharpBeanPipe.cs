@@ -11,10 +11,15 @@ using System.Text;
 
 namespace Org.FGQ.CodeGenerate.Pipe.CSharp
 {
-    public class CSharpBeanPipe : WorkPipeBaseT<CSharpWork, CSharpClass>   
+    public class CSharpBeanPipe : TemplatePipeBaseT<CSharpWork, CSharpClass>
     {
 
+
         private const string fileSuffix = ".cs";
+
+        public CSharpBeanPipe() : base()
+        {
+        }
 
         public override void GenerateT(CSharpWork work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<CSharpClass>> template, CSharpClass t)
         {
@@ -46,28 +51,14 @@ namespace Org.FGQ.CodeGenerate.Pipe.CSharp
 
         }
 
-        public override string getRazorFilePath(Work.Work work)
+        protected override string GetInternalTplFileName()
         {
-            return FileUtil.GetInternalTemplateFilePath("CSharpBean.cshtml");
+            return "CSharpBean.cshtml";
         }
 
-        public override void PrePareModel(Work.Work work, PipeBase pipe)
+        public void PrePareModel(Work.Work work)
         {
             (work as JavaWork).BeanConfig.DDLConfig.Prepare();
-        }
-
-        public override void AddTemplateReference(IRazorEngineCompilationOptionsBuilder builder)
-        {
-            base.AddTemplateReference(builder);
-
-
-            builder.AddAssemblyReferenceByName("System.Collections");
-            builder.AddAssemblyReference(typeof(CodeUtil)); // by type         
-            builder.AddAssemblyReference(typeof(ReverseStrTagHelper)); // by type
-        }
-
-        public override IEnumerable<object> GetModels(Work.Work work)
-        {
             JavaBeanModel javaBeanConfig = (work as JavaWork).BeanConfig;
 
             List<ClassBase> models = new List<ClassBase>();
@@ -80,10 +71,22 @@ namespace Org.FGQ.CodeGenerate.Pipe.CSharp
                 models.Add((t.RelatedClsss as JavaClass).JavaVoClass);
 
             });
-
-            return models;
-
-
         }
+
+        public override void AddTemplateReference(IRazorEngineCompilationOptionsBuilder builder)
+        {
+            base.AddTemplateReference(builder);
+
+
+            builder.AddAssemblyReferenceByName("System.Collections");
+            builder.AddAssemblyReference(typeof(CodeUtil)); // by type         
+            builder.AddAssemblyReference(typeof(ReverseStrTagHelper)); // by type
+        }
+
+
+
+
+
+
     }
 }

@@ -7,6 +7,7 @@ namespace Org.FGQ.CodeGenerate
     {
         public static string GetInternalTemplateFilePath(string filename)
         {
+            filename = (string.IsNullOrEmpty(filename) ? null : filename) ?? throw new ArgumentNullException(nameof(filename));
             return Environment.CurrentDirectory + Path.DirectorySeparatorChar + "template" + Path.DirectorySeparatorChar + filename;
         }
 

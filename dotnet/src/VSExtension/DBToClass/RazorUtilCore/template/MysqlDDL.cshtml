@@ -8,18 +8,18 @@
 Date: @DateTime.Now
 */
 
--- Start--------------------------------@Model.DBName.@Model.TableNameSQL------------------
-DROP TABLE if EXISTS @Model.DBName.@Model.TableNameSQL;
+-- Start--------------------------------@Model.Table.DBName.@Model.Table.TableNameSQL------------------
+DROP TABLE if EXISTS @Model.Table.DBName.@Model.Table.TableNameSQL;
 
 
-CREATE TABLE @Model.DBName.@Model.TableNameSQL ( 
+CREATE TABLE @Model.Table.DBName.@Model.Table.TableNameSQL ( 
 
-@for (var i = 0; i < @Model.Columns.Count; i++){
-  var col2=@Model.Columns[i];
+@for (var i = 0; i < @Model.Table.Columns.Count; i++){
+  var col2=@Model.Table.Columns[i];
   if( col2.Validate() ){
 
      WriteColumnDefine(col2);
-     if(i!=@Model.Columns.Count-1){
+     if(i!=@Model.Table.Columns.Count-1){
        @(",\r\n");
      }else{
      @("\r\n");
@@ -30,10 +30,10 @@ CREATE TABLE @Model.DBName.@Model.TableNameSQL (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8mb4
 COLLATE=utf8mb4_general_ci
-COMMENT='@Model.Desc'
+COMMENT='@Model.Table.Desc'
 ;
 
--- End--------------------------------@Model.DBName.@Model.TableNameSQL------------------ 
+-- End--------------------------------@Model.Table.DBName.@Model.Table.TableNameSQL------------------ 
 
 @{
   void WriteColumnDefine(DDLColumn col)

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Pipe.Java
 {
-    public class JavaBeanPipe : WorkPipeBaseT<JavaWork, JavaClass>
+    public class JavaBeanPipe : TemplatePipeBaseT<JavaWork, JavaClass>
     {
 
 
@@ -65,17 +65,7 @@ namespace Org.FGQ.CodeGenerate.Pipe.Java
 
 
         }
-
-        public override string getRazorFilePath(Work.Work work)
-        {
-            return FileUtil.GetInternalTemplateFilePath("JavaBean.cshtml");
-        }
-
-        public override void PrePareModel(Work.Work work, PipeBase pipe)
-        {
-            (work as JavaWork).BeanConfig.DDLConfig.Prepare();
-        }
-
+         
         public override void AddTemplateReference(IRazorEngineCompilationOptionsBuilder builder)
         {
             base.AddTemplateReference(builder);
@@ -86,24 +76,5 @@ namespace Org.FGQ.CodeGenerate.Pipe.Java
             builder.AddAssemblyReference(typeof(ReverseStrTagHelper)); // by type
         }
 
-        public override IEnumerable<object> GetModels(Work.Work work)
-        {
-            JavaBeanModel javaBeanConfig = (work as JavaWork).BeanConfig;
-
-            List<ClassBase> models = new List<ClassBase>();
-
-            javaBeanConfig.DDLConfig.Tables.ForEach(t =>
-            {
-                javaBeanConfig.Table = t;
-                t.RelatedClsss = JavaClass.CreateBoClass(t, javaBeanConfig, true);
-                models.Add(t.RelatedClsss as JavaClass);
-                models.Add((t.RelatedClsss as JavaClass).JavaVoClass);
-
-            });
-
-            return models;
-
-
-        }
     }
 }

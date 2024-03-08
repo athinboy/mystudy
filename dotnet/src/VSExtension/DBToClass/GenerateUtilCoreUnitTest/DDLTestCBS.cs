@@ -320,7 +320,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
             string outputpath = @"c:\1\" + DateTime.Now.ToLongDateString() + ".txt";
-            DefaultDispatch.DispathWork(new CodeGenerate.Work.Work() { ddlModel = ddlConfig, Pipes = { new SQLWorkPipe(outputpath) } });
+            DefaultDispatch.DispathWork(new CodeGenerate.Work.Work() { ddlModel = ddlConfig, OutPipes = { new SQLWorkPipe(outputpath) } });
         }
 
 
@@ -338,7 +338,7 @@ namespace Org.FGQ.CodeGenerateTest
             //JavaGenerator toJavaBean = new JavaGenerator();
             //toJavaBean.GenerateBean(javaBeanConfig);
 
-            DefaultDispatch.DispathWork(new JavaWork() { BeanConfig = javaBeanConfig, Pipes = { new CodeGenerate.Pipe.Java.JavaBeanPipe() } });
+            DefaultDispatch.DispathWork(new JavaWork() { BeanConfig = javaBeanConfig, OutPipes = { new CodeGenerate.Pipe.Java.JavaBeanPipe() } });
 
         }
 

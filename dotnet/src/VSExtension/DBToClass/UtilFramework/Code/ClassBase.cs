@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Util.Code
 {
-    public class ClassBase
+    public class ClassBase:BaseModel
     {
 
         public string NamespaceName { get; set; }

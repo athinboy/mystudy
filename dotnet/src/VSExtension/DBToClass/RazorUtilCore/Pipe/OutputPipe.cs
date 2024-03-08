@@ -1,5 +1,5 @@
-﻿using Org.FGQ.CodeGenerate.Pipe.Delegate;
-using Org.FGQ.CodeGenerate.Work;
+﻿using Org.FGQ.CodeGenerate.Config;
+using Org.FGQ.CodeGenerate.Pipe.Delegate;
 using RazorEngineCore;
 using System.Collections.Generic;
 
@@ -8,25 +8,19 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
     public abstract class OutputPipe : PipeBase
     {
-
-        protected OutputPipe()
+        protected OutputPipe() : base()
         {
-
         }
 
         public string OutputPath { get; set; }
 
-        public string RazorTplFilePath { get; set; }
+
 
         public Action2 GetModelsAction { get; set; } = null;
-        public Action3 PrepareModelAction { get; set; } = null;
 
-
-        public Action4 BeforeEachModelAction { get; set; } = null;
 
         public AddTemplateReferenceAction AddTemplateReferenceFunc { get; set; } = null;
 
-        public abstract string getRazorFilePath(Work.Work work);
 
         public Action PickCurrent { get; set; }
 
@@ -40,36 +34,53 @@ namespace Org.FGQ.CodeGenerate.Pipe
             }
         }
 
-        public abstract void PrePareModel(Work.Work work, PipeBase pipe);
+        public Action4 PrepareModelAction { get; set; } = null;
 
-        public virtual IEnumerable<object> GetModels(Work.Work work)
+
+
+        public virtual BaseModel PrepareModel(Work.Work work, BaseModel model)
         {
-            if (GetModelsAction != null)
+            if (PrepareModelAction != null)
             {
-                return GetModelsAction(work, this);
+                return PrepareModelAction(work, this, model);
             }
-            else
-            {
-                return null;
-            }
-
-        }
-
-        internal abstract object PrepareTemplate(IRazorEngine razorEngine, string templateContent);
-
-        public virtual void BeforeEachModel(Work.Work work, object t)
-        {
-            if (BeforeEachModelAction != null)
-            {
-                BeforeEachModelAction(work, this, t);
-            }
+            return null;
         }
 
 
 
 
 
+        internal virtual void DoOutput(Work.Work work, BaseModel model)
+        {
 
+        }
+        internal virtual void FinishOutput(Work.Work work, BaseModel model)
+        {
 
+        }
+
+        public Action4 PrepareOutputAction { get; set; } = null;
+
+        internal virtual void PrepareOutput(Work.Work work, BaseModel model)
+        {
+            if (PrepareOutputAction != null)
+            {
+                PrepareOutputAction(work, this, model);
+            }
+        }
+
+        public Action4 PrepareVarAction { get; set; } = null;
+
+        internal virtual BaseModel PrepareVar(Work.Work work, BaseModel model)
+        {
+            if (PrepareVarAction != null)
+            {
+                return PrepareVarAction(work, this, model);
+            }
+            return model;
+        }
+
+ 
     }
 }

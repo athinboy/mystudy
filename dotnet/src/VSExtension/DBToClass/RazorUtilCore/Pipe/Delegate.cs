@@ -1,4 +1,5 @@
-﻿using Org.FGQ.CodeGenerate.Work;
+﻿using Org.FGQ.CodeGenerate.Config;
+using Org.FGQ.CodeGenerate.Work;
 using RazorEngineCore;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace Org.FGQ.CodeGenerate.Pipe.Delegate
 
     public delegate void Action3(Work.Work work, PipeBase pipe);
 
-    public delegate void Action4(Work.Work work, PipeBase pipe,Object model);
+    public delegate BaseModel Action4(Work.Work work, PipeBase pipe,  BaseModel model);
 
     public delegate void AddTemplateReferenceAction(IRazorEngineCompilationOptionsBuilder builder);
 

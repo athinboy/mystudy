@@ -1,7 +1,6 @@
-﻿using Org.FGQ.CodeGenerate.Config;
+﻿using Org.FGQ.CodeGenerate.Model;using Org.FGQ.CodeGenerate.Model.DDL;
 using Org.FGQ.CodeGenerate.Pipe.Delegate;
 using RazorEngineCore;
-using System.Collections.Generic;
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {

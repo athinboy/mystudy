@@ -1,11 +1,6 @@
-﻿using Org.FGQ.CodeGenerate.Config;
+﻿using Org.FGQ.CodeGenerate.Model;using Org.FGQ.CodeGenerate.Model.DDL;
 using Org.FGQ.CodeGenerate.Util.DB;
 using Org.FGQ.CodeGenerate.Util.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Util.Code
 {
@@ -17,7 +12,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
         public bool IsPrimaryKeyColumn { get; private set; } = false;
         public bool IsUniqueKeyColumn { get; private set; } = false;
         public bool IsParentKey { get; private set; } = false;
-        public DDLColumn DDLColumn { get; set; }
+        public FieldColumn Column { get; set; }
 
 
         public string Desc { get; set; } = string.Empty;
@@ -34,7 +29,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
         {
             get
             {
-                return this.DDLColumn == null ? "丢失的JSON名称" : DDLColumn.JsonFieldName;
+                return this.Column == null ? "丢失的JSON名称" : Column.JsonFieldName;
             }
             private set { }
         }
@@ -43,7 +38,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
         {
             get
             {
-                return this.DDLColumn == null ? "丢失的列名称" : DDLColumn.NameSql;
+                return this.Column == null ? "丢失的列名称" : Column.NameSql;
             }
             private set { }
         }
@@ -54,14 +49,14 @@ namespace Org.FGQ.CodeGenerate.Util.Code
         }
 
 
-        internal static FieldBase Create(DDLColumn c)
+        internal static FieldBase Create(FieldColumn c)
         {
 
             FieldBase fieldBase = new FieldBase();
             fieldBase.Name = CodeUtil.GetFieldName(c);
             fieldBase.Desc = c.Desc;
             fieldBase.Remark = c.Remark;
-            fieldBase.DDLColumn = c;
+            fieldBase.Column = c;
             fieldBase.FieldType = DDLUtil.AnalysisFieldType(c);
             fieldBase.JDBCType = DBUtil.AnalysisJDBCType(fieldBase.FieldType);
             fieldBase.IsKeyField = c.IsKeyColumn();

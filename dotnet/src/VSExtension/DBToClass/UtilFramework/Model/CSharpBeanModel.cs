@@ -1,8 +1,11 @@
-﻿namespace Org.FGQ.CodeGenerate.Config
+﻿
+using Org.FGQ.CodeGenerate.Model.DDL;
+
+namespace Org.FGQ.CodeGenerate.Model
 {
     public class CSharpBeanModel : EntityModel
     {
-        public DDLModel DDLConfig { get; set; }
+        public WareDDL DDL { get; set; }
 
         
 

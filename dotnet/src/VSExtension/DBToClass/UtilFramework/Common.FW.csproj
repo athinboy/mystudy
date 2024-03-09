@@ -52,12 +52,14 @@
     <Compile Include="Config\GenerateConfig.cs" />
     <Compile Include="Config\GenerateMode.cs" />
     <Compile Include="Config\MySqlDBConfig.cs" />
+    <Compile Include="DDL\EntityTable.cs" />
+    <Compile Include="DDL\FieldColumn.cs" />
     <Compile Include="Exceptions\CodeGenerateException.cs" />
     <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\DDLTableModel.cs" />
     <Compile Include="Model\EntityModel.cs" />
     <Compile Include="Model\CSharpBeanModel.cs" />
-    <Compile Include="Model\DDLModel.cs" />
+    <Compile Include="DDL\WareDDL.cs" />
     <Compile Include="Model\JavaBeanModel.cs" />
     <Compile Include="Model\JavaCodeConfig.cs" />
     <Compile Include="Model\JavaModel.cs" />

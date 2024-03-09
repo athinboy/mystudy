@@ -9,6 +9,7 @@
     <Compile Include="..\UtilFramework\DB\**\*.cs" LinkBase="DB" />
     <Compile Include="..\UtilFramework\Code\**\*.cs" LinkBase="Code" />
     <Compile Include="..\UtilFramework\Model\**\*.cs" LinkBase="Model" />
+    <Compile Include="..\UtilFramework\DDL\**\*.cs"  LinkBase="DDL"/>
     <Compile Include="..\UtilFramework\Util\**\*.cs" LinkBase="Util" />
     <Compile Include="..\UtilFramework\RazorTag\**\*.cs" LinkBase="RazorTag" />
     <Compile Include="..\UtilFramework\Engine\**\*.cs" LinkBase="Engine" />
@@ -16,6 +17,7 @@
     <Compile Include="..\UtilFramework\Config\**\*.cs" LinkBase="Config" />
   </ItemGroup>
 
+  
   <ItemGroup>
     <PackageReference Include="MySqlConnector" Version="1.3.12" />
     <PackageReference Include="NLog" Version="5.2.8" />

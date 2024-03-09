@@ -5,8 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Org.FGQ.CodeGenerate.Config
+namespace Org.FGQ.CodeGenerate.Model
 {
+
     public class JavaMapperModel : JavaDaoModel
     {
 
@@ -64,7 +65,7 @@ namespace Org.FGQ.CodeGenerate.Config
         {
             get
             {
-                return this.JavaClass.DDLTable == null ? "丢失的数据表名称" : this.JavaClass.DDLTable.TableName;
+                return this.JavaClass.Table == null ? "丢失的数据表名称" : this.JavaClass.Table.TableName;
             }
         }
 

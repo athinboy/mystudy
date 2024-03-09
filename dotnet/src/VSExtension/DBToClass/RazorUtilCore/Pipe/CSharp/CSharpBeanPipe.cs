@@ -1,10 +1,9 @@
 ﻿using Org.FGQ.CodeGenerate.Code;
-using Org.FGQ.CodeGenerate.Config;
-using Org.FGQ.CodeGenerate.Work;
+using Org.FGQ.CodeGenerate.Model;using Org.FGQ.CodeGenerate.Model.DDL;
 using Org.FGQ.CodeGenerate.RazorTag;
 using Org.FGQ.CodeGenerate.Util.Code;
+using Org.FGQ.CodeGenerate.Work;
 using RazorEngineCore;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;

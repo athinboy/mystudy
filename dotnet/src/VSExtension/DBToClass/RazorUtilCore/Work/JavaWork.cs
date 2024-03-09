@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Org.FGQ.CodeGenerate.Config;
-using Org.FGQ.CodeGenerate.Work;
+﻿using Org.FGQ.CodeGenerate.Config;
+using Org.FGQ.CodeGenerate.Model;using Org.FGQ.CodeGenerate.Model.DDL;
 
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
     public class JavaWork : Work.Work
     {
-
+        public JavaWork(GenerateConfig generateConfig) : base(generateConfig)
+        {
+        }
 
         public JavaBeanModel BeanConfig { get; set; }
 

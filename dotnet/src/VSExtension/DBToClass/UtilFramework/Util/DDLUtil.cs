@@ -1,4 +1,5 @@
 ﻿using Org.FGQ.CodeGenerate.Config;
+using Org.FGQ.CodeGenerate.Model;using Org.FGQ.CodeGenerate.Model.DDL;
 using Org.FGQ.CodeGenerate.Util.Code;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace Org.FGQ.CodeGenerate.Util.Util
     public class DDLUtil
     {
 
-        public static FieldTypes AnalysisFieldType(Config.DDLColumn c)
+        public static FieldTypes AnalysisFieldType(FieldColumn c)
         {
             string longstr = null;
             string type = c.TypeName;

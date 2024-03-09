@@ -1,4 +1,5 @@
 ﻿using Org.FGQ.CodeGenerate.Config;
+using Org.FGQ.CodeGenerate.Model;using Org.FGQ.CodeGenerate.Model.DDL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 {
     public class JavaClass : ClassBase
     {
-        public JavaClass(string packageName, DDLTable dDLTable) : base(packageName, dDLTable)
+        public JavaClass(string packageName, EntityTable table) : base(packageName, table)
         {
 
         }
@@ -51,7 +52,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
         public JavaClass JavaVoClass { get; set; } = null;
 
 
-        public JavaClass(string packageName, DDLTable ddLTable, JavaBeanModel javaBeanConfig) : this(packageName, ddLTable)
+        public JavaClass(string packageName, EntityTable Table, JavaBeanModel javaBeanConfig) : this(packageName, Table)
         {
             JavaBeanConfig = javaBeanConfig;
         }
@@ -59,7 +60,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
         public JavaBeanModel JavaBeanConfig { get; }
 
 
-        public static JavaClass CreateBoClass(DDLTable table, JavaBeanModel javaBeanConfig, bool createVo)
+        public static JavaClass CreateBoClass(EntityTable table, JavaBeanModel javaBeanConfig, bool createVo)
         {
             JavaClass javaClass = new JavaClass(javaBeanConfig.PackageName, table, javaBeanConfig);
 

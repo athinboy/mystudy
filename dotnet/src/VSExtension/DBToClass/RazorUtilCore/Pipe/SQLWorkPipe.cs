@@ -8,14 +8,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Org.FGQ.CodeGenerate.Model;
+using Org.FGQ.CodeGenerate.Model;using Org.FGQ.CodeGenerate.Model.DDL;
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
     /// <summary>
     ///  the pipe to  generate sql .
     /// </summary>
-    public class SQLWorkPipe : TemplatePipeBaseT<Work.Work, DDLTableModel>
+    public class SQLWorkPipe : TemplatePipeBaseT<Work.Work, TableModel>
     {
 
         private static string templateOracleRelatePath = System.IO.Path.DirectorySeparatorChar + "template" + System.IO.Path.DirectorySeparatorChar + "OracleDDL.cshtml";
@@ -36,16 +36,16 @@ namespace Org.FGQ.CodeGenerate.Pipe
         {
             base.Init(work);
             string templateRelatePath = string.Empty;
-            switch (work.ddlModel.MyDBType)
+            switch (work.DDLModel.MyDBType)
             {
-                case DDLModel.DBType.MySql:
+                case WareDDL.DBType.MySql:
                     templateRelatePath = templateMysqlRelatePath;
                     break;
-                case DDLModel.DBType.Oracle:
+                case WareDDL.DBType.Oracle:
                     templateRelatePath = templateOracleRelatePath;
                     break;
                 default:
-                    throw new ArgumentNullException(nameof(work.ddlModel.MyDBType));
+                    throw new ArgumentNullException(nameof(work.DDLModel.MyDBType));
             }
 
 
@@ -54,7 +54,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         }
 
-        public override void GenerateT(Work.Work work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<DDLTableModel>> template, DDLTableModel model)
+        public override void GenerateT(Work.Work work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<TableModel>> template, TableModel model)
         {
             string result = "";
 
@@ -74,7 +74,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         public override BaseModel PrepareModel(Work.Work work, BaseModel model)
         {
-            work.ddlModel.Prepare();
+            work.DDLModel.Prepare();
             return model;
         }
 

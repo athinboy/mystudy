@@ -1,19 +1,16 @@
 ﻿using Org.FGQ.CodeGenerate.Util.Code;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Org.FGQ.CodeGenerate.Model;
+using Org.FGQ.CodeGenerate.Model.DDL;
 
-namespace Org.FGQ.CodeGenerate.Config
+namespace Org.FGQ.CodeGenerate.Model
 {
     public class JavaBeanModel : JavaModel
     {
 
-        public DDLModel DDLConfig { get; set; }
+        public WareDDL DDLConfig { get; set; }
 
-  
-        public DDLTable Table { get; set; }
+
+        public EntityTable Table { get; set; }
         public ClassBase ClassBase { get; set; }
         public string VOPackageName { get; set; }
     }

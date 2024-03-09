@@ -1,4 +1,5 @@
 ﻿using Org.FGQ.CodeGenerate.Config;
+using Org.FGQ.CodeGenerate.Model;using Org.FGQ.CodeGenerate.Model.DDL;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -47,9 +48,9 @@ namespace Org.FGQ.CodeGenerate.Util.Code
         /// </summary>
         /// <param name="c"></param>
         /// <returns></returns>
-        internal static string GetFieldName(DDLColumn c)
+        internal static string GetFieldName(FieldColumn c)
         {
-            DDLModel ddlconfig = c.DDLTable.DDLConfig;
+            WareDDL ddlconfig = c.Table.DDLConfig;
 
             if (ddlconfig.UnifyName) return c.Name;
 

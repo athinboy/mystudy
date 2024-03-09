@@ -5,6 +5,8 @@ using Org.FGQ.CodeGenerate.Pipe;
 using Org.FGQ.CodeGenerate.Work;
 using Org.FGQ.CodeGenerate.Generator;
 using Org.FGQ.CodeGenerate.Dispatch;
+using Org.FGQ.CodeGenerate.Model;using Org.FGQ.CodeGenerate.Model.DDL;
+
 
 namespace Org.FGQ.CodeGenerateTest
 {
@@ -16,27 +18,26 @@ namespace Org.FGQ.CodeGenerateTest
     {
 
 
-        DDLModel ddlModel;
+        WareDDL ddlModel;
         CSharpBeanModel beanConfig;
 
 
         [SetUp]
         public void Init()
         {
-            ddlModel = new DDLModel();
-            ddlModel.MyDBType = DDLModel.DBType.MySql;
+            WareDDL ddl = new WareDDL();
+            ddlModel.MyDBType = WareDDL.DBType.MySql;
 
 
+            EntityTable newtable;
+            FieldColumn column;
 
-            DDLTable newtable;
-            DDLColumn column;
-
-            ddlModel.Tables.Add(newtable = new DDLTable("base_info", "wx_user", "微信用户"));
-            newtable.Columns.Add(new DDLColumn("id", "id", "varchar(64)", "Y", ""));
-            newtable.Columns.Add(column = new DDLColumn("unionid", "unionid", "varchar(255)", "", ""));
+            ddlModel.Tables.Add(newtable = new EntityTable("base_info", "wx_user", "微信用户"));
+            newtable.Columns.Add(new FieldColumn("id", "id", "varchar(64)", "Y", ""));
+            newtable.Columns.Add(column = new FieldColumn("unionid", "unionid", "varchar(255)", "", ""));
             column.UniqueKeySign = "Y";
-            newtable.Columns.Add(new DDLColumn("用户昵称", "nickName", "varchar(255)", "", ""));
-            newtable.Columns.Add(new DDLColumn("用户头像图片的 URL", "avatarUrl", "varchar(500)", "", ""));
+            newtable.Columns.Add(new FieldColumn("用户昵称", "nickName", "varchar(255)", "", ""));
+            newtable.Columns.Add(new FieldColumn("用户头像图片的 URL", "avatarUrl", "varchar(500)", "", ""));
 
 
 
@@ -48,9 +49,9 @@ namespace Org.FGQ.CodeGenerateTest
         {
 
             const string outputpath = @"c:\1\2.txt";
-            DefaultDispatch.DispathWork(new CodeGenerate.Work.Work()
+            DefaultDispatch.DispathWork(new CodeGenerate.Work.Work(null)
             {
-                ddlModel = ddlModel,
+                DDLModel = ddlModel,
                 OutPipes = { new SQLWorkPipe(outputpath) }
             });
 
@@ -63,7 +64,7 @@ namespace Org.FGQ.CodeGenerateTest
         {
 
             beanConfig = new CSharpBeanModel();
-            beanConfig.DDLConfig = ddlModel;
+            beanConfig.DDL = ddlModel;
             beanConfig.NamespaceName = "com.wintop.third.bmwspark.bean";
 
             beanConfig.CodeDiretory = @"D:\fgq\temp\codegeneratetest\bean\third-bmwspark-bean\src\main\java";

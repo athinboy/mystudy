@@ -1,4 +1,4 @@
-﻿using Org.FGQ.CodeGenerate.Config;
+﻿using Org.FGQ.CodeGenerate.Model;using Org.FGQ.CodeGenerate.Model.DDL;
 using RazorEngineCore;
 using System;
 using System.Collections.Concurrent;
@@ -20,9 +20,9 @@ namespace Org.FGQ.CodeGenerate
              new ConcurrentDictionary<string, IRazorEngine>();
 
 
-        ConcurrentDictionary<string, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<DDLTable>>> templates =
-            new ConcurrentDictionary<string, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<DDLTable>>>();
-        void init(DDLModel.DBType myDBType)
+        ConcurrentDictionary<string, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<EntityTable>>> templates =
+            new ConcurrentDictionary<string, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<EntityTable>>>();
+        void init(WareDDL.DBType myDBType)
         {
             if (razorEngines.ContainsKey(myDBType.ToString()))
             {
@@ -38,10 +38,10 @@ namespace Org.FGQ.CodeGenerate
                 string templateRelatePath = string.Empty;
                 switch (myDBType)
                 {
-                    case DDLModel.DBType.MySql:
+                    case WareDDL.DBType.MySql:
                         templateRelatePath = templateMysqlRelatePath;
                         break;
-                    case DDLModel.DBType.Oracle:
+                    case WareDDL.DBType.Oracle:
                         templateRelatePath = templateOracleRelatePath;
                         break;
                     default:
@@ -55,8 +55,8 @@ namespace Org.FGQ.CodeGenerate
                 IRazorEngine razorEngine = new RazorEngine();
                 razorEngines[myDBType.ToString()] = razorEngine;
 
-                IRazorEngineCompiledTemplate<RazorEngineTemplateBase<DDLTable>> template
-                    = razorEngine.Compile<RazorEngineTemplateBase<DDLTable>>(templateContent, builder =>
+                IRazorEngineCompiledTemplate<RazorEngineTemplateBase<EntityTable>> template
+                    = razorEngine.Compile<RazorEngineTemplateBase<EntityTable>>(templateContent, builder =>
         {
             //builder.AddAssemblyReferenceByName("System.Security"); // by name
             //builder.AddAssemblyReference(typeof(System.IO.File)); // by type
@@ -73,7 +73,7 @@ namespace Org.FGQ.CodeGenerate
         }
 
 
-        internal void GenerateSql(DDLModel dDLConfig, string outputpath)
+        internal void GenerateSql(WareDDL dDLConfig, string outputpath)
         {
 
             init(dDLConfig.MyDBType);

@@ -1,11 +1,7 @@
-﻿using Org.FGQ.CodeGenerate.Config;
-using Org.FGQ.CodeGenerate.Work;
+﻿using Org.FGQ.CodeGenerate.Model;using Org.FGQ.CodeGenerate.Model.DDL;
 using RazorEngineCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Pipe.Delegate
 {

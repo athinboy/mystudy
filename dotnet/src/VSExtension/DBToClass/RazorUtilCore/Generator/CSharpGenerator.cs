@@ -1,5 +1,6 @@
 ﻿using Org.FGQ.CodeGenerate.Code;
 using Org.FGQ.CodeGenerate.Config;
+using Org.FGQ.CodeGenerate.Model;using Org.FGQ.CodeGenerate.Model.DDL;
 using Org.FGQ.CodeGenerate.Pipe;
 using Org.FGQ.CodeGenerate.Pipe.CSharp;
 using Org.FGQ.CodeGenerate.RazorTag;
@@ -185,14 +186,14 @@ namespace Org.FGQ.CodeGenerate.Generator
 
             //IRazorEngineCompiledTemplate template = razorEngine.Compile(templateContent);// "Hello @Model.Name");
 
-            beanConfig.DDLConfig.Prepare();
+            beanConfig.DDL.Prepare();
 
 
 
             string beanRootDir = CodeUtil.PrepareCodeRoot(beanConfig.CodeDiretory, beanConfig.NamespacePath);
 
             string result = string.Empty;
-            beanConfig.DDLConfig.Tables.ForEach(t =>
+            beanConfig.DDL.Tables.ForEach(t =>
             {
                 result = beanTemplate.Run(instance =>
                 {
@@ -355,7 +356,7 @@ namespace Org.FGQ.CodeGenerate.Generator
         public override Work.Work CreateWork(GenerateConfig generateConfig)
         {
             
-            CSharpWork cSharpWork=new CSharpWork();
+            CSharpWork cSharpWork=new CSharpWork(generateConfig);
 
             DBToDDLPipe dBToDDLPipe = new DBToDDLPipe();
             cSharpWork.InPipes.Add(dBToDDLPipe);

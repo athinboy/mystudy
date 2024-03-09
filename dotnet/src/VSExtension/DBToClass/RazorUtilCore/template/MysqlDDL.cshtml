@@ -3,7 +3,7 @@
 @using System.Collections.Generic
 @using System.Collections
 @using Org.FGQ.CodeGenerate.Config
-@inherits RazorEngineCore.RazorEngineTemplateBase<Org.FGQ.CodeGenerate.Config.DDLTable>
+@inherits RazorEngineCore.RazorEngineTemplateBase<Org.FGQ.CodeGenerate.Config.Table>
 /*
 Date: @DateTime.Now
 */
@@ -36,7 +36,7 @@ COMMENT='@Model.Table.Desc'
 -- End--------------------------------@Model.Table.DBName.@Model.Table.TableNameSQL------------------ 
 
 @{
-  void WriteColumnDefine(DDLColumn col)
+  void WriteColumnDefine(Column col)
   {    
        @("   "+@col.NameSql+" " +@col.SqlType + " "+@col.NullStr()  +" COMMENT '"+@col.CommentStr()+"' "+@col.KeyStr()) 
   }

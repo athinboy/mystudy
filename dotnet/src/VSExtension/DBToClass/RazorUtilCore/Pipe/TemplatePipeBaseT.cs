@@ -1,6 +1,5 @@
-﻿using Org.FGQ.CodeGenerate.Config;
-using Org.FGQ.CodeGenerate.Exceptions;
-using Org.FGQ.CodeGenerate.Work;
+﻿using Org.FGQ.CodeGenerate.Exceptions;
+using Org.FGQ.CodeGenerate.Model;using Org.FGQ.CodeGenerate.Model.DDL;
 using RazorEngineCore;
 using System;
 using System.Collections.Concurrent;

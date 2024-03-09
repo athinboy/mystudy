@@ -17,19 +17,16 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         }
 
-        internal void Finish()
+        public virtual void Finish()
         {
-            throw new NotImplementedException();
         }
 
-        internal void Input()
+        public virtual void Input()
         {
-            throw new NotImplementedException();
         }
 
-        internal void PrepareInput()
+        public virtual void PrepareInput()
         {
-            throw new NotImplementedException();
         }
 
         public Action3 PrepareVarAction { get; set; } = null;

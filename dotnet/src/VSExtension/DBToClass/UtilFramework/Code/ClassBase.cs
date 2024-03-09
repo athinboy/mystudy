@@ -1,4 +1,5 @@
 ﻿using Org.FGQ.CodeGenerate.Config;
+using Org.FGQ.CodeGenerate.Model;using Org.FGQ.CodeGenerate.Model.DDL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,10 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
         public string Desc { get; set; }
 
-        public ClassBase(string namespaceName, DDLTable dDLTable)
+        public ClassBase(string namespaceName, EntityTable Table)
         {
             NamespaceName = namespaceName ?? throw new ArgumentNullException(nameof(namespaceName));
-            DDLTable = dDLTable ?? throw new ArgumentNullException(nameof(dDLTable));
+            Table = Table ?? throw new ArgumentNullException(nameof(Table));
         }
 
         public ClassBase(string namespaceName, string className)
@@ -32,7 +33,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
         public List<FieldBase> Fields { get; set; } = new List<FieldBase>();
 
-        public DDLTable DDLTable { get; set; }
+        public EntityTable Table { get; set; }
 
 
         public string ClassName { get; protected set; }

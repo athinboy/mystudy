@@ -1,4 +1,5 @@
 ﻿using Org.FGQ.CodeGenerate.Config;
+using Org.FGQ.CodeGenerate.Model;using Org.FGQ.CodeGenerate.Model.DDL;
 using Org.FGQ.CodeGenerate.Util.Code;
 using System;
 
@@ -8,12 +9,12 @@ namespace Org.FGQ.CodeGenerate.Code
     {
         private CSharpBeanModel beanConfig;
 
-        public CSharpClass(string namespaceName, DDLTable dDLTable) : base(namespaceName, dDLTable)
+        public CSharpClass(string namespaceName, EntityTable Table) : base(namespaceName, Table)
         {
 
         }
 
-        public CSharpClass(string namespaceName, DDLTable dDLTable, CSharpBeanModel beanConfig) : this(namespaceName, dDLTable)
+        public CSharpClass(string namespaceName, EntityTable Table, CSharpBeanModel beanConfig) : this(namespaceName, Table)
         {
             this.beanConfig = beanConfig;
         }
@@ -43,7 +44,7 @@ namespace Org.FGQ.CodeGenerate.Code
             }
         }
 
-        public static ClassBase CreateEntityClass(DDLTable table, CSharpBeanModel beanConfig, bool createVo)
+        public static ClassBase CreateEntityClass(EntityTable table, CSharpBeanModel beanConfig, bool createVo)
         {
             CSharpClass cSharpClass = new CSharpClass(beanConfig.NamespaceName, table, beanConfig);
 

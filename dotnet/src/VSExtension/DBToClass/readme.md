@@ -9,7 +9,7 @@ Dispatch -->    CSharpGenerator
 Dispatch -->    JavaGenerator
 Dispatch -->    HtmlGenerator
 
-CSharpGenerator --> pipeA  -->  DDLTable
+CSharpGenerator --> pipeA  -->  Table
 CSharpGenerator --> pipeB   --> CSharpBeanModel
 CSharpGenerator --> pipeC
 
@@ -51,7 +51,7 @@ HtmlGenerator --> pipeG
         Dispatch ->> InputPipe: do input
         Dispatch ->> InputPipe: finish input 
     end     
-    Dispatch ->> Work:prepare model
+    Dispatch ->> Work:prepare ddl
     loop each model
         loop each output pipe
             Dispatch ->> OutputPipe: prepare variable

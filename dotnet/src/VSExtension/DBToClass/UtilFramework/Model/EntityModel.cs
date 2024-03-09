@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Org.FGQ.CodeGenerate.Model.DDL;
 
-namespace Org.FGQ.CodeGenerate.Config
+namespace Org.FGQ.CodeGenerate.Model
 {
     public class EntityModel : BaseModel
     {
-        public DDLTable Table { get; set; }
+        public EntityTable Table { get; set; }
     }
 }

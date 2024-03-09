@@ -1,13 +1,14 @@
 ﻿using Org.FGQ.CodeGenerate.Config;
+using Org.FGQ.CodeGenerate.Model.DDL;
 using System;
 
 namespace Org.FGQ.CodeGenerate.Model
 {
-    public class DDLTableModel : BaseModel
+    public class TableModel : BaseModel
     {
-        public DDLTable Table { get; set; }
+        public EntityTable Table { get; set; }
 
-        public DDLTableModel(DDLTable table)
+        public TableModel(EntityTable table)
         {
             Table = table ?? throw new ArgumentNullException(nameof(table));
         }

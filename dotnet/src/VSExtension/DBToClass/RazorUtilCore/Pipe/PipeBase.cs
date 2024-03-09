@@ -1,11 +1,10 @@
-﻿using Org.FGQ.CodeGenerate.Config;
-using Org.FGQ.CodeGenerate.Pipe.Delegate;
-
-namespace Org.FGQ.CodeGenerate.Pipe
+﻿namespace Org.FGQ.CodeGenerate.Pipe
 {
 
     public abstract class PipeBase
     {
+        protected Work.Work _work;
+
         protected PipeBase()
         {
 
@@ -18,7 +17,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         internal virtual void Init(Work.Work work)
         {
-
+            _work = work;
         }
     }
 }

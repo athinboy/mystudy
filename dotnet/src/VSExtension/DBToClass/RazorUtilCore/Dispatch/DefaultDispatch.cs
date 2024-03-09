@@ -1,5 +1,6 @@
 ﻿using Org.FGQ.CodeGenerate.Config;
 using Org.FGQ.CodeGenerate.Generator;
+using Org.FGQ.CodeGenerate.Model;using Org.FGQ.CodeGenerate.Model.DDL;
 using Org.FGQ.CodeGenerate.Pipe;
 using System.Collections.Generic;
 
@@ -33,8 +34,8 @@ namespace Org.FGQ.CodeGenerate.Dispatch
                 inpipe.Input();
                 inpipe.Finish();
             }
-            List<BaseModel> models = work.GetModel();
-            foreach (var model in models)
+            List<BaseModel> models = work.PrepareModel();
+            foreach (BaseModel model in models)
             {
                 BaseModel currentBox = model;
                 foreach (OutputPipe outpipe in outpipes)

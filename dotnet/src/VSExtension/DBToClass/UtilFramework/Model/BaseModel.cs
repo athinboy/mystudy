@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Org.FGQ.CodeGenerate.Config
+namespace Org.FGQ.CodeGenerate.Model
 {
     public class BaseModel
     {
@@ -14,3 +14,4 @@ namespace Org.FGQ.CodeGenerate.Config
         public string OmmitPrefix { get; set; } = string.Empty;
     }
 }
+

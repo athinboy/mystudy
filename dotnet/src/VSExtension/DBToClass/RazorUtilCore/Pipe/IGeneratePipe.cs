@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
-	internal interface IGeneratePipe
+    public interface IGeneratePipe
 	{
-		 
-	}
+        internal void Init(Work.Work work);
+
+    }
 }

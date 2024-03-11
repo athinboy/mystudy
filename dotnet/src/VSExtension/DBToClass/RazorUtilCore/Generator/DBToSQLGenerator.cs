@@ -37,7 +37,7 @@ namespace Org.FGQ.CodeGenerate.Generator
             work.InPipes.Add(dBToDDLPipe);
 
             SQLWorkPipe sqlworkpipe = new SQLWorkPipe("");
-            work.OutPipes.Add(sqlworkpipe);
+            work.OutPipes.Add( sqlworkpipe);
 
             return work;
         }

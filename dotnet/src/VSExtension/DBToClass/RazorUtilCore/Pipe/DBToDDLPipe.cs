@@ -65,7 +65,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
 		}
 
-		internal override void Init(Work.Work work)
+        public override void Init(Work.Work work)
 		{
 			base.Init(work);
 		}

@@ -21,7 +21,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
         [Test]
-        public void Test1()
+        public void RunCodeGenerateProgramTest()
         {
             string[] args = new string[] { "-c", @"config\conf.json" };
             Org.FGQ.CodeGenerate.Program.Main(args);          

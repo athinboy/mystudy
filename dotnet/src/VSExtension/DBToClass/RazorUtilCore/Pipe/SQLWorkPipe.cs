@@ -15,7 +15,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
     /// <summary>
     ///  the pipe to  generate sql .
     /// </summary>
-    public class SQLWorkPipe : TemplatePipeBaseT<Work.Work, EntityTableModel, EntityTableModel>
+    public class SQLWorkPipe : TemplatePipeBaseT<Work.Work, EntityTableModel, BaseModel>
     {
 
         private static string templateOracleRelatePath = System.IO.Path.DirectorySeparatorChar + "template" + System.IO.Path.DirectorySeparatorChar + "OracleDDL.cshtml";
@@ -32,7 +32,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
             return null;
         }
 
-        internal override void Init(Work.Work work)
+        public override void Init(Work.Work work)
         {
             base.Init(work);
             string templateRelatePath = string.Empty;
@@ -69,23 +69,20 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         }
 
-
-
-
-        public override EntityTableModel ReceiptModel(Work.Work work, EntityTableModel model)
+        public override EntityTableModel ReceiptModel(Work.Work work, BaseModel model)
         {
             work.DDLModel.Prepare();
-            return model;
+            return model as EntityTableModel;
         }
 
-        internal override BaseModel PrepareVar(Work.Work work, BaseModel model)
+        public override EntityTableModel PrepareVar(Work.Work work, BaseModel model)
         {
             base.PrepareVar(work, model);
             if (File.Exists(OutputPath))
             {
                 File.Delete(OutputPath);
             }
-            return model;
+            return model as EntityTableModel;
         }
     }
 }

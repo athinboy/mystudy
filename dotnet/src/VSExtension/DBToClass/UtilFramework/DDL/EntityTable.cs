@@ -27,7 +27,7 @@ namespace Org.FGQ.CodeGenerate.Model.DDL
 
         public string Desc { get; set; } = string.Empty;
 
-        public List<FieldColumn> Columns { get; set; } = new List<FieldColumn>();
+        public List<FieldColumn> FieldColumns { get; set; } = new List<FieldColumn>();
         public ClassBase RelatedClsss { get; set; } = null;
         public WareDDL DDLConfig { get; internal set; }
 
@@ -62,7 +62,7 @@ namespace Org.FGQ.CodeGenerate.Model.DDL
 
         internal bool HasKeyCol()
         {
-            foreach (FieldColumn col in Columns)
+            foreach (FieldColumn col in FieldColumns)
             {
                 if (col.IsKeyColumn())
                 {
@@ -75,12 +75,12 @@ namespace Org.FGQ.CodeGenerate.Model.DDL
         }
         public List<string> getPrimaryKeyNames()
         {
-            return this.Columns.FindAll(x => x.IsPrimaryKeyColumn()).ConvertAll<string>(x => { return x.NameSql; }).ToList();
+            return this.FieldColumns.FindAll(x => x.IsPrimaryKeyColumn()).ConvertAll<string>(x => { return x.NameSql; }).ToList();
         }
 
         public List<string> getUniqueKeyNames()
         {
-            return this.Columns.FindAll(x => x.IsUniqueKeyColumn()).ConvertAll<string>(x => { return x.NameSql; }).ToList();
+            return this.FieldColumns.FindAll(x => x.IsUniqueKeyColumn()).ConvertAll<string>(x => { return x.NameSql; }).ToList();
         }
 
 

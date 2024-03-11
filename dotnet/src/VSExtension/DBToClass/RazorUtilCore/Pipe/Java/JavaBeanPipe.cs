@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Org.FGQ.CodeGenerate.Pipe.Java
 {
-    public class JavaBeanPipe : TemplatePipeBaseT<JavaWork, JavaClass>
+    public class JavaBeanPipe : TemplatePipeBaseT<JavaWork, JavaClass,BaseModel>
     {
 
 

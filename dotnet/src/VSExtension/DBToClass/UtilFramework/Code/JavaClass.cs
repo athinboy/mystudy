@@ -66,7 +66,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
 
 
-            table.Columns.ForEach(c =>
+            table.FieldColumns.ForEach(c =>
             {
                 if (false == c.Validate())
                 {

@@ -81,7 +81,7 @@ namespace Org.FGQ.CodeGenerate
             dDLConfig.Prepare();
 
             string result = String.Empty;
-            dDLConfig.Tables.ForEach(t =>
+            dDLConfig.EntityTables.ForEach(t =>
             {
                 result += templates[dDLConfig.MyDBType.ToString()].Run(instance =>
                 {

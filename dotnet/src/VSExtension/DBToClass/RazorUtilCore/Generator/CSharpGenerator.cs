@@ -193,7 +193,7 @@ namespace Org.FGQ.CodeGenerate.Generator
             string beanRootDir = CodeUtil.PrepareCodeRoot(beanConfig.CodeDiretory, beanConfig.NamespacePath);
 
             string result = string.Empty;
-            beanConfig.DDL.Tables.ForEach(t =>
+            beanConfig.DDL.EntityTables.ForEach(t =>
             {
                 result = beanTemplate.Run(instance =>
                 {

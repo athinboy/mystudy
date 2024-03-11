@@ -4,7 +4,7 @@ using System;
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
-    public class SimpleInstancePipe<T> : TemplatePipeBaseT<Work.Work, T> where T:BaseModel
+    public class SimpleInstancePipe<T> : TemplatePipeBaseT<Work.Work, T,BaseModel> where T:BaseModel
     {
 
         public T MyT { get; set; }

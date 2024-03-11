@@ -1,4 +1,5 @@
 ﻿
+using Org.FGQ.CodeGenerate.Code;
 using Org.FGQ.CodeGenerate.Model.DDL;
 
 namespace Org.FGQ.CodeGenerate.Model
@@ -7,9 +8,11 @@ namespace Org.FGQ.CodeGenerate.Model
     {
         public WareDDL DDL { get; set; }
 
-        
+        public CSharpClass CSharpClass { get; set; }
 
-        public string CodeDiretory { get; set; }
+
+
+		public string CodeDiretory { get; set; }
 
         /// <summary>
         /// for example:

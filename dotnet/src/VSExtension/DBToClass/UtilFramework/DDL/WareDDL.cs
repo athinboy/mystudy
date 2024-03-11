@@ -17,7 +17,7 @@ namespace Org.FGQ.CodeGenerate.Model.DDL
 
         public EntityTable GetTable(string tableName)
         {
-            return Tables.Find(x => x.TableName == tableName);
+            return EntityTables.Find(x => x.TableName == tableName);
         }
 
         public void Prepare()
@@ -27,14 +27,14 @@ namespace Org.FGQ.CodeGenerate.Model.DDL
                 return;
             }
 
-            foreach (var table in Tables)
+            foreach (var table in EntityTables)
             {
                 table.DDLConfig = this;
 
 
-                for (int i = 0; i < table.Columns.Count; i++)
+                for (int i = 0; i < table.FieldColumns.Count; i++)
                 {
-                    if (table.Columns[i].Validate() == false)
+                    if (table.FieldColumns[i].Validate() == false)
                     {
                         throw new Exception(String.Format("表：{0} 存在无效列", table.TableName));
                     }
@@ -42,17 +42,17 @@ namespace Org.FGQ.CodeGenerate.Model.DDL
 
 
 
-                if (table.Columns.FindAll(x => x.Validate()).ConvertAll<string>(x => x.Name).Distinct<string>().Count<string>()
-                    != table.Columns.FindAll(x => x.Validate()).Count)
+                if (table.FieldColumns.FindAll(x => x.Validate()).ConvertAll<string>(x => x.Name).Distinct<string>().Count<string>()
+                    != table.FieldColumns.FindAll(x => x.Validate()).Count)
                 {
 
-                    for (int i = 0; i < table.Columns.Count; i++)
+                    for (int i = 0; i < table.FieldColumns.Count; i++)
                     {
-                        for (int j = i + 1; j < table.Columns.Count; j++)
+                        for (int j = i + 1; j < table.FieldColumns.Count; j++)
                         {
-                            if (table.Columns[i].Name == table.Columns[j].Name)
+                            if (table.FieldColumns[i].Name == table.FieldColumns[j].Name)
                             {
-                                throw new Exception(String.Format("表：{0}存在重复列{1}", table.TableName, table.Columns[i].Name));
+                                throw new Exception(String.Format("表：{0}存在重复列{1}", table.TableName, table.FieldColumns[i].Name));
                             }
                         }
 
@@ -73,20 +73,20 @@ namespace Org.FGQ.CodeGenerate.Model.DDL
 
                 }
 
-                bool idexists = table.Columns.Exists(x => x.Name.ToLower() == "id");
+                bool idexists = table.FieldColumns.Exists(x => x.Name.ToLower() == "id");
 
                 if (false == idexists)
                 {
                     if (false == table.HasKeyCol())
                     {
-                        table.Columns.Insert(0, new FieldColumn("ID", "id", "bigint(20)", "是", ""));
+                        table.FieldColumns.Insert(0, new FieldColumn("ID", "id", "bigint(20)", "是", ""));
                     }
                     else
                     {
-                        table.Columns.Insert(0, new FieldColumn("ID", "id", "bigint(20)", "", ""));
+                        table.FieldColumns.Insert(0, new FieldColumn("ID", "id", "bigint(20)", "", ""));
                     }
                 }
-                table.Columns.ForEach(x =>
+                table.FieldColumns.ForEach(x =>
                 {
                     x.SqlType = GetSqlDBType(x.TypeName, this.MyDBType, x.Length);
                     x.NameSql = DDLUtil.InferColName(x.Name, this.UnifyName, this.DBColSeparator);
@@ -224,7 +224,7 @@ namespace Org.FGQ.CodeGenerate.Model.DDL
             }
         }
 
-        public List<EntityTable> Tables { get; set; } = new List<EntityTable>();
+        public List<EntityTable> EntityTables { get; set; } = new List<EntityTable>();
 
         public DBType MyDBType { get; set; } = WareDDL.DBType.Oracle;
 

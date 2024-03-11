@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
-    public class DefaultFilePipe<T> : TemplatePipeBaseT<Work.Work, T> where T : BaseModel
+    public class DefaultFilePipe<T> : TemplatePipeBaseT<Work.Work, T,BaseModel> where T : BaseModel 
     {
 
         public DefaultFilePipe( string templatefilepath, string outputPath) : base( templatefilepath, outputPath)

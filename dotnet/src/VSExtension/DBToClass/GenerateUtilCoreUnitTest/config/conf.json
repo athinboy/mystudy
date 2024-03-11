@@ -1,3 +1,22 @@
 {
-  "$schema": "https://raw.githubusercontent.com/athinboy/mystudy/codegerate-2.0/dotnet/src/VSExtension/DBToClass/UtilFramework/Config/conf.schema.json"
+  "$schema": "https://raw.githubusercontent.com/athinboy/mystudy/codegerate-2.0/dotnet/src/VSExtension/DBToClass/UtilFramework/Config/conf.schema.json",
+  "dbConfig": {
+    "DataBaseName": "stock",
+    "MySqlDBConfig": {
+      "Port": 3306,
+      "Server": "localhost",
+      "UserId": "root",
+      "Pwd": "123"
+    }
+  },
+  "codeConfig": {
+    "CSharpConfig": {
+      "NamespaceName": "Org.Fgq.Code",
+      "NamespacePathOmmit": "",
+      "NamespacePathLowerCase": true
+    },
+    "JavaConfig": null
+  },
+  "TableNameFilter": "",
+  "Mode": 0
 }

@@ -50,7 +50,7 @@ namespace Org.FGQ.CodeGenerate.Code
 
 
 
-            table.Columns.ForEach(c =>
+            table.FieldColumns.ForEach(c =>
             {
                 if (false == c.Validate())
                 {

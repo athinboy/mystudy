@@ -9,12 +9,13 @@
     <Compile Include="..\UtilFramework\DB\**\*.cs" LinkBase="DB" />
     <Compile Include="..\UtilFramework\Code\**\*.cs" LinkBase="Code" />
     <Compile Include="..\UtilFramework\Model\**\*.cs" LinkBase="Model" />
-    <Compile Include="..\UtilFramework\DDL\**\*.cs"  LinkBase="DDL"/>
+    <Compile Include="..\UtilFramework\DDL\**\*.cs" LinkBase="DDL" />
     <Compile Include="..\UtilFramework\Util\**\*.cs" LinkBase="Util" />
     <Compile Include="..\UtilFramework\RazorTag\**\*.cs" LinkBase="RazorTag" />
     <Compile Include="..\UtilFramework\Engine\**\*.cs" LinkBase="Engine" />
     <Compile Include="..\UtilFramework\Exceptions\**\*.cs" LinkBase="Exceptions" />
     <Compile Include="..\UtilFramework\Config\**\*.cs" LinkBase="Config" />
+    <Resource Include="..\UtilFramework\Config\conf.schema.json" LinkBase="Config" />
   </ItemGroup>
 
   
@@ -26,5 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="..\UtilFramework\Config\ConfigBase.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
   </ItemGroup>
 </Project>

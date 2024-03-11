@@ -1,11 +1,11 @@
-﻿using Org.FGQ.CodeGenerate.Config;
-using NUnit.Framework;
-using System;
-using Org.FGQ.CodeGenerate.Pipe;
-using Org.FGQ.CodeGenerate.Work;
-using Org.FGQ.CodeGenerate.Generator;
+﻿using NUnit.Framework;
+using Org.FGQ.CodeGenerate.Config;
 using Org.FGQ.CodeGenerate.Dispatch;
-using Org.FGQ.CodeGenerate.Model;using Org.FGQ.CodeGenerate.Model.DDL;
+using Org.FGQ.CodeGenerate.Generator;
+using Org.FGQ.CodeGenerate.Model;
+using Org.FGQ.CodeGenerate.Model.DDL;
+using Org.FGQ.CodeGenerate.Pipe;
+using System;
 
 
 namespace Org.FGQ.CodeGenerateTest
@@ -14,7 +14,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
 
-    public class DDLTest
+	public class DDLTest
     {
 
 
@@ -25,19 +25,19 @@ namespace Org.FGQ.CodeGenerateTest
         [SetUp]
         public void Init()
         {
-            WareDDL ddl = new WareDDL();
+            ddlModel = new WareDDL();
             ddlModel.MyDBType = WareDDL.DBType.MySql;
 
 
             EntityTable newtable;
             FieldColumn column;
 
-            ddlModel.Tables.Add(newtable = new EntityTable("base_info", "wx_user", "微信用户"));
-            newtable.Columns.Add(new FieldColumn("id", "id", "varchar(64)", "Y", ""));
-            newtable.Columns.Add(column = new FieldColumn("unionid", "unionid", "varchar(255)", "", ""));
+            ddlModel.EntityTables.Add(newtable = new EntityTable("base_info", "wx_user", "微信用户"));
+            newtable.FieldColumns.Add(new FieldColumn("id", "id", "varchar(64)", "Y", ""));
+            newtable.FieldColumns.Add(column = new FieldColumn("unionid", "unionid", "varchar(255)", "", ""));
             column.UniqueKeySign = "Y";
-            newtable.Columns.Add(new FieldColumn("用户昵称", "nickName", "varchar(255)", "", ""));
-            newtable.Columns.Add(new FieldColumn("用户头像图片的 URL", "avatarUrl", "varchar(500)", "", ""));
+            newtable.FieldColumns.Add(new FieldColumn("用户昵称", "nickName", "varchar(255)", "", ""));
+            newtable.FieldColumns.Add(new FieldColumn("用户头像图片的 URL", "avatarUrl", "varchar(500)", "", ""));
 
 
 
@@ -75,39 +75,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
         }
-        [Test]
-        public void DBToCSharpAll()
-        {
-            GenerateConfig generateConfig = new GenerateConfig();
 
-            generateConfig.codeConfig.CSharpConfig = new CSharpConfig
-            {
-                NamespacePathLowerCase = true,
-                NamespacePathOmmit = ""
-            };
-
-            generateConfig.dbConfig.MySqlDBConfig = new MySqlDBConfig
-            {
-                Port = 3306,
-                Pwd = "123",
-                UserId = "root",
-                Server = "localhost"
-            };
-
-            generateConfig.codeConfig = new CodeConfig();
-            CSharpConfig cSharpConfig = (generateConfig.codeConfig.CSharpConfig = new CSharpConfig());
-            cSharpConfig.NamespacePathLowerCase = true;
-            cSharpConfig.NamespaceName = "Org.Fgq.Code";
-
-
-
-            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(generateConfig, Newtonsoft.Json.Formatting.Indented));
-
-            Assert.IsTrue(true);
-
-
-
-        }
 
     }
 }

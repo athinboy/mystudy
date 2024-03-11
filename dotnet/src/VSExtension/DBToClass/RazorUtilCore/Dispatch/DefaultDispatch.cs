@@ -13,7 +13,7 @@ namespace Org.FGQ.CodeGenerate.Dispatch
 
         void DispatchBase.Dispatch(GenerateConfig generateConfig)
         {
-            if (generateConfig.codeConfig.CSharpConfig != null)
+            if (generateConfig.CodeConfig.CSharpConfig != null)
             {
                 CSharpGenerator cSharpGenerator = new CSharpGenerator();
                 Work.Work work = cSharpGenerator.CreateWork(generateConfig);
@@ -24,7 +24,7 @@ namespace Org.FGQ.CodeGenerate.Dispatch
         public static void DispathWork(Work.Work work)
         {
             work.Prepare();
-            List<OutputPipe> outpipes = work.OutPipes;
+            List<IOutputPipe<BaseModel,BaseModel>> outpipes = work.OutPipes;
             List<InputPipe> inpipes = work.InPipes;
             foreach (InputPipe inpipe in inpipes)
             {
@@ -38,11 +38,11 @@ namespace Org.FGQ.CodeGenerate.Dispatch
             foreach (BaseModel model in models)
             {
                 BaseModel currentBox = model;
-                foreach (OutputPipe outpipe in outpipes)
+                foreach (IOutputPipe<BaseModel, BaseModel> outpipe in outpipes)
                 {
                     outpipe.Init(work);
                     currentBox = outpipe.PrepareVar(work, model);
-                    currentBox = outpipe.PrepareModel(work, model);
+                    currentBox = outpipe.ReceiptModel(work, model);
                     outpipe.PrepareOutput(work, model);
                     outpipe.DoOutput(work, model);
                     outpipe.FinishOutput(work, model);

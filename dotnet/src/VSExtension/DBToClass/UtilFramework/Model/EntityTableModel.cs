@@ -4,11 +4,11 @@ using System;
 
 namespace Org.FGQ.CodeGenerate.Model
 {
-    public class TableModel : BaseModel
+    public class EntityTableModel : BaseModel
     {
         public EntityTable Table { get; set; }
 
-        public TableModel(EntityTable table)
+        public EntityTableModel(EntityTable table)
         {
             Table = table ?? throw new ArgumentNullException(nameof(table));
         }

@@ -15,7 +15,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
     /// <summary>
     ///  the pipe to  generate sql .
     /// </summary>
-    public class SQLWorkPipe : TemplatePipeBaseT<Work.Work, TableModel>
+    public class SQLWorkPipe : TemplatePipeBaseT<Work.Work, EntityTableModel, EntityTableModel>
     {
 
         private static string templateOracleRelatePath = System.IO.Path.DirectorySeparatorChar + "template" + System.IO.Path.DirectorySeparatorChar + "OracleDDL.cshtml";
@@ -54,7 +54,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         }
 
-        public override void GenerateT(Work.Work work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<TableModel>> template, TableModel model)
+        public override void GenerateT(Work.Work work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<EntityTableModel>> template, EntityTableModel model)
         {
             string result = "";
 
@@ -72,7 +72,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
 
 
-        public override BaseModel PrepareModel(Work.Work work, BaseModel model)
+        public override EntityTableModel ReceiptModel(Work.Work work, EntityTableModel model)
         {
             work.DDLModel.Prepare();
             return model;

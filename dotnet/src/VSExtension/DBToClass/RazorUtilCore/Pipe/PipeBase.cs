@@ -1,23 +1,29 @@
-﻿namespace Org.FGQ.CodeGenerate.Pipe
+﻿using System.Collections.Generic;
+
+namespace Org.FGQ.CodeGenerate.Pipe
 {
 
-    public abstract class PipeBase
-    {
-        protected Work.Work _work;
+ 
 
-        protected PipeBase()
-        {
 
-        }
+	public abstract class PipeBase
+	{
+		protected Work.Work _work;
 
-        public bool ValidateConfig()
-        {
-            return true;
-        }
+		protected PipeBase()
+		{
+	 
 
-        internal virtual void Init(Work.Work work)
-        {
-            _work = work;
-        }
-    }
+		}
+
+		public bool ValidateConfig()
+		{
+			return true;
+		}
+
+		internal virtual void Init(Work.Work work)
+		{
+			_work = work;
+		}
+	}
 }

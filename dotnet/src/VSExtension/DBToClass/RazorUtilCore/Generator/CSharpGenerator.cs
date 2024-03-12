@@ -1,9 +1,11 @@
 ﻿using Org.FGQ.CodeGenerate.Code;
 using Org.FGQ.CodeGenerate.Config;
-using Org.FGQ.CodeGenerate.Model;using Org.FGQ.CodeGenerate.Model.DDL;
+using Org.FGQ.CodeGenerate.Model;
+using Org.FGQ.CodeGenerate.Model.DDL;
 using Org.FGQ.CodeGenerate.Pipe;
 using Org.FGQ.CodeGenerate.Pipe.CSharp;
 using Org.FGQ.CodeGenerate.RazorTag;
+using Org.FGQ.CodeGenerate.Util;
 using Org.FGQ.CodeGenerate.Util.Code;
 using Org.FGQ.CodeGenerate.Work;
 using RazorEngineCore;
@@ -186,19 +188,19 @@ namespace Org.FGQ.CodeGenerate.Generator
 
             //IRazorEngineCompiledTemplate template = razorEngine.Compile(templateContent);// "Hello @Model.Name");
 
-            beanConfig.DDL.Prepare();
+            beanConfig.WareDDL.Prepare();
 
 
 
-            string beanRootDir = CodeUtil.PrepareCodeRoot(beanConfig.CodeDiretory, beanConfig.NamespacePath);
+            string beanRootDir = FileUtil.PrepareCodeRoot(beanConfig.CodeDiretory, beanConfig.NamespacePath);
 
             string result = string.Empty;
-            beanConfig.DDL.EntityTables.ForEach(t =>
+            beanConfig.WareDDL.EntityTables.ForEach(t =>
             {
                 result = beanTemplate.Run(instance =>
                 {
                     beanConfig.Table = t;
-                    t.RelatedClsss = CSharpClass.CreateEntityClass(t, beanConfig, true);
+                    //t.RelatedClsss = CSharpClass.CreateEntityClass(t, beanConfig, true);
                     instance.Model = t.RelatedClsss as CSharpClass;
                 });
                 Console.WriteLine(result);
@@ -361,7 +363,7 @@ namespace Org.FGQ.CodeGenerate.Generator
             DBToDDLPipe dBToDDLPipe = new DBToDDLPipe();
             cSharpWork.InPipes.Add(dBToDDLPipe);
 
-            CSharpBeanPipe cSharpBeanPipe = new CSharpBeanPipe();
+			CSharpBeanPipe<CSharpBeanModel, BaseModel> cSharpBeanPipe = new CSharpBeanPipe<CSharpBeanModel, BaseModel>();
             cSharpWork.OutPipes.Add(cSharpBeanPipe);
 
             return cSharpWork;

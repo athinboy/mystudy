@@ -7,7 +7,7 @@ namespace Org.FGQ.CodeGenerate.Model
     public class JavaBeanModel : JavaModel
     {
 
-        public WareDDL DDLConfig { get; set; }
+        public WareDDL WareDDL { get; set; }
 
 
         public EntityTable Table { get; set; }

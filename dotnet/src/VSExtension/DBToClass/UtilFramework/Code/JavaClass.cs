@@ -81,7 +81,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
             javaClass.Desc = table.Desc;
 
-            javaClass.ClassName = table.ClassName.Length == 0 ? CodeUtil.GetClassName(javaBeanConfig, table.TableName) : table.ClassName;
+            //javaClass.ClassName = table.ClassName.Length == 0 ? CodeUtil.GetClassName(javaBeanConfig, table.TableName) : table.ClassName;
 
             if (createVo)
             {

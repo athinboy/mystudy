@@ -51,7 +51,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
             if (string.IsNullOrEmpty(RazorTplFilePath))
             {
-                return FileUtil.GetInternalTemplateFilePath(GetInternalTplFileName());
+                return TemplateFileUtil.GetInternalTemplateFilePath(GetInternalTplFileName());
             }
             else
             {

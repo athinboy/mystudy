@@ -61,14 +61,7 @@ namespace Org.FGQ.CodeGenerateTest
 
         [Test]
         public void DDLToCSharpAll()
-        {
-
-            beanConfig = new CSharpBeanModel();
-            beanConfig.DDL = ddlModel;
-            beanConfig.NamespaceName = "com.wintop.third.bmwspark.bean";
-
-            beanConfig.CodeDiretory = @"D:\fgq\temp\codegeneratetest\bean\third-bmwspark-bean\src\main\java";
-            beanConfig.OmmitPrefix = "ODS";
+        {         
 
             CSharpGenerator cSharpGenerator = new CSharpGenerator();
             cSharpGenerator.GenerateBean(beanConfig);

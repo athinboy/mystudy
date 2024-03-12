@@ -1,5 +1,5 @@
 ﻿using System;
-
+using Org.FGQ.CodeGenerate.Config.CSharp;
 namespace Org.FGQ.CodeGenerate.Config
 {
 	public class GenerateConfig : ConfigBase
@@ -8,6 +8,17 @@ namespace Org.FGQ.CodeGenerate.Config
 		public DBConfig DBConfig { get; set; } = new DBConfig();
 
 		public CodeConfig CodeConfig { get; set; } = new CodeConfig();
+
+		/// <summary>
+		/// perfix that should to ommit,a string separated by commas
+		/// like: order,user,
+		/// </summary>
+		public string OmmitPrefix { get; set; } = string.Empty;
+
+		/// <summary>
+		/// Regex string without ^ $ .
+		/// </summary>
+		public string TableNameRegex { get; set; } = string.Empty;
 
 
 		/// <summary>
@@ -74,27 +85,6 @@ namespace Org.FGQ.CodeGenerate.Config
 		public string PackageName { get; set; } = "";
 	}
 
-	/// <summary>
-	/// 
-	/// </summary>
-	public class CSharpConfig : ConfigBase
-	{
-		/// <summary>
-		/// namespace(c++,c#) 
-		/// </summary>
-		public string NamespaceName { get; set; } = "";
 
-		/// <summary>
-		/// NamespaceName:System.Xml.Serialize;
-		/// NamespacePathOmmit: System;
-		/// CodePath:xml/serialize ;
-		/// </summary>    
-		public string NamespacePathOmmit { get; set; } = "";
-
-		/// <summary>
-		/// whether to change  code path to lower case ?
-		/// </summary>
-		public bool NamespacePathLowerCase { get; set; } = true;
-	}
 
 }

@@ -47,9 +47,11 @@
     <Compile Include="Code\CodeTypes.cs" />
     <Compile Include="Code\CodeUtil.cs" />
     <Compile Include="Code\CSharpClass.cs" />
+    <Compile Include="Code\CSharpUtil.cs" />
     <Compile Include="Code\FieldBase.cs" />
     <Compile Include="Code\JavaClass.cs" />
     <Compile Include="Config\ConfigBase.cs" />
+    <Compile Include="Config\CSharpConfig.cs" />
     <Compile Include="Config\GenerateConfig.cs" />
     <Compile Include="Config\GenerateMode.cs" />
     <Compile Include="Config\MySqlDBConfig.cs" />

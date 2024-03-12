@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Org.FGQ.CodeGenerate.Config;
+using Org.FGQ.CodeGenerate.Config.CSharp;
 using Org.FGQ.CodeGenerate.Dispatch;
 using Org.FGQ.CodeGenerate.Generator;
 using Org.FGQ.CodeGenerate.Model;
@@ -44,12 +45,15 @@ namespace Org.FGQ.CodeGenerateTest
 			CSharpConfig cSharpConfig = (generateConfig.CodeConfig.CSharpConfig = new CSharpConfig());
 			cSharpConfig.NamespacePathLowerCase = true;
 			cSharpConfig.NamespaceName = "Org.Fgq.Code";
+			CSharpBeanConfig beanConfig = new CSharpBeanConfig();
+			cSharpConfig.BeanConfig = beanConfig;
+			beanConfig.ProjectRoot = "";
 
 
 
 			Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(generateConfig, Newtonsoft.Json.Formatting.Indented));
 
-			Assert.IsTrue(true);
+			Assert.Pass();
 
 
 

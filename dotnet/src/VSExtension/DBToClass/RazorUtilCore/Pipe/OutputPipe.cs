@@ -10,7 +10,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
         where T : BaseModel
         where M : BaseModel
     {
-        protected OutputPipe() : base()
+		public OutputPipe() : base()
         {
         }
 
@@ -25,9 +25,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
         public AddTemplateReferenceAction AddTemplateReferenceFunc { get; set; } = null;
 
         public Action4 PrepareVarAction { get; set; } = null;
-
-        public Action4 PrepareModelAction { get; set; } = null;
-
+         
 
         public Action PickCurrent { get; set; }
 
@@ -40,18 +38,6 @@ namespace Org.FGQ.CodeGenerate.Pipe
                 AddTemplateReferenceFunc(builder);
             }
         }
-
-
-        public virtual BaseModel PrepareModel(Work.Work work, BaseModel model)
-        {
-            if (PrepareModelAction != null)
-            {
-                return PrepareModelAction(work, this, model);
-            }
-            return null;
-        }
-
-
 
         public Action4 PrepareOutputAction { get; set; } = null;
 

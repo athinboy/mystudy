@@ -55,7 +55,7 @@ HtmlGenerator --> pipeG
     loop each model
         loop each output pipe
             Dispatch ->> OutputPipe: prepare variable
-            Dispatch ->> OutputPipe: prepare model
+            Dispatch ->> OutputPipe: receipt  model
             Dispatch ->> OutputPipe: prepare output
             Dispatch ->> OutputPipe: do output       
             Dispatch ->> OutputPipe: finish output 

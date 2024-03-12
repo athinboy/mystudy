@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Org.FGQ.CodeGenerate
 {
-    public class FileUtil
+    public class TemplateFileUtil
     {
         public static string GetInternalTemplateFilePath(string filename)
         {

@@ -4,9 +4,11 @@ using Org.FGQ.CodeGenerate;
 using Org.FGQ.CodeGenerate.Config;
 using Org.FGQ.CodeGenerate.Dispatch;
 using Org.FGQ.CodeGenerate.Generator;
-using Org.FGQ.CodeGenerate.Model;using Org.FGQ.CodeGenerate.Model.DDL;
+using Org.FGQ.CodeGenerate.Model;
+using Org.FGQ.CodeGenerate.Model.DDL;
 using Org.FGQ.CodeGenerate.Pipe;
 using Org.FGQ.CodeGenerate.Pipe.Java;
+using Org.FGQ.CodeGenerate.Util;
 using Org.FGQ.CodeGenerate.Util.Code;
 using Org.FGQ.CodeGenerate.Work;
 using System;
@@ -2355,16 +2357,17 @@ namespace Org.FGQ.CodeGenerateTest
 
 
             javaBeanConfig = new JavaBeanModel();
-            javaBeanConfig.DDLConfig = ddlConfig;
+            javaBeanConfig.WareDDL = ddlConfig;
             javaBeanConfig.PackageName = "com.wintop.third.bmwspark.bean";
             javaBeanConfig.VOPackageName = "com.wintop.third.bmwspark.vo";
             javaBeanConfig.JavaDiretory = @"D:\fgq\temp\codegeneratetest\bean\third-bmwspark-bean\src\main\java";
-            javaBeanConfig.OmmitPrefix = "ODS";
+            
 
             //JavaGenerator toJavaBean = new JavaGenerator();
             //toJavaBean.GenerateBean(javaBeanConfig);
 
-            DefaultDispatch.DispathWork(new JavaWork(null) { BeanConfig = javaBeanConfig, OutPipes = { new JavaBeanPipe() } });
+            DefaultDispatch.DispathWork(new JavaWork(null) { BeanConfig = javaBeanConfig, 
+                OutPipes = { new JavaBeanPipe<JavaBeanModel,BaseModel>() } });
 
 
         }
@@ -2378,11 +2381,11 @@ namespace Org.FGQ.CodeGenerateTest
         {
 
             javaBeanConfig = new JavaBeanModel();
-            javaBeanConfig.DDLConfig = ddlConfig;
+            javaBeanConfig.WareDDL = ddlConfig;
             javaBeanConfig.PackageName = "com.wintop.third.bmwspark.bean";
             javaBeanConfig.VOPackageName = "com.wintop.third.bmwspark.vo";
             javaBeanConfig.JavaDiretory = @"D:\fgq\temp\codegeneratetest\third-bmwspark-bean\src\main\java";
-            javaBeanConfig.OmmitPrefix = "ODS";
+        
 
             //JavaGenerator javaGenerator = new JavaGenerator();
             //javaGenerator.GenerateBean(javaBeanConfig);
@@ -2456,12 +2459,12 @@ namespace Org.FGQ.CodeGenerateTest
 
                 OutPipes = {
                 new SQLWorkPipe(@"D:\fgq\temp\codegeneratetest\third-bmwspark-service-api\sql.txt"),
-                    new JavaBeanPipe(),
+                    new JavaBeanPipe<JavaBeanModel,BaseModel>(),
                     new DefaultFilePipe<JavaDaoModel>()
                     {
                         PrepareVarAction = (w, p,m) =>
                         {
-                           ((DefaultFilePipe<JavaDaoModel>) p).RazorTplFilePath = FileUtil.GetInternalTemplateFilePath("JavaDao.cshtml");
+                           ((DefaultFilePipe<JavaDaoModel>) p).RazorTplFilePath = TemplateFileUtil.GetInternalTemplateFilePath("JavaDao.cshtml");
                             return m;
                         },
                         PrepareOutputAction = (w, p, m) =>
@@ -2488,7 +2491,7 @@ namespace Org.FGQ.CodeGenerateTest
                     {
                         PrepareVarAction = (w, p,m) =>
                         {
-                             ((DefaultFilePipe<JavaMapperModel>) p).RazorTplFilePath = FileUtil.GetInternalTemplateFilePath("JavaMapper.cshtml");
+                             ((DefaultFilePipe<JavaMapperModel>) p).RazorTplFilePath = TemplateFileUtil.GetInternalTemplateFilePath("JavaMapper.cshtml");
                             return m;
                         },
                         PrepareOutputAction = (w, p, m) =>
@@ -2515,13 +2518,13 @@ namespace Org.FGQ.CodeGenerateTest
                     {
                         PrepareVarAction = (w, p, m) =>
                         {
-                             ((DefaultFilePipe<JavaCodeConfig>) p).RazorTplFilePath = FileUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
+                             ((DefaultFilePipe<JavaCodeConfig>) p).RazorTplFilePath = TemplateFileUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
                             return m;
                         },
                         PrepareOutputAction = (w, p, m) =>
                         {
                             (m as JavaCodeConfig).ModelPackageName = (w as JavaWork).ModelPackageName;
-                            string rootDir = CodeUtil.PrepareCodeRoot((w as JavaWork).ModelJavaDiretory, (w as JavaWork).ModelPackageName);
+                            string rootDir = FileUtil.PrepareCodeRoot((w as JavaWork).ModelJavaDiretory, (w as JavaWork).ModelPackageName);
                              ((DefaultFilePipe<JavaCodeConfig>) p).OutputPath = rootDir + Path.DirectorySeparatorChar + (m as JavaCodeConfig).ModelName + ".java";
                             return m;
                         },
@@ -2540,14 +2543,14 @@ namespace Org.FGQ.CodeGenerateTest
                     {
                         PrepareVarAction = (w, p, m) =>
                         {
-                             ((DefaultFilePipe<JavaCodeConfig>) p).RazorTplFilePath = FileUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
+                             ((DefaultFilePipe<JavaCodeConfig>) p).RazorTplFilePath = TemplateFileUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
 
                             return m;
                         },
                         PrepareOutputAction = (w, p, m) =>
                         {
                             (m as JavaCodeConfig).ServicePackageName = (w as JavaWork).ServicePackageName;
-                            string rootDir = CodeUtil.PrepareCodeRoot((w as JavaWork).ServiceJavaDiretory, (w as JavaWork).ServicePackageName);
+                            string rootDir = FileUtil.PrepareCodeRoot((w as JavaWork).ServiceJavaDiretory, (w as JavaWork).ServicePackageName);
                              ((DefaultFilePipe<JavaCodeConfig>) p).OutputPath = rootDir + Path.DirectorySeparatorChar + (m as JavaCodeConfig).ServiceName + ".java";
                             return m;
                         },
@@ -2566,13 +2569,13 @@ namespace Org.FGQ.CodeGenerateTest
                     {
                         PrepareVarAction = (w, p,m) =>
                         {
-                             ((DefaultFilePipe<JavaCodeConfig>) p).RazorTplFilePath = FileUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
+                             ((DefaultFilePipe<JavaCodeConfig>) p).RazorTplFilePath = TemplateFileUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
                             return m;
                         },
                         PrepareOutputAction = (w, p, m) =>
                         {
                             (m as JavaCodeConfig).ServiceImplPackageName = (w as JavaWork).ServiceImplPackageName;
-                            string rootDir = CodeUtil.PrepareCodeRoot((w as JavaWork).ServiceImplJavaDiretory, (w as JavaWork).ServiceImplPackageName);
+                            string rootDir = FileUtil.PrepareCodeRoot((w as JavaWork).ServiceImplJavaDiretory, (w as JavaWork).ServiceImplPackageName);
                              ((DefaultFilePipe<JavaCodeConfig>) p).OutputPath = rootDir + Path.DirectorySeparatorChar + (m as JavaCodeConfig).ServiceImplName + ".java";
                             return m;
                         },
@@ -2591,13 +2594,13 @@ namespace Org.FGQ.CodeGenerateTest
                     {
                         PrepareVarAction = (w, p,m) =>
                         {
-                             ((DefaultFilePipe<JavaCodeConfig>) p).RazorTplFilePath = FileUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
+                             ((DefaultFilePipe<JavaCodeConfig>) p).RazorTplFilePath = TemplateFileUtil.GetInternalTemplateFilePath("JavaCode.cshtml");
                             return m;
                         },
                         PrepareOutputAction = (w, p, m) =>
                         {
                             (m as JavaCodeConfig).ControllerPackageName = (w as JavaWork).ControllerPackageName;
-                            string rootDir = CodeUtil.PrepareCodeRoot((w as JavaWork).ControllerJavaDiretory, (w as JavaWork).ControllerPackageName);
+                            string rootDir = FileUtil.PrepareCodeRoot((w as JavaWork).ControllerJavaDiretory, (w as JavaWork).ControllerPackageName);
                              ((DefaultFilePipe<JavaCodeConfig>) p).OutputPath = rootDir + Path.DirectorySeparatorChar + (m as JavaCodeConfig).ControllerName + ".java";
                             return m;
                         },

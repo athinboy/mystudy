@@ -92,7 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ICSharpCode.Decompiler">
-      <Version>7.1.0.6543</Version>
+      <Version>8.2.0.7535</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Build">
       <Version>17.0.0</Version>
@@ -106,7 +106,9 @@
     <PackageReference Include="Microsoft.VisualStudio.LanguageServices">
       <Version>4.0.1</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="16.0.206" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.9.37000" ExcludeAssets="runtime">
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.10.1056" />
     <PackageReference Include="Mono.Cecil">
       <Version>0.11.4</Version>

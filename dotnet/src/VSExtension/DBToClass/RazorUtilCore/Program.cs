@@ -34,7 +34,7 @@ namespace Org.FGQ.CodeGenerate
                             i++;
                             v = args[i];
                             string configFilePath = v;
-                            configFilePath = FileUtil.GetAbsoluteFilePath(System.Environment.CurrentDirectory, configFilePath);
+                            configFilePath = TemplateFileUtil.GetAbsoluteFilePath(System.Environment.CurrentDirectory, configFilePath);
                             GenerateConfig? generateConfig = Newtonsoft.Json.JsonConvert.DeserializeObject<GenerateConfig>(File.ReadAllText(configFilePath));
                             if (generateConfig == null)
                             {

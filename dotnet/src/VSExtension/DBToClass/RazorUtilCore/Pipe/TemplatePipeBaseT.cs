@@ -1,10 +1,12 @@
 ﻿using Org.FGQ.CodeGenerate.Exceptions;
 using Org.FGQ.CodeGenerate.Model;
 using Org.FGQ.CodeGenerate.Model.DDL;
+using Org.FGQ.CodeGenerate.Util;
 using RazorEngineCore;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
+using System.Text;
 
 namespace Org.FGQ.CodeGenerate.Pipe
 {
@@ -38,7 +40,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
         public override void Init(Work.Work work)
         {
             base.Init(work);
-            PrepareTemplate();
+          _template=  PrepareTemplate();
 
         }
 
@@ -63,7 +65,32 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         //public abstract void Generate(W work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> template);
 
-        public abstract void GenerateT(W work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> template, T t);
+        protected virtual string GetOutputFilePath(T t)
+        {
+            return "";
+        }
+
+        public virtual void GenerateT(W work, IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> template, T t)
+        {
+			string filePath=GetOutputFilePath(t);
+            if (string.IsNullOrEmpty(filePath ?? ""))
+            {
+                throw new Exception("output file path is empty!");
+            }
+			string result = string.Empty;
+ 
+
+			result = template.Run(instance =>
+			{
+				instance.Model = t;
+			});
+
+			if (File.Exists(filePath))
+			{
+				File.Delete(filePath);
+			}
+			File.WriteAllText(filePath, result, new UTF8Encoding(false));
+		}
 
 
         public override void DoOutput(Work.Work work, M model)
@@ -77,7 +104,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
             GenerateT((W)work, (IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>>)template, (T)t);
         }
 
-        public object PrepareTemplate()
+        protected IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> PrepareTemplate()
         {
 
             string razorTplPath = getRazorTplFilePath();
@@ -86,7 +113,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
                 throw new CodeGenerateException(string.Format("模板路径错误:{0}", razorTplPath));
             }
 
-            object template = null;
+			IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>> template = null;
 
             if (false == templateCache.ContainsKey(razorTplPath))
             {
@@ -112,14 +139,14 @@ namespace Org.FGQ.CodeGenerate.Pipe
                     }
                     else
                     {
-                        template = templateCache[razorTplPath];
+                        template = templateCache[razorTplPath] as IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>>;
                     }
 
                 }
             }
             else
             {
-                template = templateCache[razorTplPath];
+                template = templateCache[razorTplPath] as IRazorEngineCompiledTemplate<RazorEngineTemplateBase<T>>;
             }
             if (template == null)
             {

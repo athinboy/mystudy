@@ -9,24 +9,24 @@ namespace Org.FGQ.CodeGenerate.Util.DB
 {
     internal class DBUtil
     {
-        internal static string AnalysisJDBCType(FieldTypes fieldType)
+        internal static string AnalysisJDBCType(FieldDataTypes fieldType)
         {
 
             switch (fieldType)
             {
-                case FieldTypes.String:
+                case FieldDataTypes.String:
                     return JDBCTypes.VARCHAR.ToString();
-                case FieldTypes.Decimal:
+                case FieldDataTypes.Decimal:
                     return JDBCTypes.DECIMAL.ToString();
-                case FieldTypes.Int32:
+                case FieldDataTypes.Int32:
                     return JDBCTypes.INTEGER.ToString();
-                case FieldTypes.Long:
+                case FieldDataTypes.Long:
                     return JDBCTypes.BIGINT.ToString();
-                case FieldTypes.DateTime:
+                case FieldDataTypes.DateTime:
                     return JDBCTypes.TIMESTAMP.ToString();
-                case FieldTypes.Float:
-                case FieldTypes.Double:
-                case FieldTypes.Bool:
+                case FieldDataTypes.Float:
+                case FieldDataTypes.Double:
+                case FieldDataTypes.Bool:
                     return "暂时不支持的数据类型";
 
                 default:

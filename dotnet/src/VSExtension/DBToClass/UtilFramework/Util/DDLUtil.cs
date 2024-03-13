@@ -12,7 +12,7 @@ namespace Org.FGQ.CodeGenerate.Util.Util
     public class DDLUtil
     {
 
-        public static FieldTypes AnalysisFieldType(FieldColumn c)
+        public static FieldDataTypes AnalysisFieldType(FieldColumn c)
         {
             string longstr = null;
             string type = c.TypeName;
@@ -30,39 +30,39 @@ namespace Org.FGQ.CodeGenerate.Util.Util
 
             if (c.TypeName.ToUpper().Contains("VARCHAR") || c.TypeName.ToUpper().Contains("字符"))
             {
-                return FieldTypes.String;
+                return FieldDataTypes.String;
             }
 
             if (c.TypeName.ToUpper().Contains("BIGINT")
                 || c.TypeName.ToUpper().Contains("LONG")
                 || c.TypeName.ToUpper().Contains("长整数"))
             {
-                return FieldTypes.Long;
+                return FieldDataTypes.Long;
             }
             if (c.TypeName.ToUpper().Contains("INT") || c.TypeName.ToUpper().Contains("整数"))
             {
                 if (longstr != null && int.Parse(longstr) >= 10)
                 {
-                    return FieldTypes.Long;
+                    return FieldDataTypes.Long;
                 }
-                return FieldTypes.Int32;
+                return FieldDataTypes.Int32;
             }
             if (c.TypeName.ToUpper().Contains("NUMBER") || c.TypeName.ToUpper().Contains("数字") || c.TypeName.ToUpper().Contains("数值"))
             {
-                return FieldTypes.Decimal;
+                return FieldDataTypes.Decimal;
             }
 
             if (c.TypeName.ToLower().Contains("datetime")
                 || c.TypeName.ToUpper().Contains("时间")
                 || c.TypeName.ToUpper().Contains("日期"))
             {
-                return FieldTypes.DateTime;
+                return FieldDataTypes.DateTime;
             }
             if (c.TypeName.ToUpper().Contains("是否") || c.TypeName.ToUpper().Contains("布尔"))
             {
-                return FieldTypes.Bool;
+                return FieldDataTypes.Bool;
             }
-            return FieldTypes.String;
+            return FieldDataTypes.String;
 
         }
 

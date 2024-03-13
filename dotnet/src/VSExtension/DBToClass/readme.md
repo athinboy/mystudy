@@ -52,6 +52,9 @@ HtmlGenerator --> pipeG
         Dispatch ->> InputPipe: finish input 
     end     
     Dispatch ->> Work:prepare ddl
+    loop each output pipe
+        Dispatch ->> OutputPipe: init
+    end
     loop each model
         loop each output pipe
             Dispatch ->> OutputPipe: prepare variable

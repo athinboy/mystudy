@@ -24,7 +24,7 @@ namespace Org.FGQ.CodeGenerate.Work
  
 		}
 
-		public WareDDL DDLModel { get; set; }
+		public WareDDL WareDDL { get; set; }
 
 		public List<IOutputPipe<BaseModel, BaseModel>> OutPipes { get; set; } = new List<IOutputPipe<BaseModel, BaseModel>>();
 
@@ -36,7 +36,7 @@ namespace Org.FGQ.CodeGenerate.Work
 		{
 
 			List<BaseModel> models = new List<BaseModel>();
-			foreach (var entityTable in w.DDLModel.EntityTables)
+			foreach (var entityTable in w.WareDDL.EntityTables)
 			{
 				models.Add(new EntityTableModel(entityTable));
 			}
@@ -47,10 +47,12 @@ namespace Org.FGQ.CodeGenerate.Work
 
 		internal List<BaseModel> PrepareModel()
 		{
-			if (DDLModel == null)
+			
+			if (WareDDL == null)
 			{
 				throw new Exception("DDL is null");
 			}
+			WareDDL.Prepare();
 
 			if (PrepareModelAction != null)
 			{

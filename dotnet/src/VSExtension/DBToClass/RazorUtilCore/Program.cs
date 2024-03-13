@@ -1,6 +1,7 @@
 ﻿
 using Org.FGQ.CodeGenerate.Config;
 using Org.FGQ.CodeGenerate.Dispatch;
+using Org.FGQ.CodeGenerate.Util;
 using RazorEngineCore;
 using System;
 using System.IO;
@@ -11,7 +12,9 @@ namespace Org.FGQ.CodeGenerate
     {
         public static void Main(string[] args)
         {
-            if (args == null || args.Length == 0)
+            FluentValidateionUtil.Init();
+
+			if (args == null || args.Length == 0)
             {
                 Console.Error.WriteLine("need config!");
                 return;

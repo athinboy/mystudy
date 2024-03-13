@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/athinboy/mystudy/codegerate-2.0/dotnet/src/VSExtension/DBToClass/UtilFramework/Config/conf.schema.json",
-  "dbConfig": {
-    "DataBaseName": "stock",
+  "DBConfig": {
+    "DataBaseName": "base_info",
     "MySqlDBConfig": {
       "Port": 3306,
       "Server": "localhost",
@@ -9,14 +9,20 @@
       "Pwd": "123"
     }
   },
-  "codeConfig": {
+  "CodeConfig": {
     "CSharpConfig": {
-      "NamespaceName": "Org.Fgq.Code",
-      "NamespacePathOmmit": "",
-      "NamespacePathLowerCase": true
-    },
-    "JavaConfig": null
+      "NamespaceName": "Org.FGQ.BaseInfo",
+      "NamespacePathOmmit": "Org.FGQ.BaseInfo.Entity",
+      "NamespacePathLowerCase": true,
+      "BeanConfig": {
+        "BeanNamespaceName": "Entity",
+        "ProjectRoot": "C:\\fgq\\github\\store\\code\\backend\\src\\BaseInfo\\BaseInfoService.Entity",
+        "CodeRootRelation": ""
+      }
+    }
   },
+  "OmmitPrefix": "",
+  "TableNameRegex": "",
   "TableNameFilter": "",
   "Mode": 0
 }

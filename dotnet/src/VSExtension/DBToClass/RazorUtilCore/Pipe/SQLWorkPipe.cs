@@ -36,7 +36,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
         {
             base.Init(work);
             string templateRelatePath = string.Empty;
-            switch (work.DDLModel.MyDBType)
+            switch (work.WareDDL.MyDBType)
             {
                 case WareDDL.DBType.MySql:
                     templateRelatePath = templateMysqlRelatePath;
@@ -45,7 +45,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
                     templateRelatePath = templateOracleRelatePath;
                     break;
                 default:
-                    throw new ArgumentNullException(nameof(work.DDLModel.MyDBType));
+                    throw new ArgumentNullException(nameof(work.WareDDL.MyDBType));
             }
 
 
@@ -71,7 +71,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
         public override EntityTableModel ReceiptModel(Work.Work work, BaseModel model)
         {
-            work.DDLModel.Prepare();
+            work.WareDDL.Prepare();
             return model as EntityTableModel;
         }
 

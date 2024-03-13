@@ -2,8 +2,46 @@
 @using System
 @using System.Collections.Generic
 @using System.Collections
-@inherits RazorEngineCore.RazorEngineTemplateBase<Org.FGQ.CodeGenerate.Util.Code.CSharpClass>
- 
+@inherits RazorEngineCore.RazorEngineTemplateBase<Org.FGQ.CodeGenerate.Model.CSharpBeanModel>
+using FreeSql.DataAnnotations;
 
+namespace @Model.FullNamespace
+{    
+@    [Table(Name = "@Model.CSharpClass.EntityTable.TableName")]
+    public class @Model.CSharpClass.ClassName
+    {
+
+@foreach (var field in  Model.CSharpClass.Fields)
+{
+@:        [Column(Name = "@field.Column.Name", IsPrimary = true)]
+@:        public @field.FiledTypeStr @field.GetPropertyName() { get; set; }
+}
+
+        [Column(Name = "id", IsPrimary = true)]
+        public long Id { get; set; }
+
+        /// <summary>
+        /// unionid
+        /// </summary>
+        [Column(Name = "unionid")]
+        public string UnionId { get; set; } = "";
+
+
+
+        /// <summary>
+        /// 用户昵称
+        /// </summary>
+        [Column(Name = "nick_name", IsPrimary = false)]
+        public string NickName { get; set; } = "";
+
+        /// <summary>
+        /// 用户头像图片的 URL 
+        /// </summary>
+        [Column(Name = "avatar_url")]
+        public string AvatarUrl { get; set; } = "";
+
+    }
+
+}
 
  

@@ -65,7 +65,7 @@ namespace Org.FGQ.CodeGenerate.Model
         {
             get
             {
-                return this.JavaClass.Table == null ? "丢失的数据表名称" : this.JavaClass.Table.TableName;
+                return this.JavaClass.EntityTable == null ? "丢失的数据表名称" : this.JavaClass.EntityTable.TableName;
             }
         }
 

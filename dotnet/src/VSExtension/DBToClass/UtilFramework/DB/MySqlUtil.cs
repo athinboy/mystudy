@@ -121,12 +121,12 @@ order by ta.TABLE_SCHEMA,ta.TABLE_NAME,co.COLUMN_NAME,co.ORDINAL_POSITION
             return string.IsNullOrEmpty(v) && v.ToUpper() == "PRI";
         }
 
-        private FieldTypes AnalysisFieldType(string dataType, string columnType)
+        private FieldDataTypes AnalysisFieldType(string dataType, string columnType)
         {
 
             if (columnType.ToLower().IndexOf("int(1)") != -1)
             {
-                return FieldTypes.Bool;
+                return FieldDataTypes.Bool;
             }
 
             switch (dataType.ToLower())
@@ -140,24 +140,24 @@ order by ta.TABLE_SCHEMA,ta.TABLE_NAME,co.COLUMN_NAME,co.ORDINAL_POSITION
                 case "mediumtext":
                 case "varchar":
                 case "enum":
-                    return FieldTypes.String;
+                    return FieldDataTypes.String;
                 case "decimal":
-                    return FieldTypes.Decimal;
+                    return FieldDataTypes.Decimal;
                 case "int":
                 case "smallint":
                 case "tinyint":
-                    return FieldTypes.Int32;
+                    return FieldDataTypes.Int32;
                 case "double":
-                    return FieldTypes.Double;
+                    return FieldDataTypes.Double;
                 case "float":
-                    return FieldTypes.Float;
+                    return FieldDataTypes.Float;
                 case "bigint":
-                    return FieldTypes.Long;
+                    return FieldDataTypes.Long;
                 case "datetime":
                 case "time":
                 case "date":
                 case "timestamp":
-                    return FieldTypes.DateTime;
+                    return FieldDataTypes.DateTime;
 
                 default:
                     throw new ArgumentException(nameof(dataType) + ":" + dataType ?? "");

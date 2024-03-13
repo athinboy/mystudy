@@ -17,11 +17,11 @@ namespace Org.FGQ.CodeGenerate.Util.DB
 
         public string Comment { get; set; } = string.Empty;
 
-        public FieldTypes FieldType { get; set; } = FieldTypes.String;
+        public FieldDataTypes FieldType { get; set; } = FieldDataTypes.String;
 
         public int Position { get; set; }
 
-        public DBColumn(string colName, string columnType, string dataType, bool isPriKey, bool isNullable, int position, FieldTypes fieldTypes, string comment)
+        public DBColumn(string colName, string columnType, string dataType, bool isPriKey, bool isNullable, int position, FieldDataTypes fieldTypes, string comment)
         {
             ColName = colName ?? throw new ArgumentNullException(nameof(colName));
             ColumnType = columnType ?? throw new ArgumentNullException(nameof(columnType));

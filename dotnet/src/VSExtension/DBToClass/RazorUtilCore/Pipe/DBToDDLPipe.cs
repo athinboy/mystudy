@@ -1,8 +1,10 @@
-﻿using Org.FGQ.CodeGenerate.Config;
+﻿using FluentValidation;
+using Org.FGQ.CodeGenerate.Config;
 using Org.FGQ.CodeGenerate.Model.DDL;
 using Org.FGQ.CodeGenerate.Util.DB;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace Org.FGQ.CodeGenerate.Pipe
@@ -12,7 +14,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 	/// </summary>
 	public class DBToDDLPipe : InputPipe
 	{
-
+		protected DBConfig dBConfig = null;
 		public DBToDDLPipe() : base()
 		{
 
@@ -50,7 +52,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
 				}
 			}
-			_work.DDLModel = ddlModel;
+			_work.WareDDL = ddlModel;
 		}
 
 		public override void PrepareInput()
@@ -65,9 +67,36 @@ namespace Org.FGQ.CodeGenerate.Pipe
 
 		}
 
-        public override void Init(Work.Work work)
+		public override void Init(Work.Work work)
 		{
 			base.Init(work);
+
+			dBConfig = work.GenerateConfig.DBConfig ?? new DBConfig();
+			BeanConfigValidator beanConfigValidator = new BeanConfigValidator();
+			beanConfigValidator.ValidateAndThrow(dBConfig);
+		}
+
+		protected class BeanConfigValidator : AbstractValidator<DBConfig>
+		{
+			public BeanConfigValidator()
+			{
+				RuleFor(bc => bc.DataBaseName).NotEmpty();
+				RuleFor(bc => bc.MySqlDBConfig).NotNull().SetValidator(new MysqlDBConfigValidator());
+			}
+		}
+		protected class MysqlDBConfigValidator : AbstractValidator<MySqlDBConfig>
+		{
+			public MysqlDBConfigValidator()
+			{
+
+
+				RuleFor(bc => bc.Pwd).NotEmpty();
+				RuleFor(bc => bc.UserId).NotEmpty();
+				RuleFor(bc => bc.Port).NotNull().NotEmpty();
+				RuleFor(bc => bc.Server).NotEmpty();
+				 
+
+			}
 		}
 
 

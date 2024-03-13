@@ -13,7 +13,7 @@ namespace Org.FGQ.CodeGenerate.Model
 			CSharpClass = cSharpClass ?? throw new ArgumentNullException(nameof(cSharpClass));
 			CodeDiretory = codeDiretory ?? throw new ArgumentNullException(nameof(codeDiretory));
 			NamespacePath = namespacePath ?? throw new ArgumentNullException(nameof(namespacePath));
-			FullNamespaceh = classNameSpace ?? throw new ArgumentNullException(nameof(classNameSpace));
+			FullNamespace = classNameSpace ?? throw new ArgumentNullException(nameof(classNameSpace));
 		}
 
 		public WareDDL WareDDL { get; private set; }
@@ -29,6 +29,6 @@ namespace Org.FGQ.CodeGenerate.Model
 		/// NamespacePath:xml.serialize;
 		/// </summary>
 		public string NamespacePath { get; set; }
-		public string FullNamespaceh { get; private set; }
+		public string FullNamespace { get; private set; }
 	}
 }

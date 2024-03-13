@@ -100,6 +100,9 @@ namespace Org.FGQ.CodeGenerate.Model.DDL
 
         private string nameSql;
 
+        /// <summary>
+        /// the column name that in database in sql script;
+        /// </summary>
         public string NameSql
         {
             get { return nameSql ?? Name; }

@@ -71,7 +71,7 @@
     <Compile Include="DB\DBUtil.cs" />
     <Compile Include="DB\JDBCTypes.cs" />
     <Compile Include="DB\OracleUtil.cs" />
-    <Compile Include="Code\FieldTypes.cs" />
+    <Compile Include="Code\FieldDataTypes.cs" />
     <Compile Include="DB\DBColumn.cs" />
     <Compile Include="DB\DB.cs" />
     <Compile Include="DB\MySqlUtil.cs" />

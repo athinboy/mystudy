@@ -63,7 +63,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
 			if (ddlconfig.UnifyName) return c.Name;
 
-			string columnName = c.NameSql;
+			string columnName = c.Name;
 			string[] parts = columnName.Split(ddlconfig.DBColSeparator[0]);
 			string result = "";
 			for (int i = 0; i < parts.Length; i++)

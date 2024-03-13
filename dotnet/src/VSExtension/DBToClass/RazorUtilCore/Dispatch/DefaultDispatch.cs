@@ -3,6 +3,7 @@ using Org.FGQ.CodeGenerate.Generator;
 using Org.FGQ.CodeGenerate.Model;using Org.FGQ.CodeGenerate.Model.DDL;
 using Org.FGQ.CodeGenerate.Pipe;
 using System.Collections.Generic;
+using System.Reflection;
 
 
 namespace Org.FGQ.CodeGenerate.Dispatch
@@ -35,12 +36,17 @@ namespace Org.FGQ.CodeGenerate.Dispatch
                 inpipe.Finish();
             }
             List<BaseModel> models = work.PrepareModel();
-            foreach (BaseModel model in models)
+
+			foreach (IOutputPipe<BaseModel, BaseModel> outpipe in outpipes)
+			{
+				outpipe.Init(work);
+			}
+
+			foreach (BaseModel model in models)
             {
                 BaseModel currentBox = model;
                 foreach (IOutputPipe<BaseModel, BaseModel> outpipe in outpipes)
-                {
-                    outpipe.Init(work);
+                {                     
                     currentBox = outpipe.PrepareVar(work, model);
                     currentBox = outpipe.ReceiptModel(work, model);
                     outpipe.PrepareOutput(work, model);

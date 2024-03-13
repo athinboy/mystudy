@@ -167,27 +167,27 @@ order by c.TNAME,c.COLNO asc
 
         }
 
-        private FieldTypes AnalysisFieldType(string coltype, int width, int scale, int precision)
+        private FieldDataTypes AnalysisFieldType(string coltype, int width, int scale, int precision)
         {
             if (coltype.ToUpper().Contains("VARCHAR"))
             {
-                return FieldTypes.String;
+                return FieldDataTypes.String;
             }
 
             if (coltype.ToUpper().Contains("LONG"))
             {
-                return FieldTypes.Long;
+                return FieldDataTypes.Long;
             }
 
             if (coltype.ToUpper().Contains("NUMBER"))
             {
                 if (scale > 0)
                 {
-                    return FieldTypes.Decimal;
+                    return FieldDataTypes.Decimal;
                 }
                 else
                 {
-                    return precision > 10 ? FieldTypes.Long : FieldTypes.Int32;
+                    return precision > 10 ? FieldDataTypes.Long : FieldDataTypes.Int32;
 
                 }
             }

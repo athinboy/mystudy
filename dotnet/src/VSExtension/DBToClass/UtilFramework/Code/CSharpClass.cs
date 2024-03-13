@@ -20,21 +20,21 @@ namespace Org.FGQ.CodeGenerate.Code
 		{
 			switch (filedBase.FieldType)
 			{
-				case FieldTypes.String:
+				case FieldDataTypes.String:
 					return "String";
-				case FieldTypes.Decimal:
+				case FieldDataTypes.Decimal:
 					return "BigDecimal";
-				case FieldTypes.Int32:
+				case FieldDataTypes.Int32:
 					return "Integer";
-				case FieldTypes.Long:
+				case FieldDataTypes.Long:
 					return "Long";
-				case FieldTypes.Float:
+				case FieldDataTypes.Float:
 					return "Float";
-				case FieldTypes.Double:
+				case FieldDataTypes.Double:
 					return "Double";
-				case FieldTypes.DateTime:
+				case FieldDataTypes.DateTime:
 					return "Date";
-				case FieldTypes.Bool:
+				case FieldDataTypes.Bool:
 					return "Boolean";
 				default:
 					throw new ArgumentException(nameof(filedBase.FieldType));

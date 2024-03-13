@@ -20,7 +20,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
         public ClassBase(string namespaceName, EntityTable Table)
         {
             NamespaceName = namespaceName ?? throw new ArgumentNullException(nameof(namespaceName));
-            Table = Table ?? throw new ArgumentNullException(nameof(Table));
+            EntityTable = Table ?? throw new ArgumentNullException(nameof(Table));
         }
 
         public ClassBase(string namespaceName, string className)
@@ -33,7 +33,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
 
         public List<FieldBase> Fields { get; set; } = new List<FieldBase>();
 
-        public EntityTable Table { get; set; }
+        public EntityTable EntityTable { get; set; }
 
 
         public string ClassName { get; protected set; }
@@ -43,7 +43,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
         {
             get
             {
-                return Fields.Any(x => x.IsKeyField == false && x.Name.ToLower() == "id" && x.FieldType == FieldTypes.Long);
+                return Fields.Any(x => x.IsKeyField == false && x.Name.ToLower() == "id" && x.FieldType == FieldDataTypes.Long);
             }
         }
 
@@ -51,7 +51,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
         {
             get
             {
-                return Fields.Find(x => x.Name.ToLower() == "id" && x.FieldType == FieldTypes.Long);
+                return Fields.Find(x => x.Name.ToLower() == "id" && x.FieldType == FieldDataTypes.Long);
             }
         }
 

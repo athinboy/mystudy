@@ -2345,7 +2345,7 @@ namespace Org.FGQ.CodeGenerateTest
         {
 
             const string outputpath = @"c:\1\2.txt";
-            DefaultDispatch.DispathWork(new Work(null) { DDLModel = ddlConfig, OutPipes = { new SQLWorkPipe(outputpath) } });
+            DefaultDispatch.DispathWork(new Work(null) { WareDDL = ddlConfig, OutPipes = { new SQLWorkPipe(outputpath) } });
 
 
         }
@@ -2433,10 +2433,10 @@ namespace Org.FGQ.CodeGenerateTest
             {
                 PrepareAction = (w) =>
                 {
-                    (w as JavaWork).DDLModel.Prepare();
+                    (w as JavaWork).WareDDL.Prepare();
                 },
                 BeanConfig = javaBeanConfig,
-                DDLModel = ddlConfig,
+                WareDDL = ddlConfig,
 
 
                 MapperDirectory = @"D:\fgq\temp\codegeneratetest\third-bmwspark-dao\src\main\resources\mybatis\mapper",
@@ -2478,7 +2478,7 @@ namespace Org.FGQ.CodeGenerateTest
                         GetModelsAction = (w, p) =>
                         {
                             List<JavaDaoModel> models = new List<JavaDaoModel>();
-                            (w as JavaWork).DDLModel.EntityTables.ForEach((Action<EntityTable>)((t) =>
+                            (w as JavaWork).WareDDL.EntityTables.ForEach((Action<EntityTable>)((t) =>
                             {
                                 models.Add((CodeGenerate.Model.JavaDaoModel)new CodeGenerate.Model.JavaDaoModel(t.RelatedClsss as JavaClass) { SplitReadWrite = true, ForRead = true, ForWrite = false });
                                 models.Add((CodeGenerate.Model.JavaDaoModel)new CodeGenerate.Model.JavaDaoModel(t.RelatedClsss as JavaClass) { SplitReadWrite = true, ForRead = false, ForWrite = true });
@@ -2505,7 +2505,7 @@ namespace Org.FGQ.CodeGenerateTest
                         GetModelsAction = (w, p) =>
                         {
                             List<JavaMapperModel> models = new List<JavaMapperModel>();
-                            (w as JavaWork).DDLModel.EntityTables.ForEach((Action<EntityTable>)((t) =>
+                            (w as JavaWork).WareDDL.EntityTables.ForEach((Action<EntityTable>)((t) =>
                             {
                                 models.Add((JavaMapperModel)new CodeGenerate.Model.JavaMapperModel(new JavaDaoModel(t.RelatedClsss as JavaClass)) { SplitReadWrite = true, ForRead = true, ForWrite = false });
                                 models.Add((JavaMapperModel)new CodeGenerate.Model.JavaMapperModel(new JavaDaoModel(t.RelatedClsss as JavaClass)) { SplitReadWrite = true, ForRead = false, ForWrite = true });
@@ -2531,7 +2531,7 @@ namespace Org.FGQ.CodeGenerateTest
                         GetModelsAction = (w, p) =>
                         {
                             List<JavaCodeConfig> models = new List<JavaCodeConfig>();
-                            (w as JavaWork).DDLModel.EntityTables.ForEach((Action<EntityTable>)((t) =>
+                            (w as JavaWork).WareDDL.EntityTables.ForEach((Action<EntityTable>)((t) =>
                             {
                                 models.Add(new JavaCodeConfig((JavaDaoModel ) new JavaDaoModel(t.RelatedClsss as JavaClass)) { JavaClass = t.RelatedClsss as JavaClass, ForModel = true });
                             }));
@@ -2557,7 +2557,7 @@ namespace Org.FGQ.CodeGenerateTest
                         GetModelsAction = (w, p) =>
                         {
                             List<JavaCodeConfig> models = new List<JavaCodeConfig>();
-                            (w as JavaWork).DDLModel.EntityTables.ForEach((Action<EntityTable>)((t) =>
+                            (w as JavaWork).WareDDL.EntityTables.ForEach((Action<EntityTable>)((t) =>
                             {
                                 models.Add(new JavaCodeConfig((JavaDaoModel ) new JavaDaoModel(t.RelatedClsss as JavaClass)) { JavaClass = t.RelatedClsss as JavaClass, ForService = true });
                             }));
@@ -2582,7 +2582,7 @@ namespace Org.FGQ.CodeGenerateTest
                         GetModelsAction = (w, p) =>
                         {
                             List<JavaCodeConfig> models = new List<JavaCodeConfig>();
-                            (w as JavaWork).DDLModel.EntityTables.ForEach((Action<EntityTable>)((t) =>
+                            (w as JavaWork).WareDDL.EntityTables.ForEach((Action<EntityTable>)((t) =>
                             {
                                 models.Add(new JavaCodeConfig((JavaDaoModel)new JavaDaoModel(t.RelatedClsss as JavaClass)) { JavaClass = t.RelatedClsss as JavaClass, ForServiceImpl = true });
                             }));
@@ -2607,7 +2607,7 @@ namespace Org.FGQ.CodeGenerateTest
                         GetModelsAction = (w, p) =>
                         {
                             List<JavaCodeConfig> models = new List<JavaCodeConfig>();
-                            (w as JavaWork).DDLModel.EntityTables.ForEach((Action<EntityTable>)((t) =>
+                            (w as JavaWork).WareDDL.EntityTables.ForEach((Action<EntityTable>)((t) =>
                             {
                                 models.Add(new JavaCodeConfig((JavaDaoModel)new JavaDaoModel(t.RelatedClsss as JavaClass)) { JavaClass = t.RelatedClsss as JavaClass, ForController = true });
                             }));

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Newtonsoft.Json;
+using NUnit.Framework;
 using Org.FGQ.CodeGenerate.Config;
 using Org.FGQ.CodeGenerate.Config.CSharp;
 using Org.FGQ.CodeGenerate.Dispatch;
@@ -7,6 +8,7 @@ using Org.FGQ.CodeGenerate.Model;
 using Org.FGQ.CodeGenerate.Model.DDL;
 using Org.FGQ.CodeGenerate.Pipe;
 using System;
+using System.Text.Json;
 
 namespace Org.FGQ.CodeGenerateTest
 {
@@ -17,7 +19,7 @@ namespace Org.FGQ.CodeGenerateTest
 		[SetUp]
 		public void Init()
 		{
-			 
+
 
 
 		}
@@ -30,9 +32,9 @@ namespace Org.FGQ.CodeGenerateTest
 			generateConfig.CodeConfig.CSharpConfig = new CSharpConfig
 			{
 				NamespacePathLowerCase = true,
-				NamespacePathOmmit = ""
+				NamespacePathOmmit = "Org.FGQ.BaseInfo.Entity"
 			};
-
+			generateConfig.DBConfig.DataBaseName = "base_info";
 			generateConfig.DBConfig.MySqlDBConfig = new MySqlDBConfig
 			{
 				Port = 3306,
@@ -44,15 +46,24 @@ namespace Org.FGQ.CodeGenerateTest
 			generateConfig.CodeConfig = new CodeConfig();
 			CSharpConfig cSharpConfig = (generateConfig.CodeConfig.CSharpConfig = new CSharpConfig());
 			cSharpConfig.NamespacePathLowerCase = true;
-			cSharpConfig.NamespaceName = "Org.Fgq.Code";
+			cSharpConfig.NamespaceName = "Org.FGQ.BaseInfo";
 			CSharpBeanConfig beanConfig = new CSharpBeanConfig();
 			cSharpConfig.BeanConfig = beanConfig;
-			beanConfig.ProjectRoot = "";
+			beanConfig.ProjectRoot = @"C:\fgq\github\store\code\backend\src\BaseInfo\BaseInfoService.Entity";
+			beanConfig.CodeRootRelation = "";
+			beanConfig.BeanNamespaceName = "Entity";
 
+ 
 
-
-			Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(generateConfig, Newtonsoft.Json.Formatting.Indented));
-
+			Console.WriteLine(JsonConvert.SerializeObject(
+				generateConfig,
+				Formatting.Indented,
+				new JsonSerializerSettings
+				{
+					NullValueHandling = NullValueHandling.Ignore,
+					MissingMemberHandling = MissingMemberHandling.Ignore
+					
+				}));
 			Assert.Pass();
 
 

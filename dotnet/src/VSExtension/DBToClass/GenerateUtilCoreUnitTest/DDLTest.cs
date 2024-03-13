@@ -51,7 +51,7 @@ namespace Org.FGQ.CodeGenerateTest
             const string outputpath = @"c:\1\2.txt";
             DefaultDispatch.DispathWork(new CodeGenerate.Work.Work(null)
             {
-                DDLModel = ddlModel,
+                WareDDL = ddlModel,
                 OutPipes = { new SQLWorkPipe(outputpath) }
             });
 

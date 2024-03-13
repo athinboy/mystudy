@@ -51,12 +51,8 @@ namespace Org.FGQ.CodeGenerate.Config
 
 		public override bool Validate()
 		{
-			bool? v = MySqlDBConfig?.Validate();
-			if (string.IsNullOrEmpty(DataBaseName))
-			{
-				throw new ArgumentException(nameof(DataBaseName));
-			}
-			return v ?? true;
+ 
+			return  true;
 
 		}
 	}

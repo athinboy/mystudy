@@ -1,6 +1,6 @@
 ﻿namespace Org.FGQ.CodeGenerate.Util.Code
 {
-    public enum FieldTypes
+    public enum FieldDataTypes
     {
         String,
         Decimal,

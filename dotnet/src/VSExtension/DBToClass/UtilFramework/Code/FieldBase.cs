@@ -7,7 +7,7 @@ namespace Org.FGQ.CodeGenerate.Util.Code
     public class FieldBase
     {
 
-        public FieldTypes FieldType { get; set; } = FieldTypes.String;
+        public FieldDataTypes FieldType { get; set; } = FieldDataTypes.String;
         public bool IsKeyField { get; private set; } = false;
         public bool IsPrimaryKeyColumn { get; private set; } = false;
         public bool IsUniqueKeyColumn { get; private set; } = false;

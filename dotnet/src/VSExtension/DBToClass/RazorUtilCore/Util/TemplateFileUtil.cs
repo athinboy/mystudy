@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Org.FGQ.CodeGenerate
+namespace Org.FGQ.CodeGenerate.Util
 {
     public class TemplateFileUtil
     {

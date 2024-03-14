@@ -47,6 +47,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 				ddlModel.EntityTables.Add(newtable);
 				foreach (var column in table.Columns)
 				{
+					//todo   2024年3月14日17:25:38 bug
 					Column = new FieldColumn(column.Comment, column.ColName, column.ColumnType);
 					newtable.FieldColumns.Add(Column);
 

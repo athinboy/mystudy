@@ -118,7 +118,7 @@ order by ta.TABLE_SCHEMA,ta.TABLE_NAME,co.COLUMN_NAME,co.ORDINAL_POSITION
 
         private bool CheckPriKey(string v)
         {
-            return string.IsNullOrEmpty(v) && v.ToUpper() == "PRI";
+            return (string.IsNullOrEmpty(v)==false) && v.ToUpper() == "PRI";
         }
 
         private FieldDataTypes AnalysisFieldType(string dataType, string columnType)

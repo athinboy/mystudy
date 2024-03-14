@@ -12,12 +12,21 @@ namespace Org.FGQ.CodeGenerate.Util.DB
 
         public string ColName { get; set; } = string.Empty;
 
-        public string ColumnType { get; set; } = string.Empty;
-        public string DataType { get; set; } = string.Empty;
+		/// <summary>
+        /// for example:
+		/// decimal(43,0)
+		/// </summary>
+		public string ColumnType { get; set; } = string.Empty;
+		/// <summary>
+		/// for example:
+		/// decimal
+		/// </summary>
+		/// <seealso cref="ColumnType"/>
+		public string DataType { get; set; } = string.Empty;
 
         public string Comment { get; set; } = string.Empty;
 
-        public FieldDataTypes FieldType { get; set; } = FieldDataTypes.String;
+        public FieldDataTypes FieldDataType { get; set; } = FieldDataTypes.String;
 
         public int Position { get; set; }
 
@@ -30,7 +39,7 @@ namespace Org.FGQ.CodeGenerate.Util.DB
             IsNullable = isNullable;
             Position = position;
             Comment = comment ?? "";
-            FieldType = fieldTypes;
+            FieldDataType = fieldTypes;
         }
     }
 }

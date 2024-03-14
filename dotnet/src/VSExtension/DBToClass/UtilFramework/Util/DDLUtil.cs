@@ -15,7 +15,7 @@ namespace Org.FGQ.CodeGenerate.Util.Util
         public static FieldDataTypes AnalysisFieldType(FieldColumn c)
         {
             string longstr = null;
-            string type = c.TypeName;
+            string type = c.DataTypeDesc;
             if (type.Contains("("))
             {
 
@@ -28,18 +28,18 @@ namespace Org.FGQ.CodeGenerate.Util.Util
 
             }
 
-            if (c.TypeName.ToUpper().Contains("VARCHAR") || c.TypeName.ToUpper().Contains("字符"))
+            if (c.DataTypeDesc.ToUpper().Contains("VARCHAR") || c.DataTypeDesc.ToUpper().Contains("字符"))
             {
                 return FieldDataTypes.String;
             }
 
-            if (c.TypeName.ToUpper().Contains("BIGINT")
-                || c.TypeName.ToUpper().Contains("LONG")
-                || c.TypeName.ToUpper().Contains("长整数"))
+            if (c.DataTypeDesc.ToUpper().Contains("BIGINT")
+                || c.DataTypeDesc.ToUpper().Contains("LONG")
+                || c.DataTypeDesc.ToUpper().Contains("长整数"))
             {
                 return FieldDataTypes.Long;
             }
-            if (c.TypeName.ToUpper().Contains("INT") || c.TypeName.ToUpper().Contains("整数"))
+            if (c.DataTypeDesc.ToUpper().Contains("INT") || c.DataTypeDesc.ToUpper().Contains("整数"))
             {
                 if (longstr != null && int.Parse(longstr) >= 10)
                 {
@@ -47,18 +47,18 @@ namespace Org.FGQ.CodeGenerate.Util.Util
                 }
                 return FieldDataTypes.Int32;
             }
-            if (c.TypeName.ToUpper().Contains("NUMBER") || c.TypeName.ToUpper().Contains("数字") || c.TypeName.ToUpper().Contains("数值"))
+            if (c.DataTypeDesc.ToUpper().Contains("NUMBER") || c.DataTypeDesc.ToUpper().Contains("数字") || c.DataTypeDesc.ToUpper().Contains("数值"))
             {
                 return FieldDataTypes.Decimal;
             }
 
-            if (c.TypeName.ToLower().Contains("datetime")
-                || c.TypeName.ToUpper().Contains("时间")
-                || c.TypeName.ToUpper().Contains("日期"))
+            if (c.DataTypeDesc.ToLower().Contains("datetime")
+                || c.DataTypeDesc.ToUpper().Contains("时间")
+                || c.DataTypeDesc.ToUpper().Contains("日期"))
             {
                 return FieldDataTypes.DateTime;
             }
-            if (c.TypeName.ToUpper().Contains("是否") || c.TypeName.ToUpper().Contains("布尔"))
+            if (c.DataTypeDesc.ToUpper().Contains("是否") || c.DataTypeDesc.ToUpper().Contains("布尔"))
             {
                 return FieldDataTypes.Bool;
             }

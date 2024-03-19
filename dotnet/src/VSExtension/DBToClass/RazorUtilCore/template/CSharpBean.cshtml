@@ -13,8 +13,12 @@ namespace @Model.FullNamespace
 
 @foreach (var field in  Model.CSharpClass.Fields)
 {
+@:        /// <summary>
+@:        /// @field.Column.Desc
+@:        /// </summary>
 @:        [Column(Name = "@field.Column.Name" @(field.Column.IsPrimaryKeyColumn() ? " ,IsPrimary = true" : ""))]
 @:        public @field.FiledTypeStr @field.GetPropertyName() { get; set; }
+@:
 }
 
     }

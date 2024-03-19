@@ -88,7 +88,7 @@ namespace Org.FGQ.CodeGenerate.Model.DDL
                 }
                 table.FieldColumns.ForEach(x =>
                 {
-                    x.SqlType = GetSqlDBType(x.TypeName, this.MyDBType, x.Length);
+                    x.SqlType = GetSqlDBType(x.DataTypeDesc, this.MyDBType, x.Length);
                     x.NameSql = DDLUtil.InferColName(x.Name, this.UnifyName, this.DBColSeparator);
 
 

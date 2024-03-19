@@ -48,7 +48,7 @@ namespace Org.FGQ.CodeGenerate.Pipe
 				foreach (var column in table.Columns)
 				{
 					//todo   2024年3月14日17:25:38 bug
-					Column = new FieldColumn(column.Comment, column.ColName, column.ColumnType);
+					Column = new FieldColumn(column);
 					newtable.FieldColumns.Add(Column);
 
 				}

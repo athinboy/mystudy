@@ -1,9 +1,6 @@
 ﻿
 using NUnit.Framework;
-using Org.FGQ.CodeGenerate;
-using Org.FGQ.CodeGenerate.Config;
 using Org.FGQ.CodeGenerate.Dispatch;
-using Org.FGQ.CodeGenerate.Generator;
 using Org.FGQ.CodeGenerate.Model;
 using Org.FGQ.CodeGenerate.Model.DDL;
 using Org.FGQ.CodeGenerate.Pipe;
@@ -21,7 +18,7 @@ namespace Org.FGQ.CodeGenerateTest
 
 
 
-    public class DDLTestYT
+	public class DDLTestYT
     {
 
 
